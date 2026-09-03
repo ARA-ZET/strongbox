@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pricing | StrongBox Valet Storage</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "lavender-haze": "#F5F2FF",
+                      "background": "#fcf8ff",
+                      "surface-bright": "#fcf8ff",
+                      "primary": "#031634",
+                      "on-error-container": "#93000a",
+                      "secondary": "#835500",
+                      "surface-variant": "#e4e1ee",
+                      "on-tertiary-fixed-variant": "#5c4217",
+                      "on-surface": "#1b1b24",
+                      "tertiary": "#221400",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed": "#291800",
+                      "on-secondary": "#ffffff",
+                      "surface-tint": "#4e5e80",
+                      "on-primary-fixed-variant": "#364767",
+                      "tertiary-fixed-dim": "#e7c18a",
+                      "surface-container": "#efecf9",
+                      "on-surface-variant": "#44474e",
+                      "on-primary-container": "#8293b7",
+                      "surface-container-highest": "#e4e1ee",
+                      "on-secondary-fixed-variant": "#633f00",
+                      "outline": "#75777e",
+                      "surface-container-high": "#e9e6f3",
+                      "surface": "#fcf8ff",
+                      "primary-container": "#1a2b4a",
+                      "on-tertiary-fixed": "#281800",
+                      "inverse-on-surface": "#f2effc",
+                      "action-text": "#6B4500",
+                      "on-tertiary-container": "#af8d5b",
+                      "inverse-primary": "#b6c6ee",
+                      "surface-dim": "#dbd8e5",
+                      "primary-fixed": "#d8e2ff",
+                      "on-primary-fixed": "#081b39",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-container": "#3d2700",
+                      "secondary-fixed-dim": "#ffb954",
+                      "primary-fixed-dim": "#b6c6ee",
+                      "surface-container-low": "#f5f2ff",
+                      "surface-white": "#FFFFFF",
+                      "on-background": "#1b1b24",
+                      "error-container": "#ffdad6",
+                      "on-primary": "#ffffff",
+                      "secondary-container": "#feae2c",
+                      "on-secondary-container": "#6b4500",
+                      "secondary-fixed": "#ffddb4",
+                      "inverse-surface": "#302f39",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed": "#ffddaf",
+                      "outline-variant": "#c5c6cf"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "8px",
+                      "margin-desktop": "48px",
+                      "margin-mobile": "16px",
+                      "container-max": "1200px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "display-bold": ["Inter"],
+                      "body-strong": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "body-main": ["Inter"],
+                      "headline-h2": ["Inter"],
+                      "headline-h1-mobile": ["Inter"],
+                      "headline-h1": ["Inter"],
+                      "headline-h3": ["Inter"]
+              },
+              "fontSize": {
+                      "display-bold": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-strong": ["16px", {"lineHeight": "1.6", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "body-main": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-h2": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "headline-h1-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "headline-h1": ["36px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-h3": ["22px", {"lineHeight": "1.4", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background font-body-main text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full h-[72px] bg-surface-white dark:bg-surface-container-highest shadow-[0px_4px_20px_rgba(3,22,52,0.04)] z-50">
+<div class="flex justify-between items-center h-full max-w-container-max mx-auto px-margin-desktop">
+<div class="font-display-bold text-headline-h2 text-primary dark:text-primary-fixed flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-4xl fill-icon">inventory_2</span>
+<span>StrongBox</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary dark:text-on-surface-variant font-body-main hover:text-secondary transition-colors duration-200" href="#">Home</a>
+<a class="text-primary dark:text-on-surface-variant font-body-main hover:text-secondary transition-colors duration-200" href="#">How It Works</a>
+<a class="text-secondary font-body-strong border-b-2 border-secondary pb-1" href="#">Pricing</a>
+<a class="text-primary dark:text-on-surface-variant font-body-main hover:text-secondary transition-colors duration-200" href="#">About</a>
+<a class="text-primary dark:text-on-surface-variant font-body-main hover:text-secondary transition-colors duration-200" href="#">Contact</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-primary-fixed font-body-strong hover:text-secondary transition-colors duration-200">Log In</button>
+<button class="bg-secondary-container text-on-secondary-container h-[48px] px-8 rounded-full font-body-strong hover:shadow-lg transition-all active:scale-95">Get Started Free</button>
+</div>
+</div>
+</header>
+<main class="pt-[72px]">
+<!-- Pricing Hero -->
+<section class="bg-lavender-haze py-24 px-margin-desktop text-center border-b border-primary/5">
+<div class="max-w-3xl mx-auto">
+<span class="font-label-caps text-label-caps text-secondary mb-4 block uppercase tracking-widest">Pricing Transparency</span>
+<h1 class="font-headline-h1 text-headline-h1 text-primary mb-6">Flexible Volume-Based Pricing</h1>
+<p class="font-body-main text-body-main text-on-surface-variant mb-12">No more paying for empty space. With StrongBox, you only pay for exactly what you store. Scalable solutions that grow and shrink with your needs.</p>
+</div>
+<!-- How We Charge -->
+<div class="max-w-container-max mx-auto">
+<h2 class="font-headline-h2 text-headline-h2 text-primary mb-10">How We Charge</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Boxes Volume -->
+<div class="bg-surface-white p-8 rounded-2xl shadow-[0px_4px_20px_rgba(3,22,52,0.04)] border border-primary/5 text-left">
+<div class="flex items-start gap-4 mb-6">
+<div class="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">inventory_2</span>
+</div>
+<div>
+<h3 class="font-headline-h3 text-headline-h3 text-primary mb-1">StrongBox Units</h3>
+<p class="text-on-surface-variant text-sm font-body-main">Choose the size that fits your items. Charged per unit per month.</p>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center p-4 bg-background rounded-xl border border-primary/5">
+<span class="font-body-strong">Small Box (45L)</span>
+<span class="text-secondary font-bold">R195/mo</span>
+</div>
+<div class="flex justify-between items-center p-4 bg-background rounded-xl border border-primary/5">
+<span class="font-body-strong">Medium Box (80L)</span>
+<span class="text-secondary font-bold">R295/mo</span>
+</div>
+<div class="flex justify-between items-center p-4 bg-background rounded-xl border border-primary/5">
+<span class="font-body-strong">Large Box (120L)</span>
+<span class="text-secondary font-bold">R395/mo</span>
+</div>
+<div class="flex justify-between items-center p-4 bg-background rounded-xl border border-primary/5">
+<span class="font-body-strong">XL Heavy-Duty Box</span>
+<span class="text-secondary font-bold">R595/mo</span>
+</div>
+</div>
+</div>
+<!-- Loose Items Volume -->
+<div class="bg-surface-white p-8 rounded-2xl shadow-[0px_4px_20px_rgba(3,22,52,0.04)] border border-primary/5 text-left">
+<div class="flex items-start gap-4 mb-6">
+<div class="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">chair</span>
+</div>
+<div>
+<h3 class="font-headline-h3 text-headline-h3 text-primary mb-1">Loose Items</h3>
+<p class="text-on-surface-variant text-sm font-body-main">Items too big for a box are charged based on their unique dimensions.</p>
+</div>
+</div>
+<div class="p-6 bg-secondary/5 rounded-xl border border-secondary/10 flex flex-col justify-center h-[264px] text-center">
+<p class="font-body-main text-on-surface italic mb-4">"Bikes, golf clubs, surfboards, or single furniture items—we calculate the exact space they occupy to ensure you get the fairest price in Cape Town."</p>
+<div class="flex justify-center gap-8 mt-4">
+<div class="text-center">
+<span class="material-symbols-outlined text-secondary block mb-1">pedal_bike</span>
+<span class="text-xs font-label-caps opacity-60">GEAR</span>
+</div>
+<div class="text-center">
+<span class="material-symbols-outlined text-secondary block mb-1">weekend</span>
+<span class="text-xs font-label-caps opacity-60">FURNITURE</span>
+</div>
+<div class="text-center">
+<span class="material-symbols-outlined text-secondary block mb-1">fitness_center</span>
+<span class="text-xs font-label-caps opacity-60">EQUIPMENT</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Calculator - NOW ELEVATED PRIMARY TOOL -->
+<section class="py-24 px-margin-desktop bg-surface-white" id="calculator">
+<div class="max-w-container-max mx-auto">
+<div class="mb-12 text-center">
+<span class="font-label-caps text-label-caps text-secondary mb-4 block">COST ESTIMATOR</span>
+<h2 class="font-headline-h2 text-headline-h2 text-primary mb-4">Calculate Your Custom Quote</h2>
+<p class="text-on-surface-variant max-w-xl mx-auto font-body-main text-lg">Use our interactive tool to build your storage plan. See exactly what you'll pay before you book.</p>
+</div>
+<div class="bg-surface-white rounded-3xl shadow-[0px_10px_40px_rgba(3,22,52,0.08)] overflow-hidden grid grid-cols-1 lg:grid-cols-12 border border-primary/5">
+<!-- Calculator Left -->
+<div class="lg:col-span-7 p-10 lg:p-14 space-y-12">
+<!-- Boxes Selection -->
+<div>
+<h4 class="font-body-strong text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">package_2</span>
+                            1. Select StrongBoxes &amp; Sizes
+                        </h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 border rounded-xl border-primary/10 flex justify-between items-center">
+<div>
+<p class="font-body-strong text-sm">Small (45L)</p>
+<p class="text-xs text-on-surface-variant">R195/mo</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">-</button>
+<span class="font-bold">2</span>
+<button class="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">+</button>
+</div>
+</div>
+<div class="p-4 border rounded-xl border-primary/10 flex justify-between items-center">
+<div>
+<p class="font-body-strong text-sm">Medium (80L)</p>
+<p class="text-xs text-on-surface-variant">R295/mo</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">-</button>
+<span class="font-bold">4</span>
+<button class="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Loose Items -->
+<div>
+<h4 class="font-body-strong text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">chair</span>
+                            2. Add Loose Items
+                        </h4>
+<div class="space-y-4">
+<div class="flex justify-between items-center p-4 bg-background rounded-xl border border-primary/5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary/60">pedal_bike</span>
+<span class="font-body-main">Mountain Bike</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-body-strong">R120/mo</span>
+<button class="text-error hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<button class="w-full py-4 border-2 border-dashed border-primary/20 rounded-xl text-primary/60 font-body-strong flex items-center justify-center gap-2 hover:border-secondary hover:text-secondary hover:bg-secondary/5 transition-all">
+<span class="material-symbols-outlined">add</span>
+                                Add Loose Item
+                            </button>
+</div>
+</div>
+<!-- Vehicle Radio -->
+<div>
+<h4 class="font-body-strong text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">local_shipping</span>
+                            3. Choose Pickup Vehicle
+                        </h4>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<label class="cursor-pointer group">
+<input checked="" class="hidden peer" name="vehicle" type="radio"/>
+<div class="p-4 border-2 border-primary/5 rounded-xl text-center transition-all peer-checked:border-secondary peer-checked:bg-secondary/5 group-hover:bg-primary/5">
+<span class="material-symbols-outlined text-3xl mb-2 text-primary/40 group-hover:text-secondary peer-checked:text-secondary">airport_shuttle</span>
+<p class="font-body-strong text-sm">Small Van</p>
+<p class="text-xs text-on-surface-variant">R250 once-off</p>
+</div>
+</label>
+<label class="cursor-pointer group">
+<input class="hidden peer" name="vehicle" type="radio"/>
+<div class="p-4 border-2 border-primary/5 rounded-xl text-center transition-all peer-checked:border-secondary peer-checked:bg-secondary/5 group-hover:bg-primary/5">
+<span class="material-symbols-outlined text-3xl mb-2 text-primary/40 group-hover:text-secondary peer-checked:text-secondary">open_in_full</span>
+<p class="font-body-strong text-sm">Medium Truck</p>
+<p class="text-xs text-on-surface-variant">R450 once-off</p>
+</div>
+</label>
+<label class="cursor-pointer group">
+<input class="hidden peer" name="vehicle" type="radio"/>
+<div class="p-4 border-2 border-primary/5 rounded-xl text-center transition-all peer-checked:border-secondary peer-checked:bg-secondary/5 group-hover:bg-primary/5">
+<span class="material-symbols-outlined text-3xl mb-2 text-primary/40 group-hover:text-secondary peer-checked:text-secondary">local_shipping</span>
+<p class="font-body-strong text-sm">Large Fleet</p>
+<p class="text-xs text-on-surface-variant">R850 once-off</p>
+</div>
+</label>
+</div>
+</div>
+</div>
+<!-- Calculator Right Summary -->
+<div class="lg:col-span-5 bg-primary p-10 lg:p-14 text-white flex flex-col justify-between">
+<div>
+<h3 class="font-headline-h3 text-headline-h3 mb-8">Estimated Summary</h3>
+<div class="space-y-6 opacity-90 border-b border-white/10 pb-8">
+<div class="flex justify-between">
+<span>Total Box Storage (Monthly)</span>
+<span class="font-bold">R1,570</span>
+</div>
+<div class="flex justify-between">
+<span>Loose Items (Monthly)</span>
+<span class="font-bold">R120</span>
+</div>
+<div class="flex justify-between">
+<span>Small Van Pickup (Once)</span>
+<span class="font-bold">R250</span>
+</div>
+</div>
+</div>
+<div class="pt-8">
+<div class="flex justify-between items-end mb-8">
+<div>
+<p class="text-xs font-label-caps opacity-60 mb-1">EST. TOTAL MONTHLY</p>
+<p class="text-5xl font-extrabold text-secondary-fixed">R1,690</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-label-caps opacity-60 mb-1">INITIAL PICKUP</p>
+<p class="text-2xl font-bold">R250</p>
+</div>
+</div>
+<button class="w-full h-[64px] bg-secondary-container text-on-secondary-container rounded-xl font-body-strong text-lg shadow-lg hover:bg-secondary-fixed transition-colors flex items-center justify-center gap-3 active:scale-95">
+<span>Book Your Pickup</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<p class="text-center text-xs opacity-50 mt-6 italic">Prices inclusive of 15% VAT. Terms and conditions apply.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature Comparison (Updated for volume model) -->
+<section class="py-24 px-margin-desktop bg-lavender-haze/30">
+<div class="max-w-container-max mx-auto overflow-x-auto">
+<h3 class="font-headline-h3 text-primary mb-8">Standard Benefits for All Customers</h3>
+<table class="w-full text-left border-collapse bg-white rounded-xl overflow-hidden shadow-sm">
+<tbody class="font-body-main">
+<tr class="border-b border-primary/5 hover:bg-lavender-haze/30 transition-colors">
+<td class="py-5 px-6 font-body-strong w-1/2">Climate Controlled Storage</td>
+<td class="py-5 px-6 text-green-600 flex items-center gap-2"><span class="material-symbols-outlined">check_circle</span> Included</td>
+</tr>
+<tr class="border-b border-primary/5 hover:bg-lavender-haze/30 transition-colors">
+<td class="py-5 px-6 font-body-strong">Photo Cataloging (Digital Inventory)</td>
+<td class="py-5 px-6 text-green-600 flex items-center gap-2"><span class="material-symbols-outlined">check_circle</span> Included</td>
+</tr>
+<tr class="border-b border-primary/5 hover:bg-lavender-haze/30 transition-colors">
+<td class="py-5 px-6 font-body-strong">Insurance Value (Up to R25,000)</td>
+<td class="py-5 px-6 text-green-600 flex items-center gap-2"><span class="material-symbols-outlined">check_circle</span> Included</td>
+</tr>
+<tr class="border-b border-primary/5 hover:bg-lavender-haze/30 transition-colors">
+<td class="py-5 px-6 font-body-strong">Next-Day Delivery Notice</td>
+<td class="py-5 px-6 text-green-600 flex items-center gap-2"><span class="material-symbols-outlined">check_circle</span> Included</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 px-margin-desktop bg-surface-white relative overflow-hidden">
+<div class="max-w-container-max mx-auto bg-primary rounded-[32px] p-16 relative z-10 text-center">
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0); background-size: 32px 32px;"></div>
+<h2 class="font-headline-h1 text-headline-h1 text-white mb-6">Ready to reclaim your space?</h2>
+<p class="text-white/70 max-w-2xl mx-auto mb-10 text-lg">Join 1,000+ Cape Town residents who have extended their closets with StrongBox. Secure, valet-managed, and 100% stress-free.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-secondary-container text-on-secondary-container h-[56px] px-12 rounded-full font-body-strong text-lg hover:shadow-xl transition-all">Get Started Today</button>
+<button class="bg-transparent border-2 border-white/30 text-white h-[56px] px-12 rounded-full font-body-strong text-lg hover:bg-white/10 transition-all">Schedule a Consult</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-16 pb-8 bg-primary dark:bg-primary-container border-t-4 border-secondary">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div>
+<div class="font-display-bold text-headline-h3 text-surface-white mb-6">StrongBox</div>
+<p class="text-surface-variant/60 mb-8 max-w-xs">The Extended Closet for premium Cape Town living. Valet-delivered, secure, and digitally cataloged storage solutions.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-secondary transition-colors" href="#"><span class="material-symbols-outlined">qr_code_2</span></a>
+<a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-secondary transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-secondary transition-colors" href="#"><span class="material-symbols-outlined">group</span></a>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div>
+<h5 class="font-label-caps text-label-caps text-secondary-fixed mb-6 uppercase tracking-widest">Company</h5>
+<ul class="space-y-4">
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors" href="#">Home</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors font-bold text-secondary-fixed" href="#">Pricing</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors" href="#">About</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label-caps text-label-caps text-secondary-fixed mb-6 uppercase tracking-widest">Support</h5>
+<ul class="space-y-4">
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors" href="#">How It Works</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors" href="#">FAQ</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div>
+<h5 class="font-label-caps text-label-caps text-secondary-fixed mb-6 uppercase tracking-widest">Contact</h5>
+<ul class="space-y-4 text-surface-variant/60">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed">mail</span>
+                    hello@strongbox.co.za
+                </li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed">call</span>
+                    +27 (21) 555-0123
+                </li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed">location_on</span>
+                    Waterfront, Cape Town, 8001
+                </li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop mt-16 pt-8 border-t border-white/5 text-center">
+<p class="text-surface-variant/60 font-body-main text-sm">© 2024 StrongBox Valet Storage. All rights reserved.</p>
+</div>
+</footer>
+<script>
+    // Micro-interactions for interactive elements
+    document.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            this.classList.add('scale-95');
+            setTimeout(() => this.classList.remove('scale-95'), 150);
+        });
+    });
+</script>
+</body></html>

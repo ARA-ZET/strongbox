@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox Logistics - Driver Jobs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#fcf8ff",
+                    "primary-container": "#1a2b4a",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed": "#081b39",
+                    "surface-container": "#efecff",
+                    "tertiary-container": "#003316",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#44474e",
+                    "tertiary-fixed-dim": "#4ae183",
+                    "surface-dim": "#dad7f3",
+                    "inverse-surface": "#2f2e43",
+                    "surface-tint": "#4e5e80",
+                    "on-tertiary-fixed": "#00210c",
+                    "on-primary-fixed-variant": "#364767",
+                    "secondary": "#835500",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "secondary-fixed-dim": "#ffb955",
+                    "tertiary": "#001c09",
+                    "surface-container-high": "#e8e5ff",
+                    "inverse-on-surface": "#f2efff",
+                    "on-surface": "#1a1a2e",
+                    "on-error-container": "#93000a",
+                    "outline-variant": "#c5c6cf",
+                    "on-primary-container": "#8293b7",
+                    "secondary-container": "#feae2c",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed-dim": "#b6c6ee",
+                    "outline": "#75777e",
+                    "surface-container-low": "#f5f2ff",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#291800",
+                    "surface-bright": "#fcf8ff",
+                    "primary-fixed": "#d8e2ff",
+                    "inverse-primary": "#b6c6ee",
+                    "on-tertiary-fixed-variant": "#005228",
+                    "primary": "#031634",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#e2e0fc",
+                    "on-tertiary-container": "#00a858",
+                    "secondary-fixed": "#ffddb4",
+                    "surface-variant": "#e2e0fc",
+                    "on-background": "#1a1a2e",
+                    "on-secondary-container": "#6b4500",
+                    "surface": "#fcf8ff",
+                    "tertiary-fixed": "#6bfe9c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "3xl": "64px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "lg": "24px",
+                    "2xl": "48px",
+                    "margin": "24px",
+                    "gutter": "16px",
+                    "md": "16px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "label-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 224, 252, 0.5);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-3xl">
+<!-- Top Navigation Anchor -->
+<header class="md:hidden fixed top-0 left-0 w-full bg-background z-40 px-margin h-16 flex items-center justify-between border-b border-outline-variant">
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">StrongBox</h1>
+<div class="flex gap-md">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[20px]">person</span>
+</div>
+</div>
+</header>
+<main class="pt-20 px-margin">
+<!-- Header & Greetings -->
+<section class="mb-lg">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight">Active Jobs</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Route: Sector 7G • Truck 402</p>
+</section>
+<!-- Tabs -->
+<div class="flex p-1 bg-surface-container rounded-xl mb-lg">
+<button class="flex-1 py-2 rounded-lg bg-surface-container-lowest shadow-sm font-label-lg text-label-lg text-primary">Today</button>
+<button class="flex-1 py-2 rounded-lg font-label-lg text-label-lg text-on-surface-variant">Upcoming</button>
+</div>
+<!-- Job List -->
+<div class="space-y-md">
+<!-- Job Card 1 -->
+<div class="glass-card p-md rounded-xl shadow-sm border border-outline-variant flex flex-col gap-md transition-transform active:scale-[0.98]">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md bg-secondary-container/10 text-on-secondary-container px-2 py-1 rounded-full w-fit mb-2 border border-secondary-container/20">Pickup</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Alice M.</h3>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-headline-sm text-headline-sm text-primary">10:00 AM</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Stop #1</span>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">location_on</span>
+<p class="font-body-md text-body-md text-on-surface-variant">123 Maple St, North District</p>
+</div>
+<div class="flex justify-between items-center pt-sm border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">inventory_2</span>
+<span class="font-label-lg text-label-lg text-on-surface">3 Boxes</span>
+</div>
+<div class="flex items-center gap-sm bg-secondary-container/20 px-3 py-1 rounded-full">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="font-label-md text-label-md text-on-secondary-container font-bold">In Transit</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-lg text-label-lg flex items-center justify-center gap-sm mt-1">
+<span class="material-symbols-outlined text-[20px]">directions</span>
+                    Start Navigation
+                </button>
+</div>
+<!-- Job Card 2 -->
+<div class="glass-card p-md rounded-xl shadow-sm border border-outline-variant flex flex-col gap-md opacity-90">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md bg-tertiary-fixed/20 text-on-tertiary-fixed-variant px-2 py-1 rounded-full w-fit mb-2 border border-tertiary-fixed/30">Delivery</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Bob's Workshop</h3>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-headline-sm text-headline-sm text-primary">11:15 AM</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Stop #2</span>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">location_on</span>
+<p class="font-body-md text-body-md text-on-surface-variant">456 Industrial Pkwy, Bldg B</p>
+</div>
+<div class="flex justify-between items-center pt-sm border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">inventory_2</span>
+<span class="font-label-lg text-label-lg text-on-surface">1 Heavy Pallet</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-3 py-1 rounded-full">Pending</span>
+</div>
+</div>
+<!-- Visual Break/Graphic -->
+<div class="relative h-32 rounded-xl overflow-hidden mt-xl mb-md">
+<div class="absolute inset-0 bg-primary-container"></div>
+
+<div class="absolute inset-0 p-md flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" data-weight="fill">qr_code_scanner</span>
+</div>
+<div>
+<p class="text-white font-label-lg text-label-lg">Ready to scan?</p>
+<p class="text-on-primary-container font-body-sm text-body-sm">Sync with warehouse in one tap</p>
+</div>
+</div>
+</div>
+<!-- Job Card 3 -->
+<div class="glass-card p-md rounded-xl shadow-sm border border-outline-variant flex flex-col gap-md opacity-90">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md bg-secondary-container/10 text-on-secondary-container px-2 py-1 rounded-full w-fit mb-2 border border-secondary-container/20">Pickup</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Charlie Logistics</h3>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-headline-sm text-headline-sm text-primary">1:30 PM</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Stop #3</span>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">location_on</span>
+<p class="font-body-md text-body-md text-on-surface-variant">88 Ocean View Terrace</p>
+</div>
+<div class="flex justify-between items-center pt-sm border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">inventory_2</span>
+<span class="font-label-lg text-label-lg text-on-surface">12 Units</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-3 py-1 rounded-full">Pending</span>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for Quick Actions -->
+<div class="fixed bottom-24 right-margin z-50">
+<button class="w-14 h-14 rounded-2xl bg-secondary-container text-on-secondary-container shadow-xl flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[32px]">qr_code_scanner</span>
+</button>
+</div>
+<!-- Bottom Navigation Shell (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-surface flex justify-around items-center px-gutter pb-4 pt-2 shadow-lg border-t border-outline-variant rounded-t-xl">
+<!-- Jobs Tab (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<span class="font-label-md text-label-md">Jobs</span>
+</a>
+<!-- Scan Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-container-highest transition-colors px-4" href="#">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+<span class="font-label-md text-label-md">Scan</span>
+</a>
+<!-- Inventory Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-container-highest transition-colors px-4" href="#">
+<span class="material-symbols-outlined">box</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<!-- Account Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-container-highest transition-colors px-4" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Account</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.backgroundColor = 'rgba(239, 236, 255, 0.9)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.backgroundColor = 'rgba(255, 255, 255, 0.85)';
+            });
+        });
+
+        // Tab switching logic (visual only)
+        const tabButtons = document.querySelectorAll('.bg-surface-container button');
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabButtons.forEach(b => {
+                    b.classList.remove('bg-surface-container-lowest', 'shadow-sm', 'text-primary');
+                    b.classList.add('text-on-surface-variant');
+                });
+                btn.classList.add('bg-surface-container-lowest', 'shadow-sm', 'text-primary');
+                btn.classList.remove('text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

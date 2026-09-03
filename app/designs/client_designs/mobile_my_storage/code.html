@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox - My Storage</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#031634",
+                    "surface-container-lowest": "#ffffff",
+                    "on-background": "#1b1b24",
+                    "background": "#fcf8ff",
+                    "secondary-container": "#feae2c",
+                    "on-tertiary-fixed-variant": "#633f00",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#ffddb4",
+                    "on-secondary-container": "#6b4500",
+                    "tertiary-fixed-dim": "#f4bd71",
+                    "primary-fixed": "#d8e2ff",
+                    "inverse-on-surface": "#f2effc",
+                    "on-primary-container": "#8293b7",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#efecf9",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ffddb3",
+                    "surface-container-high": "#e9e6f3",
+                    "surface-dim": "#dbd8e5",
+                    "on-tertiary-fixed": "#291800",
+                    "on-secondary": "#ffffff",
+                    "tertiary": "#231300",
+                    "on-surface-variant": "#44474e",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#e4e1ee",
+                    "on-tertiary-container": "#ba8943",
+                    "on-primary-fixed-variant": "#364767",
+                    "secondary-fixed-dim": "#ffb954",
+                    "outline": "#75777e",
+                    "surface-tint": "#4e5e80",
+                    "surface-container-highest": "#e4e1ee",
+                    "surface-container-low": "#f5f2ff",
+                    "surface": "#fcf8ff",
+                    "surface-bright": "#fcf8ff",
+                    "secondary": "#835500",
+                    "primary-fixed-dim": "#b6c6ee",
+                    "inverse-surface": "#302f39",
+                    "on-secondary-fixed": "#291800",
+                    "tertiary-container": "#3e2600",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#b6c6ee",
+                    "on-primary-fixed": "#081b39",
+                    "on-surface": "#1b1b24",
+                    "primary-container": "#1a2b4a",
+                    "outline-variant": "#c5c6cf",
+                    "on-secondary-fixed-variant": "#633f00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "mobile-padding": "16px",
+                    "section-gap": "32px",
+                    "component-gap": "8px",
+                    "desktop-padding": "24px"
+            },
+            "fontFamily": {
+                    "label": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "headline": ["Inter"],
+                    "display-mobile": ["Inter"],
+                    "caption": ["Inter"],
+                    "title": ["Inter"]
+            },
+            "fontSize": {
+                    "label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "display": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "label-mobile": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-mobile": ["20px", {"lineHeight": "24px", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        .filter-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body min-h-screen pb-24">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-mobile-padding h-[64px] bg-surface-container-lowest shadow-sm">
+<div class="flex items-center gap-2">
+<div class="bg-secondary-container p-1 rounded-sm">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</div>
+<span class="text-headline-mobile font-headline-mobile text-primary tracking-tight">StrongBox</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-secondary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a mid-40s male client with a sharp, corporate look. He is wearing a dark navy suit against a clean, soft-focus office background that matches the StrongBox professional and secure aesthetic. The lighting is bright and even, highlighting a trustworthy and reliable personality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-rhbjrHdT3hv6YjLhTxyr4Hl3pY80YsU9g2kbUHfmEhoYYojpiDLReVlnmmRJbzdUq9LQ0hZuzX7zIgcq8Hy_hEsaqyVv8t5NucnMB7zp49S0VuuXZVjbkLvslSUtvBZj2b2xI50h14m8bmhz_JCc6fFHCleIiiW4xVqGmF1c-2dzsn7riOZWtR5dJwXvuOvyp7wOuIwrDiFxM1toroG-U5lrYFHF7ovlNLCiXco2sGq5R-yZ5ILCj8G5HK9JGU1tL6_eKMWDjKj-"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="mt-[64px] px-mobile-padding pt-6">
+<!-- Headline Section -->
+<div class="mb-6">
+<h1 class="font-display-mobile text-display-mobile text-primary mb-4">My Storage</h1>
+<!-- Pill Search Bar -->
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full h-12 pl-12 pr-4 bg-surface-container rounded-full border-none focus:ring-2 focus:ring-secondary-container transition-all text-on-surface font-body" placeholder="Search storage units, IDs..." type="text"/>
+</div>
+</div>
+<!-- Filter Chips (Horizontal Scroll) -->
+<div class="flex gap-2 overflow-x-auto filter-scroll pb-4 -mx-mobile-padding px-mobile-padding">
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-primary text-white font-label text-label transition-all active:scale-95 shadow-md">All</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-label border border-outline-variant hover:bg-surface-container-highest transition-all active:scale-95">In Storage</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-label border border-outline-variant hover:bg-surface-container-highest transition-all active:scale-95">In Transit</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-label border border-outline-variant hover:bg-surface-container-highest transition-all active:scale-95">Pending Pickup</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-label border border-outline-variant hover:bg-surface-container-highest transition-all active:scale-95">Delivered</button>
+</div>
+<!-- Storage Units List/Grid -->
+<div class="flex flex-col gap-gutter mt-2">
+<!-- Storage Card 1: In Storage -->
+<div class="bg-surface-container-lowest rounded-xl p-3 flex gap-4 border border-outline-variant shadow-sm hover:shadow-md transition-shadow active:scale-[0.98]">
+<div class="relative w-[120px] h-[120px] rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A high-quality studio photograph of a premium metal climate-controlled storage container inside a high-tech warehouse. The lighting is clean and professional with a blue-toned industrial mood that feels secure and modern. The container is organized and reflects the high-value logistics management theme of the StrongBox application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBCrvn5H_VsV6EBaV7Fedly11mPXJzU8MVGY3T7gsIDQ47XSjaoIBqC69wGV4YWEqpgmrSw1QowLxl4tdHvNb1V6Gi7h29RaKV2HZske0o0yAahx7xDIlp_FhkNGxZjVFDcYtPlb832oT2Dxu7zdZ9o4AG7xo5SKp3UtjSBPkfbK6fdvPcV5T1jCjg3oRJ8Fyz_SPuEamoEKzaUDBiEhvHDtPHAOdFTmsDv2ErVAILxo5cIXu1YMO9pSNsHla8_gnE2mjOc0nepAA9"/>
+<!-- Status Chip Overlay -->
+<div class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                        In Storage
+                    </div>
+</div>
+<div class="flex flex-col justify-between py-1 flex-1">
+<div>
+<div class="flex justify-between items-start mb-1">
+<span class="bg-secondary-container/20 text-secondary px-2 py-0.5 rounded text-[10px] font-bold uppercase">Vault Unit</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">more_vert</span>
+</div>
+<h3 class="font-title text-title text-primary leading-tight">Executive Archive Alpha</h3>
+<p class="font-caption text-caption text-on-surface-variant mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">tag</span>
+                            ST-2940-V
+                        </p>
+</div>
+<div class="flex justify-between items-end">
+<p class="font-caption text-caption text-outline italic">Updated 2h ago</p>
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Storage Card 2: In Transit -->
+<div class="bg-surface-container-lowest rounded-xl p-3 flex gap-4 border border-outline-variant shadow-sm hover:shadow-md transition-shadow active:scale-[0.98]">
+<div class="relative w-[120px] h-[120px] rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional wide shot of a sleek, white logistics delivery truck traveling along a well-lit highway during dusk. The sky is a gradient of deep orange and soft blue. The overall mood is reliable and efficient, emphasizing the 'In Transit' status within the StrongBox application. The image is crisp and conveys the security and speed of the service." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMCxAKoUlicJB2lnglwW1JtK1BUUx8-lrr8yIoYdNkvcl9caV6LUF0dVmIpbgsAOUHls4aqe2-Hx6D9-PuKxpvwDsdF40-23ALtZ6nvHdqOhNTX_TMDuwY25riRa5parSZf_X809BxWHLSUgA0UwUdQbKt5vu1wmqVDCXkhUtLprpdg7pfnlqR_ue5hfJAUIlKACh8SYZ_NCOaLHIgiwA660sLhN_OQFxOmapmd-sWA9KlCXrPV46S5pd12d1_7RxkkwxOWnkSRiV1"/>
+<div class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                        In Transit
+                    </div>
+</div>
+<div class="flex flex-col justify-between py-1 flex-1">
+<div>
+<div class="flex justify-between items-start mb-1">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-bold uppercase">Standard</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">more_vert</span>
+</div>
+<h3 class="font-title text-title text-primary leading-tight">Seasonal Inventory B</h3>
+<p class="font-caption text-caption text-on-surface-variant mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">tag</span>
+                            ST-5512-S
+                        </p>
+</div>
+<div class="flex justify-between items-end">
+<p class="font-caption text-caption text-outline italic">Updated 45m ago</p>
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Storage Card 3: Pending Pickup -->
+<div class="bg-surface-container-lowest rounded-xl p-3 flex gap-4 border border-outline-variant shadow-sm hover:shadow-md transition-shadow active:scale-[0.98]">
+<div class="relative w-[120px] h-[120px] rounded-lg overflow-hidden flex-shrink-0 opacity-80">
+<img class="w-full h-full object-cover" data-alt="A clean top-down view of several neatly packed brown shipping boxes with professional logistics labels sitting on a polished concrete warehouse floor. The lighting is bright and even, highlighting the readiness and order of the shipment. This imagery reflects the pending pickup phase of the logistics management system with a focus on precision and security." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF1iP71kAtggGOXPI01d4LKaCYyMKgcFVbVYrL19J1lPllgsvtYAA8CScepaKXv_SuKjwgcGBOAnQ8ATewSUe_80l9YJ-kFFPkGCEe1c9BN4WZSAqB7V3Yt8zf7uqkY4A8EFxv0jkqSfwRR3YtStjMwCtBiC9fyKDMsqGZnAKmMU3ZdtXpXR0X5xPpg9Dz1m4d-peGNic88PndcfryohTVoHmf2SoVi1-MGOb_0DIh7zWPZSVvXg6zLTwIg2Cb--EV_d9Qob2A9vCS"/>
+<div class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                        Pending Pickup
+                    </div>
+</div>
+<div class="flex flex-col justify-between py-1 flex-1">
+<div>
+<div class="flex justify-between items-start mb-1">
+<span class="bg-secondary-container/20 text-secondary px-2 py-0.5 rounded text-[10px] font-bold uppercase">Furniture</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">more_vert</span>
+</div>
+<h3 class="font-title text-title text-primary leading-tight">Office Relocation Kit</h3>
+<p class="font-caption text-caption text-on-surface-variant mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">tag</span>
+                            ST-8890-F
+                        </p>
+</div>
+<div class="flex justify-between items-end">
+<p class="font-caption text-caption text-outline italic">Updated 5h ago</p>
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Storage Card 4: In Storage -->
+<div class="bg-surface-container-lowest rounded-xl p-3 flex gap-4 border border-outline-variant shadow-sm hover:shadow-md transition-shadow active:scale-[0.98]">
+<div class="relative w-[120px] h-[120px] rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="An interior shot of a sterile, ultra-secure climate-controlled locker room with metallic silver finishes and bright LED strips along the floor. The setting is highly futuristic and corporate, emphasizing the reliability and security of the storage facilities. Each locker is labeled with digital numbers, conveying a sense of organized, high-value asset management." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7I--a_KJg9HNRvW9dty73mXICzG0sVw6z_ttfLva-s2nvLVgllupeDu4JAEfp870Pj4k2B4ay17ZgXDjKgbaChYwgRiEFosbfQwVydaTWcs7NBV_5VVCr3eta2qrdxgg_FUg-4jzGzIYBq5Xltpyh51Yi6chwtL5y4M1TLk-lJDxVFxOIFR9H5ssxK-h8qr3atf7unKP8qLMkC0145tBvdbE78n_b8oK2NUpcV2LeiRLwwzDtCkUr5XPSX1gNjG1cuP-ZxNPu353w"/>
+<div class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                        In Storage
+                    </div>
+</div>
+<div class="flex flex-col justify-between py-1 flex-1">
+<div>
+<div class="flex justify-between items-start mb-1">
+<span class="bg-secondary-container/20 text-secondary px-2 py-0.5 rounded text-[10px] font-bold uppercase">Vault Unit</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">more_vert</span>
+</div>
+<h3 class="font-title text-title text-primary leading-tight">High-Value Assets 04</h3>
+<p class="font-caption text-caption text-on-surface-variant mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">tag</span>
+                            ST-1104-V
+                        </p>
+</div>
+<div class="flex justify-between items-end">
+<p class="font-caption text-caption text-outline italic">Updated 12h ago</p>
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Add New CTA (Floating Logic for Mobile) -->
+<div class="fixed bottom-24 right-6">
+<button class="w-14 h-14 bg-secondary-container text-on-secondary-container rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-mobile-padding py-component-gap md:hidden bg-surface-container-lowest shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl h-[72px]">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<span class="font-label-mobile text-label-mobile mt-1">Home</span>
+</button>
+<!-- Active Tab: Storage -->
+<button class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-surface-container-low transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-mobile text-label-mobile mt-1">Storage</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[24px]">local_shipping</span>
+<span class="font-label-mobile text-label-mobile mt-1">Requests</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="font-label-mobile text-label-mobile mt-1">Account</span>
+</button>
+</nav>
+<script>
+        // Simple Interaction logic for filter chips
+        const filterChips = document.querySelectorAll('.filter-scroll button');
+        filterChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                filterChips.forEach(c => {
+                    c.classList.remove('bg-primary', 'text-white', 'shadow-md');
+                    c.classList.add('bg-surface-container-high', 'text-on-surface-variant', 'border', 'border-outline-variant');
+                });
+                chip.classList.remove('bg-surface-container-high', 'text-on-surface-variant', 'border', 'border-outline-variant');
+                chip.classList.add('bg-primary', 'text-white', 'shadow-md');
+            });
+        });
+    </script>
+</body></html>

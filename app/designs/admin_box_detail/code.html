@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Box Detail - StrongBox Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2f2e43",
+                        "tertiary-fixed": "#6bfe9c",
+                        "outline-variant": "#c5c6cf",
+                        "on-background": "#1a1a2e",
+                        "tertiary": "#001c09",
+                        "primary-container": "#1a2b4a",
+                        "on-tertiary-fixed": "#00210c",
+                        "background": "#fcf8ff",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "inverse-on-surface": "#f2efff",
+                        "surface-variant": "#e2e0fc",
+                        "surface-container-high": "#e8e5ff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "surface": "#fcf8ff",
+                        "secondary-container": "#feae2c",
+                        "outline": "#75777e",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffddb4",
+                        "surface-tint": "#4e5e80",
+                        "on-primary-container": "#8293b7",
+                        "surface-dim": "#dad7f3",
+                        "surface-container-highest": "#e2e0fc",
+                        "surface-container-low": "#f5f2ff",
+                        "primary": "#031634",
+                        "on-surface": "#1a1a2e",
+                        "tertiary-container": "#003316",
+                        "on-primary-fixed-variant": "#364767",
+                        "secondary-fixed-dim": "#ffb955",
+                        "on-surface-variant": "#44474e",
+                        "on-primary-fixed": "#081b39",
+                        "secondary": "#835500",
+                        "inverse-primary": "#b6c6ee",
+                        "on-tertiary-container": "#00a858",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#6b4500",
+                        "on-secondary-fixed": "#291800",
+                        "surface-container": "#efecff",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "surface-bright": "#fcf8ff",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "primary-fixed": "#d8e2ff",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "3xl": "64px",
+                        "2xl": "48px",
+                        "margin": "24px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24 md:pb-0">
+<!-- TopNavBar (Desktop) -->
+<header class="hidden md:flex justify-between items-center w-full px-margin h-16 bg-background border-b border-outline-variant fixed top-0 z-50">
+<div class="flex items-center gap-lg">
+<span class="font-headline-lg text-headline-lg font-black text-primary">StrongBox Logistics</span>
+<nav class="flex gap-md">
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors font-label-lg text-label-lg px-2 py-1 rounded" href="#">Dashboard</a>
+<a class="text-secondary-container font-bold border-b-2 border-secondary-container pb-1 font-label-lg text-label-lg" href="#">Inventory</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors font-label-lg text-label-lg px-2 py-1 rounded" href="#">Shipments</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container rounded-full">notifications</button>
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container rounded-full">person</button>
+</div>
+</header>
+<!-- SideNavBar (Desktop) -->
+<aside class="hidden md:flex flex-col h-screen fixed left-0 top-0 w-64 bg-primary-container text-on-primary-container border-r border-outline-variant shadow-sm z-40 pt-20">
+<div class="px-gutter mb-lg">
+<h2 class="font-headline-sm text-headline-sm font-bold text-secondary-container">Admin Portal</h2>
+<p class="font-label-md text-label-md text-on-primary-container opacity-80">Logistics Lead</p>
+</div>
+<div class="flex flex-col gap-1 overflow-y-auto flex-grow px-2">
+<a class="flex items-center gap-md text-on-primary-container hover:bg-primary transition-all px-4 py-3 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-md bg-secondary-container text-on-secondary-container rounded-lg px-4 py-3 translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-lg text-label-lg">Inventory</span>
+</a>
+<a class="flex items-center gap-md text-on-primary-container hover:bg-primary transition-all px-4 py-3 rounded-lg" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label-lg text-label-lg">Shipments</span>
+</a>
+<a class="flex items-center gap-md text-on-primary-container hover:bg-primary transition-all px-4 py-3 rounded-lg" href="#">
+<span class="material-symbols-outlined">vibration</span>
+<span class="font-label-lg text-label-lg">Fleet</span>
+</a>
+<a class="flex items-center gap-md text-on-primary-container hover:bg-primary transition-all px-4 py-3 rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-lg text-label-lg">Team</span>
+</a>
+<a class="flex items-center gap-md text-on-primary-container hover:bg-primary transition-all px-4 py-3 rounded-lg" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-lg text-label-lg">Reports</span>
+</a>
+</div>
+<div class="p-gutter border-t border-outline-variant mt-auto">
+<button class="w-full bg-secondary text-on-secondary py-3 rounded-lg font-label-lg text-label-lg flex items-center justify-center gap-2 mb-4">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+                Quick Scan
+            </button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-md text-on-primary-container px-4 py-2 text-sm" href="#"><span class="material-symbols-outlined text-base">settings</span> Settings</a>
+<a class="flex items-center gap-md text-on-primary-container px-4 py-2 text-sm" href="#"><span class="material-symbols-outlined text-base">help</span> Support</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:pl-64 md:pt-16 min-h-screen">
+<div class="max-w-[1200px] mx-auto p-margin md:p-lg space-y-lg">
+<!-- Breadcrumbs & Header Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<nav class="flex items-center gap-xs text-on-surface-variant font-label-md text-label-md mb-2">
+<span>Inventory</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-primary font-bold">Box #SB-1002</span>
+</nav>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Storage Unit #SB-1002</h1>
+</div>
+<div class="flex flex-wrap gap-sm">
+<button class="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg font-label-lg text-label-lg hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">edit</span> Edit Label
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-lg text-label-lg hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">print</span> Print QR
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-error text-error rounded-lg font-label-lg text-label-lg hover:bg-error-container transition-colors">
+<span class="material-symbols-outlined">archive</span> Archive
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Horizontal Photo Gallery (Left 2 Columns) -->
+<div class="lg:col-span-2 space-y-md">
+<div class="bg-surface border border-outline-variant rounded-xl p-md overflow-hidden shadow-sm">
+<div class="flex justify-between items-center mb-sm">
+<h3 class="font-headline-sm text-headline-sm text-primary">Inspection Photos</h3>
+<button class="text-secondary font-label-lg text-label-lg flex items-center">
+<span class="material-symbols-outlined mr-1">add_a_photo</span> Add New
+                            </button>
+</div>
+<div class="flex gap-md overflow-x-auto hide-scrollbar pb-2">
+<div class="flex-shrink-0 w-64 h-48 rounded-lg overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional inspection photograph of a clean, durable navy blue heavy-duty storage container in a well-lit industrial warehouse. The lighting is bright and overhead, highlighting the reinforced structural ribs of the plastic box. The setting is modern and high-efficiency with a soft grey concrete background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk5fvLidDn3X67a83SMRwfiXBZ3IqGtmrz63iQJJU-dGxOFWzXpAg0ZoD9H3rxLo8DxoG0X4HFFGGx8llFasz0jVzgIerQlagYt9beEvERznzr_NgJ23pwziQCr777Jy3QKzF04WedGv2eB58TiYQQi1nVfLuia-5gZW_Cng-Tpd6Yu5E7347l16uMCnvz-QpkjNrh1tovHEGD6h_xVbuhHVTu_d9KBtdlu1YGRmEdw4aOalha_w_K2YB74Fj4hkUpRuWRZVGBX5g"/>
+</div>
+<div class="flex-shrink-0 w-64 h-48 rounded-lg overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A macro shot of the corner of a storage unit showing the high-quality industrial hinge and latching mechanism. The lighting is crisp and focuses on the metallic textures. The overall color palette is professional with navies, silvers, and ambers, reflecting a corporate logistics environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByxiEx_sux3hPhMSDEpCQEyopGWheEwXWdfq_hFIRZ1W2to0tTUy8L6wgkc5JOJAvZIXbiw8Pd-rN4TDWR9_UZ8E4b66FxwjmB7af-XqOOdHpTP7RFTnf7CRxW_59bSV2m3z4O7GxVbc7YmPtgyLg0We01W98rcBy253QX4vl_Hb9lrSYdWI1IJTkF0f-LuvxKc8rF2OYzq5lIkfRJ2Evu9dPRWm52LGH1-AQcKlAhqe5v_QfxnEi8FIy0KWdM0W2LJLJEfme8IsU"/>
+</div>
+<div class="flex-shrink-0 w-64 h-48 rounded-lg overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="An interior view of a storage box SB-1002 showing carefully organized logistic items like handheld scanners and electronic parts. The lighting is clinical and uniform, ensuring every item is clearly visible for inventory tracking. Modern, high-density storage aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiM2jeixX0yJQX_vbpV2h0HSAQngpjpzzSiV1xDcrqf19KXG7lUSu-8uLM4dOuY938LPE3wXijhHhOuYqZzNfdBMUJiMVF0W_3t_oAAxP2vNT8AtuO8VjPh_cmkmbPfeJPALuQ7AfgigIc9VbF8Uu9VDMNM3T-tiMBDxvFDYsndzCcfUvd7qESy7SLACPAnVo-hUbjV5Jw0VW6hIxp2b3Mu8BNi8hWZ8vI1zKSU5-E8hZ984kiT_G6FAH8aIfpBIaUBS-WxtnLxT0"/>
+</div>
+</div>
+</div>
+<!-- Items Inside (For Open Boxes) -->
+<div class="space-y-md">
+<h3 class="font-headline-sm text-headline-sm text-primary">Items Inside</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<!-- Item Card 1 -->
+<div class="bg-surface border border-outline-variant rounded-xl p-md flex items-center gap-md hover:shadow-md transition-shadow">
+<div class="w-20 h-20 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A high-resolution product shot of a Zebra handheld mobile computer scanner on a clean white surface. The lighting is soft and professional. The image reflects a corporate logistics and asset management vibe with high-tech equipment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCsWVI4S4-yLN29I9cW1Sl5JbC0oveA3_zvAxjLTgMGXQURYCCJuZA2eUYB54USz1q2fHH0k30045SXpIvj9n50GiR8xNEDqQyYpiACC0SPeJJ1T4eYNKC-icgweAQlhC3OD-zki9LeX-3QvSjjOopIcxHsxucjqCF07aSP4fNiCB9n2rWis6imCHos-dXFxTvkPXYl-sqTwZC09Vi2n0IxiP2_Ye1uWT9PFnwwHAvHtfG0HBQPA71rzNW97vJ9XQI2q20BH7xzAc"/>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-primary">RF-Scanner Z10</h4>
+<p class="font-label-md text-label-md text-on-surface-variant">Qty: 2 • Serial: #88921</p>
+<span class="inline-block mt-2 px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] rounded font-bold uppercase tracking-wider">Functional</span>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="bg-surface border border-outline-variant rounded-xl p-md flex items-center gap-md hover:shadow-md transition-shadow">
+<div class="w-20 h-20 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A set of high-visibility orange protective cases for fragile logistics equipment, photographed in a bright studio environment. The colors are vibrant and signal urgency and safety. Corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_u13pPpiR86SnTYEy3ahOZ6U8MAUXUi0TMzK2f800Qjuh9kYjomN6pGx3w1tvt6eVaapcyY-YtkZh7KbBhNrAvZ_uPaRDA_6dhUBfKh-A6CJco6O2IKSDndSH6ueEFqihxKBTnlgDUK9wlx4UEQJhS8gzAe5PtDC3sGFRP1TpCSxrRaseCxJAh7JwcvFmLOvvufJxJ54HVIflG0ct2FwVsuRTlv2-3eHvOZpfy6y-Y8EQtdl6bj0mDhFXk81Fe2meZc0q9aQ7AgY"/>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-primary">Impact Protector Case</h4>
+<p class="font-label-md text-label-md text-on-surface-variant">Qty: 5 • New Stock</p>
+<span class="inline-block mt-2 px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed text-[10px] rounded font-bold uppercase tracking-wider">Stocked</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Side Panel (Right Column) -->
+<div class="space-y-lg">
+<!-- QR & Status Card -->
+<div class="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
+<div class="flex flex-col items-center text-center">
+<div class="w-48 h-48 bg-white border-4 border-secondary p-2 rounded-xl mb-md">
+<img class="w-full h-full" data-alt="A high-contrast, clean QR code generated specifically for logistics tracking. The QR code is centered in a white frame with a bold amber border, emphasizing its importance for scanning operations in a fast-paced environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkVNVGsIKtP_O82oiHabNSoSDewHVqRJ9XYiAk0RZlElnMw8kJjSNRRfDIgRVf3PenGWlQYYdZ92kXcQ3AgTnnzG_Cj-FyMcNVMB3IwrdgkRTf6sex74M2LpZBUTzZ71WwbDK2rmK33RvqBMML9Iuc7k9y6GbjHTSpc9aBUX8JxW9_nTmq6EtzV3n8HwBhfqkXFj8RhbbgHt5OngPMlNP3zAN5SWah8H2TBVY4nkk5JG4AG06SbIKkwrJmZgawwKR2VAKA7HMzWBk"/>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-1">SB-1002</h2>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md mb-lg">In Transit: Route 44</span>
+</div>
+<div class="space-y-4 border-t border-outline-variant pt-lg">
+<div class="flex justify-between">
+<span class="text-on-surface-variant font-label-md text-label-md">Unique ID</span>
+<span class="text-primary font-label-lg text-label-lg">009-882-SB1002</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant font-label-md text-label-md">Created Date</span>
+<span class="text-primary font-label-lg text-label-lg">Oct 12, 2023</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant font-label-md text-label-md">Owner</span>
+<span class="text-primary font-label-lg text-label-lg">Warehouse A-4</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant font-label-md text-label-md">Security Seal</span>
+<span class="text-on-tertiary-container font-label-lg text-label-lg flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">verified</span> Verified
+                                </span>
+</div>
+</div>
+</div>
+<!-- Scan Quick Action -->
+<div class="bg-primary-container text-on-primary rounded-xl p-lg flex flex-col items-center gap-md">
+<span class="material-symbols-outlined text-secondary-container text-4xl">qr_code_scanner</span>
+<div class="text-center">
+<h4 class="font-headline-sm text-headline-sm">Need an Update?</h4>
+<p class="text-body-sm text-on-primary-container mt-1">Scan to update location or report contents damage.</p>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container font-bold py-3 rounded-lg hover:scale-[1.02] transition-transform">
+                            Open Mobile Scanner
+                        </button>
+</div>
+</div>
+</div>
+<!-- Job History Timeline (Full Width Bottom) -->
+<section class="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-lg">Job History</h3>
+<div class="relative space-y-lg before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-outline-variant">
+<!-- History Item 1 -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-secondary-container border-4 border-surface flex items-center justify-center"></div>
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-label-lg text-label-lg text-primary">Loaded onto Fleet #402</h4>
+<span class="text-on-surface-variant font-label-md text-label-md">2h ago</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-1">Operator: J. Miller • Location: West Loading Dock</p>
+</div>
+</div>
+<!-- History Item 2 -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-primary border-4 border-surface flex items-center justify-center"></div>
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-label-lg text-label-lg text-primary">Quality Inspection Passed</h4>
+<span class="text-on-surface-variant font-label-md text-label-md">Oct 24, 14:20</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-1">Inspector: S. Chen • Unit Integrity: 100%</p>
+</div>
+</div>
+<!-- History Item 3 -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-primary border-4 border-surface flex items-center justify-center"></div>
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-label-lg text-label-lg text-primary">Box Sealed and Registered</h4>
+<span class="text-on-surface-variant font-label-md text-label-md">Oct 12, 09:15</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-1">Initial registration and inventory tagging completed at Main Hub.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-surface flex justify-around items-center px-gutter pb-4 pt-2 shadow-lg border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-label-md text-label-md">Jobs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+<span class="font-label-md text-label-md">Scan</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">box</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Account</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for hover states and active button feedback
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.98)';
+                el.style.transition = 'transform 0.1s';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = 'scale(1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simple scroll reveal for the timeline
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.relative.pl-10').forEach(item => {
+            item.classList.add('opacity-0', 'translate-y-4', 'transition-all', 'duration-500');
+            observer.observe(item);
+        });
+    </script>
+</body></html>

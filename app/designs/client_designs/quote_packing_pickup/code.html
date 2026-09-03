@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ValetStore - Service Selection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#291800",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "surface-variant": "#e4e2e5",
+                        "background": "#fbf8fc",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-bright": "#fbf8fc",
+                        "primary-container": "#1a2b4a",
+                        "secondary": "#835500",
+                        "surface-container": "#efedf0",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#081b39",
+                        "outline-variant": "#c5c6cf",
+                        "on-tertiary-fixed-variant": "#633f00",
+                        "on-background": "#1b1b1e",
+                        "on-primary-fixed-variant": "#364767",
+                        "surface-tint": "#4e5e80",
+                        "surface-container-high": "#e9e7eb",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f5f3f6",
+                        "inverse-primary": "#b6c6ee",
+                        "secondary-container": "#feae2c",
+                        "tertiary-fixed": "#ffddb3",
+                        "on-primary-container": "#8293b7",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#6b4500",
+                        "tertiary-fixed-dim": "#f4bd71",
+                        "outline": "#75777e",
+                        "surface": "#fbf8fc",
+                        "surface-container-highest": "#e4e2e5",
+                        "surface-dim": "#dbd9dc",
+                        "inverse-on-surface": "#f2f0f3",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#031634",
+                        "tertiary-container": "#3e2600",
+                        "on-tertiary-container": "#ba8943",
+                        "secondary-fixed-dim": "#ffb954",
+                        "on-surface": "#1b1b1e",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303033",
+                        "secondary-fixed": "#ffddb4",
+                        "tertiary": "#231300",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#44474e",
+                        "on-secondary-fixed": "#291800"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack_md": "16px",
+                        "container_max": "1200px",
+                        "page_padding": "24px",
+                        "stack_lg": "24px",
+                        "gutter": "16px",
+                        "stack_sm": "8px"
+                    },
+                    "fontFamily": {
+                        "caption-xs": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "caption-xs": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active { color: #031634; border-color: #031634; }
+        .step-inactive { color: #75777e; border-color: #c5c6cf; }
+        .custom-radio:checked + label { border-color: #feae2c; background-color: #fffaf0; }
+        .custom-radio:checked + label .radio-dot { border-color: #feae2c; background-color: #feae2c; }
+        
+        /* Ambient shadows as per style guidance */
+        .valet-card {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-page_padding py-stack_sm max-w-container_max mx-auto">
+<div class="font-headline-md text-headline-md text-primary dark:text-primary-fixed font-extrabold tracking-tight">ValetStore</div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-body-md" href="#">Inventory</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-body-md" href="#">Pickups</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-body-md" href="#">Returns</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-body-md" href="#">Billing</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden md:block text-on-surface-variant hover:text-primary transition-colors font-body-md">Support</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional user profile avatar in a corporate light-themed dashboard environment. The avatar features a friendly person with a clear background, styled with clean lines and soft lighting to match the dependable and systematic brand identity of a premium valet storage service." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVLrOjO6J2871ZdYv7TJbrhUBwIJcLijTi0cTQ1x3u3cRq8LF5mIp0WQPqu5w7jm7A2lsfDxTUejfmqL0DUO65xbaGqMRC1FibK4Hy0DfLuWQWP_c4VMerSAkF9MdqPcLDD3ZM9eYxjW8vVdzXpJFVda3F_8RjJmciIBl-22EKAt6UlbfdgT-A9JNJ1Ga2oP4RnF8D_27ACdEZfEghLV9d-v-ZXFv2FXszXxDzL0AzWU1XkyoAW6i44HxMlQTTRvnZCtAXbFEjRP91"/>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow max-w-container_max mx-auto w-full px-page_padding py-stack_lg pb-32">
+<!-- Step Indicator -->
+<div class="flex items-center justify-center mb-stack_lg">
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2 text-on-surface-variant opacity-60">
+<span class="w-6 h-6 rounded-full border border-current flex items-center justify-center text-caption-xs font-bold">1</span>
+<span class="font-label-sm">Items</span>
+</div>
+<div class="w-12 h-px bg-outline-variant"></div>
+<div class="flex items-center gap-2 text-on-surface-variant opacity-60">
+<span class="w-6 h-6 rounded-full border border-current flex items-center justify-center text-caption-xs font-bold">2</span>
+<span class="font-label-sm">Date</span>
+</div>
+<div class="w-12 h-px bg-outline-variant"></div>
+<div class="flex items-center gap-2 text-primary">
+<span class="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center text-caption-xs font-bold">3</span>
+<span class="font-label-sm font-bold">Services</span>
+</div>
+<div class="w-12 h-px bg-outline-variant"></div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center text-caption-xs font-bold">4</span>
+<span class="font-label-sm">Review</span>
+</div>
+</div>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary mb-stack_lg">Services</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack_lg">
+<!-- LEFT: Packing Card -->
+<section class="valet-card bg-surface p-stack_lg flex flex-col gap-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[28px]" data-icon="package_2">package_2</span>
+<h2 class="font-title-sm text-title-sm text-primary">Packing Service</h2>
+</div>
+<div class="space-y-4">
+<!-- Radio Options -->
+<div class="grid grid-cols-1 gap-3">
+<input class="hidden custom-radio" id="pack_self" name="packing_choice" type="radio"/>
+<label class="flex items-center p-4 border border-outline-variant rounded-lg cursor-pointer hover:border-primary transition-all" for="pack_self">
+<div class="w-5 h-5 rounded-full border-2 border-outline-variant mr-4 radio-dot"></div>
+<span class="font-body-md">No, I'll pack myself</span>
+</label>
+<input checked="" class="hidden custom-radio" id="pack_help" name="packing_choice" type="radio"/>
+<label class="flex items-center p-4 border-2 border-secondary-container bg-[#fffaf0] rounded-lg cursor-pointer" for="pack_help">
+<div class="w-5 h-5 rounded-full border-2 border-secondary-container bg-secondary-container mr-4 radio-dot"></div>
+<span class="font-body-md font-semibold">Yes, I need help</span>
+</label>
+</div>
+<!-- Expanded Section -->
+<div class="bg-[#FFF3E0] rounded-xl p-stack_md space-y-6" id="packing_details">
+<!-- Packers Stepper -->
+<div class="flex items-center justify-between">
+<div>
+<p class="font-label-sm text-on-surface">Packers</p>
+<p class="text-caption-xs text-on-surface-variant">Suggested: 2 people</p>
+</div>
+<div class="flex items-center bg-surface rounded-lg border border-outline-variant p-1 shadow-sm">
+<button class="w-8 h-8 flex items-center justify-center text-primary hover:bg-surface-container transition-colors rounded">
+<span class="material-symbols-outlined text-[18px]" data-icon="remove">remove</span>
+</button>
+<span class="w-10 text-center font-title-sm">2</span>
+<button class="w-8 h-8 flex items-center justify-center text-primary hover:bg-surface-container transition-colors rounded">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<!-- Hours Stepper -->
+<div class="flex items-center justify-between">
+<div>
+<p class="font-label-sm text-on-surface">Hours</p>
+<p class="text-caption-xs text-on-tertiary-container italic">Min 3 hours</p>
+</div>
+<div class="flex items-center bg-surface rounded-lg border border-outline-variant p-1 shadow-sm">
+<button class="w-8 h-8 flex items-center justify-center text-primary hover:bg-surface-container transition-colors rounded">
+<span class="material-symbols-outlined text-[18px]" data-icon="remove">remove</span>
+</button>
+<span class="w-10 text-center font-title-sm">3</span>
+<button class="w-8 h-8 flex items-center justify-center text-primary hover:bg-surface-container transition-colors rounded">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-secondary-container/20">
+<span class="font-body-md text-on-surface-variant">Estimated Cost</span>
+<span class="font-headline-md text-headline-md text-secondary-container font-bold">R900</span>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT: Pickup Vehicle Card -->
+<section class="valet-card bg-surface p-stack_lg flex flex-col gap-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[28px]" data-icon="local_shipping">local_shipping</span>
+<h2 class="font-title-sm text-title-sm text-primary">Pickup Vehicle</h2>
+</div>
+<div class="space-y-3">
+<!-- Small Van -->
+<input class="hidden custom-radio" id="van_small" name="vehicle" type="radio"/>
+<label class="flex items-center p-4 border border-outline-variant rounded-lg cursor-pointer hover:border-primary transition-all group" for="van_small">
+<div class="w-5 h-5 rounded-full border-2 border-outline-variant mr-4 radio-dot"></div>
+<div class="flex-grow flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="airport_shuttle">airport_shuttle</span>
+<div class="flex flex-col">
+<span class="font-body-md font-semibold text-on-surface">Small Van</span>
+<span class="text-caption-xs text-on-surface-variant">Up to 1m³</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-title-sm text-primary">R350</span>
+</div>
+</label>
+<!-- Medium Van (Recommended) -->
+<input checked="" class="hidden custom-radio" id="van_medium" name="vehicle" type="radio"/>
+<label class="relative flex items-center p-4 border-2 border-secondary-container bg-[#fffaf0] rounded-lg cursor-pointer transition-all" for="van_medium">
+<div class="absolute -top-3 right-4 bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Recommended</div>
+<div class="w-5 h-5 rounded-full border-2 border-secondary-container bg-secondary-container mr-4 radio-dot"></div>
+<div class="flex-grow flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="airport_shuttle">airport_shuttle</span>
+<div class="flex flex-col">
+<span class="font-body-md font-semibold text-on-surface">Medium Van</span>
+<span class="text-caption-xs text-on-surface-variant">Up to 3m³</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-title-sm text-primary">R550</span>
+</div>
+</label>
+<!-- Large Truck -->
+<input class="hidden custom-radio" id="truck_large" name="vehicle" type="radio"/>
+<label class="flex items-center p-4 border border-outline-variant rounded-lg cursor-pointer hover:border-primary transition-all group" for="truck_large">
+<div class="w-5 h-5 rounded-full border-2 border-outline-variant mr-4 radio-dot"></div>
+<div class="flex-grow flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="local_shipping">local_shipping</span>
+<div class="flex flex-col">
+<span class="font-body-md font-semibold text-on-surface">Large Truck</span>
+<span class="text-caption-xs text-on-surface-variant">Up to 8m³</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-title-sm text-primary">R850</span>
+</div>
+</label>
+</div>
+<div class="mt-4 p-4 bg-surface-container-low rounded-lg border border-outline-variant border-dashed">
+<p class="text-caption-xs text-on-surface-variant leading-relaxed">
+<span class="material-symbols-outlined text-[16px] align-middle mr-1" data-icon="info">info</span>
+                        All vehicles include basic insurance coverage for items in transit. Our drivers will assist with loading.
+                    </p>
+</div>
+</section>
+</div>
+</main>
+<!-- Sticky Bottom Bar -->
+<footer class="fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant z-50">
+<div class="max-w-container_max mx-auto px-page_padding py-stack_md flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-caption-xs text-on-surface-variant font-semibold uppercase tracking-wider">Estimated Total</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-primary">R1,450</span>
+<span class="text-caption-xs text-on-surface-variant">inc. VAT</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="hidden md:flex items-center gap-2 text-primary font-title-sm hover:translate-x-[-4px] transition-transform">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+                    Back
+                </button>
+<button class="bg-secondary-container hover:bg-secondary-container/90 text-on-secondary-container font-title-sm py-4 px-10 rounded-lg flex items-center gap-3 shadow-lg hover:shadow-xl transition-all active:scale-95">
+                    Next: Review
+                    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</footer>
+<!-- SideNavBar (Hidden on Mobile) -->
+<aside class="fixed left-0 top-0 hidden md:flex flex-col h-screen p-stack_md border-r border-outline-variant bg-surface-container-low w-64 z-30 pt-20">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="inventory">inventory</span>
+</div>
+<div>
+<p class="font-title-sm text-primary">Client Portal</p>
+<p class="text-caption-xs text-on-surface-variant">ZAR Account</p>
+</div>
+</div>
+<nav class="flex-grow space-y-1">
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg font-body-md group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary" data-icon="grid_view">grid_view</span>
+                Overview
+            </a>
+<a class="flex items-center gap-3 p-3 bg-primary-container text-on-primary-container font-semibold rounded-lg transition-all translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+                My Boxes
+            </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg font-body-md group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary" data-icon="category">category</span>
+                Loose Items
+            </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg font-body-md group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary" data-icon="history">history</span>
+                Recent Activity
+            </a>
+<div class="pt-4 mt-4 border-t border-outline-variant/30">
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg font-body-md group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary" data-icon="settings">settings</span>
+                    Settings
+                </a>
+</div>
+</nav>
+<button class="mt-auto bg-primary text-on-primary py-3 px-4 rounded-lg font-title-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="add_circle">add_circle</span>
+            Request Return
+        </button>
+</aside>
+<script>
+        // Simple interactive handling for the UI states
+        document.querySelectorAll('input[name="packing_choice"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const details = document.getElementById('packing_details');
+                if (e.target.id === 'pack_help') {
+                    details.classList.remove('hidden');
+                } else {
+                    details.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body></html>

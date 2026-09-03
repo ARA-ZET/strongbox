@@ -1,0 +1,14 @@
+runConfig:
+  runtime: nodejs20
+  concurrency: 100
+  minInstances: 0
+  maxInstances: 10
+  cpu: 1
+  memoryMiB: 512
+
+env:
+  - variable: NEXT_PUBLIC_APP_URL
+    value: https://app.strongboxstorage.co.za
+    availability:
+      - BUILD
+      - RUNTIME

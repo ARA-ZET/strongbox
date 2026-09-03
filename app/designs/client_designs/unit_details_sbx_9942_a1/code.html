@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox - Box Detail View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #F5F2FF;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #EFECFF;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c5c6cf;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="font-body text-body text-on-surface">
+<!-- Shared Components Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#b6c6ee",
+                    "on-tertiary-container": "#ba8943",
+                    "on-primary-container": "#8293b7",
+                    "on-secondary-container": "#6b4500",
+                    "outline": "#75777e",
+                    "secondary": "#835500",
+                    "secondary-fixed-dim": "#ffb954",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "tertiary-container": "#3e2600",
+                    "error": "#ba1a1a",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#b6c6ee",
+                    "on-surface-variant": "#44474e",
+                    "surface-variant": "#e4e1ee",
+                    "inverse-on-surface": "#f2effc",
+                    "outline-variant": "#c5c6cf",
+                    "tertiary": "#231300",
+                    "on-tertiary-fixed": "#291800",
+                    "secondary-fixed": "#ffddb4",
+                    "surface-container-high": "#e9e6f3",
+                    "surface-tint": "#4e5e80",
+                    "error-container": "#ffdad6",
+                    "primary-container": "#1a2b4a",
+                    "surface-container": "#efecf9",
+                    "inverse-surface": "#302f39",
+                    "on-error": "#ffffff",
+                    "primary": "#031634",
+                    "on-primary-fixed": "#081b39",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f5f2ff",
+                    "surface-container-highest": "#e4e1ee",
+                    "surface-dim": "#dbd8e5",
+                    "primary-fixed": "#d8e2ff",
+                    "secondary-container": "#feae2c",
+                    "tertiary-fixed-dim": "#f4bd71",
+                    "on-background": "#1b1b24",
+                    "tertiary-fixed": "#ffddb3",
+                    "surface": "#fcf8ff",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#1b1b24",
+                    "on-tertiary": "#ffffff",
+                    "surface-bright": "#fcf8ff",
+                    "on-secondary-fixed": "#291800",
+                    "background": "#fcf8ff",
+                    "on-primary-fixed-variant": "#364767",
+                    "on-tertiary-fixed-variant": "#633f00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "desktop-padding": "24px",
+                    "mobile-padding": "16px",
+                    "gutter": "16px",
+                    "component-gap": "8px",
+                    "section-gap": "32px"
+            },
+            "fontFamily": {
+                    "caption": ["Inter"],
+                    "headline": ["Inter"],
+                    "label": ["Inter"],
+                    "body": ["Inter"],
+                    "title": ["Inter"],
+                    "display": ["Inter"],
+                    "display-mobile": ["Inter"]
+            },
+            "fontSize": {
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "body": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "display": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<!-- Navigation Shell -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-desktop-padding max-w-full bg-surface shadow-sm border-b border-[#C5C6CF] h-[64px]">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-secondary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1">inventory_2</span>
+</div>
+<span class="text-headline font-headline font-extrabold text-primary">StrongBox</span>
+</div>
+<div class="hidden md:flex items-center gap-6">
+<a class="font-label text-[14px] font-semibold text-on-surface-variant hover:text-primary transition-colors" href="#">Home</a>
+<a class="font-label text-[14px] font-semibold text-[#FEAE2C] border-b-2 border-[#FEAE2C] pb-1" href="#">My Storage</a>
+<a class="font-label text-[14px] font-semibold text-on-surface-variant hover:text-primary transition-colors" href="#">Deliveries</a>
+<a class="font-label text-[14px] font-semibold text-on-surface-variant hover:text-primary transition-colors" href="#">Billing</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container-low transition-colors rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_g2wsv0hHNA2yDwLEmD8gDhZ6zdgEMi5ozh9isb2rDQtAFJj6b-cUovBiJ7xVAPkAvUQjFAQKJwdrVTTdRgCry8vnQPKgFA-6_VYwpsAMLqjTohZJZpChfGnCh-_fCgKpFH23ThYDV_9uBOWXGSyR1ni3_ruHMUj1q3vrTQ4Xcgl-a2lrEv1sJPT4679BhidnMW-ybXj14bcVcNflYyN_HTdZvZZqYpBDtbgpTVRq983trNEcHuA6T5BaSP1ofUCYbTV-gOFk8ppw"/>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="pt-[88px] pb-12 px-desktop-padding max-w-7xl mx-auto space-y-gutter">
+<!-- Breadcrumb & Action Header -->
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-surface-container-low rounded-lg transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">arrow_back</span>
+</button>
+<nav class="flex items-center gap-2 font-title text-title">
+<span class="text-on-surface-variant">My Storage</span>
+<span class="text-outline-variant">/</span>
+<span class="text-primary font-bold">SBX-9942-A1</span>
+</nav>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 border border-outline-variant rounded-lg text-primary font-label flex items-center gap-2 hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-[20px]">print</span> Print Label
+                </button>
+<button class="px-4 py-2 bg-[#FEAE2C] text-primary font-label rounded-lg flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1">edit</span> Edit Details
+                </button>
+</div>
+</div>
+<!-- Layout Grid -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- LEFT COLUMN: Main Visuals & Info -->
+<div class="col-span-12 lg:col-span-8 space-y-gutter">
+<!-- Photo Gallery Card -->
+<div class="bg-surface rounded-xl shadow-sm border border-outline-variant overflow-hidden p-3 h-[480px]">
+<div class="flex h-full gap-3">
+<!-- Main Photo -->
+<div class="w-[60%] relative rounded-lg overflow-hidden group">
+<img alt="Main Box Image" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBftjjL5qx0N1VFjXMpqsMoyCqV4lUUnUMbLIQUczvoC2kopTfBorFUKWaJxiQMk0pTqUeTe0eaCrl4XF6VIbGQp3YpO_4wCsyMeXdyVMTcJ2ISqNqyGOyllYRmiWVkEZkI59pWmP1KMAQI-nIAlag3c-9bWg147rq6Qv8GAuBahmS-4hU_ZDEf9xik26F-lwdui3O-MeY6Lb9KO45W_4JQjJUdy0P865mWp_l_YTvuydpi0_jCGVQLzcPh2vCigPVnfYlAC53RT0w_"/>
+<div class="absolute top-4 left-4 bg-[#FEAE2C] text-primary font-label text-[12px] px-3 py-1 rounded-full shadow-md font-bold">MAIN EXTERIOR</div>
+<div class="absolute bottom-4 left-4 bg-primary/40 backdrop-blur-md text-white px-3 py-1 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+<span class="text-caption font-bold">4K Scan • Aug 12</span>
+</div>
+</div>
+<!-- Secondary Photos -->
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex-1 rounded-lg overflow-hidden relative group">
+<img alt="Interior View" class="w-full h-full object-cover group-hover:scale-105 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCi1Pl0H1IarDW5_VLEln90eYVpoDueqgDdAuQpxOfK6agldMpdPTe5UdGX2u2-HiRt0xEC2RwV1Jo9A68JX2nnphxfLPvyvGLDlpqiUQI6c12b5ATqjOrSJMsUXywI6ufZQiy4_zgJnUNnN-zIN-jU-hBjY8-4sbllZ5tbwmNxkEk0o5gk4KG9ogJPS-wN9GNTcBzjDy9LY2Hdv_44_Fxi_hlzIkw_ldIZebcGPVgT9g_vRFgzAHBEHwhk1h8bLs1ZfliRGu-dmHd8"/>
+<div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="flex-1 rounded-lg overflow-hidden relative group cursor-pointer">
+<img alt="Facility Context" class="w-full h-full object-cover group-hover:scale-105 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNE6iFhvuU2e-m874KhpFh0_iAzhTbOAe4NBPEmP7zPrkPAF6_VnbvRyaIgqCgd-h7aqpMPSn4JbElnMPGqpEk_L9Ek3AqD2k6VS6ffaMHxu0kO_V_uU-IJTukrpEqadmVBOC7_36jlqSF3kM5eLRyG5iU2a_j-Ocr-RcTAGOV9PQ5wy9RtbmjGzqZ-rCR2StDaEoDYD1eqBcghoYn-pKMdQseH0elJVTHiys4wwZar9mkgMN_vXpzKTpYHAiXLjUNdQ5-3JrsR9XX"/>
+<div class="absolute inset-0 bg-black/60 backdrop-blur-[1px] flex flex-col items-center justify-center text-white transition-opacity group-hover:opacity-90">
+<span class="text-display font-bold">+8</span>
+<span class="text-caption font-semibold">View More</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Info Bar Card -->
+<div class="bg-surface rounded-xl shadow-sm border border-outline-variant p-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1">location_on</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-title text-title text-primary">Secure Facility, Zone D-14</span>
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+</div>
+<p class="text-on-surface-variant font-caption">Last scanned: Today, 09:41am by System Node 4</p>
+</div>
+</div>
+<button class="px-6 py-3 bg-[#FEAE2C] text-primary font-title rounded-lg hover:bg-[#E59A1B] transition-all shadow-md active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined">local_shipping</span>
+                        Request This Back
+                    </button>
+</div>
+<!-- Status Timeline Card -->
+<div class="bg-surface rounded-xl shadow-sm border border-outline-variant p-6">
+<div class="flex justify-between mb-8">
+<h3 class="font-title text-title text-primary">Current Journey Status</h3>
+<span class="text-secondary font-label bg-secondary-fixed/30 px-3 py-1 rounded-full">Transit Duration: 4.2 days</span>
+</div>
+<div class="relative px-4">
+<!-- Connecting Line -->
+<div class="absolute top-5 left-10 right-10 h-1 bg-surface-container-highest z-0"></div>
+<div class="absolute top-5 left-10 w-[50%] h-1 bg-secondary z-0"></div>
+<div class="relative z-10 flex justify-between">
+<!-- Step 1 -->
+<div class="flex flex-col items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<span class="text-caption font-bold text-primary">Pickup</span>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<span class="text-caption font-bold text-primary">In Transit</span>
+</div>
+<!-- Step 3 (Current) -->
+<div class="flex flex-col items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center shadow-lg ring-4 ring-secondary-fixed/40">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1">inventory_2</span>
+</div>
+<span class="text-caption font-bold text-secondary">In Storage</span>
+</div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">pending</span>
+</div>
+<span class="text-caption font-semibold text-outline-variant">Pending Delivery</span>
+</div>
+<!-- Step 5 -->
+<div class="flex flex-col items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">home_pin</span>
+</div>
+<span class="text-caption font-semibold text-outline-variant">Delivered</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Items Section -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="font-headline text-headline text-primary">Items Inside (8)</h2>
+<button class="text-secondary font-label flex items-center gap-1 hover:underline">
+                            Full Inventory Report <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Item Card 1 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-2 group hover:shadow-md transition-shadow">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container mb-2">
+<img alt="Camera Lens" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5aLXpxt2YKImSeA__ZSVVUUfibhBINrJya4aHgnTsSvx4OwGn2MCa8FuMZMuYI249S9mr5vRSPYfBdhyCdRY54DMrcoSo6ZLzGB2mOkfuB3VcfHACjvDNZ19wjwIdNqeOTByfo-7u0MMmQ6TdXHthtHGqRmDedFkMY0hR1Li7OiHHkghLBnzB6kZZxRQV4en90sYHQZx5hhY1nHRRtxAAom0Gvj3UQmRrivscxqQe1YiAmVvd7IV1TINKIo-bvXGCSe-uX9h2uK8k"/>
+</div>
+<div class="px-1">
+<h4 class="font-title text-caption text-primary truncate">Sony FE 24-70mm</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="text-[10px] text-outline font-mono">ITM-4402</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">qr_code_2</span>
+</div>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-2 group hover:shadow-md transition-shadow">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container mb-2">
+<img alt="Portable SSD" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGC4Nprs_sV5zvGIM3tPKW5jDkJZ7R3d0Uvdca3wjIK3nWwXyGrcMytFnitcsxfDBEp0_dTCa31wnUIW3Y0EZLim1IC8MFke6iu7fvhD_kAgpzuZqcR_81aSihsFo0Dh2FnU6dTIf6eTJHXTREFgMzV3X5DwV0D4lHt-7rNd7yFPTCeVH5En18Ukwgtm_8ptsT2-Lb74UKCXJYAqAXUloYXlOC2EnB0lpLDWCA-4RdMV3huFTHe6cyc6q4KJzu6e7NCdLpYOJXuV2r"/>
+</div>
+<div class="px-1">
+<h4 class="font-title text-caption text-primary truncate">Samsung T7 2TB</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="text-[10px] text-outline font-mono">ITM-8819</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">qr_code_2</span>
+</div>
+</div>
+</div>
+<!-- Item Card 3 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-2 group hover:shadow-md transition-shadow">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container mb-2">
+<img alt="Leather Briefcase" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAP_9nYood1DmGTXv0uFtFuiYnmMknh9LoYRHQkR_3QjCcK1DoEYJ0LpBikOnSkmrEprRSeV_eNCud0i4Xgo5wevXTEpfN7IDbS1C75hD_Lbs4wzb2UZR5OE40DOMj-d2NBN1YEaFRvioPacKzP2vZq7NQAkS5Fz8X90u3SUPCyG-ncbEXn9VVBsuXkCUTCe6vKAEG6c2aRk4PNFyI7mBsap7XCNdENlVjoqTgFCfiig3Xu--LyeEgoblvPl-Jb-T9mBlHQBhnMs2x"/>
+</div>
+<div class="px-1">
+<h4 class="font-title text-caption text-primary truncate">Leather Briefcase</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="text-[10px] text-outline font-mono">ITM-2231</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">qr_code_2</span>
+</div>
+</div>
+</div>
+<!-- Item Card 4 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-2 group hover:shadow-md transition-shadow">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container mb-2">
+<img alt="Hardware Wallet" class="w-full h-full object-cover group-hover:scale-110 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6Os9w0diEcFPrc8zPO4kiAnC1BW3g4Gdo1Eu4tJHg4grnLmBtLpqxy-yKNr_xAhHcrSVxO9SwOkmfFiA0Gceaqn8to1unyNV3UlC2QDfxvFS5JTiqjpgdAlUYXraR3dVM7tTEqhdRK3enw0ktqeZh0cj9xv83sjMbI8ikHxVWnYDoo663A_rhSD0NfKPv4yA9ieaiEy9jdmbVMtkaLRXnXgY-YXcBssJl8NLkGP4Yy5awXEwPyHF8wc-IBokIsziDu-TVNz089mdu"/>
+</div>
+<div class="px-1">
+<h4 class="font-title text-caption text-primary truncate">Ledger Nano X</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="text-[10px] text-outline font-mono">ITM-9904</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">qr_code_2</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Details & Activity Log -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Details Grid Card -->
+<div class="bg-surface rounded-xl shadow-sm border border-outline-variant p-6">
+<h3 class="font-title text-title text-primary mb-6">Vault Specifications</h3>
+<div class="space-y-5">
+<div class="grid grid-cols-2 gap-4 border-b border-surface-container pb-4">
+<div>
+<p class="text-[11px] uppercase tracking-wider text-outline-variant font-bold mb-1">Serial Label</p>
+<p class="font-title text-body text-primary">SBX-9942-A1</p>
+</div>
+<div class="flex justify-end">
+<div class="w-12 h-12 bg-white border border-outline-variant p-1 rounded">
+<span class="material-symbols-outlined text-[40px] text-primary">qr_code_2</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 border-b border-surface-container pb-4">
+<div>
+<p class="text-[11px] uppercase tracking-wider text-outline-variant font-bold mb-1">Storage Type</p>
+<p class="font-title text-body text-primary">Large Steel Vault</p>
+</div>
+<div>
+<p class="text-[11px] uppercase tracking-wider text-outline-variant font-bold mb-1">Status</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-caption font-bold bg-green-100 text-green-700">
+                                    inStorage
+                                </span>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-4 border-b border-surface-container pb-4">
+<div>
+<p class="text-[11px] uppercase tracking-wider text-outline-variant font-bold mb-1">Added On</p>
+<p class="font-title text-body text-primary">Aug 12, 2023 • 14:22</p>
+</div>
+</div>
+<div>
+<p class="text-[11px] uppercase tracking-wider text-outline-variant font-bold mb-1">Notes</p>
+<p class="text-on-surface-variant text-caption leading-relaxed italic">"Contains critical archival hardware and sensitive electronics. Fragile - handle with pneumatic lifter only."</p>
+</div>
+</div>
+</div>
+<!-- Activity Log Card -->
+<div class="bg-surface rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+<div class="p-6 border-b border-surface-container flex items-center justify-between">
+<h3 class="font-title text-title text-primary">Security &amp; Activity</h3>
+<span class="material-symbols-outlined text-outline-variant">history</span>
+</div>
+<div class="max-h-[400px] overflow-y-auto custom-scrollbar">
+<!-- Log Item 1 -->
+<div class="p-4 border-b border-surface-container flex gap-4 hover:bg-surface-container-low transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-primary flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-caption font-bold text-primary truncate">Vault Health Check</p>
+<p class="text-caption text-on-surface-variant mb-1">Humidity and Temperature within safe range.</p>
+<div class="flex justify-between items-center text-[11px] text-outline">
+<span>System Node 4</span>
+<span>09:41 AM</span>
+</div>
+</div>
+</div>
+<!-- Log Item 2 -->
+<div class="p-4 border-b border-surface-container flex gap-4 hover:bg-surface-container-low transition-colors">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-secondary flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">camera</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-caption font-bold text-primary truncate">Content Scan Completed</p>
+<p class="text-caption text-on-surface-variant mb-1">New item 'Ledger Nano X' detected and indexed.</p>
+<div class="flex justify-between items-center text-[11px] text-outline">
+<span>Inventory Specialist Marcus</span>
+<span>Yesterday</span>
+</div>
+</div>
+</div>
+<!-- Log Item 3 -->
+<div class="p-4 border-b border-surface-container flex gap-4 hover:bg-surface-container-low transition-colors">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-primary flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">shelves</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-caption font-bold text-primary truncate">Relocated to Zone D-14</p>
+<p class="text-caption text-on-surface-variant mb-1">Moved from Zone C-02 for climate optimization.</p>
+<div class="flex justify-between items-center text-[11px] text-outline">
+<span>Auto-Mover #88</span>
+<span>Aug 14</span>
+</div>
+</div>
+</div>
+<!-- Log Item 4 -->
+<div class="p-4 border-b border-surface-container flex gap-4 hover:bg-surface-container-low transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-caption font-bold text-primary truncate">Vault Sealed</p>
+<p class="text-caption text-on-surface-variant mb-1">Arrival at Main Facility. Security seal #AQ-0012.</p>
+<div class="flex justify-between items-center text-[11px] text-outline">
+<span>Security Chief Vance</span>
+<span>Aug 12</span>
+</div>
+</div>
+</div>
+<!-- Log Item 5 -->
+<div class="p-4 flex gap-4 hover:bg-surface-container-low transition-colors">
+<div class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-caption font-bold text-primary truncate">Transit Pickup</p>
+<p class="text-caption text-on-surface-variant mb-1">Box collected from client office location.</p>
+<div class="flex justify-between items-center text-[11px] text-outline">
+<span>Logistics Team Bravo</span>
+<span>Aug 11</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-mobile-padding py-component-gap bg-surface border-t border-outline-variant shadow-lg rounded-t-xl h-[64px]">
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-mobile text-[10px]">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#FEAE2C] font-bold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">inventory_2</span>
+<span class="font-label-mobile text-[10px]">Storage</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label-mobile text-[10px]">Requests</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-mobile text-[10px]">Account</span>
+</button>
+</nav>
+<script>
+        // Simple micro-interaction for item cards
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.98)';
+                card.style.transition = 'transform 0.1s ease';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

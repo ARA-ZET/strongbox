@@ -1,0 +1,64 @@
+name: Deploy Flutter app → Firebase Hosting
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "packages/**"
+      - "firebase.json"
+      - "firestore.rules"
+      - ".github/workflows/deploy-app.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-app
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Regenerate design tokens
+        run: node packages/tokens/build.mjs
+
+      - name: Write Firebase options (gitignored — see docs/SECURITY.md)
+        run: |
+          if [ -z "${FIREBASE_OPTIONS_DART}" ]; then
+            echo "::error::FIREBASE_OPTIONS_DART secret is not set"; exit 1
+          fi
+          printf '%s' "${FIREBASE_OPTIONS_DART}" > app/lib/core/firebase_options.dart
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.FIREBASE_OPTIONS_DART }}
+
+      - name: Install dependencies
+        working-directory: app
+        run: flutter pub get
+
+      - name: Codegen (freezed / riverpod / json)
+        working-directory: app
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Analyze
+        working-directory: app
+        run: flutter analyze
+
+      - name: Build web
+        working-directory: app
+        run: flutter build web --release
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: strongbox-app
+          channelId: live
+          entryPoint: "."

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox - New Delivery Request</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#031634",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#1b1b24",
+                        "background": "#fcf8ff",
+                        "secondary-container": "#feae2c",
+                        "on-tertiary-fixed-variant": "#633f00",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#ffddb4",
+                        "on-secondary-container": "#6b4500",
+                        "tertiary-fixed-dim": "#f4bd71",
+                        "primary-fixed": "#d8e2ff",
+                        "inverse-on-surface": "#f2effc",
+                        "on-primary-container": "#8293b7",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#efecf9",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffddb3",
+                        "surface-container-high": "#e9e6f3",
+                        "surface-dim": "#dbd8e5",
+                        "on-tertiary-fixed": "#291800",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#231300",
+                        "on-surface-variant": "#44474e",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e4e1ee",
+                        "on-tertiary-container": "#ba8943",
+                        "on-primary-fixed-variant": "#364767",
+                        "secondary-fixed-dim": "#ffb954",
+                        "outline": "#75777e",
+                        "surface-tint": "#4e5e80",
+                        "surface-container-highest": "#e4e1ee",
+                        "surface-container-low": "#f5f2ff",
+                        "surface": "#fcf8ff",
+                        "surface-bright": "#fcf8ff",
+                        "secondary": "#835500",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "inverse-surface": "#302f39",
+                        "on-secondary-fixed": "#291800",
+                        "tertiary-container": "#3e2600",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#b6c6ee",
+                        "on-primary-fixed": "#081b39",
+                        "on-surface": "#1b1b24",
+                        "primary-container": "#1a2b4a",
+                        "outline-variant": "#c5c6cf",
+                        "on-secondary-fixed-variant": "#633f00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "mobile-padding": "16px",
+                        "section-gap": "32px",
+                        "component-gap": "8px",
+                        "desktop-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "label": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "headline": ["Inter"],
+                        "display-mobile": ["Inter"],
+                        "caption": ["Inter"],
+                        "title": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "label-mobile": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "display": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "headline-mobile": ["20px", {"lineHeight": "24px", "fontWeight": "700"}],
+                        "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fcf8ff;
+            font-family: 'Inter', sans-serif;
+        }
+        .step-active {
+            width: 32px;
+            background-color: #835500;
+        }
+        .custom-checkbox:checked {
+            background-color: #835500;
+            border-color: #835500;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- Top App Bar (Mobile Profile/Back Shell) -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface h-[64px] flex items-center justify-between px-mobile-padding border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="p-2 -ml-2 text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-mobile text-headline-mobile text-primary">New Delivery Request</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">notifications</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional close-up studio portrait of a corporate executive for a logistics company. The lighting is soft and high-key, emphasizing a clean and trustworthy appearance. The background is a minimalist, light-grey gradient consistent with a modern corporate brand identity. The user has a warm, confident expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOoenEXVoeSE2zdC6u0r9oSwySTzxToHvMe3h00fNy-YSOMYGNNLciyxGq_DN5aBCLn0FRBqGmTcqdlFGaSSwEOiv0OkPSwEPG-9XhSyEsW30DEm3rxp_gsyg9x1p2EOGm_gmF4PGdVEYISSfT1uphcm5cuN03bMQC2R7-JC37ZFV8TdthA97i-QnijVisQU3_Cx0l88jVCTc3yGAJzk4DunR9PNzaVhHeY-1U6NdUHIDsYw-GsMxWKEnrQgYt_C4-4IjhyioDhf_G"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-[64px] pb-[160px] px-mobile-padding">
+<!-- Step Indicator -->
+<section class="py-6">
+<div class="flex items-center justify-between mb-3">
+<span class="font-label text-label text-primary">Step 1 of 4</span>
+<span class="font-label text-label text-secondary font-bold">Items Selection</span>
+</div>
+<div class="flex gap-2 h-1.5 w-full">
+<div class="step-active rounded-full transition-all duration-300"></div>
+<div class="flex-grow bg-surface-container-highest rounded-full"></div>
+<div class="flex-grow bg-surface-container-highest rounded-full"></div>
+<div class="flex-grow bg-surface-container-highest rounded-full"></div>
+</div>
+</section>
+<!-- Search and Filter -->
+<div class="mb-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container border-b border-outline-variant rounded-t-lg focus:outline-none focus:border-secondary transition-colors font-body text-body" placeholder="Search items in storage..." type="text"/>
+</div>
+</div>
+<!-- Scrollable Items List -->
+<div class="space-y-4">
+<!-- Item 1 -->
+<label class="flex items-center p-4 bg-surface rounded-xl border border-outline-variant shadow-sm active:scale-[0.98] transition-transform">
+<input checked="" class="custom-checkbox w-6 h-6 rounded border-outline text-secondary focus:ring-secondary mr-4" type="checkbox"/>
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container mr-4 flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A high-quality product photo of a designer ergonomic office chair, meticulously wrapped in protective industrial-grade clear plastic film for secure storage. The lighting is bright and even, characteristic of a professional warehouse inventory system. The background is a neutral off-white, focusing entirely on the item's condition and secure packaging." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBB0Xtl0l-tvUOM7wx4l25dcn0ra9F3WmOaWVIEvHOm5uZtTOhadlfzoe5NvlB1Jf2vimhIn2vXsDT5HtJuwduZISxb5QNQcXgGnl40aVhNvSG0DI7YgA0fLYCBJ2i1qWiy4mY7ByVEWTaPui3VF_r_osPnJkHLdp8fMsQasuC7K2SEywosOaFHy0AD0a5AOsTcCH16_Ki9GqClAblGXHUH5ZJ7WKpexAtVSbgRvcOGETGNw4sXObOpkQ2LfX774z4NvvdRT7-xKgZb"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-title text-title text-primary">ErgoPro Office Chair</h3>
+<p class="font-caption text-caption text-on-surface-variant">ID: SB-8842 • Sec: B-12</p>
+<div class="mt-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800 uppercase tracking-wider">inStorage</span>
+</div>
+</div>
+</label>
+<!-- Item 2 -->
+<label class="flex items-center p-4 bg-surface rounded-xl border border-outline-variant shadow-sm active:scale-[0.98] transition-transform">
+<input checked="" class="custom-checkbox w-6 h-6 rounded border-outline text-secondary focus:ring-secondary mr-4" type="checkbox"/>
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container mr-4 flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A side view of three large, heavy-duty cardboard moving boxes stacked neatly. Each box is sealed with reinforced industrial tape and has a clear digital inventory label. The lighting is crisp and detailed, showcasing the texture of the cardboard and the integrity of the seals. Professional logistics management visual style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt-N9Mq21bXcEFmyH7Yy-JBS_U3EV_u7cOAblCKoNdl4gSr49G5YSt3boJaMf-CwWzViK__V2wlg8OoTCUOM_60t4gVaJaMXdiGD6DRKTZ1H3ZHRn8P3Aw95JxPQxcB2t8kKGWTRnm_kEFhbuH82ZpZa79AFNUKcV7LmgSMERN3jGDPm2CbpcJePzDzoVWe02lGMpalGnpHtdXA6ikGNiZQI864STYmSRvD8YCpXyRZroSKSiJf59GtzXLlUjaaY8oXQ-RDfTp-kmG"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-title text-title text-primary">Archived Files (Box 1-3)</h3>
+<p class="font-caption text-caption text-on-surface-variant">ID: SB-1029 • Sec: A-04</p>
+<div class="mt-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800 uppercase tracking-wider">inStorage</span>
+</div>
+</div>
+</label>
+<!-- Item 3 -->
+<label class="flex items-center p-4 bg-surface rounded-xl border border-outline-variant shadow-sm active:scale-[0.98] transition-transform">
+<input checked="" class="custom-checkbox w-6 h-6 rounded border-outline text-secondary focus:ring-secondary mr-4" type="checkbox"/>
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container mr-4 flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A sleek, modern 27-inch computer monitor packaged in its original retail box, secured with additional black industrial strapping. The image highlights the clean lines of the packaging and the protective measures taken for high-value electronics in storage. Professional warehouse setting with a focus on precision and safety." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3B87Vkv7PB201cyIKnglf2ejQbxWJm9hdNlSbQ9o0nvKom1C3N-tTvDt9UIgDpBVZkS_ycM1FrfISWFxv1cgSA0AR0M9DpPklPG2uNooMxm_6wSoz0WpAUoe4d0ucqWMNEavOGfmGhijydwFv2-rvDjccOWdph1fLgdlPWw83cYi3e7X2pbCp7gOG7pzcIR8P22yAk8INIEqg8HozjUI1AsQz-ZhwQ4oYfb8sZ_s7uQ0fBqqnyHmucH9T4ijT05qVvLTjRK_dy7xy"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-title text-title text-primary">4K Display Monitor</h3>
+<p class="font-caption text-caption text-on-surface-variant">ID: SB-9901 • Sec: V-01</p>
+<div class="mt-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800 uppercase tracking-wider">inStorage</span>
+</div>
+</div>
+</label>
+<!-- Item 4 -->
+<label class="flex items-center p-4 bg-surface rounded-xl border border-outline-variant shadow-sm active:scale-[0.98] transition-transform">
+<input checked="" class="custom-checkbox w-6 h-6 rounded border-outline text-secondary focus:ring-secondary mr-4" type="checkbox"/>
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container mr-4 flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A medium-sized climate-controlled storage crate made of polished reinforced wood with metal corner guards. The crate is sealed with a digital security tag. The image emphasizes high-value item protection and the premium nature of the storage facility. The aesthetic is clean, professional, and secure." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQVKgujQoxslhIcgFFjNy2Djryi3ViAn_c1Iggh84YCucc8GHYEHmQav7ubFaA2WtMxQqZM2QSkmm-oh9TgWY0vx63Ku-uo3yz9FvnH21Zd4gAbiLfGEdVP9PC48L6dLeUzDzjWF38Uy8UedcBun914xfX-AbzNIwWn29_Od8BgLx8G3DlieXZvHziWjEWVcGvM-ik_bBAPa8Uqb4McYaoNg1pG6_Pw8i64B4NX2yAPxXzL9REbqfNlolXSHMIDWy3B-FYP4BaR58o"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-title text-title text-primary">Delicate Hardware Kit</h3>
+<p class="font-caption text-caption text-on-surface-variant">ID: SB-4432 • Sec: C-09</p>
+<div class="mt-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800 uppercase tracking-wider">inStorage</span>
+</div>
+</div>
+</label>
+<!-- Item 5 (Not Selected) -->
+<label class="flex items-center p-4 bg-surface-container-low rounded-xl border border-outline-variant/50 shadow-sm opacity-70 active:scale-[0.98] transition-transform">
+<input class="custom-checkbox w-6 h-6 rounded border-outline text-secondary focus:ring-secondary mr-4" type="checkbox"/>
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container mr-4 flex-shrink-0">
+<img class="w-full h-full object-cover grayscale" data-alt="A professional photography lighting kit in a durable black padded carry case with zippers and reinforced handles. The case is shown on a clean warehouse pallet. The image style is technical and inventory-focused, maintaining the brand's commitment to precision and reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD82_azXnjfVyyT8VWbTUb2W36R4zXjW8hOBSe1z-o7ZnuhWL3HLQXrWhR5i-rk97Jz3ZyQTTzkq4bYNHTe3Vtcy3ApucMdGXxXaKUyEzPhNe3xd0p1yMiv6NmNXEUIXVHodm9HUupd1fBH_xWbOwvtD_szEuiUI9nJRVNoc-u-KGALaoJHmCmtS4BGxCMgbip1iesY5udCP5oY15sZeWs-asZAyk5zwFZL7KiMfIYo7XeGyUD6aknwOE6Oa01cDhsEdMpftRgvH98K"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-title text-title text-primary">Photo Studio Kit</h3>
+<p class="font-caption text-caption text-on-surface-variant">ID: SB-2210 • Sec: D-05</p>
+<div class="mt-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800 uppercase tracking-wider">inStorage</span>
+</div>
+</div>
+</label>
+</div>
+</main>
+<!-- Sticky Bottom Selection Bar (Mobile) -->
+<div class="fixed bottom-[64px] left-0 w-full bg-surface z-40 p-mobile-padding border-t border-outline-variant shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-title text-title font-bold">4 items selected</span>
+</div>
+<button class="text-on-surface-variant font-label text-label">Clear selection</button>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container py-4 rounded-lg font-title text-title font-bold shadow-md active:scale-95 transition-transform">
+            Continue
+        </button>
+</div>
+<!-- Bottom Navigation Bar (Shared Component) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-mobile-padding py-component-gap md:hidden bg-surface dark:bg-surface-container-highest shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl h-[64px]">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-mobile text-label-mobile">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-mobile text-label-mobile">Storage</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-bold scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="local_shipping" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span class="font-label-mobile text-label-mobile">Requests</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-mobile text-label-mobile">Account</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions for checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const parent = this.closest('label');
+                if (this.checked) {
+                    parent.classList.remove('opacity-70', 'bg-surface-container-low');
+                    parent.classList.add('bg-surface');
+                    parent.querySelector('img').classList.remove('grayscale');
+                } else {
+                    parent.classList.add('opacity-70', 'bg-surface-container-low');
+                    parent.classList.remove('bg-surface');
+                    parent.querySelector('img').classList.add('grayscale');
+                }
+                
+                // Update selection count
+                const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                document.querySelector('.font-title.font-bold').innerText = `${count} items selected`;
+            });
+        });
+    </script>
+</body></html>

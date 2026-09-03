@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notification Preferences | StrongBox</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Design System Tokens -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#f4bd71",
+                    "on-tertiary-fixed": "#291800",
+                    "on-surface": "#1b1b24",
+                    "surface-container": "#efecf9",
+                    "on-surface-variant": "#44474e",
+                    "secondary-fixed": "#ffddb4",
+                    "inverse-primary": "#b6c6ee",
+                    "surface-container-low": "#f5f2ff",
+                    "on-primary-container": "#8293b7",
+                    "secondary-container": "#feae2c",
+                    "on-secondary-container": "#6b4500",
+                    "surface-container-highest": "#e4e1ee",
+                    "on-error-container": "#93000a",
+                    "inverse-on-surface": "#f2effc",
+                    "error-container": "#ffdad6",
+                    "surface": "#fcf8ff",
+                    "primary-container": "#1a2b4a",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-high": "#e9e6f3",
+                    "surface-variant": "#e4e1ee",
+                    "tertiary-fixed": "#ffddb3",
+                    "outline-variant": "#c5c6cf",
+                    "secondary": "#835500",
+                    "on-primary-fixed": "#081b39",
+                    "error": "#ba1a1a",
+                    "primary": "#031634",
+                    "primary-fixed": "#d8e2ff",
+                    "on-secondary-fixed": "#291800",
+                    "on-secondary": "#ffffff",
+                    "outline": "#75777e",
+                    "surface-bright": "#fcf8ff",
+                    "on-tertiary-fixed-variant": "#633f00",
+                    "surface-container-lowest": "#ffffff",
+                    "background": "#fcf8ff",
+                    "secondary-fixed-dim": "#ffb954",
+                    "surface-dim": "#dbd8e5",
+                    "tertiary": "#231300",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "on-primary-fixed-variant": "#364767",
+                    "on-tertiary-container": "#ba8943",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-tint": "#4e5e80",
+                    "on-background": "#1b1b24",
+                    "tertiary-container": "#3e2600",
+                    "primary-fixed-dim": "#b6c6ee",
+                    "inverse-surface": "#302f39"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "mobile-padding": "16px",
+                    "gutter": "16px",
+                    "component-gap": "8px",
+                    "section-gap": "32px",
+                    "desktop-padding": "24px"
+            },
+            "fontFamily": {
+                    "display-mobile": ["Inter"],
+                    "label": ["Inter"],
+                    "headline": ["Inter"],
+                    "title": ["Inter"],
+                    "caption": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"]
+            },
+            "fontSize": {
+                    "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "headline": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .toggle-checkbox:checked + .toggle-track {
+            background-color: #feae2c; /* secondary-container */
+        }
+        .toggle-checkbox:checked + .toggle-track .toggle-thumb {
+            transform: translateX(1.25rem);
+            background-color: #6b4500; /* on-secondary-container */
+        }
+        /* Custom scrollbar for clean UI */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #fcf8ff; }
+        ::-webkit-scrollbar-thumb { background: #c5c6cf; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top AppBar (Mobile UI Pattern) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-mobile-padding h-[64px] bg-surface dark:bg-surface-container-highest border-b border-outline-variant shadow-sm">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-headline-mobile font-headline-mobile font-bold text-primary dark:text-primary-fixed">Notification Preferences</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-primary p-2" data-icon="notifications">notifications</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="pt-[80px] pb-[120px] px-mobile-padding max-w-md mx-auto">
+<!-- Intro Section -->
+<div class="mb-section-gap">
+<p class="text-body font-body text-on-surface-variant">
+                Control how you receive alerts about your vault, deliveries, and billing activities.
+            </p>
+</div>
+<!-- Preference Groups -->
+<div class="space-y-section-gap">
+<!-- Delivery Updates Group -->
+<section>
+<div class="flex items-center gap-2 mb-gutter px-2">
+<span class="material-symbols-outlined text-secondary" data-icon="local_shipping">local_shipping</span>
+<h2 class="text-title font-title text-primary uppercase tracking-wider text-xs font-bold">Delivery Updates</h2>
+</div>
+<div class="bg-surface-container rounded-xl overflow-hidden shadow-sm border border-outline-variant">
+<!-- Item Row -->
+<div class="flex flex-col p-gutter border-b border-outline-variant/30">
+<span class="text-body font-title font-semibold mb-3">Shipment Arrival</span>
+<div class="flex justify-between items-center">
+<label class="flex items-center gap-2 text-caption font-label text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="mail">mail</span> Email
+                            </label>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-track w-11 h-6 bg-outline-variant rounded-full transition-colors duration-200">
+<div class="toggle-thumb absolute top-[2px] left-[2px] bg-white border border-outline-variant w-5 h-5 rounded-full transition-transform duration-200 shadow-sm"></div>
+</div>
+</label>
+</div>
+<div class="flex justify-between items-center mt-3">
+<label class="flex items-center gap-2 text-caption font-label text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="notifications_active">notifications_active</span> Push
+                            </label>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-track w-11 h-6 bg-outline-variant rounded-full transition-colors duration-200">
+<div class="toggle-thumb absolute top-[2px] left-[2px] bg-white border border-outline-variant w-5 h-5 rounded-full transition-transform duration-200 shadow-sm"></div>
+</div>
+</label>
+</div>
+</div>
+<!-- Item Row -->
+<div class="flex flex-col p-gutter">
+<span class="text-body font-title font-semibold mb-3">Courier Delay Alerts</span>
+<div class="flex justify-between items-center">
+<label class="flex items-center gap-2 text-caption font-label text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="mail">mail</span> Email
+                            </label>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-track w-11 h-6 bg-outline-variant rounded-full transition-colors duration-200">
+<div class="toggle-thumb absolute top-[2px] left-[2px] bg-white border border-outline-variant w-5 h-5 rounded-full transition-transform duration-200 shadow-sm"></div>
+</div>
+</label>
+</div>
+<div class="flex justify-between items-center mt-3">
+<label class="flex items-center gap-2 text-caption font-label text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="notifications_active">notifications_active</span> Push
+                            </label>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-track w-11 h-6 bg-outline-variant rounded-full transition-colors duration-200">
+<div class="toggle-thumb absolute top-[2px] left-[2px] bg-white border border-outline-variant w-5 h-5 rounded-full transition-transform duration-200 shadow-sm"></div>
+</div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Storage Updates Group -->
+<section>
+<div class="flex items-center gap-2 mb-gutter px-2">
+<span class="material-symbols-outlined text-secondary" data-icon="inventory_2">inventory_2</span>
+<h2 class="text-title font-title text-primary uppercase tracking-wider text-xs font-bold">Storage Updates</h2>
+</div>
+<div class="bg-surface-container rounded-xl overflow-hidden shadow-sm border border-outline-variant">
+<!-- Item Row -->
+<div class="flex flex-col p-gutter">
+<span class="text-body font-title font-semibold mb-3">Inventory Verification</span>
+<div class="flex justify-between items-center">
+<label class="flex items-center gap-2 text-caption font-label text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="mail">mail</span> Email
+                            </label>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-track w-11 h-6 bg-outline-variant rounded-full transition-colors duration-200">
+<div class="toggle-thumb absolute top-[2px] left-[2px] bg-white border border-outline-variant w-5 h-5 rounded-full transition-transform duration-200 shadow-sm"></div>
+</div>
+</label>
+</div>
+<div class="flex justify-between items-center mt-3">
+<label class="flex items-center gap-2 text-caption font-label text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="notifications_active">notifications_active</span> Push
+                            </label>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-track w-11 h-6 bg-outline-variant rounded-full transition-colors duration-200">
+<div class="toggle-thumb absolute top-[2px] left-[2px] bg-white border border-outline-variant w-5 h-5 rounded-full transition-transform duration-200 shadow-sm"></div>
+</div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Billing Group -->
+<section>
+<div class="flex items-center gap-2 mb-gutter px-2">
+<span class="material-symbols-outlined text-secondary" data-icon="receipt_long">receipt_long</span>
+<h2 class="text-title font-title text-primary uppercase tracking-wider text-xs font-bold">Billing</h2>
+</div>
+<div class="bg-surface-container rounded-xl overflow-hidden shadow-sm border border-outline-variant">
+<!-- Item Row -->
+<div class="flex flex-col p-gutter">
+<span class="text-body font-title font-semibold mb-3">Invoices &amp; Receipts</span>
+<div class="flex justify-between items-center">
+<label class="flex items-center gap-2 text-caption font-label text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="mail">mail</span> Email
+                            </label>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-track w-11 h-6 bg-outline-variant rounded-full transition-colors duration-200">
+<div class="toggle-thumb absolute top-[2px] left-[2px] bg-white border border-outline-variant w-5 h-5 rounded-full transition-transform duration-200 shadow-sm"></div>
+</div>
+</label>
+</div>
+<div class="flex justify-between items-center mt-3">
+<label class="flex items-center gap-2 text-caption font-label text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="notifications_active">notifications_active</span> Push
+                            </label>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-track w-11 h-6 bg-outline-variant rounded-full transition-colors duration-200">
+<div class="toggle-thumb absolute top-[2px] left-[2px] bg-white border border-outline-variant w-5 h-5 rounded-full transition-transform duration-200 shadow-sm"></div>
+</div>
+</label>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Fixed Bottom Action & Nav -->
+<div class="fixed bottom-0 left-0 w-full z-50 bg-surface dark:bg-surface-container-highest">
+<!-- Save Preference Button -->
+<div class="px-mobile-padding py-gutter bg-white/80 backdrop-blur-md border-t border-outline-variant">
+<button class="w-full h-[48px] bg-secondary-container text-on-secondary-container font-title text-title rounded-lg shadow-lg active:scale-95 transition-transform duration-200 flex items-center justify-center gap-2">
+                Save Preferences
+            </button>
+</div>
+<!-- Bottom NavBar Component -->
+<nav class="flex justify-around items-center px-mobile-padding py-component-gap md:hidden border-t border-outline-variant/30 h-[72px]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-caption font-label-mobile text-label-mobile">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-caption font-label-mobile text-label-mobile">Storage</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="text-caption font-label-mobile text-label-mobile">Requests</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-caption font-label-mobile text-label-mobile">Account</span>
+</a>
+</nav>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Simple Toggle interaction logic for demo
+        document.querySelectorAll('.toggle-checkbox').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const parent = this.closest('label');
+                if (this.checked) {
+                    console.log('Preference Enabled');
+                } else {
+                    console.log('Preference Disabled');
+                }
+            });
+        });
+    </script>
+</body></html>

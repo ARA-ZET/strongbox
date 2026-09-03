@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Billing &amp; Subscription | StrongBox</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#b6c6ee",
+                    "on-tertiary-container": "#ba8943",
+                    "on-primary-container": "#8293b7",
+                    "on-secondary-container": "#6b4500",
+                    "outline": "#75777e",
+                    "secondary": "#835500",
+                    "secondary-fixed-dim": "#ffb954",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "tertiary-container": "#3e2600",
+                    "error": "#ba1a1a",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#b6c6ee",
+                    "on-surface-variant": "#44474e",
+                    "surface-variant": "#e4e1ee",
+                    "inverse-on-surface": "#f2effc",
+                    "outline-variant": "#c5c6cf",
+                    "tertiary": "#231300",
+                    "on-tertiary-fixed": "#291800",
+                    "secondary-fixed": "#ffddb4",
+                    "surface-container-high": "#e9e6f3",
+                    "surface-tint": "#4e5e80",
+                    "error-container": "#ffdad6",
+                    "primary-container": "#1a2b4a",
+                    "surface-container": "#efecf9",
+                    "inverse-surface": "#302f39",
+                    "on-error": "#ffffff",
+                    "primary": "#031634",
+                    "on-primary-fixed": "#081b39",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f5f2ff",
+                    "surface-container-highest": "#e4e1ee",
+                    "surface-dim": "#dbd8e5",
+                    "primary-fixed": "#d8e2ff",
+                    "secondary-container": "#feae2c",
+                    "tertiary-fixed-dim": "#f4bd71",
+                    "on-background": "#1b1b24",
+                    "tertiary-fixed": "#ffddb3",
+                    "surface": "#fcf8ff",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#1b1b24",
+                    "on-tertiary": "#ffffff",
+                    "surface-bright": "#fcf8ff",
+                    "on-secondary-fixed": "#291800",
+                    "background": "#fcf8ff",
+                    "on-primary-fixed-variant": "#364767",
+                    "on-tertiary-fixed-variant": "#633f00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "desktop-padding": "24px",
+                    "mobile-padding": "16px",
+                    "gutter": "16px",
+                    "component-gap": "8px",
+                    "section-gap": "32px"
+            },
+            "fontFamily": {
+                    "caption": ["Inter"],
+                    "headline": ["Inter"],
+                    "label": ["Inter"],
+                    "body": ["Inter"],
+                    "title": ["Inter"],
+                    "display": ["Inter"],
+                    "display-mobile": ["Inter"]
+            },
+            "fontSize": {
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "body": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "display": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F5F2FF; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .active-nav-border { border-bottom-width: 3px; border-color: #feae2c; }
+        .amber-shadow { box-shadow: 0 4px 14px 0 rgba(254, 174, 44, 0.15); }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-desktop-padding h-[64px] bg-surface shadow-sm border-b border-outline-variant">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="bg-secondary p-1 rounded">
+<span class="material-symbols-outlined text-white text-[20px]">inventory_2</span>
+</div>
+<span class="text-headline font-headline font-bold text-primary">StrongBox</span>
+</div>
+<div class="hidden md:flex items-center gap-6 h-[64px]">
+<a class="text-on-surface-variant font-label text-label h-full flex items-center hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-on-surface-variant font-label text-label h-full flex items-center hover:text-primary transition-colors" href="#">My Storage</a>
+<a class="text-on-surface-variant font-label text-label h-full flex items-center hover:text-primary transition-colors" href="#">Deliveries</a>
+<a class="text-primary font-label text-label h-full flex items-center border-b-2 border-secondary pb-1" href="#">Billing</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional user avatar for a logistics manager, presented as a clean studio portrait with soft lighting against a neutral grey background. The manager is wearing a crisp corporate shirt, conveying authority and reliability in a modern business context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChaqbActhrN7rkNmYsg-NbHCuDsWebYWeN49FzYQlNsXRUzx602jgMTX2TvnpNPEaJzhk9g_Fy_j_0jl7ISLI7qnnEy3NZuulLtNGfLqlP9ggtOYZPQQTq4Cj2cDi3M85XUJg2BiKtHeVw15gVlzxDHX4zPXdM0KwNlRFrLLM00OKFNqGRWulOfMApHG1opvvHwH4cGPo9CT5Sf1zqh8g0L_GqZHlcFfkpl293u5ycCRvQegv3d_xUfgoY-XVZVWdFdyrZUqI7tre1"/>
+</div>
+</div>
+</nav>
+<main class="pt-[88px] pb-12 px-desktop-padding max-w-7xl mx-auto space-y-section-gap">
+<!-- Header -->
+<header class="flex flex-col gap-1">
+<h1 class="font-display text-display text-primary">Billing &amp; Subscription</h1>
+<p class="font-body text-body text-on-surface-variant">Manage your warehouse allocation and subscription plans.</p>
+</header>
+<!-- Top Cards (2 columns) -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+<!-- Warehouse Capacity -->
+<div class="bg-surface p-6 rounded-xl border border-outline-variant shadow-[0_2px_8px_rgba(0,0,0,0.08)] flex flex-col justify-between">
+<div>
+<h2 class="font-title text-title text-primary mb-4">Warehouse Capacity</h2>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="font-display text-display text-primary">84 <span class="text-title text-on-surface-variant font-normal">/ 100 units used</span></span>
+<span class="font-label text-label text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+                                Approaching plan limit
+                            </span>
+</div>
+<div class="w-full bg-surface-container h-3 rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full rounded-full" style="width: 84%"></div>
+</div>
+</div>
+</div>
+<div class="flex gap-3 mt-8">
+<button class="px-6 py-2.5 bg-primary text-white font-label text-label rounded-lg hover:opacity-90 transition-all">Upgrade Plan</button>
+<button class="px-6 py-2.5 border border-primary text-primary font-label text-label rounded-lg hover:bg-surface-container-low transition-all">View Analytics</button>
+</div>
+</div>
+<!-- Active Plan -->
+<div class="bg-primary p-6 rounded-xl shadow-lg flex flex-col justify-between relative overflow-hidden">
+<!-- Subtle background pattern -->
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[120px] text-white">verified_user</span>
+</div>
+<div class="relative z-10">
+<p class="text-secondary font-label text-[12px] tracking-widest uppercase mb-1">ACTIVE PLAN</p>
+<h2 class="font-display text-[36px] text-white font-bold leading-none mb-2">Professional</h2>
+<div class="flex items-baseline gap-2">
+<span class="text-white font-title text-title">$149 / month</span>
+<span class="text-primary-fixed-dim text-caption font-caption">• Next billing: Aug 15, 2026</span>
+</div>
+</div>
+<div class="mt-8 relative z-10">
+<button class="px-6 py-2.5 bg-secondary-container text-primary font-label text-label rounded-lg hover:opacity-90 transition-all font-bold">
+                        Manage Billing
+                    </button>
+</div>
+</div>
+</section>
+<!-- Plan Selection Row -->
+<section class="space-y-gutter">
+<h3 class="font-title text-title text-primary">Available Plans</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Starter -->
+<div class="bg-surface p-6 rounded-xl border border-outline-variant hover:border-primary transition-all group">
+<div class="mb-6">
+<h4 class="font-title text-title text-primary mb-1">Starter</h4>
+<p class="font-caption text-caption text-on-surface-variant">Ideal for individuals &amp; small setups.</p>
+</div>
+<div class="mb-6">
+<span class="font-display text-display text-primary">$49</span>
+<span class="text-on-surface-variant font-body">/mo</span>
+</div>
+<ul class="space-y-3 mb-8">
+<li class="flex items-center gap-2 text-body text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+                            25 Storage Units
+                        </li>
+<li class="flex items-center gap-2 text-body text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+                            Basic Analytics
+                        </li>
+</ul>
+<button class="w-full py-2.5 border border-primary text-primary font-label text-label rounded-lg group-hover:bg-primary group-hover:text-white transition-all">Switch to Starter</button>
+</div>
+<!-- Professional -->
+<div class="bg-surface p-6 rounded-xl border-2 border-secondary amber-shadow relative transform lg:scale-105 z-20">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-white px-4 py-1 rounded-full text-[12px] font-bold tracking-tight">
+                        CURRENT PLAN
+                    </div>
+<div class="mb-6">
+<h4 class="font-title text-title text-primary mb-1">Professional</h4>
+<p class="font-caption text-caption text-on-surface-variant">Scaling logistics for growing teams.</p>
+</div>
+<div class="mb-6">
+<span class="font-display text-display text-primary">$149</span>
+<span class="text-on-surface-variant font-body">/mo</span>
+</div>
+<ul class="space-y-3 mb-8">
+<li class="flex items-center gap-2 text-body text-primary font-medium">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+                            100 Storage Units
+                        </li>
+<li class="flex items-center gap-2 text-body text-primary font-medium">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+                            Advanced Analytics
+                        </li>
+<li class="flex items-center gap-2 text-body text-primary font-medium">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+                            Priority Support
+                        </li>
+</ul>
+<button class="w-full py-2.5 bg-primary text-white font-label text-label rounded-lg opacity-50 cursor-default">Current Subscription</button>
+</div>
+<!-- Enterprise -->
+<div class="bg-surface p-6 rounded-xl border border-outline-variant hover:border-primary transition-all group">
+<div class="mb-6">
+<h4 class="font-title text-title text-primary mb-1">Enterprise</h4>
+<p class="font-caption text-caption text-on-surface-variant">Custom solutions for heavy logistics.</p>
+</div>
+<div class="mb-6">
+<span class="font-display text-display text-primary">Custom</span>
+<span class="text-on-surface-variant font-body">/mo</span>
+</div>
+<ul class="space-y-3 mb-8">
+<li class="flex items-center gap-2 text-body text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+                            Unlimited Units
+                        </li>
+<li class="flex items-center gap-2 text-body text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+                            Dedicated Account Mgr
+                        </li>
+</ul>
+<button class="w-full py-2.5 bg-primary text-white font-label text-label rounded-lg hover:opacity-90 transition-all">Contact Sales</button>
+</div>
+</div>
+</section>
+<!-- Payment History -->
+<section class="space-y-gutter">
+<h3 class="font-title text-title text-primary">Payment History</h3>
+<div class="bg-surface rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container border-b border-outline-variant">
+<tr>
+<th class="px-6 py-4 font-label text-[12px] text-on-surface-variant uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 font-label text-[12px] text-on-surface-variant uppercase tracking-wider">Description</th>
+<th class="px-6 py-4 font-label text-[12px] text-on-surface-variant uppercase tracking-wider">Amount</th>
+<th class="px-6 py-4 font-label text-[12px] text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 font-label text-[12px] text-on-surface-variant uppercase tracking-wider text-right">Invoice</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 text-body text-on-surface">Jul 15, 2026</td>
+<td class="px-6 py-4 font-medium text-primary">Professional Plan - Monthly</td>
+<td class="px-6 py-4 text-body text-on-surface">$149.00</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[12px] font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check</span> Paid
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-all text-primary">
+<span class="material-symbols-outlined">download</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 text-body text-on-surface">Jun 15, 2026</td>
+<td class="px-6 py-4 font-medium text-primary">Professional Plan - Monthly</td>
+<td class="px-6 py-4 text-body text-on-surface">$149.00</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[12px] font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check</span> Paid
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-all text-primary">
+<span class="material-symbols-outlined">download</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 text-body text-on-surface">May 15, 2026</td>
+<td class="px-6 py-4 font-medium text-primary">Professional Plan - Monthly</td>
+<td class="px-6 py-4 text-body text-on-surface">$149.00</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[12px] font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check</span> Paid
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-all text-primary">
+<span class="material-symbols-outlined">download</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 text-body text-on-surface">Apr 15, 2026</td>
+<td class="px-6 py-4 font-medium text-primary">Professional Plan - Monthly</td>
+<td class="px-6 py-4 text-body text-on-surface">$149.00</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[12px] font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check</span> Paid
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-all text-primary">
+<span class="material-symbols-outlined">download</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</main>
+<!-- Mobile Bottom NavBar (Hidden on Desktop) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-mobile-padding py-component-gap md:hidden bg-surface rounded-t-xl shadow-lg">
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-label">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-label">Storage</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="text-[10px] font-label">Requests</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary font-bold">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-[10px] font-label">Billing</span>
+</button>
+</nav>
+<script>
+        // Simple interactivity for plan selection
+        document.querySelectorAll('.grid-cols-3 > div').forEach(card => {
+            if(!card.classList.contains('border-secondary')) {
+                card.addEventListener('mouseenter', () => {
+                    card.classList.add('shadow-md');
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.classList.remove('shadow-md');
+                });
+            }
+        });
+    </script>
+</body></html>

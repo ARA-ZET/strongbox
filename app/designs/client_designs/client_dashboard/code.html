@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox Client Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Use the provided Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#291800",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "surface-variant": "#e4e2e5",
+                    "background": "#fbf8fc",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-bright": "#fbf8fc",
+                    "primary-container": "#1a2b4a",
+                    "secondary": "#835500",
+                    "surface-container": "#efedf0",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed": "#081b39",
+                    "outline-variant": "#c5c6cf",
+                    "on-tertiary-fixed-variant": "#633f00",
+                    "on-background": "#1b1b1e",
+                    "on-primary-fixed-variant": "#364767",
+                    "surface-tint": "#4e5e80",
+                    "surface-container-high": "#e9e7eb",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f5f3f6",
+                    "inverse-primary": "#b6c6ee",
+                    "secondary-container": "#feae2c",
+                    "tertiary-fixed": "#ffddb3",
+                    "on-primary-container": "#8293b7",
+                    "primary-fixed-dim": "#b6c6ee",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#6b4500",
+                    "tertiary-fixed-dim": "#f4bd71",
+                    "outline": "#75777e",
+                    "surface": "#fbf8fc",
+                    "surface-container-highest": "#e4e2e5",
+                    "surface-dim": "#dbd9dc",
+                    "inverse-on-surface": "#f2f0f3",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#031634",
+                    "tertiary-container": "#3e2600",
+                    "on-tertiary-container": "#ba8943",
+                    "secondary-fixed-dim": "#ffb954",
+                    "on-surface": "#1b1b1e",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#303033",
+                    "secondary-fixed": "#ffddb4",
+                    "tertiary": "#231300",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#44474e",
+                    "on-secondary-fixed": "#291800"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack_md": "16px",
+                    "container_max": "1200px",
+                    "page_padding": "24px",
+                    "stack_lg": "24px",
+                    "gutter": "16px",
+                    "stack_sm": "8px"
+            },
+            "fontFamily": {
+                    "caption-xs": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "caption-xs": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #fbf8fc;
+            font-family: 'Inter', sans-serif;
+            color: #1b1b1e;
+        }
+        .shadow-soft {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="bg-surface sticky top-0 z-50 h-[64px] border-b border-outline-variant">
+<div class="max-w-container_max mx-auto px-page_padding h-full flex justify-between items-center">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md text-primary tracking-tight">StrongBox</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="font-body-md text-body-md text-primary font-bold border-b-2 border-primary pb-1" href="#">Dashboard</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">My Items</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Quotes</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Invoices</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full border border-outline-variant overflow-hidden bg-surface-container-low cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a corporate executive in his late 40s, Richard, with a friendly and trustworthy expression. He has short hair and is wearing a clean, crisp business casual shirt. The background is a soft, blurred office environment with warm, high-key lighting to emphasize security and modern professionalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYM0QhEdp14zWfwFtvQIMRJJ11uF23xHZh5GsurlGp0U-0A8Ipd4WnOyo2MQyclcSfrqX79XOftF00VfuvqG9kayV5aWz_f_nbl_j_4Onr6xVRAAO00Z6_SySvtlLqZhlJ9RvZ36kt3KXjyun1wiqCE_7aLu1kAjwXCmAW9H-IOqu3dnjp5x8-9zM5e2k1r235pAVHUL91XmMkn817nFrsjCpsM998FW8Z0p9_I0px12Tg4cbivtM0DCQqIvzBMTmNIuD8DB3Aic0D"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-container_max mx-auto px-page_padding py-stack_lg">
+<!-- Welcome Header -->
+<div class="mb-stack_lg">
+<h1 class="font-display-lg text-display-lg text-on-background">Hello, Richard 👋</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Your belongings are safe.</p>
+</div>
+<!-- Stat Cards Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-stack_md mb-stack_lg">
+<!-- Monthly Storage -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex flex-col justify-between min-h-[120px]">
+<div>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant mb-1">Monthly Storage</p>
+<p class="font-title-sm text-title-sm text-on-background">R685</p>
+</div>
+<div class="flex">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">Active</span>
+</div>
+</div>
+<!-- Items in Storage -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex flex-col justify-between min-h-[120px]">
+<div>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant mb-1">Items in Storage</p>
+<p class="font-title-sm text-title-sm text-on-background">31</p>
+</div>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant">23 boxes + 8 loose</p>
+</div>
+<!-- Next Billing -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex flex-col justify-between min-h-[120px]">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant mb-1">Next Billing</p>
+<p class="font-title-sm text-title-sm text-on-background">1 Aug 2026</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant">calendar_today</span>
+</div>
+</div>
+<!-- Next Free Retrieval -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex flex-col justify-between min-h-[120px]">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant mb-1">Next Free Retrieval</p>
+<p class="font-title-sm text-title-sm text-on-background">15 Sep 2026</p>
+</div>
+<span class="material-symbols-outlined text-secondary">card_giftcard</span>
+</div>
+</div>
+<!-- Balance -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex flex-col justify-between min-h-[120px]">
+<div>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant mb-1">Balance</p>
+<p class="font-title-sm text-title-sm text-on-background">R0.00</p>
+</div>
+<div class="flex">
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm">Paid</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons Row -->
+<div class="flex flex-wrap gap-stack_md mb-stack_lg">
+<button class="bg-secondary-container text-on-secondary-container px-stack_lg py-stack_sm rounded-lg font-title-sm text-title-sm hover:opacity-90 transition-opacity">Get New Quote</button>
+<button class="bg-primary text-on-primary px-stack_lg py-stack_sm rounded-lg font-title-sm text-title-sm hover:opacity-90 transition-opacity">Request Retrieval</button>
+<button class="border border-outline text-on-background px-stack_lg py-stack_sm rounded-lg font-title-sm text-title-sm hover:bg-surface-container transition-colors">View Inventory</button>
+<button class="border border-outline text-on-background px-stack_lg py-stack_sm rounded-lg font-title-sm text-title-sm hover:bg-surface-container transition-colors">Invoices</button>
+</div>
+<!-- Two Column Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-stack_lg">
+<!-- Left 65%: Storage Details -->
+<div class="lg:col-span-8">
+<div class="flex justify-between items-center mb-stack_md">
+<h2 class="font-headline-md text-headline-md text-on-background">Your Storage</h2>
+<a class="text-secondary font-label-sm text-label-sm hover:underline" href="#">View All →</a>
+</div>
+<!-- Categories Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-stack_md mb-stack_lg">
+<!-- Kitchen -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex items-center justify-between border border-outline-variant hover:border-secondary transition-colors cursor-pointer group">
+<div class="flex items-center gap-stack_sm">
+<span class="text-2xl">📦</span>
+<span class="font-title-sm text-title-sm group-hover:text-secondary">Kitchen</span>
+</div>
+<span class="bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-lg font-label-sm text-label-sm">4 boxes</span>
+</div>
+<!-- Books -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex items-center justify-between border border-outline-variant hover:border-secondary transition-colors cursor-pointer group">
+<div class="flex items-center gap-stack_sm">
+<span class="text-2xl">📚</span>
+<span class="font-title-sm text-title-sm group-hover:text-secondary">Books</span>
+</div>
+<span class="bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-lg font-label-sm text-label-sm">6 boxes</span>
+</div>
+<!-- Winter Clothes -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex items-center justify-between border border-outline-variant hover:border-secondary transition-colors cursor-pointer group">
+<div class="flex items-center gap-stack_sm">
+<span class="text-2xl">🧥</span>
+<span class="font-title-sm text-title-sm group-hover:text-secondary">Winter Clothes</span>
+</div>
+<span class="bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-lg font-label-sm text-label-sm">5 boxes</span>
+</div>
+<!-- Baby Clothes -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex items-center justify-between border border-outline-variant hover:border-secondary transition-colors cursor-pointer group">
+<div class="flex items-center gap-stack_sm">
+<span class="text-2xl">🧸</span>
+<span class="font-title-sm text-title-sm group-hover:text-secondary">Baby Clothes</span>
+</div>
+<span class="bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-lg font-label-sm text-label-sm">3 boxes</span>
+</div>
+<!-- Garage -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex items-center justify-between border border-outline-variant hover:border-secondary transition-colors cursor-pointer group">
+<div class="flex items-center gap-stack_sm">
+<span class="text-2xl">🔧</span>
+<span class="font-title-sm text-title-sm group-hover:text-secondary">Garage</span>
+</div>
+<span class="bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-lg font-label-sm text-label-sm">3 boxes</span>
+</div>
+<!-- Office -->
+<div class="bg-surface p-stack_md rounded-xl shadow-soft flex items-center justify-between border border-outline-variant hover:border-secondary transition-colors cursor-pointer group">
+<div class="flex items-center gap-stack_sm">
+<span class="text-2xl">💼</span>
+<span class="font-title-sm text-title-sm group-hover:text-secondary">Office</span>
+</div>
+<span class="bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-lg font-label-sm text-label-sm">2 boxes</span>
+</div>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-background mb-stack_md">Loose Items</h2>
+<!-- Horizontal Scroll Items -->
+<div class="flex overflow-x-auto gap-stack_md pb-4 hide-scrollbar">
+<!-- Queen Bed -->
+<div class="min-w-[180px] bg-surface p-stack_md rounded-xl shadow-soft border border-outline-variant flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl mb-stack_sm text-primary">bed</span>
+<p class="font-title-sm text-title-sm mb-1">Queen Bed</p>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full text-[10px] font-bold mb-stack_sm">inStorage</span>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant">R120/mo</p>
+</div>
+<!-- Dining Table -->
+<div class="min-w-[180px] bg-surface p-stack_md rounded-xl shadow-soft border border-outline-variant flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl mb-stack_sm text-primary">table_restaurant</span>
+<p class="font-title-sm text-title-sm mb-1">Dining Table</p>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full text-[10px] font-bold mb-stack_sm">inStorage</span>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant">R95/mo</p>
+</div>
+<!-- TV 55" -->
+<div class="min-w-[180px] bg-surface p-stack_md rounded-xl shadow-soft border border-outline-variant flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl mb-stack_sm text-primary">tv</span>
+<p class="font-title-sm text-title-sm mb-1">TV 55"</p>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full text-[10px] font-bold mb-stack_sm">inStorage</span>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant">R45/mo</p>
+</div>
+<!-- Mountain Bike -->
+<div class="min-w-[180px] bg-surface p-stack_md rounded-xl shadow-soft border border-outline-variant flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl mb-stack_sm text-primary">pedal_bike</span>
+<p class="font-title-sm text-title-sm mb-1">Mountain Bike</p>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full text-[10px] font-bold mb-stack_sm">inStorage</span>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant">R60/mo</p>
+</div>
+<!-- Mirror -->
+<div class="min-w-[180px] bg-surface p-stack_md rounded-xl shadow-soft border border-outline-variant flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl mb-stack_sm text-primary">filter_frames</span>
+<p class="font-title-sm text-title-sm mb-1">Mirror</p>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full text-[10px] font-bold mb-stack_sm">inStorage</span>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant">R25/mo</p>
+</div>
+</div>
+</div>
+<!-- Right 35%: Tracking & Snapshot -->
+<aside class="lg:col-span-4 space-y-stack_lg">
+<!-- Active Retrieval Card -->
+<div class="bg-surface rounded-xl shadow-soft border-l-4 border-secondary p-stack_md">
+<div class="flex items-start gap-stack_md mb-stack_md">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">local_shipping</span>
+</div>
+<div class="flex-1">
+<p class="font-title-sm text-title-sm text-on-background">Delivering: 2 boxes</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Wed 23 Jul</p>
+</div>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm py-stack_sm rounded-lg hover:opacity-90 transition-opacity">Track</button>
+</div>
+<!-- Storage Snapshot Card -->
+<div class="bg-surface rounded-xl shadow-soft p-stack_md">
+<h3 class="font-title-sm text-title-sm text-on-background mb-stack_sm">Storage Snapshot</h3>
+<!-- Progress Bar -->
+<div class="mb-stack_md">
+<div class="flex justify-between items-center mb-1">
+<span class="font-body-md text-body-md text-on-surface-variant">14.2 / 20 m³</span>
+<span class="font-caption-xs text-caption-xs text-secondary font-bold">71% Full</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 71%;"></div>
+</div>
+</div>
+<!-- Visual Grid Representation -->
+<div class="grid grid-cols-5 gap-2 mb-stack_sm">
+<!-- Used squares -->
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<div class="aspect-square rounded-sm bg-secondary"></div>
+<!-- Empty squares -->
+<div class="aspect-square rounded-sm border border-outline-variant bg-surface-container-low"></div>
+<div class="aspect-square rounded-sm border border-outline-variant bg-surface-container-low"></div>
+<div class="aspect-square rounded-sm border border-outline-variant bg-surface-container-low"></div>
+</div>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant text-center">31 items total</p>
+</div>
+<!-- Warehouse Banner / Help (Extra) -->
+<div class="bg-primary-container text-white p-stack_md rounded-xl relative overflow-hidden group">
+<div class="relative z-10">
+<p class="font-title-sm text-title-sm text-primary-fixed mb-1">Need more space?</p>
+<p class="font-body-md text-body-md text-on-primary-container mb-stack_md">Upgrade your plan to get an extra 10m³ and priority retrieval.</p>
+<button class="font-label-sm text-label-sm text-white flex items-center gap-1 group-hover:gap-2 transition-all">
+                            View Plans <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">warehouse</span>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Bottom Nav for Mobile Only -->
+<footer class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface shadow-[0_-2px_8px_rgba(0,0,0,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-sm text-label-sm">Items</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-sm text-label-sm">Schedule</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Account</span>
+</a>
+</footer>
+<script>
+        // Micro-interaction for horizontal scroll
+        const scrollContainer = document.querySelector('.hide-scrollbar');
+        if (scrollContainer) {
+            scrollContainer.addEventListener('wheel', (evt) => {
+                evt.preventDefault();
+                scrollContainer.scrollLeft += evt.deltaY;
+            });
+        }
+
+        // Add active states for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => btn.classList.add('scale-95'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('scale-95'));
+            btn.addEventListener('mouseleave', () => btn.classList.remove('scale-95'));
+        });
+    </script>
+</body></html>

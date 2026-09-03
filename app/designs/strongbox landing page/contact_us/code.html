@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact StrongBox | Premium Valet Storage</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "error": "#ba1a1a",
+                "lavender-haze": "#F5F2FF",
+                "background": "#fcf8ff",
+                "surface-bright": "#fcf8ff",
+                "primary": "#031634",
+                "on-error-container": "#93000a",
+                "secondary": "#835500",
+                "surface-variant": "#e4e1ee",
+                "on-tertiary-fixed-variant": "#5c4217",
+                "on-surface": "#1b1b24",
+                "tertiary": "#221400",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-fixed": "#291800",
+                "on-secondary": "#ffffff",
+                "surface-tint": "#4e5e80",
+                "on-primary-fixed-variant": "#364767",
+                "tertiary-fixed-dim": "#e7c18a",
+                "surface-container": "#efecf9",
+                "on-surface-variant": "#44474e",
+                "on-primary-container": "#8293b7",
+                "surface-container-highest": "#e4e1ee",
+                "on-secondary-fixed-variant": "#633f00",
+                "outline": "#75777e",
+                "surface-container-high": "#e9e6f3",
+                "surface": "#fcf8ff",
+                "primary-container": "#1a2b4a",
+                "on-tertiary-fixed": "#281800",
+                "inverse-on-surface": "#f2effc",
+                "action-text": "#6B4500",
+                "on-tertiary-container": "#af8d5b",
+                "inverse-primary": "#b6c6ee",
+                "surface-dim": "#dbd8e5",
+                "primary-fixed": "#d8e2ff",
+                "on-primary-fixed": "#081b39",
+                "on-tertiary": "#ffffff",
+                "tertiary-container": "#3d2700",
+                "secondary-fixed-dim": "#ffb954",
+                "primary-fixed-dim": "#b6c6ee",
+                "surface-container-low": "#f5f2ff",
+                "surface-white": "#FFFFFF",
+                "on-background": "#1b1b24",
+                "error-container": "#ffdad6",
+                "on-primary": "#ffffff",
+                "secondary-container": "#feae2c",
+                "on-secondary-container": "#6b4500",
+                "secondary-fixed": "#ffddb4",
+                "inverse-surface": "#302f39",
+                "on-error": "#ffffff",
+                "tertiary-fixed": "#ffddaf",
+                "outline-variant": "#c5c6cf"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.8px",
+                "xl": "12px",
+                "full": "9999px"
+            },
+            "spacing": {
+                "base": "8px",
+                "margin-desktop": "48px",
+                "margin-mobile": "16px",
+                "container-max": "1200px",
+                "gutter": "24px"
+            },
+            "fontFamily": {
+                "display-bold": ["Inter", "sans-serif"],
+                "body-strong": ["Inter", "sans-serif"],
+                "label-caps": ["Inter", "sans-serif"],
+                "body-main": ["Inter", "sans-serif"],
+                "headline-h2": ["Inter", "sans-serif"],
+                "headline-h1-mobile": ["Inter", "sans-serif"],
+                "headline-h1": ["Inter", "sans-serif"],
+                "headline-h3": ["Inter", "sans-serif"]
+            },
+            "fontSize": {
+                "display-bold": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-strong": ["16px", {"lineHeight": "1.6", "fontWeight": "600"}],
+                "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                "body-main": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "headline-h2": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "headline-h1-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "headline-h1": ["36px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "headline-h3": ["22px", {"lineHeight": "1.4", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .form-input-focus:focus {
+            border-color: #FEAE2C !important;
+            box-shadow: 0 0 0 1px #FEAE2C;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-lavender-haze font-body-main text-on-surface selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full h-[72px] bg-surface-white z-50 shadow-[0px_4px_20px_rgba(3,22,52,0.04)]">
+<div class="flex justify-between items-center h-full max-w-container-max mx-auto px-margin-desktop">
+<div class="font-display-bold text-headline-h2 text-primary flex items-center gap-2">
+                StrongBox
+            </div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-primary font-body-main hover:text-secondary transition-colors duration-200" href="#">Home</a>
+<a class="text-primary font-body-main hover:text-secondary transition-colors duration-200" href="#">How It Works</a>
+<a class="text-primary font-body-main hover:text-secondary transition-colors duration-200" href="#">Pricing</a>
+<a class="text-primary font-body-main hover:text-secondary transition-colors duration-200" href="#">About</a>
+<a class="text-secondary font-body-strong border-b-2 border-secondary pb-1" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary font-body-strong hover:text-secondary transition-colors duration-200">Log In</button>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-3 rounded-xl font-body-strong hover:brightness-95 transition-all active:scale-95">Get Started Free</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="pt-[152px] pb-[80px] px-margin-desktop text-center max-w-container-max mx-auto">
+<h1 class="font-display-bold text-display-bold text-primary mb-4">Get in Touch</h1>
+<p class="font-body-main text-on-surface-variant max-w-xl mx-auto">
+            Experience the gold standard of valet storage. Our concierge team typically responds within 2 hours during operating hours.
+        </p>
+</header>
+<!-- Main Content Grid -->
+<main class="max-w-container-max mx-auto px-margin-desktop pb-[120px]">
+<div class="grid grid-cols-12 gap-gutter items-start">
+<!-- Contact Form Card (60%) -->
+<section class="col-span-12 lg:col-span-7 bg-surface-white rounded-xl shadow-[0px_4px_20px_rgba(3,22,52,0.04)] p-10">
+<h2 class="font-headline-h2 text-headline-h2 text-primary mb-8">Send us a message</h2>
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase">Full Name</label>
+<input class="w-full h-[56px] px-4 rounded-xl border border-primary/15 bg-surface-white form-input-focus transition-all font-body-main text-on-surface placeholder:text-on-surface-variant/40" placeholder="John Doe" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase">Email Address</label>
+<input class="w-full h-[56px] px-4 rounded-xl border border-primary/15 bg-surface-white form-input-focus transition-all font-body-main text-on-surface placeholder:text-on-surface-variant/40" placeholder="john@example.com" type="email"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase">Phone Number</label>
+<input class="w-full h-[56px] px-4 rounded-xl border border-primary/15 bg-surface-white form-input-focus transition-all font-body-main text-on-surface placeholder:text-on-surface-variant/40" placeholder="+27 00 000 0000" type="tel"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase">Subject</label>
+<div class="relative">
+<select class="w-full h-[56px] px-4 rounded-xl border border-primary/15 bg-surface-white form-input-focus transition-all font-body-main text-on-surface appearance-none">
+<option>General Inquiry</option>
+<option>New Booking</option>
+<option>Billing Question</option>
+<option>Corporate Solutions</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block uppercase">Message</label>
+<textarea class="w-full p-4 rounded-xl border border-primary/15 bg-surface-white form-input-focus transition-all font-body-main text-on-surface placeholder:text-on-surface-variant/40 resize-none" placeholder="How can our valet team assist you today?" rows="5"></textarea>
+</div>
+<button class="w-full h-[56px] bg-secondary-container text-on-secondary-container font-body-strong rounded-xl hover:brightness-95 transition-all flex items-center justify-center gap-2 group active:scale-[0.98]" type="submit">
+                        Send Message
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">send</span>
+</button>
+</form>
+</section>
+<!-- Info Stack (40%) -->
+<aside class="col-span-12 lg:col-span-5 space-y-6">
+<!-- Contact Info Card -->
+<div class="bg-surface-white rounded-xl shadow-[0px_4px_20px_rgba(3,22,52,0.04)] p-8">
+<h3 class="font-headline-h3 text-headline-h3 text-primary mb-6">Contact Details</h3>
+<div class="space-y-5">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-lavender-haze flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary" data-weight="fill" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div>
+<p class="font-body-strong text-on-surface">Cape Town HQ</p>
+<p class="font-body-main text-on-surface-variant">123 Victoria Road, Woodstock,<br/>Cape Town, 7925, South Africa</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-lavender-haze flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary" data-weight="fill" style="font-variation-settings: 'FILL' 1;">mail</span>
+</div>
+<div>
+<p class="font-body-strong text-on-surface">Email Us</p>
+<p class="font-body-main text-on-surface-variant">concierge@strongbox.co.za</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-lavender-haze flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary" data-weight="fill" style="font-variation-settings: 'FILL' 1;">call</span>
+</div>
+<div>
+<p class="font-body-strong text-on-surface">Phone Support</p>
+<p class="font-body-main text-on-surface-variant">+27 (0) 21 555 0123</p>
+</div>
+</div>
+<div class="flex items-start gap-4 pt-4 border-t border-surface-variant/30">
+<div class="w-10 h-10 rounded-full bg-lavender-haze flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">schedule</span>
+</div>
+<div>
+<p class="font-body-strong text-on-surface">Operating Hours</p>
+<p class="font-body-main text-on-surface-variant">Mon – Fri: 08:00 – 18:00</p>
+<p class="font-body-main text-on-surface-variant">Sat: 09:00 – 13:00</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Map Placeholder -->
+<div class="bg-surface-variant/40 rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(3,22,52,0.04)] h-[240px] relative">
+<div class="absolute inset-0 bg-primary/5 flex items-center justify-center">
+<div class="relative">
+<div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center shadow-lg animate-bounce duration-1000">
+<span class="material-symbols-outlined text-on-secondary-container" data-weight="fill" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="w-8 h-2 bg-primary/10 rounded-[100%] blur-sm absolute -bottom-1 left-2"></div>
+</div>
+</div>
+<!-- Using data-location as specified -->
+<div class="hidden" data-location="Cape Town, WC, South Africa" style=""></div>
+<div class="w-full h-full bg-cover bg-center grayscale opacity-60" data-alt="An artistic, stylized minimalist map of Cape Town's Waterfront and Woodstock districts. The map uses a sophisticated corporate palette of deep navy blues, soft lavenders, and crisp whites. A vibrant amber pin marks a specific location, with subtle 3D depth and soft shadows, creating a high-end concierge service aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBgodpFwSuujr52_fShZawuovA5n-dnxEx3XjUgI41X_-N949Ei3uhhFbK2MceiCaNOOBlykQgmEQ0xM5YbJb1xmo6wPqr7txYt6ubfITUSH-pCIZw9t2vRtNw2OHDPWKQq2UDxChNtJeHdmEb83qjQtqW-O33RnUm1fEPIhETD-G9hsFXbAjbdS2Ppqs5GhsNIyxwZ1a-RDo_1NpcmPYT_XEXj5MspgidN8kQz3ZyaKzwWN5wO_ykQuZNqAdwAJ_kEgxphCZZjaCXb')"></div>
+<div class="absolute bottom-4 left-4 bg-surface-white/90 backdrop-blur px-4 py-2 rounded-lg text-label-caps font-label-caps text-primary border border-primary/5">
+                        VIEW ON GOOGLE MAPS
+                    </div>
+</div>
+<!-- Social Card -->
+<div class="bg-surface-white rounded-xl shadow-[0px_4px_20px_rgba(3,22,52,0.04)] p-8">
+<h3 class="font-headline-h3 text-headline-h3 text-primary mb-6">Connect With Us</h3>
+<div class="flex gap-4">
+<a class="w-12 h-12 rounded-xl bg-lavender-haze flex items-center justify-center text-primary hover:bg-secondary-container hover:text-on-secondary-container transition-all group shadow-sm" href="#">
+<span class="material-symbols-outlined">camera</span>
+</a>
+<a class="w-12 h-12 rounded-xl bg-lavender-haze flex items-center justify-center text-primary hover:bg-secondary-container hover:text-on-secondary-container transition-all group shadow-sm" href="#">
+<span class="material-symbols-outlined">qr_code_2</span>
+</a>
+<a class="w-12 h-12 rounded-xl bg-lavender-haze flex items-center justify-center text-primary hover:bg-secondary-container hover:text-on-secondary-container transition-all group shadow-sm" href="#">
+<span class="material-symbols-outlined">work</span>
+</a>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary pt-16 pb-8 border-t-4 border-secondary">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="space-y-6">
+<div class="font-display-bold text-headline-h3 text-surface-white">StrongBox</div>
+<p class="text-surface-variant/60 font-body-main max-w-xs">
+                    Redefining storage through premium valet services. We take the hassle out of organization, one box at a time.
+                </p>
+</div>
+<div class="grid grid-cols-2 gap-8 md:col-span-2">
+<div class="space-y-4">
+<h4 class="text-surface-white font-body-strong uppercase tracking-wider">Navigation</h4>
+<div class="flex flex-col gap-3">
+<a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">Home</a>
+<a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">How It Works</a>
+<a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">Pricing</a>
+<a class="text-secondary-fixed font-bold font-body-main" href="#">Contact</a>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="text-surface-white font-body-strong uppercase tracking-wider">Legal</h4>
+<div class="flex flex-col gap-3">
+<a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">FAQ</a>
+</div>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop mt-16 pt-8 border-t border-surface-variant/10 text-center md:text-left">
+<p class="text-surface-variant/60 font-label-caps text-label-caps">© 2024 StrongBox Valet Storage. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        // Form field focus effects and submission feedback
+        const inputs = document.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('label')?.classList.add('text-secondary');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.querySelector('label')?.classList.remove('text-secondary');
+            });
+        });
+
+        // Simple button active state micro-interaction
+        const mainBtn = document.querySelector('button[type="submit"]');
+        if(mainBtn) {
+            mainBtn.addEventListener('click', function() {
+                const originalContent = this.innerHTML;
+                this.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Sending...';
+                this.classList.add('opacity-80');
+                setTimeout(() => {
+                    this.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Message Sent!';
+                    this.classList.replace('bg-secondary-container', 'bg-green-600');
+                    this.classList.replace('text-on-secondary-container', 'text-white');
+                    setTimeout(() => {
+                        this.innerHTML = originalContent;
+                        this.classList.replace('bg-green-600', 'bg-secondary-container');
+                        this.classList.replace('text-white', 'text-on-secondary-container');
+                        this.classList.remove('opacity-80');
+                    }, 3000);
+                }, 1500);
+            });
+        }
+    </script>
+</body></html>

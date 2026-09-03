@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox - Unit Tracking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pulse-amber {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+        .bento-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#6b4500",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "surface-container-high": "#e9e6f3",
+                        "primary-fixed": "#d8e2ff",
+                        "primary": "#031634",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#291800",
+                        "secondary-fixed": "#ffddb4",
+                        "surface-variant": "#e4e1ee",
+                        "inverse-surface": "#302f39",
+                        "background": "#fcf8ff",
+                        "surface-bright": "#fcf8ff",
+                        "surface": "#fcf8ff",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#3e2600",
+                        "surface-container": "#efecf9",
+                        "on-surface": "#1b1b24",
+                        "outline-variant": "#c5c6cf",
+                        "inverse-primary": "#b6c6ee",
+                        "surface-container-highest": "#e4e1ee",
+                        "primary-container": "#1a2b4a",
+                        "on-primary-fixed": "#081b39",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "surface-tint": "#4e5e80",
+                        "secondary-fixed-dim": "#ffb954",
+                        "secondary-container": "#feae2c",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#dbd8e5",
+                        "inverse-on-surface": "#f2effc",
+                        "on-tertiary-fixed-variant": "#633f00",
+                        "on-primary-fixed-variant": "#364767",
+                        "surface-container-low": "#f5f2ff",
+                        "on-tertiary-container": "#ba8943",
+                        "secondary": "#835500",
+                        "on-primary-container": "#8293b7",
+                        "on-background": "#1b1b24",
+                        "on-tertiary-fixed": "#291800",
+                        "tertiary-fixed-dim": "#f4bd71",
+                        "tertiary-fixed": "#ffddb3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#44474e",
+                        "outline": "#75777e",
+                        "error": "#ba1a1a",
+                        "tertiary": "#231300",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "component-gap": "8px",
+                        "mobile-padding": "16px",
+                        "gutter": "16px",
+                        "section-gap": "32px",
+                        "desktop-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "title": ["Inter"],
+                        "headline": ["Inter"],
+                        "display": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-secondary-container">
+<!-- Top Navigation (Shared Component) -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-desktop-padding max-w-full bg-surface dark:bg-surface-container-highest h-[64px] shadow-sm border-b border-outline-variant dark:border-outline">
+<div class="flex items-center gap-8">
+<span class="text-headline font-headline font-bold text-primary dark:text-primary-fixed tracking-tight">StrongBox</span>
+<div class="hidden md:flex gap-6 h-full items-center">
+<a class="font-title text-title text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Home</a>
+<a class="font-title text-title text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">My Storage</a>
+<a class="font-title text-title text-primary dark:text-secondary-fixed-dim border-b-2 border-secondary dark:border-secondary-fixed-dim pb-1" href="#">Deliveries</a>
+<a class="font-title text-title text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Billing</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged male user with short hair, wearing a navy blue corporate vest. The background is a clean, bright, high-tech office setting with soft focus, maintaining the navy and white brand palette of a high-end logistics company." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJnOZve5uivdyoiJeqVa3VxdJbDFlCCwUi9kd7hdIPEeqzHrhvqu9FN8hm-MvQbtgin4zV4qti_qvoaYuTKr1__junrOTD8pZR4EC1oV6-j7CVRZE4f4dE4YZi07L83lG1At4g84LrR-3cgoqWe4S5A4uoZ34Tk-dUH8k_CBT7Kz_CPuJNsPCTrvGrhs2O1oJ9FKmwQroBCf8OQ56KWchOVk5eXlHPCguDbYiBTDIzaOQZAPtJlYgd4wMpFUHJXiFSmGUIQIu8cFwc"/>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-[88px] pb-24 px-mobile-padding md:px-desktop-padding max-w-7xl mx-auto">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-section-gap">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<button class="p-1 -ml-1 rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<span class="font-label text-label text-on-surface-variant uppercase tracking-wider">Unit #SB-4092</span>
+</div>
+<h1 class="font-display text-display md:text-display text-primary">Climate-Controlled Vault 09</h1>
+<p class="text-on-surface-variant font-body mt-1">Valuation: $12,500.00 • Last accessed 4 days ago</p>
+</div>
+<div class="flex flex-col gap-2">
+<span class="flex items-center gap-2 text-secondary font-bold font-title">
+<span class="material-symbols-outlined pulse-amber">local_shipping</span>
+                    Driver is 10 minutes away
+                </span>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-3 rounded-lg font-title flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined">map</span>
+                    Track Driver
+                </button>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Live Map / On the Move Card -->
+<div class="md:col-span-8 h-[400px] bento-card relative rounded-xl overflow-hidden border border-outline-variant bg-surface-container-low shadow-sm">
+<div class="absolute top-4 left-4 z-10">
+<div class="bg-surface/90 backdrop-blur px-4 py-2 rounded-full border border-outline-variant flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></div>
+<span class="font-label text-label text-primary font-bold">On the Move</span>
+</div>
+</div>
+<!-- Interactive Map Visualization -->
+<div class="w-full h-full grayscale-[0.5] opacity-90">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist vector-style map of a metropolitan city area. The map uses a palette of light greys, navy blue for main routes, and a bright amber line showing the vehicle's real-time path. A small 3D icon of a modern delivery truck is positioned on the route, indicating movement toward a destination marked with a corporate pin." data-location="Chicago" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu0Z941gl__DTFU05LY2uDO4Te2NAWWF3MQDsBqEoZJTEjnB_zVAPtrybYBBhQ7paafxFJyWWtrW098arcHOe_1RtuiNDJUg0lgr0VsC-ePurNlrVmBLyz2_8JXvpZYTGNMlVU-FX9fhjlCROANTrf83AXEQ3ZIcy9TaWeHqES4KyMZMBk_Nist6m8eyaz6po8XJ0V1nOYdJxA_-clLQ17YNwGG3QvNZ19dhLFF87Nj7gAKw5JPjuogO0yax-BqudItHTRWMJb9lyB"/>
+</div>
+<!-- Overlay Status -->
+<div class="absolute bottom-4 left-4 right-4 bg-primary/95 text-on-primary p-4 rounded-lg flex justify-between items-center backdrop-blur shadow-2xl">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-fixed-dim" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<div>
+<p class="font-label text-label opacity-70">Assigned Professional</p>
+<p class="font-title text-title text-white">Marcus Sterling • ★ 4.9</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-white">call</span>
+</button>
+<button class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-white">chat_bubble</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Current Journey Status (Timeline) -->
+<div class="md:col-span-4 bento-card p-desktop-padding bg-surface rounded-xl border border-outline-variant shadow-sm flex flex-col">
+<h3 class="font-title text-title text-primary mb-6">Current Journey Status</h3>
+<div class="space-y-8 relative flex-grow">
+<!-- Timeline Line -->
+<div class="absolute left-[15px] top-2 bottom-2 w-[2px] bg-outline-variant"></div>
+<div class="absolute left-[15px] top-2 h-[75%] w-[2px] bg-secondary"></div>
+<!-- Step 1: Completed -->
+<div class="relative flex gap-4">
+<div class="z-10 w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<p class="font-title text-title text-primary">Pickup</p>
+<p class="font-body text-caption text-on-surface-variant">Completed Oct 12, 09:15 AM</p>
+</div>
+</div>
+<!-- Step 2: Completed -->
+<div class="relative flex gap-4">
+<div class="z-10 w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<p class="font-title text-title text-primary">In Transit</p>
+<p class="font-body text-caption text-on-surface-variant">Arrived at HUB-North 11:30 AM</p>
+</div>
+</div>
+<!-- Step 3: Completed -->
+<div class="relative flex gap-4">
+<div class="z-10 w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<p class="font-title text-title text-primary">In Storage</p>
+<p class="font-body text-caption text-on-surface-variant">Secured in Vault 09</p>
+</div>
+</div>
+<!-- Step 4: Active -->
+<div class="relative flex gap-4">
+<div class="z-10 w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container ring-4 ring-secondary-container/30">
+<span class="material-symbols-outlined text-[18px] animate-bounce">local_shipping</span>
+</div>
+<div>
+<p class="font-title text-title text-primary font-bold">Pending Delivery</p>
+<p class="font-body text-caption text-secondary font-medium">Out for delivery • Expected 2:45 PM</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Content Details -->
+<div class="md:col-span-5 bento-card p-desktop-padding bg-surface-container rounded-xl border border-outline-variant shadow-sm">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-title text-title text-primary">Manifest Details</h3>
+<span class="text-caption text-on-surface-variant">4 Items • 120 lbs</span>
+</div>
+<ul class="space-y-3">
+<li class="flex items-center justify-between p-3 bg-surface rounded-lg border border-outline-variant/30">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+<span class="text-body font-medium">Antique Silverware Set</span>
+</div>
+<span class="text-caption text-on-surface-variant">Case #01</span>
+</li>
+<li class="flex items-center justify-between p-3 bg-surface rounded-lg border border-outline-variant/30">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">description</span>
+<span class="text-body font-medium">Legal Archives - Series A</span>
+</div>
+<span class="text-caption text-on-surface-variant">Box #14</span>
+</li>
+<li class="flex items-center justify-between p-3 bg-surface rounded-lg border border-outline-variant/30">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">diamond</span>
+<span class="text-body font-medium">Hard-Drive Backup (Encrypted)</span>
+</div>
+<span class="text-caption text-on-surface-variant">Pouch #09</span>
+</li>
+</ul>
+</div>
+<!-- Secure Facility Metadata -->
+<div class="md:col-span-3 bento-card p-desktop-padding bg-primary text-on-primary rounded-xl shadow-sm overflow-hidden relative">
+<div class="absolute -top-10 -right-10 opacity-10">
+<span class="material-symbols-outlined text-[160px]">verified_user</span>
+</div>
+<h3 class="font-title text-title mb-4 relative z-10">Security Protocol</h3>
+<div class="space-y-4 relative z-10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed-dim">verified</span>
+<div class="text-body">
+<p class="font-bold">Active Shield</p>
+<p class="text-caption opacity-80">256-bit chain tracking</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed-dim">lock</span>
+<div class="text-body">
+<p class="font-bold">Dual-Key Auth</p>
+<p class="text-caption opacity-80">Required on delivery</p>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-4 border-t border-white/10">
+<p class="text-caption opacity-70">Last Telemetry Check</p>
+<p class="text-title font-bold text-secondary-fixed-dim">2 minutes ago</p>
+</div>
+</div>
+<!-- Logistics Action / Support -->
+<div class="md:col-span-4 bento-card p-desktop-padding bg-surface-container-highest rounded-xl border border-outline-variant shadow-sm flex flex-col justify-between">
+<div>
+<h3 class="font-title text-title text-primary mb-2">Need Assistance?</h3>
+<p class="text-body text-on-surface-variant">Our priority concierge is available 24/7 for active deliveries.</p>
+</div>
+<div class="flex flex-col gap-3 mt-6">
+<button class="w-full py-3 border-2 border-primary text-primary rounded-lg font-title hover:bg-primary hover:text-white transition-all">
+                        Change Delivery Spot
+                    </button>
+<button class="w-full py-3 text-on-surface-variant hover:text-error transition-colors font-title text-caption">
+                        Emergency Stop Delivery
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-mobile-padding py-component-gap bg-surface dark:bg-surface-container-highest shadow-lg rounded-t-xl border-t border-outline-variant/30">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-mobile text-label-mobile">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-mobile text-label-mobile">Storage</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-bold scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span class="font-label-mobile text-label-mobile">Requests</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-mobile text-label-mobile">Account</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction: Update "10 minutes" text slightly to simulate live movement
+        let timeRemaining = 10;
+        const statusText = document.querySelector('.text-secondary.font-bold span');
+        
+        setInterval(() => {
+            if (timeRemaining > 1) {
+                // Not really counting down for the demo, just pulsing the presence
+                console.log('Driver position updated...');
+            }
+        }, 30000);
+
+        // Map pan animation logic could go here
+    </script>
+</body></html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox Logistics - Drivers List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#8293b7",
+                    "surface-container-low": "#f5f2ff",
+                    "inverse-on-surface": "#f2efff",
+                    "surface-container-high": "#e8e5ff",
+                    "secondary-fixed": "#ffddb4",
+                    "tertiary-fixed": "#6bfe9c",
+                    "secondary-container": "#feae2c",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "tertiary": "#001c09",
+                    "primary": "#031634",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed": "#d8e2ff",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#44474e",
+                    "surface-bright": "#fcf8ff",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#003316",
+                    "primary-container": "#1a2b4a",
+                    "outline-variant": "#c5c6cf",
+                    "error": "#ba1a1a",
+                    "inverse-surface": "#2f2e43",
+                    "on-surface": "#1a1a2e",
+                    "surface-tint": "#4e5e80",
+                    "surface": "#fcf8ff",
+                    "on-primary-fixed-variant": "#364767",
+                    "outline": "#75777e",
+                    "surface-container-highest": "#e2e0fc",
+                    "on-tertiary-container": "#00a858",
+                    "on-secondary-fixed": "#291800",
+                    "on-primary-fixed": "#081b39",
+                    "on-background": "#1a1a2e",
+                    "surface-variant": "#e2e0fc",
+                    "on-tertiary-fixed": "#00210c",
+                    "background": "#fcf8ff",
+                    "surface-container": "#efecff",
+                    "tertiary-fixed-dim": "#4ae183",
+                    "surface-dim": "#dad7f3",
+                    "secondary-fixed-dim": "#ffb955",
+                    "secondary": "#835500",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "on-secondary-container": "#6b4500",
+                    "on-tertiary-fixed-variant": "#005228",
+                    "primary-fixed-dim": "#b6c6ee",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#b6c6ee",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "2xl": "48px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "margin": "24px",
+                    "gutter": "16px",
+                    "3xl": "64px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+        .active-nav-link { transform: translateX(4px); }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar (Desktop Shell Anchor) -->
+<aside class="hidden md:flex flex-col h-screen fixed left-0 top-0 bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary docked left-0 h-full w-64 border-r border-outline-variant shadow-sm z-50">
+<div class="p-lg">
+<h1 class="font-headline-sm text-headline-sm font-bold text-secondary-container">Admin Portal</h1>
+<p class="font-label-md text-label-md opacity-70">Logistics Lead</p>
+</div>
+<nav class="flex-1 px-base space-y-1">
+<a class="flex items-center text-on-primary-container hover:text-on-primary px-4 py-3 hover:bg-primary dark:hover:bg-primary-fixed-dim transition-all group" href="#">
+<span class="material-symbols-outlined mr-md">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="flex items-center text-on-primary-container hover:text-on-primary px-4 py-3 hover:bg-primary dark:hover:bg-primary-fixed-dim transition-all group" href="#">
+<span class="material-symbols-outlined mr-md">inventory_2</span>
+<span class="font-label-lg text-label-lg">Inventory</span>
+</a>
+<a class="flex items-center text-on-primary-container hover:text-on-primary px-4 py-3 hover:bg-primary dark:hover:bg-primary-fixed-dim transition-all group" href="#">
+<span class="material-symbols-outlined mr-md">local_shipping</span>
+<span class="font-label-lg text-label-lg">Shipments</span>
+</a>
+<!-- Active Tab: Fleet (contextually relevant to Drivers List) -->
+<a class="flex items-center bg-secondary-container text-on-secondary-container rounded-lg mx-2 px-4 py-3 translate-x-1 transition-transform group shadow-md" href="#">
+<span class="material-symbols-outlined mr-md">vibration</span>
+<span class="font-label-lg text-label-lg">Fleet</span>
+</a>
+<a class="flex items-center text-on-primary-container hover:text-on-primary px-4 py-3 hover:bg-primary dark:hover:bg-primary-fixed-dim transition-all group" href="#">
+<span class="material-symbols-outlined mr-md">group</span>
+<span class="font-label-lg text-label-lg">Team</span>
+</a>
+<a class="flex items-center text-on-primary-container hover:text-on-primary px-4 py-3 hover:bg-primary dark:hover:bg-primary-fixed-dim transition-all group" href="#">
+<span class="material-symbols-outlined mr-md">assessment</span>
+<span class="font-label-lg text-label-lg">Reports</span>
+</a>
+</nav>
+<div class="mt-auto p-md border-t border-white/10">
+<button class="w-full bg-secondary-container text-on-secondary-container font-label-lg text-label-lg py-sm rounded-lg mb-md hover:brightness-110 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">qr_code_scanner</span> Quick Scan
+            </button>
+<a class="flex items-center text-on-primary-container hover:text-on-primary px-4 py-2 hover:bg-primary transition-all" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+<span class="font-label-lg text-label-lg">Settings</span>
+</a>
+<a class="flex items-center text-on-primary-container hover:text-on-primary px-4 py-2 hover:bg-primary transition-all" href="#">
+<span class="material-symbols-outlined mr-md">help</span>
+<span class="font-label-lg text-label-lg">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="hidden md:flex justify-between items-center w-full px-margin h-16 bg-background dark:bg-primary text-primary dark:text-on-primary border-b border-outline-variant dark:border-on-primary-fixed-variant fixed top-0 left-64 right-0 z-40 bg-white/80 backdrop-blur-md">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full font-body-md text-body-md focus:ring-2 focus:ring-secondary-container outline-none transition-all" placeholder="Search driver names, IDs, or sectors..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<span class="font-headline-lg text-headline-lg font-black text-primary dark:text-on-primary mr-lg">StrongBox Logistics</span>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container transition-colors p-2 rounded-full">notifications</button>
+<div class="flex items-center gap-sm cursor-pointer hover:bg-surface-container transition-colors p-1 rounded-full pr-4">
+<img class="w-8 h-8 rounded-full border-2 border-secondary-container object-cover" data-alt="A professional headshot of a senior logistics manager in a high-tech corporate office. The manager is a middle-aged male with a confident smile, wearing a dark navy polo shirt with a subtle corporate logo. Soft, directional office lighting emphasizes a clean, professional workspace with digital screens in the blurred background. High-quality corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDOkR-C6DQnpmyK9XXcb7o4FFgSjylZekioLDG-BtpkIwf4Y8DoOg62ILkTWFtKE2-vDl9YiLJ-F-RWZRh_jin4jwnlbfUs1Jsd1Y5OSsyAyD9AX4bInURVA9hBeOUA45LRd207PUZ_b4Nx8bsJVnJJI_UYirUCD6v-2MWxqlEFb9s3rSdrJqE96Yglr8qOjjspPVpvnhS33X9GV9_2W1gI3Sk94aPEdedwVonD8rixC7Cth-hmQCg83AV8N4b0z_MQtflpd_Be6k"/>
+<span class="font-label-lg text-label-lg">Admin</span>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="pt-2 md:pt-20 px-4 md:px-margin pb-32">
+<!-- Mobile Search & Title (Hidden on desktop) -->
+<div class="md:hidden mb-lg mt-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-md">Drivers Fleet</h2>
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container border-none rounded-xl font-body-md text-body-md focus:ring-2 focus:ring-secondary-container outline-none" placeholder="Search drivers..." type="text"/>
+</div>
+</div>
+<!-- Bento Stats Overview -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-md mb-lg">
+<div class="bg-surface border border-outline-variant p-md rounded-xl shadow-sm flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase tracking-wider">Total Drivers</span>
+<span class="font-display-lg text-display-lg text-primary">142</span>
+<div class="mt-auto flex items-center text-on-tertiary-container gap-1">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span class="font-label-md text-label-md">+12 this month</span>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant p-md rounded-xl shadow-sm flex flex-col border-l-4 border-l-tertiary-fixed-dim">
+<span class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase tracking-wider">Available</span>
+<span class="font-display-lg text-display-lg text-tertiary-container">84</span>
+<span class="font-label-md text-label-md text-outline">Active readiness 94%</span>
+</div>
+<div class="bg-surface border border-outline-variant p-md rounded-xl shadow-sm flex flex-col border-l-4 border-l-secondary-container">
+<span class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase tracking-wider">On Job</span>
+<span class="font-display-lg text-display-lg text-secondary">58</span>
+<span class="font-label-md text-label-md text-outline">Active transits</span>
+</div>
+<div class="bg-surface border border-outline-variant p-md rounded-xl shadow-sm flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase tracking-wider">Avg. Rating</span>
+<div class="flex items-center gap-2">
+<span class="font-display-lg text-display-lg text-primary">4.8</span>
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-label-md text-label-md text-outline">Fleet standard: High</span>
+</div>
+</div>
+<!-- Drivers Table Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+<div class="p-md border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+<h3 class="font-headline-sm text-headline-sm text-primary">Active Fleet Registry</h3>
+<div class="flex gap-sm">
+<button class="flex items-center gap-xs px-md py-1.5 border border-outline text-outline rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span> Filter
+                        </button>
+<button class="flex items-center gap-xs px-md py-1.5 border border-outline text-outline rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span> Export
+                        </button>
+</div>
+</div>
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Avatar</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Name</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Phone</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Active Job ID</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Location</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-lg py-md">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A portrait of a male driver in his late 30s wearing a high-visibility yellow logistics vest and a branded blue cap. He has a friendly but professional expression, standing against a background of white delivery vans and a modern warehouse loading dock during daylight. The style is sharp, clean, and highlights operational readiness with vibrant safety colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAJ4-AbaSM7dClwIFguyJ3mfG2oAGmRhezSjGL-ah-Kx7L9fsgTteRX-8sB9QK4fIS-sS6Imix9MIERChR_vffPwFDPfvHyyS4PIlFNXCBlCII7-mtsR4m-t3hGdtnj8CaEFGTqQMFmbsJ_VNaF6TrbNtu7fymNuV44bcGWOv_ed1o45Py-4XQRSon0vrRxkh0lROdfOhMD_7XDphFtngaWy9VrnX_QnQINU3WCVvjpAumUVpgcycde721pL9_LV79_nqFljLDTyQ"/>
+</td>
+<td class="px-lg py-md font-body-md text-body-md text-primary font-semibold">Marcus Rivera</td>
+<td class="px-lg py-md font-body-md text-body-md text-on-surface-variant">+1 (555) 012-3456</td>
+<td class="px-lg py-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-md font-label-md bg-tertiary-fixed/20 text-on-tertiary-container">
+                                        Available
+                                    </span>
+</td>
+<td class="px-lg py-md font-body-md text-body-md text-outline">--</td>
+<td class="px-lg py-md font-body-md text-body-md text-on-surface-variant">Sector 7G</td>
+<td class="px-lg py-md text-right">
+<div class="flex justify-end gap-sm">
+<button class="px-3 py-1 font-label-md text-label-md text-primary hover:bg-primary-fixed rounded-lg transition-colors border border-primary/10">View</button>
+<button class="px-3 py-1 font-label-md text-label-md text-on-primary bg-primary hover:brightness-125 rounded-lg transition-colors">Edit</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-lg py-md">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A close-up headshot of a female logistics driver in her early 30s. She is wearing a dark blue corporate polo shirt with the StrongBox Logistics logo. She has a confident, focused gaze. The setting is the cabin of a modern delivery truck, with high-tech dashboard elements visible in soft focus. Bright morning light streams through the window. Corporate photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmJtZzWykvn-SVFUomgiKEO08SuVsaOxqHrG9ZSsCby0I3fU7kIjJCvW59w7NTpSnjq8q0UyBmJFn-Mn7_D4QsL_xrGogVGzCJo39bKVdhk5Iyc4X5cPs8z38Idmk4pT2cl9lfihpsb3x1CYi8HNA6BTH_G42Q1N_qiX-eQEKFl8zNhboqiQiNXwt1A1s0TGEbSIN56zivhyRVUYh68gJbxeNCT-3TZSVx2vRM0P3rFAl5JE4WsEC-FIZrvsKWBEAdWqOpfbhVfWo"/>
+</td>
+<td class="px-lg py-md font-body-md text-body-md text-primary font-semibold">Sarah Chen</td>
+<td class="px-lg py-md font-body-md text-body-md text-on-surface-variant">+1 (555) 789-0123</td>
+<td class="px-lg py-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-md font-label-md bg-secondary-fixed/50 text-secondary">
+                                        On Job
+                                    </span>
+</td>
+<td class="px-lg py-md font-body-md text-body-md text-secondary font-bold">#JOB-98442</td>
+<td class="px-lg py-md font-body-md text-body-md text-on-surface-variant">Sector 3A</td>
+<td class="px-lg py-md text-right">
+<div class="flex justify-end gap-sm">
+<button class="px-3 py-1 font-label-md text-label-md text-primary hover:bg-primary-fixed rounded-lg transition-colors border border-primary/10">View</button>
+<button class="px-3 py-1 font-label-md text-label-md text-on-primary bg-primary hover:brightness-125 rounded-lg transition-colors">Edit</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-lg py-md">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A portrait of a male delivery driver in his 40s. He is wearing a grey company sweater and a lanyard with an ID badge. He looks experienced and reliable. The background shows a busy urban street with a blurred city skyline at dusk, accented by warm orange streetlights. The aesthetic is modern, industrious, and high-quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH_TLKmRmd7k79Zyy8d89o0h3HPKFmblBCxYL8f3Fx-InNfj2cX0J4ayTPCLYRa5x6o4fb5216ND0C3CBtRXSY87WeC9SJ3c1yad89N4Huy59w13w5MG04_kFf6QY_cnjmt3E4I_ca7k_-m_vi1I_g90KzKtCs3O8RAc1CAjOLul-_lKq6hSdZdpwxsnfsFQwZawt5uSvoC5X9MqQSNJLFSExww_8sPzf1MkXSL-CrNlSd9AMbBvm4BpoO1sSLwIUJCgeZTHglfo8"/>
+</td>
+<td class="px-lg py-md font-body-md text-body-md text-primary font-semibold">Jameson Miller</td>
+<td class="px-lg py-md font-body-md text-body-md text-on-surface-variant">+1 (555) 456-7890</td>
+<td class="px-lg py-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-md font-label-md bg-tertiary-fixed/20 text-on-tertiary-container">
+                                        Available
+                                    </span>
+</td>
+<td class="px-lg py-md font-body-md text-body-md text-outline">--</td>
+<td class="px-lg py-md font-body-md text-body-md text-on-surface-variant">Sector 12B</td>
+<td class="px-lg py-md text-right">
+<div class="flex justify-end gap-sm">
+<button class="px-3 py-1 font-label-md text-label-md text-primary hover:bg-primary-fixed rounded-lg transition-colors border border-primary/10">View</button>
+<button class="px-3 py-1 font-label-md text-label-md text-on-primary bg-primary hover:brightness-125 rounded-lg transition-colors">Edit</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-lg py-md">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A portrait of a young male driver in his 20s, wearing a high-visibility orange vest over a black t-shirt. He is holding a digital tablet for logistics scanning. The setting is a large industrial warehouse with shelving units in the background. The lighting is cool-toned and industrial, highlighting the sleek design of the tablet and the bright safety gear. High-end commercial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlfzHZOOuZCgSaWKJfNs3SAprHlLWB28l0vQyHq-FN2_kz2t-6QfKeLJ9TPZdKJ3lMt45hStfAfXlfZT4h8Z1UECMSyHCayw-viM2H7x9r4MutNZElvHs_TwWqbS8OsJWtxuqzMRvcy1uJBdInKlkXG_1HoyW1IgVb93B4waMEbS52SogDbdEVvQ5-QYebc1Xyxv7bMxNnVjBIzIyXNadlaqnKRovhMAR0MGwaQDKeekFoXlGj5LnkyIK22OG8OcXrFX6a_ymBYxE"/>
+</td>
+<td class="px-lg py-md font-body-md text-body-md text-primary font-semibold">Leo Kovic</td>
+<td class="px-lg py-md font-body-md text-body-md text-on-surface-variant">+1 (555) 222-3344</td>
+<td class="px-lg py-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-md font-label-md bg-secondary-fixed/50 text-secondary">
+                                        On Job
+                                    </span>
+</td>
+<td class="px-lg py-md font-body-md text-body-md text-secondary font-bold">#JOB-98511</td>
+<td class="px-lg py-md font-body-md text-body-md text-on-surface-variant">Sector 7G</td>
+<td class="px-lg py-md text-right">
+<div class="flex justify-end gap-sm">
+<button class="px-3 py-1 font-label-md text-label-md text-primary hover:bg-primary-fixed rounded-lg transition-colors border border-primary/10">View</button>
+<button class="px-3 py-1 font-label-md text-label-md text-on-primary bg-primary hover:brightness-125 rounded-lg transition-colors">Edit</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md bg-surface-container border-t border-outline-variant flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Showing 1-10 of 142 drivers</span>
+<div class="flex gap-xs">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-bright transition-colors text-outline">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-label-md text-label-md">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-bright transition-colors text-outline font-label-md text-label-md">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-bright transition-colors text-outline font-label-md text-label-md">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-bright transition-colors text-outline">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (+ Add Driver) -->
+<button class="fixed bottom-24 md:bottom-lg right-lg w-14 h-14 bg-secondary-container text-on-secondary-container rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center group z-50 overflow-hidden">
+<span class="material-symbols-outlined text-3xl">person_add</span>
+<span class="absolute right-16 bg-primary text-on-primary px-3 py-1 rounded-lg font-label-lg text-label-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">Add Driver</span>
+</button>
+<!-- BottomNavBar (Mobile Shell Anchor) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter pb-4 pt-2 bg-surface dark:bg-inverse-surface shadow-lg border-t border-outline-variant rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-label-md text-label-md">Jobs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+<span class="font-label-md text-label-md">Scan</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">box</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Account</span>
+</a>
+</nav>
+<script>
+        // Simple search interaction highlight
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-secondary-container');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-secondary-container');
+        });
+
+        // Hover effect for table rows
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.boxShadow = 'inset 4px 0 0 0 #feae2c';
+            });
+            row.addEventListener('mouseleave', () => {
+                row.style.boxShadow = 'none';
+            });
+        });
+    </script>
+</body></html>

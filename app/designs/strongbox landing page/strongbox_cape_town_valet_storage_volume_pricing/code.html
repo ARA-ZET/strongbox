@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox | Cape Town's Premium Valet Storage</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .shadow-tactile {
+            box-shadow: 0px 4px 20px rgba(3, 22, 52, 0.04);
+        }
+        .shadow-tactile-hover:hover {
+            box-shadow: 0px 8px 30px rgba(3, 22, 52, 0.08);
+            transform: translateY(-2px);
+        }
+        .transition-all-custom {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "lavender-haze": "#F5F2FF",
+                        "background": "#fcf8ff",
+                        "surface-bright": "#fcf8ff",
+                        "primary": "#031634",
+                        "on-error-container": "#93000a",
+                        "secondary": "#835500",
+                        "surface-variant": "#e4e1ee",
+                        "on-tertiary-fixed-variant": "#5c4217",
+                        "on-surface": "#1b1b24",
+                        "tertiary": "#221400",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#291800",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#4e5e80",
+                        "on-primary-fixed-variant": "#364767",
+                        "tertiary-fixed-dim": "#e7c18a",
+                        "surface-container": "#efecf9",
+                        "on-surface-variant": "#44474e",
+                        "on-primary-container": "#8293b7",
+                        "surface-container-highest": "#e4e1ee",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "outline": "#75777e",
+                        "surface-container-high": "#e9e6f3",
+                        "surface": "#fcf8ff",
+                        "primary-container": "#1a2b4a",
+                        "on-tertiary-fixed": "#281800",
+                        "inverse-on-surface": "#f2effc",
+                        "action-text": "#6B4500",
+                        "on-tertiary-container": "#af8d5b",
+                        "inverse-primary": "#b6c6ee",
+                        "surface-dim": "#dbd8e5",
+                        "primary-fixed": "#d8e2ff",
+                        "on-primary-fixed": "#081b39",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#3d2700",
+                        "secondary-fixed-dim": "#ffb954",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "surface-container-low": "#f5f2ff",
+                        "surface-white": "#FFFFFF",
+                        "on-background": "#1b1b24",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#feae2c",
+                        "on-secondary-container": "#6b4500",
+                        "secondary-fixed": "#ffddb4",
+                        "inverse-surface": "#302f39",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffddaf",
+                        "outline-variant": "#c5c6cf"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "8px",
+                        "xl": "12px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "container-max": "1200px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "display-bold": ["Inter", "sans-serif"],
+                        "body-strong": ["Inter", "sans-serif"],
+                        "label-caps": ["Inter", "sans-serif"],
+                        "body-main": ["Inter", "sans-serif"],
+                        "headline-h2": ["Inter", "sans-serif"],
+                        "headline-h1-mobile": ["Inter", "sans-serif"],
+                        "headline-h1": ["Inter", "sans-serif"],
+                        "headline-h3": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "display-bold": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-strong": ["16px", { "lineHeight": "1.6", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-main": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-h2": ["28px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-h1-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-h1": ["36px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-h3": ["22px", { "lineHeight": "1.4", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-lavender-haze font-body-main text-on-surface antialiased">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full h-[72px] bg-surface-white dark:bg-surface-container-highest shadow-[0px_4px_20px_rgba(3,22,52,0.04)] z-50">
+<div class="flex justify-between items-center h-full max-w-container-max mx-auto px-margin-desktop">
+<div class="font-display-bold text-headline-h2 text-primary dark:text-primary-fixed flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">package_2</span>
+                StrongBox
+            </div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-secondary font-body-strong border-b-2 border-secondary pb-1 hover:text-secondary transition-colors duration-200" href="#">Home</a>
+<a class="text-primary dark:text-on-surface-variant font-body-main hover:text-secondary transition-colors duration-200" href="#">How It Works</a>
+<a class="text-primary dark:text-on-surface-variant font-body-main hover:text-secondary transition-colors duration-200" href="#">Pricing</a>
+<a class="text-primary dark:text-on-surface-variant font-body-main hover:text-secondary transition-colors duration-200" href="#">About</a>
+<a class="text-primary dark:text-on-surface-variant font-body-main hover:text-secondary transition-colors duration-200" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary font-body-strong hover:text-secondary transition-colors">Log In</button>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-3 rounded-xl font-body-strong hover:opacity-90 active:scale-95 transition-all">Get Started Free</button>
+</div>
+</div>
+</nav>
+<main class="pt-[72px]">
+<!-- Hero Section -->
+<section class="bg-primary relative overflow-hidden min-h-[640px] flex items-center">
+<div class="max-w-container-max mx-auto px-margin-desktop grid md:grid-cols-2 gap-gutter items-center py-20 relative z-10">
+<div class="text-on-primary">
+<h1 class="font-display-bold text-display-bold mb-6 text-surface-white">Cape Town's First Valet Storage Service</h1>
+<p class="text-surface-variant text-body-main mb-10 max-w-lg">Reclaim your living space without lifting a finger. We collect, store, and return your items on demand. Secure, seamless, and domestic-focused storage.</p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-secondary-container text-on-secondary-container h-[56px] px-8 rounded-xl font-body-strong flex items-center gap-2 hover:opacity-90 transition-all">
+                            Get a Free Quote <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="border-2 border-surface-white text-surface-white h-[56px] px-8 rounded-xl font-body-strong hover:bg-surface-white hover:text-primary transition-all">
+                            See How It Works
+                        </button>
+</div>
+</div>
+<div class="relative mt-12 md:mt-0">
+<div class="rounded-xl overflow-hidden shadow-2xl relative">
+<img alt="Modern high-end Cape Town home interior featuring organized storage solutions and sleek domestic aesthetics." class="w-full h-full object-cover aspect-[1.49]" src="https://lh3.googleusercontent.com/aida/AP1WRLsFxKDhhD_hA1R0QPyVK1IPw5Lmy1mvw9HXG6XgxR6r9KsSS8g6jR8F_7cvkHm3viP30F6S6GbQs_I8lHGGFacdHh5JSkEN-yhvclnYu-3_NhwNPYSjJb_yKxGsqZ4hEdvGZDmX0veELB8p3tL9hvBxogwrBShXZIBXjy_2fbUp9KgwZLzIPtf6jC38SSlfiIBvK-a7R7iRNDR1Wy8gKwAuI_mYJ5TNyCp_Qatrc9NVpaCBQ6gEE4wqnmJw"/>
+<!-- Floating Card -->
+<div class="absolute bottom-6 left-6 bg-surface-white p-4 rounded-xl shadow-tactile flex items-center gap-3 animate-bounce shadow-xl">
+<div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+<p class="text-primary font-body-strong text-sm">Items collected safely</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Decorative Element -->
+<div class="absolute right-0 top-0 w-1/3 h-full bg-primary-container opacity-20 transform translate-x-1/2 -skew-x-12"></div>
+</section>
+<!-- Trust Badges -->
+<section class="py-16 bg-surface-white">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter text-center">
+<div class="flex flex-col items-center p-6 transition-all-custom hover:scale-105">
+<div class="w-16 h-16 rounded-full bg-lavender-haze flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">verified_user</span>
+</div>
+<h3 class="font-headline-h3 text-primary mb-2">Fully Insured</h3>
+<p class="text-on-surface-variant text-body-main">Every item is protected with comprehensive coverage for your absolute peace of mind.</p>
+</div>
+<div class="flex flex-col items-center p-6 transition-all-custom hover:scale-105">
+<div class="w-16 h-16 rounded-full bg-lavender-haze flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">schedule</span>
+</div>
+<h3 class="font-headline-h3 text-primary mb-2">Same-day Collection</h3>
+<p class="text-on-surface-variant text-body-main">Book by 10 AM and we'll have your space reclaimed by the end of the day.</p>
+</div>
+<div class="flex flex-col items-center p-6 transition-all-custom hover:scale-105">
+<div class="w-16 h-16 rounded-full bg-lavender-haze flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">star_rate</span>
+</div>
+<h3 class="font-headline-h3 text-primary mb-2">4.9 Rating</h3>
+<p class="text-on-surface-variant text-body-main">Cape Town's most trusted valet storage partner, rated by hundreds of happy locals.</p>
+</div>
+</div>
+</section>
+<!-- How It Works -->
+<section class="py-24 bg-lavender-haze">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-16">
+<span class="font-label-caps text-secondary tracking-widest uppercase mb-4 block">The Process</span>
+<h2 class="font-headline-h1 text-primary">Storage as simple as ordering a taxi</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter relative">
+<!-- Step 1 -->
+<div class="bg-surface-white p-10 rounded-xl shadow-tactile shadow-tactile-hover relative z-10">
+<span class="absolute top-6 right-6 text-4xl font-display-bold text-surface-variant opacity-50">01</span>
+<div class="mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl">event_available</span>
+</div>
+<h3 class="font-headline-h3 text-primary mb-4">Book Online</h3>
+<p class="text-on-surface-variant text-body-main">Schedule your collection date and time through our easy-to-use digital concierge platform.</p>
+</div>
+<!-- Step 2 -->
+<div class="bg-surface-white p-10 rounded-xl shadow-tactile shadow-tactile-hover relative z-10">
+<span class="absolute top-6 right-6 text-4xl font-display-bold text-surface-variant opacity-50">02</span>
+<div class="mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl">inventory</span>
+</div>
+<h3 class="font-headline-h3 text-primary mb-4">We Collect</h3>
+<p class="text-on-surface-variant text-body-main">Our professional valets handle the heavy lifting. We barcode, track, and transport items securely.</p>
+</div>
+<!-- Step 3 -->
+<div class="bg-surface-white p-10 rounded-xl shadow-tactile shadow-tactile-hover relative z-10">
+<span class="absolute top-6 right-6 text-4xl font-display-bold text-surface-variant opacity-50">03</span>
+<div class="mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl">local_shipping</span>
+</div>
+<h3 class="font-headline-h3 text-primary mb-4">Request Back</h3>
+<p class="text-on-surface-variant text-body-main">Need your items? Tap the app and we’ll deliver them back to your door within 24 hours.</p>
+</div>
+<!-- Connector Line (Desktop Only) -->
+<div class="hidden md:block absolute top-1/2 left-0 w-full h-[2px] border-t-2 border-dashed border-surface-variant -translate-y-1/2 z-0"></div>
+</div>
+</div>
+</section>
+<!-- Flexible Pricing Section -->
+<section class="py-24 bg-primary text-surface-white">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="grid md:grid-cols-2 gap-16 items-center">
+<div>
+<span class="font-label-caps text-secondary-fixed tracking-widest uppercase mb-4 block">Pricing Model</span>
+<h2 class="font-headline-h1 mb-6">Flexible Volume-Based Pricing</h2>
+<p class="text-surface-variant text-lg mb-8">No rigid plans. No paying for empty space. At StrongBox, you only pay for exactly what you store. Our simple volume-based model scales with your life.</p>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="bg-surface-white/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-secondary-fixed">inventory_2</span>
+</div>
+<div>
+<h4 class="font-body-strong">Box-Level Precision</h4>
+<p class="text-surface-variant text-sm">Select from four standard box sizes to fit your items perfectly.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-surface-white/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-secondary-fixed">shopping_basket</span>
+</div>
+<div>
+<h4 class="font-body-strong">Loose &amp; Oversized Items</h4>
+<p class="text-surface-variant text-sm">Bicycles, surfboards, or suitcases are calculated simply based on the volume they occupy.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-surface-white/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-secondary-fixed">verified</span>
+</div>
+<div>
+<h4 class="font-body-strong">All-Inclusive Security</h4>
+<p class="text-surface-variant text-sm">Every stored item includes full insurance and digital cataloging at no extra cost.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-white/5 border border-surface-white/10 p-6 rounded-xl hover:bg-surface-white/10 transition-colors">
+<p class="text-secondary-fixed font-label-caps mb-2">Small Box</p>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-2xl font-display-bold">R195</span>
+<span class="text-surface-variant text-xs">/mo</span>
+</div>
+<p class="text-xs text-surface-variant">Ideal for documents, books, or small tech.</p>
+</div>
+<div class="bg-surface-white/5 border border-surface-white/10 p-6 rounded-xl hover:bg-surface-white/10 transition-colors">
+<p class="text-secondary-fixed font-label-caps mb-2">Medium Box</p>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-2xl font-display-bold">R295</span>
+<span class="text-surface-variant text-xs">/mo</span>
+</div>
+<p class="text-xs text-surface-variant">The standard choice for clothing and kitchenware.</p>
+</div>
+<div class="bg-surface-white/5 border border-surface-white/10 p-6 rounded-xl hover:bg-surface-white/10 transition-colors">
+<p class="text-secondary-fixed font-label-caps mb-2">Large Box</p>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-2xl font-display-bold">R395</span>
+<span class="text-surface-variant text-xs">/mo</span>
+</div>
+<p class="text-xs text-surface-variant">Best for bulky bedding or winter gear.</p>
+</div>
+<div class="bg-surface-white/5 border border-surface-white/10 p-6 rounded-xl hover:bg-surface-white/10 transition-colors">
+<p class="text-secondary-fixed font-label-caps mb-2">XL Box</p>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-2xl font-display-bold">R595</span>
+<span class="text-surface-variant text-xs">/mo</span>
+</div>
+<p class="text-xs text-surface-variant">Maximum capacity for heavy or oversized boxable items.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Calculator -->
+<section class="py-24 bg-lavender-haze">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="grid md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-5 mb-12 md:mb-0">
+<h2 class="font-headline-h1 text-primary mb-6">Estimate your monthly storage cost</h2>
+<p class="text-on-surface-variant text-body-main mb-8">No hidden fees. Pay only for the space you use. Adjust the items below to see an instant live quote for our valet services.</p>
+<div class="flex items-center gap-4 text-primary font-body-strong">
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+                            No long-term contracts
+                        </div>
+<div class="flex items-center gap-4 text-primary font-body-strong mt-4">
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+                            Billed monthly, cancel anytime
+                        </div>
+</div>
+<div class="md:col-span-7">
+<div class="bg-surface-white rounded-xl shadow-tactile overflow-hidden flex flex-col md:flex-row">
+<div class="p-8 flex-1">
+<div class="space-y-6">
+<div class="flex justify-between items-center">
+<div>
+<p class="font-body-strong text-primary">Standard Boxes</p>
+<p class="text-xs text-on-surface-variant">Archival / Clothing / Misc</p>
+</div>
+<div class="flex items-center gap-3 bg-lavender-haze rounded-lg p-1">
+<button class="w-8 h-8 rounded bg-surface-white shadow-sm flex items-center justify-center hover:bg-secondary-fixed transition-colors" onclick="updateCalc('box', -1)">-</button>
+<span class="w-6 text-center font-bold" id="box-count">2</span>
+<button class="w-8 h-8 rounded bg-surface-white shadow-sm flex items-center justify-center hover:bg-secondary-fixed transition-colors" onclick="updateCalc('box', 1)">+</button>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<p class="font-body-strong text-primary">Large Items</p>
+<p class="text-xs text-on-surface-variant">Suitcases / Golf Bags</p>
+</div>
+<div class="flex items-center gap-3 bg-lavender-haze rounded-lg p-1">
+<button class="w-8 h-8 rounded bg-surface-white shadow-sm flex items-center justify-center hover:bg-secondary-fixed transition-colors" onclick="updateCalc('large', -1)">-</button>
+<span class="w-6 text-center font-bold" id="large-count">1</span>
+<button class="w-8 h-8 rounded bg-surface-white shadow-sm flex items-center justify-center hover:bg-secondary-fixed transition-colors" onclick="updateCalc('large', 1)">+</button>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<p class="font-body-strong text-primary">Furniture Pieces</p>
+<p class="text-xs text-on-surface-variant">Chairs / Side Tables</p>
+</div>
+<div class="flex items-center gap-3 bg-lavender-haze rounded-lg p-1">
+<button class="w-8 h-8 rounded bg-surface-white shadow-sm flex items-center justify-center hover:bg-secondary-fixed transition-colors" onclick="updateCalc('furniture', -1)">-</button>
+<span class="w-6 text-center font-bold" id="furniture-count">0</span>
+<button class="w-8 h-8 rounded bg-surface-white shadow-sm flex items-center justify-center hover:bg-secondary-fixed transition-colors" onclick="updateCalc('furniture', 1)">+</button>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<p class="font-body-strong text-primary">Oversized</p>
+<p class="text-xs text-on-surface-variant">Surfboards / Mattresses</p>
+</div>
+<div class="flex items-center gap-3 bg-lavender-haze rounded-lg p-1">
+<button class="w-8 h-8 rounded bg-surface-white shadow-sm flex items-center justify-center hover:bg-secondary-fixed transition-colors" onclick="updateCalc('oversized', -1)">-</button>
+<span class="w-6 text-center font-bold" id="oversized-count">0</span>
+<button class="w-8 h-8 rounded bg-surface-white shadow-sm flex items-center justify-center hover:bg-secondary-fixed transition-colors" onclick="updateCalc('oversized', 1)">+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-primary p-8 md:w-[280px] text-surface-white flex flex-col justify-between">
+<div>
+<p class="font-label-caps text-on-primary-container mb-4">Your Estimate</p>
+<div class="flex items-baseline gap-1">
+<span class="text-xl">R</span>
+<span class="text-5xl font-display-bold" id="total-price">255</span>
+<span class="text-surface-variant">/mo</span>
+</div>
+<p class="text-xs text-on-primary-container mt-4">Estimated collection fee: R150 (Once-off)</p>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container py-4 rounded-xl font-body-strong mt-8 hover:opacity-90 transition-all">Book This Plan</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-24 bg-primary-container">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16">
+<div>
+<h2 class="font-headline-h1 text-surface-white mb-2">Trusted by 2,000+ Capetonians</h2>
+<p class="text-on-primary-container">See how we're changing the way the city lives.</p>
+</div>
+<div class="hidden md:flex gap-4">
+<button class="w-12 h-12 rounded-full border border-surface-white/20 flex items-center justify-center text-surface-white hover:bg-surface-white/10"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="w-12 h-12 rounded-full border border-surface-white/20 flex items-center justify-center text-surface-white hover:bg-surface-white/10"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="bg-surface-white/10 p-8 rounded-xl border border-surface-white/5">
+<div class="flex gap-1 text-secondary-fixed mb-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-surface-variant italic mb-8 text-body-main">"StrongBox changed my life in Sea Point. My flat is tiny, but now I can swap my winter gear for my surfboard in minutes. The concierge service is impeccable."</p>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold">TM</div>
+<div>
+<p class="text-surface-white font-body-strong">Thandi M.</p>
+<p class="text-xs text-on-primary-container">Verified Customer</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-white/10 p-8 rounded-xl border border-surface-white/5">
+<div class="flex gap-1 text-secondary-fixed mb-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-surface-variant italic mb-8 text-body-main">"As an estate agent, I recommend StrongBox to all my clients who are downsizing. They are professional, punctual, and highly secure. Best in Cape Town!"</p>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary text-surface-white flex items-center justify-center font-bold">JK</div>
+<div>
+<p class="text-surface-white font-body-strong">Johan K.</p>
+<p class="text-xs text-on-primary-container">Verified Customer</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-white/10 p-8 rounded-xl border border-surface-white/5">
+<div class="flex gap-1 text-secondary-fixed mb-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+<p class="text-surface-variant italic mb-8 text-body-main">"Storing my collection of rare books was a worry until I found StrongBox. Their humidity-controlled facility and digital inventory give me total confidence."</p>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary text-surface-white flex items-center justify-center font-bold">LS</div>
+<div>
+<p class="text-surface-white font-body-strong">Linda S.</p>
+<p class="text-xs text-on-primary-container">Verified Customer</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Banner -->
+<section class="py-20 bg-lavender-haze">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="bg-secondary-container rounded-xl p-12 text-center md:text-left relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+<div class="relative z-10">
+<h2 class="font-headline-h1 text-on-secondary-container mb-4">Ready to Reclaim Your Space?</h2>
+<p class="text-on-secondary-container/80 text-lg max-w-xl">Join thousands of Capetonians who have discovered the luxury of valet storage. Get your first month free if you book today.</p>
+</div>
+<div class="relative z-10 flex flex-wrap gap-4">
+<button class="bg-primary text-surface-white px-8 py-4 rounded-xl font-body-strong shadow-lg hover:scale-105 transition-transform">Get Started Now</button>
+<button class="bg-surface-white text-primary px-8 py-4 rounded-xl font-body-strong hover:bg-primary-fixed transition-colors">Speak to an Expert</button>
+</div>
+<!-- Abstract Circles -->
+<div class="absolute -right-20 -bottom-20 w-80 h-80 bg-secondary/10 rounded-full"></div>
+<div class="absolute -left-20 -top-20 w-60 h-60 bg-secondary/10 rounded-full"></div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-primary dark:bg-primary-container w-full pt-16 pb-8 border-t-4 border-secondary">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter mb-16">
+<div class="space-y-6">
+<div class="font-display-bold text-headline-h3 text-surface-white">StrongBox</div>
+<p class="text-surface-variant/60 text-body-main max-w-xs">Cape Town's premium valet storage solution. Secure, professional, and domestic-focused storage at your fingertips.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-lg bg-surface-white/10 flex items-center justify-center text-surface-white hover:text-secondary-fixed transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="w-10 h-10 rounded-lg bg-surface-white/10 flex items-center justify-center text-surface-white hover:text-secondary-fixed transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="w-10 h-10 rounded-lg bg-surface-white/10 flex items-center justify-center text-surface-white hover:text-secondary-fixed transition-colors" href="#"><span class="material-symbols-outlined">location_on</span></a>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div>
+<h4 class="text-surface-white font-body-strong mb-6 uppercase tracking-wider text-xs">Quick Links</h4>
+<ul class="space-y-3">
+<li><a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">Home</a></li>
+<li><a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">How It Works</a></li>
+<li><a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">Pricing</a></li>
+<li><a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">FAQ</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-surface-white font-body-strong mb-6 uppercase tracking-wider text-xs">Legal</h4>
+<ul class="space-y-3">
+<li><a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">Terms of Service</a></li>
+<li><a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">Contact</a></li>
+<li><a class="text-surface-variant/60 font-body-main hover:text-secondary-fixed transition-colors" href="#">About</a></li>
+</ul>
+</div>
+</div>
+<div>
+<h4 class="text-surface-white font-body-strong mb-6 uppercase tracking-wider text-xs">Newsletter</h4>
+<p class="text-surface-variant/60 text-sm mb-4">Get home organization tips and seasonal offers.</p>
+<form class="flex gap-2">
+<input class="bg-surface-white/10 border-0 rounded-lg px-4 py-3 flex-grow text-surface-white placeholder:text-surface-variant/40 focus:ring-2 focus:ring-secondary-container outline-none" placeholder="Email address" type="email"/>
+<button class="bg-secondary-container text-on-secondary-container p-3 rounded-lg hover:opacity-90 transition-all">
+<span class="material-symbols-outlined">send</span>
+</button>
+</form>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop pt-8 border-t border-surface-white/10 text-center">
+<p class="text-label-caps text-surface-variant/40 font-label-caps">© 2024 StrongBox Valet Storage. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        const rates = {
+            box: 65,
+            large: 125,
+            furniture: 250,
+            oversized: 350
+        };
+
+        const counts = {
+            box: 2,
+            large: 1,
+            furniture: 0,
+            oversized: 0
+        };
+
+        function updateCalc(type, delta) {
+            counts[type] = Math.max(0, counts[type] + delta);
+            document.getElementById(`${type}-count`).innerText = counts[type];
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            for (const key in counts) {
+                total += counts[key] * rates[key];
+            }
+            
+            // Add a small discount factor for higher volume
+            const itemCount = Object.values(counts).reduce((a, b) => a + b, 0);
+            if (itemCount > 10) total *= 0.9;
+            
+            document.getElementById('total-price').innerText = Math.round(total);
+            
+            // Subtle animation on price change
+            const priceEl = document.getElementById('total-price');
+            priceEl.classList.add('scale-110');
+            setTimeout(() => priceEl.classList.remove('scale-110'), 200);
+        }
+
+        // Initialize total
+        calculateTotal();
+    </script>
+</body></html>

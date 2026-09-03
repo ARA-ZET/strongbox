@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>StrongBox Logistics - Job Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#efecff",
+                    "secondary-container": "#feae2c",
+                    "on-tertiary-container": "#00a858",
+                    "tertiary-fixed-dim": "#4ae183",
+                    "secondary-fixed": "#ffddb4",
+                    "on-primary-fixed": "#081b39",
+                    "on-background": "#1a1a2e",
+                    "tertiary-container": "#003316",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#005228",
+                    "on-secondary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "tertiary": "#001c09",
+                    "on-surface": "#1a1a2e",
+                    "on-primary-fixed-variant": "#364767",
+                    "on-primary-container": "#8293b7",
+                    "on-primary": "#ffffff",
+                    "secondary": "#835500",
+                    "tertiary-fixed": "#6bfe9c",
+                    "on-surface-variant": "#44474e",
+                    "surface-dim": "#dad7f3",
+                    "secondary-fixed-dim": "#ffb955",
+                    "primary-fixed-dim": "#b6c6ee",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e2e0fc",
+                    "outline-variant": "#c5c6cf",
+                    "inverse-on-surface": "#f2efff",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-container-low": "#f5f2ff",
+                    "background": "#fcf8ff",
+                    "surface": "#fcf8ff",
+                    "outline": "#75777e",
+                    "on-error-container": "#93000a",
+                    "surface-variant": "#e2e0fc",
+                    "primary": "#031634",
+                    "surface-tint": "#4e5e80",
+                    "on-tertiary-fixed": "#00210c",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "surface-bright": "#fcf8ff",
+                    "primary-container": "#1a2b4a",
+                    "on-secondary-fixed": "#291800",
+                    "surface-container-high": "#e8e5ff",
+                    "on-secondary-container": "#6b4500",
+                    "inverse-surface": "#2f2e43",
+                    "inverse-primary": "#b6c6ee"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "2xl": "48px",
+                    "sm": "8px",
+                    "margin": "24px",
+                    "gutter": "16px",
+                    "xl": "32px",
+                    "lg": "24px",
+                    "base": "4px",
+                    "3xl": "64px",
+                    "xs": "4px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"]
+            },
+            "fontSize": {
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- Top Navigation Bar (Simplified for Task-Focused View) -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-margin h-16 border-b border-outline-variant shadow-sm">
+<div class="flex items-center gap-md">
+<button class="p-2 -ml-2 active:opacity-80 transition-all">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">Job Details</h1>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-2 hover:bg-surface-container-high transition-colors rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high transition-colors rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow px-margin pt-lg pb-32">
+<!-- Job Header Information -->
+<section class="mb-lg">
+<div class="flex justify-between items-start mb-base">
+<h2 class="font-headline-md text-headline-md text-primary">Global Logistics Hub</h2>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md rounded-full">EXPRESS DELIVERY</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md leading-tight">
+                482 Industrial Parkway, Suite 102<br/>
+                East Palo Alto, CA 94303
+            </p>
+<a class="inline-flex items-center gap-xs font-label-lg text-label-lg text-secondary font-bold hover:underline" href="#">
+<span class="material-symbols-outlined text-[20px]">map</span>
+                Open in Maps
+            </a>
+</section>
+<!-- Inventory / Package List -->
+<section class="space-y-gutter">
+<div class="flex items-center justify-between">
+<h3 class="font-label-lg text-label-lg text-on-surface uppercase tracking-wider">Manifest Items (5)</h3>
+<button class="text-primary font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                    Filter
+                </button>
+</div>
+<!-- Box Item 1: Loaded -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-outline-variant shadow-sm flex gap-md">
+<div class="w-20 h-20 bg-surface-container rounded-lg flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A high-resolution close-up photo of a durable, reinforced cardboard shipping box with 'FRAGILE' handling tape and a visible tracking barcode. The lighting is clean and industrial, with a cool blue and gray color palette that matches a professional logistics environment. The focus is sharp on the texture of the box and the clarity of the labels." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEq8RNOzx5lO7k16cX8TX9N8pK3hFfAfNif6bav4mVj6Gpz7PEMQ-LsJ1pArI_UDGpiWceursfjNXxBsoStnkhCR_SVXW-uFKPzm4ZzR53SrTxecjCbnbCZ61qlWsvzZA1TghgLdZHDtg6413bOuM7I5CtjyyqFLZ_MEiUTV_R6RehXXibXPSWYgfKw3mipwWABRNEggR_FFm-4IqU3cLD-bb93ba6ES77msW8EY328SeG5pkMBuqHUN1FA1JdQf_l7utxsyeojvY"/>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<span class="font-label-lg text-label-lg text-primary">BOX-2901-A</span>
+<span class="px-2 py-0.5 bg-on-tertiary-container/10 text-on-tertiary-container font-label-md text-label-md rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                Loaded
+                            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Electronic Components (12kg)</p>
+</div>
+<div class="flex items-center gap-2 mt-sm">
+<div class="flex items-center gap-1 px-2 py-1 bg-secondary-fixed/30 border border-secondary-fixed text-on-secondary-fixed-variant rounded font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">qr_code_2</span>
+                            QRD-772
+                        </div>
+</div>
+</div>
+</div>
+<!-- Box Item 2: Pending -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-outline-variant shadow-sm flex gap-md opacity-80">
+<div class="w-20 h-20 bg-surface-container rounded-lg flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover grayscale-[30%]" data-alt="A medium-sized heavy-duty logistics crate sitting on a warehouse floor. The crate is secured with plastic strapping. The lighting is bright and overhead, casting soft shadows. The overall aesthetic is professional, reliable, and functional, emphasizing the scale and security of modern freight transportation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChf6IeIRLHz5eJMvUAWKxVAJfE3PKu98iFUGbLkV-CLFuMAk0uelNSSXGgvz3Zw9QyWVJbAmklK_dHJI0F83hKNWC3e-EINjZjXyGaab8sF32P32S72KcfRnNpmF0848QDugdvjIJVOo9xWdIK4Ap1oQMxhus0fmKLEfTdUCDyTR9S2yuqT9IVIeKPM3a-Vcz4tMhTq370OfHrRfCKnyp7qWneZ-wdkwIe6LtOfVwIIrJR0KlUzzX4F7o8LkTj6NElDZZvbHj6ZHU"/>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<span class="font-label-lg text-label-lg text-primary">BOX-2901-B</span>
+<span class="px-2 py-0.5 bg-surface-variant text-on-surface-variant font-label-md text-label-md rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                                Pending
+                            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Medical Equipment (6kg)</p>
+</div>
+<div class="flex items-center gap-2 mt-sm">
+<div class="flex items-center gap-1 px-2 py-1 bg-surface-container-highest border border-outline-variant text-on-surface-variant rounded font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">qr_code_2</span>
+                            QRD-773
+                        </div>
+</div>
+</div>
+</div>
+<!-- Box Item 3: Delivered -->
+<div class="bg-surface-container-low p-md rounded-xl border border-outline-variant/50 shadow-none flex gap-md">
+<div class="w-20 h-20 bg-surface-container rounded-lg flex-shrink-0 overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-50" data-alt="A photograph of a successfully delivered package sitting neatly on a clean concrete loading dock. The sun is shining, creating high-contrast shadows. The image has a warm, positive tone, suggesting a completed task. The background shows a portion of a clean, modern warehouse facility." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXue0KXAuArXLT2ekyBO6pnmGj4fLsdLHaVGCqyPsh8_4iUr_Bn4iGVg8A5uEY7TqZaL--269pbkBxnlahd6CKmh2WoPhloq3FwQPe3wjs1VvBaHxwqowiXVddbyyNMYZWRA17hlW3oh0lpjXml9GD6kN_Q6sagPzkdsiyULRUfb8ucY1-Xz1G7KML69VxycOsDmP_0LFI8G84AI2HPCmU_PlaIjVdg5AX-4MW_ZCD0vG4h8vzTUeC3Fp5TN0BA7ka8FEzL691WfY"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-3xl" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+</div>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<span class="font-label-lg text-label-lg text-on-surface-variant line-through">BOX-2895-Z</span>
+<span class="px-2 py-0.5 bg-on-tertiary-container/10 text-on-tertiary-container font-label-md text-label-md rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">done_all</span>
+                                Delivered
+                            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Documents / Files (2kg)</p>
+</div>
+<div class="flex items-center gap-2 mt-sm">
+<div class="flex items-center gap-1 px-2 py-1 bg-surface-container text-on-surface-variant rounded font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">qr_code_2</span>
+                            QRD-760
+                        </div>
+</div>
+</div>
+</div>
+<!-- Box Item 4: Pending -->
+<div class="bg-surface-container-lowest p-md rounded-xl border border-outline-variant shadow-sm flex gap-md">
+<div class="w-20 h-20 bg-surface-container rounded-lg flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A close-up of a small industrial parcel wrapped in protective film with a clear, prominent tracking label. The package is set against a dark navy background, highlighting its crisp white and orange labeling. The lighting is dramatic and focused, emphasizing the importance of detail in the delivery process." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEbWdOskG3iBVJqytANkzn3B7Kwmlg6VMkZ2TH3JfRfB-3fmfuzyAr8QVYhoki7fFQo_jkbcY4hxVbwnWO4WgZCZ6f1cz0XEsd5hN9hAbSQGhonIYZxRWqpWvU505IJbvnLBxr5H2XuyYgJrjXH_KFs1ytdmEabUNwdh_9QnVM6zruOaNQI2vZGUwSYkqQL-vPDeVCDf8Gw6LC-y1uGL8h_J_26dN23C9cEWSgxDGNJWD8w-_LYrS0kpCZdaDQWom533C-uxIM6_U"/>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<span class="font-label-lg text-label-lg text-primary">BOX-2902-C</span>
+<span class="px-2 py-0.5 bg-surface-variant text-on-surface-variant font-label-md text-label-md rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                                Pending
+                            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Auto Parts (24kg)</p>
+</div>
+<div class="flex items-center gap-2 mt-sm">
+<div class="flex items-center gap-1 px-2 py-1 bg-surface-container-highest border border-outline-variant text-on-surface-variant rounded font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">qr_code_2</span>
+                            QRD-775
+                        </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Spacer for FAB/Button Area -->
+<div class="h-8"></div>
+</main>
+<!-- Floating Action Footer -->
+<div class="fixed bottom-20 left-0 w-full px-margin pb-gutter z-40 bg-gradient-to-t from-background via-background to-transparent pt-10">
+<button class="w-full bg-secondary-container text-on-secondary-container h-[56px] rounded-xl flex items-center justify-center gap-md font-label-lg text-label-lg font-bold shadow-lg active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+            Start Job
+        </button>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-safe bg-surface border-t border-outline-variant shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors flex-1 h-full" href="#">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<span class="font-label-md text-label-md mt-1">Home</span>
+</a>
+<!-- Jobs (Active) -->
+<a class="flex-1 h-full flex items-center justify-center" href="#">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-6 py-1 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">list_alt</span>
+<span class="font-label-md text-label-md mt-0.5">Jobs</span>
+</div>
+</a>
+<!-- Scan -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors flex-1 h-full" href="#">
+<span class="material-symbols-outlined text-[24px]">qr_code_scanner</span>
+<span class="font-label-md text-label-md mt-1">Scan</span>
+</a>
+<!-- Inventory -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors flex-1 h-full" href="#">
+<span class="material-symbols-outlined text-[24px]">package</span>
+<span class="font-label-md text-label-md mt-1">Inventory</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for item clicking
+        document.querySelectorAll('.bg-surface-container-lowest').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.add('scale-[0.98]', 'bg-surface-container-low');
+                setTimeout(() => {
+                    this.classList.remove('scale-[0.98]', 'bg-surface-container-low');
+                }, 150);
+            });
+        });
+
+        // "Start Job" button interaction
+        const startBtn = document.querySelector('button.bg-secondary-container');
+        startBtn.addEventListener('click', () => {
+            const originalContent = startBtn.innerHTML;
+            startBtn.innerHTML = `<span class="material-symbols-outlined animate-spin">refresh</span> Starting...`;
+            startBtn.classList.add('opacity-80');
+            setTimeout(() => {
+                startBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Job Active`;
+                startBtn.classList.remove('bg-secondary-container');
+                startBtn.classList.add('bg-on-tertiary-container', 'text-white');
+            }, 1200);
+        });
+    </script>
+</body></html>

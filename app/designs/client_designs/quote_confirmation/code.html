@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quote Confirmation - ValetStore</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed": "#291800",
+            "on-secondary-fixed-variant": "#633f00",
+            "surface-variant": "#e4e2e5",
+            "background": "#fbf8fc",
+            "primary-fixed": "#d8e2ff",
+            "surface-bright": "#fbf8fc",
+            "primary-container": "#1a2b4a",
+            "secondary": "#835500",
+            "surface-container": "#efedf0",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-primary-fixed": "#081b39",
+            "outline-variant": "#c5c6cf",
+            "on-tertiary-fixed-variant": "#633f00",
+            "on-background": "#1b1b1e",
+            "on-primary-fixed-variant": "#364767",
+            "surface-tint": "#4e5e80",
+            "surface-container-high": "#e9e7eb",
+            "error": "#ba1a1a",
+            "surface-container-low": "#f5f3f6",
+            "inverse-primary": "#b6c6ee",
+            "secondary-container": "#feae2c",
+            "tertiary-fixed": "#ffddb3",
+            "on-primary-container": "#8293b7",
+            "primary-fixed-dim": "#b6c6ee",
+            "on-primary": "#ffffff",
+            "on-secondary-container": "#6b4500",
+            "tertiary-fixed-dim": "#f4bd71",
+            "outline": "#75777e",
+            "surface": "#fbf8fc",
+            "surface-container-highest": "#e4e2e5",
+            "surface-dim": "#dbd9dc",
+            "inverse-on-surface": "#f2f0f3",
+            "surface-container-lowest": "#ffffff",
+            "primary": "#031634",
+            "tertiary-container": "#3e2600",
+            "on-tertiary-container": "#ba8943",
+            "secondary-fixed-dim": "#ffb954",
+            "on-surface": "#1b1b1e",
+            "on-error-container": "#93000a",
+            "inverse-surface": "#303033",
+            "secondary-fixed": "#ffddb4",
+            "tertiary": "#231300",
+            "on-tertiary": "#ffffff",
+            "on-surface-variant": "#44474e",
+            "on-secondary-fixed": "#291800"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "stack_md": "16px",
+            "container_max": "1200px",
+            "page_padding": "24px",
+            "stack_lg": "24px",
+            "gutter": "16px",
+            "stack_sm": "8px"
+          },
+          "fontFamily": {
+            "caption-xs": ["Inter"],
+            "label-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "display-lg": ["Inter"],
+            "title-sm": ["Inter"],
+            "headline-md": ["Inter"]
+          },
+          "fontSize": {
+            "caption-xs": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+            "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+            "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "display-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+            "headline-md": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #F5F2FF;
+      font-family: 'Inter', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .btn-bounce:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-page_padding">
+<main class="w-full max-w-[640px] bg-surface-container-lowest rounded-xl p-8 shadow-[0_2px_8px_rgba(0,0,0,0.08)] flex flex-col items-center">
+<!-- Success Icon Section -->
+<div class="mb-stack_lg">
+<div class="w-20 h-20 rounded-full flex items-center justify-center bg-[#E8F5F0]">
+<span class="material-symbols-outlined text-[40px] text-[#00A858]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Confirmation Header -->
+<div class="text-center space-y-stack_sm mb-stack_lg">
+<h1 class="font-headline-md text-headline-md text-primary">Quote Accepted!</h1>
+<div class="flex justify-center">
+<span class="inline-flex items-center px-4 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+          Reference: SBQ-2024-0847
+        </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[400px]">
+        We'll contact you within 24 hours to confirm collection.
+      </p>
+</div>
+<!-- Summary Card -->
+<div class="w-full bg-[#EFECFF] rounded-lg p-6 mb-stack_lg space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter text-center md:text-left">
+<div class="flex flex-col">
+<span class="font-caption-xs text-caption-xs text-on-surface-variant uppercase tracking-wider">Monthly</span>
+<span class="font-title-sm text-title-sm text-primary">R1 080</span>
+</div>
+<div class="flex flex-col border-t md:border-t-0 md:border-l border-outline-variant pt-4 md:pt-0 md:pl-4">
+<span class="font-caption-xs text-caption-xs text-on-surface-variant uppercase tracking-wider">Due Today</span>
+<span class="font-title-sm text-title-sm text-primary">R1 450</span>
+</div>
+<div class="flex flex-col border-t md:border-t-0 md:border-l border-outline-variant pt-4 md:pt-0 md:pl-4">
+<span class="font-caption-xs text-caption-xs text-on-surface-variant uppercase tracking-wider">Collection</span>
+<span class="font-title-sm text-title-sm text-primary">To be scheduled</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="w-full flex flex-col gap-3 mb-stack_lg">
+<button class="btn-bounce w-full bg-secondary-container text-on-secondary-container font-title-sm text-title-sm py-4 px-stack_lg rounded-lg flex items-center justify-center gap-2 hover:bg-secondary transition-colors">
+        Schedule Collection
+        <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="btn-bounce w-full bg-primary text-on-primary font-title-sm text-title-sm py-4 px-stack_lg rounded-lg hover:opacity-90 transition-opacity">
+        View Dashboard
+      </button>
+<button class="btn-bounce w-full border border-outline text-on-surface-variant font-title-sm text-title-sm py-4 px-stack_lg rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+        Download Quote PDF
+      </button>
+</div>
+<!-- Share Section -->
+<div class="w-full pt-stack_lg border-t border-outline-variant flex flex-col items-center gap-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Share Confirmation</span>
+<div class="flex items-center gap-4">
+<button class="p-3 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center group" title="Share via WhatsApp">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-[#25D366]" data-icon="chat">chat</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:bg-surface-container-low transition-colors group" title="Send via Email">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="mail">mail</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Email Confirmation</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Visual Atmospheric Element -->
+<div class="fixed top-0 left-0 w-full h-full pointer-events-none -z-10 opacity-30">
+<div class="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-primary-fixed rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-secondary-fixed rounded-full blur-[120px]"></div>
+</div>
+<script>
+    // Micro-interaction for feedback
+    document.querySelectorAll('button').forEach(button => {
+      button.addEventListener('click', function() {
+        const originalContent = this.innerHTML;
+        if (this.innerText.includes('Download')) {
+          this.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="sync">sync</span> Preparing...';
+          setTimeout(() => {
+            this.innerHTML = originalContent;
+          }, 2000);
+        }
+      });
+    });
+  </script>
+</body></html>

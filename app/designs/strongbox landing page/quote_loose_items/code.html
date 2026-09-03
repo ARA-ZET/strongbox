@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ValetStore - Client Quote: Loose Items</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c5c6cf;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #75777e;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#291800",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "surface-variant": "#e4e2e5",
+                        "background": "#fbf8fc",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-bright": "#fbf8fc",
+                        "primary-container": "#1a2b4a",
+                        "secondary": "#835500",
+                        "surface-container": "#efedf0",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#081b39",
+                        "outline-variant": "#c5c6cf",
+                        "on-tertiary-fixed-variant": "#633f00",
+                        "on-background": "#1b1b1e",
+                        "on-primary-fixed-variant": "#364767",
+                        "surface-tint": "#4e5e80",
+                        "surface-container-high": "#e9e7eb",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f5f3f6",
+                        "inverse-primary": "#b6c6ee",
+                        "secondary-container": "#feae2c",
+                        "tertiary-fixed": "#ffddb3",
+                        "on-primary-container": "#8293b7",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#6b4500",
+                        "tertiary-fixed-dim": "#f4bd71",
+                        "outline": "#75777e",
+                        "surface": "#fbf8fc",
+                        "surface-container-highest": "#e4e2e5",
+                        "surface-dim": "#dbd9dc",
+                        "inverse-on-surface": "#f2f0f3",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#031634",
+                        "tertiary-container": "#3e2600",
+                        "on-tertiary-container": "#ba8943",
+                        "secondary-fixed-dim": "#ffb954",
+                        "on-surface": "#1b1b1e",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303033",
+                        "secondary-fixed": "#ffddb4",
+                        "tertiary": "#231300",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#44474e",
+                        "on-secondary-fixed": "#291800"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack_md": "16px",
+                        "container_max": "1200px",
+                        "page_padding": "24px",
+                        "stack_lg": "24px",
+                        "gutter": "16px",
+                        "stack_sm": "8px"
+                    },
+                    "fontFamily": {
+                        "caption-xs": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "caption-xs": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-page_padding py-stack_sm max-w-container_max mx-auto">
+<div class="font-headline-md text-headline-md text-primary dark:text-primary-fixed">ValetStore</div>
+<nav class="hidden md:flex items-center gap-stack_lg">
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Inventory</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Pickups</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Returns</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Billing</a>
+</nav>
+<div class="flex items-center gap-stack_md">
+<button class="hidden sm:flex items-center text-primary dark:text-primary-fixed font-title-sm hover:opacity-80 transition-opacity">
+                    Support
+                </button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-title-sm hover:opacity-90 transition-opacity">
+                    New Pickup
+                </button>
+</div>
+</div>
+</header>
+<main class="flex-grow w-full max-w-container_max mx-auto px-page_padding py-stack_lg pb-32">
+<!-- Step Indicator -->
+<div class="mb-stack_lg">
+<div class="flex items-center justify-between max-w-2xl mx-auto mb-4">
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-title-sm">1</div>
+<span class="text-caption-xs font-caption-xs text-on-surface-variant">Profile</span>
+</div>
+<div class="h-1 flex-grow mx-2 bg-secondary rounded-full"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-title-sm">2</div>
+<span class="text-caption-xs font-caption-xs text-on-surface-variant">Boxes</span>
+</div>
+<div class="h-1 flex-grow mx-2 bg-secondary rounded-full"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full border-4 border-secondary-container bg-primary text-on-primary flex items-center justify-center font-title-sm">3</div>
+<span class="text-caption-xs font-caption-xs text-primary font-bold">Items</span>
+</div>
+<div class="h-1 flex-grow mx-2 bg-surface-container-high rounded-full"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-title-sm">4</div>
+<span class="text-caption-xs font-caption-xs text-on-surface-variant">Packing</span>
+</div>
+</div>
+</div>
+<!-- Header Section -->
+<div class="text-center mb-stack_lg">
+<h1 class="font-display-lg text-display-lg text-primary mb-2">Loose Items</h1>
+<p class="text-on-surface-variant max-w-lg mx-auto">Add furniture and oversized items that won't fit in a standard valet box. We handle everything from beds to office chairs.</p>
+</div>
+<!-- Category Filter -->
+<div class="flex overflow-x-auto gap-stack_sm pb-4 mb-stack_lg scrollbar-hide no-scrollbar">
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-primary text-on-primary font-title-sm shadow-sm transition-all">All</button>
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-title-sm hover:bg-surface-container-highest transition-all">Beds</button>
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-title-sm hover:bg-surface-container-highest transition-all">Tables</button>
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-title-sm hover:bg-surface-container-highest transition-all">Office</button>
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-title-sm hover:bg-surface-container-highest transition-all">Appliances</button>
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-title-sm hover:bg-surface-container-highest transition-all">Outdoor</button>
+<button class="flex-shrink-0 px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-title-sm hover:bg-surface-container-highest transition-all">Other</button>
+</div>
+<!-- Items Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter mb-stack_lg">
+<!-- Item Card 1 -->
+<div class="bg-surface rounded-xl p-stack_md flex flex-col items-center text-center shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant hover:border-secondary-container transition-all group">
+<div class="text-[48px] mb-stack_md leading-none select-none">🍽️</div>
+<div class="font-title-sm text-primary mb-stack_sm">Dining Table</div>
+<button class="mt-auto w-full py-2 border-2 border-secondary-container text-on-secondary-container rounded-lg font-title-sm hover:bg-secondary-container hover:text-on-secondary transition-all">Add</button>
+</div>
+<!-- Item Card 2 -->
+<div class="bg-surface rounded-xl p-stack_md flex flex-col items-center text-center shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant hover:border-secondary-container transition-all group">
+<div class="text-[48px] mb-stack_md leading-none select-none">☕</div>
+<div class="font-title-sm text-primary mb-stack_sm">Coffee Table</div>
+<button class="mt-auto w-full py-2 border-2 border-secondary-container text-on-secondary-container rounded-lg font-title-sm hover:bg-secondary-container hover:text-on-secondary transition-all">Add</button>
+</div>
+<!-- Item Card 3 -->
+<div class="bg-surface rounded-xl p-stack_md flex flex-col items-center text-center shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant hover:border-secondary-container transition-all group">
+<div class="text-[48px] mb-stack_md leading-none select-none">🖥️</div>
+<div class="font-title-sm text-primary mb-stack_sm">Desk</div>
+<button class="mt-auto w-full py-2 border-2 border-secondary-container text-on-secondary-container rounded-lg font-title-sm hover:bg-secondary-container hover:text-on-secondary transition-all">Add</button>
+</div>
+<!-- Item Card 4 -->
+<div class="bg-surface rounded-xl p-stack_md flex flex-col items-center text-center shadow-[0_2px_8_rgba(0,0,0,0.08)] border border-outline-variant hover:border-secondary-container transition-all group">
+<div class="text-[48px] mb-stack_md leading-none select-none">📺</div>
+<div class="font-title-sm text-primary mb-stack_sm">TV Stand</div>
+<button class="mt-auto w-full py-2 border-2 border-secondary-container text-on-secondary-container rounded-lg font-title-sm hover:bg-secondary-container hover:text-on-secondary transition-all">Add</button>
+</div>
+<!-- Item Card 5 -->
+<div class="bg-surface rounded-xl p-stack_md flex flex-col items-center text-center shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant hover:border-secondary-container transition-all group">
+<div class="text-[48px] mb-stack_md leading-none select-none">💺</div>
+<div class="font-title-sm text-primary mb-stack_sm">Office Chair</div>
+<button class="mt-auto w-full py-2 border-2 border-secondary-container text-on-secondary-container rounded-lg font-title-sm hover:bg-secondary-container hover:text-on-secondary transition-all">Add</button>
+</div>
+<!-- Item Card 6 -->
+<div class="bg-surface rounded-xl p-stack_md flex flex-col items-center text-center shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant hover:border-secondary-container transition-all group">
+<div class="text-[48px] mb-stack_md leading-none select-none">📚</div>
+<div class="font-title-sm text-primary mb-stack_sm">Bookshelf</div>
+<button class="mt-auto w-full py-2 border-2 border-secondary-container text-on-secondary-container rounded-lg font-title-sm hover:bg-secondary-container hover:text-on-secondary transition-all">Add</button>
+</div>
+<!-- Custom Item Card -->
+<div class="bg-surface-container-low rounded-xl p-stack_md flex flex-col items-center text-center border-2 border-dashed border-secondary-container cursor-pointer hover:bg-white transition-all group">
+<div class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mb-stack_md group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</div>
+<div class="font-title-sm text-on-secondary-container mb-1">Custom Item</div>
+<div class="text-caption-xs font-caption-xs text-on-surface-variant">Specify dimensions</div>
+</div>
+</div>
+<!-- Added Items Section -->
+<section class="mt-12 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] overflow-hidden border border-outline-variant">
+<div class="px-page_padding py-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h3 class="font-title-sm text-primary">Added Items (3)</h3>
+<span class="text-caption-xs font-caption-xs text-on-surface-variant">Estimated monthly total shown in footer</span>
+</div>
+<div class="divide-y divide-outline-variant">
+<!-- Added Item 1 -->
+<div class="px-page_padding py-4 flex items-center justify-between hover:bg-surface-container-lowest transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-2xl">🍽️</div>
+<div>
+<div class="font-title-sm text-primary">Dining Table</div>
+<div class="text-caption-xs text-on-surface-variant">160 x 90 x 75 cm</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<div class="font-title-sm text-secondary">R145.00/mo</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-full transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container rounded-full transition-all">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Added Item 2 -->
+<div class="px-page_padding py-4 flex items-center justify-between hover:bg-surface-container-lowest transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-2xl">💺</div>
+<div>
+<div class="font-title-sm text-primary">Office Chair</div>
+<div class="text-caption-xs text-on-surface-variant">Standard Ergonomic</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<div class="font-title-sm text-secondary">R85.00/mo</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-full transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container rounded-full transition-all">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Added Item 3 -->
+<div class="px-page_padding py-4 flex items-center justify-between hover:bg-surface-container-lowest transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-2xl">📦</div>
+<div>
+<div class="font-title-sm text-primary">Custom Bicycle</div>
+<div class="text-caption-xs text-on-surface-variant">Mountain Bike Frame</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<div class="font-title-sm text-secondary">R110.00/mo</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-full transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container rounded-full transition-all">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant z-50 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+<div class="max-w-container_max mx-auto px-page_padding py-4 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-caption-xs font-caption-xs text-on-surface-variant uppercase tracking-wider">Estimated Monthly Total</span>
+<div class="text-headline-md font-headline-md text-primary">R340.00 <span class="text-body-md font-normal text-on-surface-variant">p/m</span></div>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden sm:block text-on-surface-variant font-title-sm px-6 py-3 hover:bg-surface-container transition-all rounded-lg">
+                    ← Back
+                </button>
+<button class="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-lg font-title-sm flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-md">
+                    Next: Packing
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface dark:bg-surface-container-highest rounded-t-xl shadow-[0_-2px_8px_rgba(0,0,0,0.08)] pointer-events-none opacity-0">
+<!-- Hidden as per shell rules for task-focused screens, but structure preserved for integrity -->
+</nav>
+<script>
+        // Simple interactive handling for the buttons to simulate state
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (this.innerText.includes('Add')) {
+                    const originalText = this.innerText;
+                    this.innerText = 'Added ✓';
+                    this.classList.remove('border-secondary-container', 'text-on-secondary-container');
+                    this.classList.add('bg-secondary', 'text-on-secondary', 'border-secondary');
+                    
+                    setTimeout(() => {
+                        this.innerText = originalText;
+                        this.classList.add('border-secondary-container', 'text-on-secondary-container');
+                        this.classList.remove('bg-secondary', 'text-on-secondary', 'border-secondary');
+                    }, 2000);
+                }
+            });
+        });
+
+        // Toggle mobile nav suppression based on screen purpose
+        // As a quote flow, global nav is typically hidden to focus on the transaction.
+    </script>
+</body></html>

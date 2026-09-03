@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="StrongBox">
+  <rect width="64" height="64" rx="14" fill="#0a1a33"/>
+  <!--
+    The same carton-in-cabinet-projection the site's hero art uses, reduced to
+    a mark: sky-blue lid, navy body, and the tape seam down the front face.
+    The lid and seam use `sky` rather than `accent` — at 16px the darker azure
+    closes up against the navy plate.
+  -->
+  <path d="M14 26 H42 V48 H14 Z" fill="#0f2a52" stroke="#5ea6f5" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M14 26 L22 18 H50 L42 26 Z" fill="#5ea6f5" stroke="#5ea6f5" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M42 26 L50 18 V40 L42 48 Z" fill="#1d6fe0" stroke="#5ea6f5" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M28 26 V48" stroke="#5ea6f5" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox - New Delivery Request</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        [data-weight="fill"] {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b6c6ee",
+                        "on-tertiary-container": "#ba8943",
+                        "on-primary-container": "#8293b7",
+                        "on-secondary-container": "#6b4500",
+                        "outline": "#75777e",
+                        "secondary": "#835500",
+                        "secondary-fixed-dim": "#ffb954",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "tertiary-container": "#3e2600",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#b6c6ee",
+                        "on-surface-variant": "#44474e",
+                        "surface-variant": "#e4e1ee",
+                        "inverse-on-surface": "#f2effc",
+                        "outline-variant": "#c5c6cf",
+                        "tertiary": "#231300",
+                        "on-tertiary-fixed": "#291800",
+                        "secondary-fixed": "#ffddb4",
+                        "surface-container-high": "#e9e6f3",
+                        "surface-tint": "#4e5e80",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#1a2b4a",
+                        "surface-container": "#efecf9",
+                        "inverse-surface": "#302f39",
+                        "on-error": "#ffffff",
+                        "primary": "#031634",
+                        "on-primary-fixed": "#081b39",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f5f2ff",
+                        "surface-container-highest": "#e4e1ee",
+                        "surface-dim": "#dbd8e5",
+                        "primary-fixed": "#d8e2ff",
+                        "secondary-container": "#feae2c",
+                        "tertiary-fixed-dim": "#f4bd71",
+                        "on-background": "#1b1b24",
+                        "tertiary-fixed": "#ffddb3",
+                        "surface": "#fcf8ff",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1b1b24",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#fcf8ff",
+                        "on-secondary-fixed": "#291800",
+                        "background": "#fcf8ff",
+                        "on-primary-fixed-variant": "#364767",
+                        "on-tertiary-fixed-variant": "#633f00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "desktop-padding": "24px",
+                        "mobile-padding": "16px",
+                        "gutter": "16px",
+                        "component-gap": "8px",
+                        "section-gap": "32px"
+                    },
+                    "fontFamily": {
+                        "caption": ["Inter"],
+                        "headline": ["Inter"],
+                        "label": ["Inter"],
+                        "body": ["Inter"],
+                        "title": ["Inter"],
+                        "display": ["Inter"],
+                        "display-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "headline": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "body": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "display": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface-container-low min-h-screen font-body text-on-surface antialiased">
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-desktop-padding max-w-full bg-surface dark:bg-surface-container-highest shadow-sm border-b border-outline-variant dark:border-outline h-[64px]">
+<div class="flex items-center gap-8">
+<div class="text-headline font-headline font-bold text-primary dark:text-primary-fixed flex items-center gap-2">
+<span class="bg-secondary-container p-1 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-weight="fill">inventory_2</span>
+</span>
+                StrongBox
+            </div>
+<!-- Desktop Nav Links -->
+<div class="hidden md:flex gap-6 items-center h-full">
+<a class="font-title text-title text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Home</a>
+<a class="font-title text-title text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">My Storage</a>
+<a class="font-title text-title text-primary dark:text-secondary-fixed-dim border-b-2 border-secondary dark:border-secondary-fixed-dim pb-1" href="#">Deliveries</a>
+<a class="font-title text-title text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Billing</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a corporate user for a logistics application, set against a clean, neutral studio background with soft cinematic lighting. The individual is wearing professional attire, and the overall color palette emphasizes clean whites and deep navy blues to match a corporate identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzy4eb0BCLoVHxK2gZkJzyZdVXHsmhP_ysYHFmFRFuaxooXEuh3vVPgQQtlUsV5uUcSv2QCTcG9V_pMji_mzoEBPVCaORloXTSkOjiXxgw7ZNNiNYldSP426F_y4fe2DtsFUEkGOZLdCinFmfd8TujyG54LbOui3GMibH_SO1E6-OqGjR5inw5ojEYD-c1hYt5Dcome8e5Mil_1MaZJlKg5u0QAMuT5KXgzP7AMVByDZwcWnA20Lx2uVSCzuPjHix3vsNfir0NRjrt"/>
+</div>
+</div>
+</nav>
+<!-- Main Content Container -->
+<main class="pt-[88px] pb-24 px-desktop-padding max-w-[1440px] mx-auto">
+<!-- Header & Step Indicator -->
+<div class="mb-section-gap">
+<h1 class="font-display text-display text-primary mb-6">New Delivery Request</h1>
+<!-- Step Indicator -->
+<div class="flex items-center justify-between max-w-4xl">
+<!-- Step 1: Active -->
+<div class="flex flex-col items-center gap-2 relative z-10">
+<div class="w-10 h-10 rounded-full border-2 border-secondary-container bg-surface flex items-center justify-center text-secondary font-bold">
+                        1
+                    </div>
+<span class="font-label text-label text-secondary">Items</span>
+</div>
+<div class="flex-1 h-[2px] bg-outline-variant mx-4 -mt-6"></div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center gap-2 relative z-10">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant bg-surface-container flex items-center justify-center text-on-surface-variant font-bold">
+                        2
+                    </div>
+<span class="font-label text-label text-on-surface-variant">Date</span>
+</div>
+<div class="flex-1 h-[2px] bg-outline-variant mx-4 -mt-6"></div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center gap-2 relative z-10">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant bg-surface-container flex items-center justify-center text-on-surface-variant font-bold">
+                        3
+                    </div>
+<span class="font-label text-label text-on-surface-variant">Address</span>
+</div>
+<div class="flex-1 h-[2px] bg-outline-variant mx-4 -mt-6"></div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center gap-2 relative z-10">
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant bg-surface-container flex items-center justify-center text-on-surface-variant font-bold">
+                        4
+                    </div>
+<span class="font-label text-label text-on-surface-variant">Confirm</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col lg:flex-row gap-gutter">
+<!-- Left Selection Area (65%) -->
+<div class="lg:w-[65%] space-y-6">
+<!-- Filters -->
+<div class="flex gap-2">
+<button class="px-4 py-2 rounded-full bg-primary text-on-primary font-label text-label">All Items</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-label hover:bg-surface-variant transition-colors">In Storage</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-label hover:bg-surface-variant transition-colors">Delivered</button>
+</div>
+<!-- Storage Unit Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Item Card 1 (Selected) -->
+<div class="group relative bg-surface border-2 border-secondary-container rounded-xl p-4 shadow-sm transition-all cursor-pointer">
+<div class="absolute top-3 left-3 z-20">
+<div class="bg-secondary-container text-primary rounded w-6 h-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-weight="fill">check</span>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-24 h-24 rounded-lg bg-surface-container-low overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A high-resolution photograph of a set of premium leather office chairs, neatly wrapped in protective industrial plastic. The chairs are arranged against a clean warehouse background with professional lighting that highlights the texture of the leather and the quality of the storage environment. The color palette is composed of rich browns, deep blues, and crisp whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5Rm2HuzquSuXacqTWYXyryBnGkpx3jH_OnAuE9v6ChpjFKRF6EoFPCY2aklqOKxiOc0j1hZMje8fpsZnMDiLQNIhnk4iwCDTRu1pm8BoIyLpivE8g_vkrDEOB51YTJmoOh5Tp6ETbz4oZoy2fUjCb-YILs6lM9CD-yALJmAS6Vu7m2nvpz5v3xrsOncjhqpaXPfpYLPfvsVAPKGq5CaiENtcIaNhHw_jMmzhgEl0N6mFhQ4n_HaXzK7NlUv_sJVg44xiHKDNBhI20"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-title text-title text-primary">Executive Office Suite</h3>
+<span class="bg-secondary-container/10 text-secondary text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded">Unit A-204</span>
+</div>
+<p class="text-on-surface-variant text-caption mt-1">4 Items: 2 Desk, 2 Chairs</p>
+<div class="flex items-center gap-1 mt-3 text-on-tertiary-container">
+<span class="material-symbols-outlined text-[16px]" data-weight="fill">check_circle</span>
+<span class="text-caption font-medium">In Storage</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item Card 2 (Selected) -->
+<div class="group relative bg-surface border-2 border-secondary-container rounded-xl p-4 shadow-sm transition-all cursor-pointer">
+<div class="absolute top-3 left-3 z-20">
+<div class="bg-secondary-container text-primary rounded w-6 h-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-weight="fill">check</span>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-24 h-24 rounded-lg bg-surface-container-low overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A detailed commercial shot of high-end audiovisual equipment including professional speakers and sound mixing consoles, carefully packed in specialized transit cases. The lighting is crisp and cool, suggesting a secure tech-focused storage facility. The aesthetic is modern and corporate with professional branding elements visible." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4jHoRJKpOUgdREdTODXbUq0-xqFuP8mHz0OYQ2qgCBuVwwhVZij_Nsnmp_fmhVgOZZOWDCvspVwDGrZMcF7aNkI7twQ69tICDliBl0HdSXb4_ZJRPdoif1hbQPDCGuH1IgtJ1xq0wTEEzmz7GqEoyXjJv2VFQBnDA8JO24Xjh8SyFMSJSI6v1nxRd0gbzWhHo7XeLsC3yFO3AR4SYPq7dGQuYwtJrQSAYftkbsMytybYIusnInqt1nP22QkKJnQFRWWV70a-Q7I0w"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-title text-title text-primary">AV Equipment Rack</h3>
+<span class="bg-secondary-container/10 text-secondary text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded">Unit B-012</span>
+</div>
+<p class="text-on-surface-variant text-caption mt-1">1 Item: Rack Mount Unit</p>
+<div class="flex items-center gap-1 mt-3 text-on-tertiary-container">
+<span class="material-symbols-outlined text-[16px]" data-weight="fill">check_circle</span>
+<span class="text-caption font-medium">In Storage</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item Card 3 (Unselected) -->
+<div class="group relative bg-surface border border-outline-variant rounded-xl p-4 shadow-sm hover:border-secondary-container/50 transition-all cursor-pointer">
+<div class="absolute top-3 left-3 z-20">
+<div class="border-2 border-outline-variant bg-surface rounded w-6 h-6"></div>
+</div>
+<div class="flex gap-4">
+<div class="w-24 h-24 rounded-lg bg-surface-container-low overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A clean, professional photograph of architectural models and blueprints stored in protective cylindrical tubes and sturdy flat-file boxes. The setting is a minimalist, secure storage vault with soft ambient lighting that conveys precision and high-value security. The color palette features neutral grays and warm wooden accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkAHvbgK8lqDY7wxJmKo6tZmlSX1zkGdcD9DJg5tNAK4ovGf_w7egqLTY9PIFZuWO1BfyYXg-2SpDLnnpalloLF82BI2JaHPaI0O6vaqbibs3u3uTo8TraXqPTBz76WvxfWa7l92jGI2jZZ3-69jHfTDHcNlXoDb-38O0-JaJS1yYXssVzvZt2Q_eXoH1Rm9JHHoAoiuTrh1UYIzhMGzE9ysNiVQ8ZhmcjSiIkfBxV9wWrceo67ZobUh4NVnXoo61_6LoP6eIRVLv5"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-title text-title text-primary">Project Archives</h3>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded">Unit C-501</span>
+</div>
+<p class="text-on-surface-variant text-caption mt-1">12 Items: Tubes &amp; Cases</p>
+<div class="flex items-center gap-1 mt-3 text-on-tertiary-container">
+<span class="material-symbols-outlined text-[16px]" data-weight="fill">check_circle</span>
+<span class="text-caption font-medium">In Storage</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item Card 4 (Unselected) -->
+<div class="group relative bg-surface border border-outline-variant rounded-xl p-4 shadow-sm hover:border-secondary-container/50 transition-all cursor-pointer">
+<div class="absolute top-3 left-3 z-20">
+<div class="border-2 border-outline-variant bg-surface rounded w-6 h-6"></div>
+</div>
+<div class="flex gap-4">
+<div class="w-24 h-24 rounded-lg bg-surface-container-low overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional studio shot of high-end corporate signage and exhibition display hardware, neatly organized and secured on a industrial pallet. The materials including brushed aluminum and acrylic panels catch the bright studio light. The mood is efficient, orderly, and representative of a modern logistics operation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqRVJ30ye7YerB8PDFAgBffbdOwPwqaWHMnHyaMq4ZxzfsnHBs8RPb76T7LQfYsTZf_DnukwUG_yERxY4KHmUUoKB-HCNAVUrw4WGh0BVjNGG7r11h1abVeBYpsIoC2PI0WtFXgC898bZO2n4Jy_KO7cvb1jLCGokRqUPGc3IXg_jihzYuYDUiiMjuX7jgsROEM0LsFBw6VPwrdlfZ4DsloCvmlJlFn1ZN0ICjktrJF-awnltYI02lEyAvhFhFKHKw0pRPbp81lsle"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-title text-title text-primary">Marketing Displays</h3>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded">Unit A-102</span>
+</div>
+<p class="text-on-surface-variant text-caption mt-1">3 Items: Pop-up Stands</p>
+<div class="flex items-center gap-1 mt-3 text-on-tertiary-container">
+<span class="material-symbols-outlined text-[16px]" data-weight="fill">check_circle</span>
+<span class="text-caption font-medium">In Storage</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Selection Counter -->
+<div class="flex items-center gap-3 py-4 border-t border-outline-variant">
+<span class="bg-secondary-container text-primary font-bold px-3 py-1 rounded-full text-label">4 items selected</span>
+<span class="text-on-surface-variant text-caption italic">Select the units or individual items you wish to have delivered to your location.</span>
+</div>
+</div>
+<!-- Right Sidebar Sidebar (35%) -->
+<aside class="lg:w-[35%]">
+<div class="bg-surface p-6 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant sticky top-[88px]">
+<h2 class="font-headline text-title text-primary mb-6">Job Summary</h2>
+<div class="space-y-4 mb-6 max-h-[300px] overflow-y-auto pr-2">
+<!-- Selected Item 1 -->
+<div class="flex justify-between items-center">
+<div>
+<p class="font-label text-label text-primary">Executive Office Suite</p>
+<p class="text-caption text-on-surface-variant">4 items total</p>
+</div>
+<button class="text-error hover:bg-error-container p-1 rounded transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<!-- Selected Item 2 -->
+<div class="flex justify-between items-center">
+<div>
+<p class="font-label text-label text-primary">AV Equipment Rack</p>
+<p class="text-caption text-on-surface-variant">1 item total</p>
+</div>
+<button class="text-error hover:bg-error-container p-1 rounded transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+<!-- Selected Item 3 -->
+<div class="flex justify-between items-center">
+<div>
+<p class="font-label text-label text-primary">Safety Hardware Kit</p>
+<p class="text-caption text-on-surface-variant">3 items total</p>
+</div>
+<button class="text-error hover:bg-error-container p-1 rounded transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-4 space-y-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+<p class="text-caption font-medium uppercase tracking-tight">Estimated: 1–2 business days</p>
+</div>
+<button class="w-full h-[48px] bg-secondary-container hover:bg-secondary-container/90 text-primary font-bold rounded-lg flex items-center justify-center gap-2 transition-all active:scale-95 shadow-sm">
+                            Continue to Date
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="w-full text-on-surface-variant font-label text-label hover:text-primary transition-colors py-2">
+                            Clear Selection
+                        </button>
+</div>
+<!-- Security Badge -->
+<div class="mt-6 flex items-center gap-3 p-3 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-on-tertiary-container" data-weight="fill">verified_user</span>
+<div class="text-[11px] leading-tight text-on-surface-variant">
+                            StrongBox Guard Protection is active for all items in transit.
+                        </div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-mobile-padding py-component-gap bg-surface dark:bg-surface-container-highest shadow-lg rounded-t-xl border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-mobile text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-mobile text-[10px]">Storage</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-bold scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-weight="fill">local_shipping</span>
+<span class="font-label-mobile text-[10px]">Requests</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-mobile text-[10px]">Account</span>
+</a>
+</nav>
+<script>
+        // Simple interactive micro-effects
+        document.querySelectorAll('.group.cursor-pointer').forEach(card => {
+            card.addEventListener('click', () => {
+                // Visual toggle logic placeholder
+                const isSelected = card.classList.contains('border-secondary-container');
+                if (isSelected) {
+                    card.classList.remove('border-secondary-container', 'border-2');
+                    card.classList.add('border', 'border-outline-variant');
+                    card.querySelector('.material-symbols-outlined')?.remove();
+                    card.querySelector('.absolute .bg-secondary-container')?.classList.add('border-2', 'border-outline-variant', 'bg-surface');
+                    card.querySelector('.absolute .bg-secondary-container')?.classList.remove('bg-secondary-container');
+                }
+            });
+        });
+    </script>
+</body></html>

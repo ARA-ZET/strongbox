@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#291800",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "surface-variant": "#e4e2e5",
+                    "background": "#fbf8fc",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-bright": "#fbf8fc",
+                    "primary-container": "#1a2b4a",
+                    "secondary": "#835500",
+                    "surface-container": "#efedf0",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed": "#081b39",
+                    "outline-variant": "#c5c6cf",
+                    "on-tertiary-fixed-variant": "#633f00",
+                    "on-background": "#1b1b1e",
+                    "on-primary-fixed-variant": "#364767",
+                    "surface-tint": "#4e5e80",
+                    "surface-container-high": "#e9e7eb",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f5f3f6",
+                    "inverse-primary": "#b6c6ee",
+                    "secondary-container": "#feae2c",
+                    "tertiary-fixed": "#ffddb3",
+                    "on-primary-container": "#8293b7",
+                    "primary-fixed-dim": "#b6c6ee",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#6b4500",
+                    "tertiary-fixed": "#ffddb3",
+                    "on-primary-container": "#8293b7",
+                    "primary-fixed-dim": "#b6c6ee",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#6b4500",
+                    "tertiary-fixed-dim": "#f4bd71",
+                    "outline": "#75777e",
+                    "surface": "#fbf8fc",
+                    "surface-container-highest": "#e4e2e5",
+                    "surface-dim": "#dbd9dc",
+                    "inverse-on-surface": "#f2f0f3",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#031634",
+                    "tertiary-container": "#3e2600",
+                    "on-tertiary-container": "#ba8943",
+                    "secondary-fixed-dim": "#ffb954",
+                    "on-surface": "#1b1b1e",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#303033",
+                    "secondary-fixed": "#ffddb4",
+                    "tertiary": "#231300",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#44474e",
+                    "on-secondary-fixed": "#291800"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack_md": "16px",
+                    "container_max": "1200px",
+                    "page_padding": "24px",
+                    "stack_lg": "24px",
+                    "gutter": "16px",
+                    "stack_sm": "8px"
+            },
+            "fontFamily": {
+                    "caption-xs": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "caption-xs": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active { width: 40px; height: 8px; border-radius: 4px; }
+        .step-inactive { width: 8px; height: 8px; border-radius: 50%; }
+        .grid-visualizer-square { width: 100%; aspect-ratio: 1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- Top Navigation (Shell Component) -->
+<nav class="bg-surface border-b border-outline-variant flex justify-between items-center w-full px-page_padding py-stack_sm max-w-container_max mx-auto top-0 z-50">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md text-primary">ValetStore</span>
+<div class="hidden md:flex gap-6">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Inventory</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Pickups</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Returns</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Billing</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors">Support</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a modern warehouse manager or customer service representative, smiling warmly against a clean corporate office background. The lighting is soft and high-key, reinforcing the professional and dependable brand identity of the ValetStore service." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8SJRGlRyJzIqbE6WAVEnic15zaDSNT-piILx9-XGhhlrNBKCkKanRIYP2-iuSxOfJ6QsY3IRXC159gfXeDQvzHprQj0Kdn4uFK-4bJ8_whnp00h3gzeNvgdFfqi6rKPdwuY3bsunQt7j2QTWDyw7C5RdbOobNXlrtXEGPD6-RV2Wc0MbyTjrqMQaTUuq5-g9En0o7DpC0WRqlSUr8MpKBGR_aYH1DpiOOIBxXJ6Acb4mcInJoKTZIDMJ1cP0DmrqfztoKt3DhB17G"/>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="max-w-container_max mx-auto px-page_padding py-stack_lg">
+<!-- Step Indicator -->
+<div class="flex items-center justify-center gap-2 mb-stack_lg">
+<div class="step-inactive bg-outline-variant"></div>
+<div class="step-inactive bg-outline-variant"></div>
+<div class="step-inactive bg-outline-variant"></div>
+<div class="step-inactive bg-outline-variant"></div>
+<div class="step-inactive bg-outline-variant"></div>
+<div class="step-active bg-primary"></div>
+</div>
+<header class="mb-stack_lg text-center md:text-left">
+<h1 class="font-display-lg text-display-lg text-primary">Quote Summary</h1>
+<p class="text-on-surface-variant mt-2">Review your storage requirements and logistics plan before finalizing.</p>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-start">
+<!-- Left Column: Details (65%) -->
+<div class="md:col-span-8 space-y-gutter">
+<!-- Storage Details Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] overflow-hidden border border-outline-variant/30">
+<div class="px-6 py-4 bg-surface-container-low border-b border-outline-variant/30">
+<h2 class="font-title-sm text-title-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+                            Storage
+                        </h2>
+</div>
+<div class="divide-y divide-outline-variant/20">
+<!-- Table Row Item -->
+<div class="flex items-center justify-between h-[56px] px-6 hover:bg-[#EFECFF] transition-colors group">
+<div class="flex items-center gap-3">
+<span class="text-on-surface">2 × Small Storage Box</span>
+</div>
+<span class="font-semibold text-primary">R390.00</span>
+</div>
+<div class="flex items-center justify-between h-[56px] px-6 hover:bg-[#EFECFF] transition-colors">
+<div class="flex items-center gap-3">
+<span class="text-on-surface">1 × Medium Storage Box</span>
+</div>
+<span class="font-semibold text-primary">R295.00</span>
+</div>
+<div class="flex items-center justify-between h-[56px] px-6 hover:bg-[#EFECFF] transition-colors">
+<div class="flex items-center gap-3">
+<span class="text-on-surface">1 × Large Storage Box</span>
+</div>
+<span class="font-semibold text-primary">R395.00</span>
+</div>
+<div class="flex items-center justify-between h-[56px] px-6 hover:bg-[#EFECFF] transition-colors">
+<div class="flex items-center gap-3">
+<span class="text-on-surface">Dining Table</span>
+</div>
+<span class="font-semibold text-primary">Included</span>
+</div>
+<div class="flex items-center justify-between h-[56px] px-6 hover:bg-[#EFECFF] transition-colors">
+<div class="flex items-center gap-3">
+<span class="text-on-surface">Mountain Bike</span>
+</div>
+<span class="font-semibold text-primary">Included</span>
+</div>
+</div>
+</section>
+<!-- Services Details Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] overflow-hidden border border-outline-variant/30">
+<div class="px-6 py-4 bg-surface-container-low border-b border-outline-variant/30">
+<h2 class="font-title-sm text-title-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">local_shipping</span>
+                            Services
+                        </h2>
+</div>
+<div class="divide-y divide-outline-variant/20">
+<div class="flex items-center justify-between h-[56px] px-6 hover:bg-[#EFECFF] transition-colors">
+<div class="flex items-center gap-3">
+<span class="text-on-surface">Medium Van Collection</span>
+<span class="px-2 py-0.5 bg-surface-container-high rounded-full text-caption-xs font-label-sm">Once-off</span>
+</div>
+<span class="font-semibold text-primary">R550.00</span>
+</div>
+<div class="flex items-center justify-between h-[56px] px-6 hover:bg-[#EFECFF] transition-colors">
+<div class="flex items-center gap-3">
+<span class="text-on-surface">Packing Assistance (2 persons x 3hrs)</span>
+<span class="px-2 py-0.5 bg-surface-container-high rounded-full text-caption-xs font-label-sm">Once-off</span>
+</div>
+<span class="font-semibold text-primary">R900.00</span>
+</div>
+</div>
+</section>
+<!-- Volume Visualization Card -->
+<div class="bg-[#EFECFF] p-6 rounded-xl border border-primary/10 flex flex-col md:flex-row gap-8 items-center">
+<div class="flex-1 w-full">
+<div class="flex justify-between items-end mb-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Estimated Volume</span>
+<span class="font-display-lg text-display-lg text-primary">4.8 m³</span>
+</div>
+<!-- Progress Bar -->
+<div class="h-4 w-full bg-surface-container-highest rounded-full overflow-hidden mb-4 relative">
+<div class="h-full bg-secondary-container w-[80%] rounded-full shadow-sm transition-all duration-1000 ease-out" style="width: 80%;"></div>
+</div>
+<p class="font-caption-xs text-caption-xs text-on-surface-variant italic">
+                            Equivalent to the space of a large walk-in wardrobe.
+                        </p>
+</div>
+<!-- 3x4 Grid Representation -->
+<div class="w-48">
+<div class="grid grid-cols-4 grid-rows-3 gap-2">
+<!-- Amber Squares (Used) -->
+<div class="grid-visualizer-square bg-secondary-container border border-on-secondary-container/20"></div>
+<div class="grid-visualizer-square bg-secondary-container border border-on-secondary-container/20"></div>
+<div class="grid-visualizer-square bg-secondary-container border border-on-secondary-container/20"></div>
+<div class="grid-visualizer-square bg-secondary-container border border-on-secondary-container/20"></div>
+<div class="grid-visualizer-square bg-secondary-container border border-on-secondary-container/20"></div>
+<div class="grid-visualizer-square bg-secondary-container border border-on-secondary-container/20"></div>
+<div class="grid-visualizer-square bg-secondary-container border border-on-secondary-container/20"></div>
+<div class="grid-visualizer-square bg-secondary-container border border-on-secondary-container/20"></div>
+<div class="grid-visualizer-square bg-secondary-container border border-on-secondary-container/20"></div>
+<!-- Outline Squares (Empty) -->
+<div class="grid-visualizer-square border-2 border-dashed border-outline-variant"></div>
+<div class="grid-visualizer-square border-2 border-dashed border-outline-variant"></div>
+<div class="grid-visualizer-square border-2 border-dashed border-outline-variant"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Quote Breakdown Sticky (35%) -->
+<div class="md:col-span-4 sticky top-page_padding">
+<div class="bg-primary text-on-primary rounded-xl p-8 shadow-xl relative overflow-hidden">
+<!-- Subtle Background Pattern -->
+<div class="absolute inset-0 opacity-5 pointer-events-none">
+<div class="absolute inset-0 bg-repeat bg-[length:24px_24px]" style="background-image: radial-gradient(circle, white 1px, transparent 1px);"></div>
+</div>
+<div class="relative z-10 space-y-6">
+<div>
+<h3 class="font-headline-md text-headline-md mb-1 inline-block border-b-4 border-secondary-container">Quote Breakdown</h3>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-on-primary/70 font-label-sm">Monthly Storage</p>
+<p class="font-headline-md text-secondary-container">R1 080/month</p>
+</div>
+</div>
+<div class="space-y-2 text-body-md border-t border-on-primary/10 pt-4">
+<div class="flex justify-between">
+<span class="text-on-primary/70">Collection (once)</span>
+<span>R550.00</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-primary/70">Packing (once)</span>
+<span>R900.00</span>
+</div>
+</div>
+<div class="h-px bg-on-primary/20 my-4"></div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-on-primary/70 text-label-sm font-semibold uppercase tracking-widest">Due Today</p>
+<p class="text-[32px] leading-tight font-bold text-secondary-container">R1 450.00</p>
+</div>
+</div>
+<div class="flex justify-between items-center py-3 px-4 bg-on-primary/5 rounded-lg">
+<p class="text-on-primary/70 text-label-sm">Monthly from Month 2</p>
+<p class="font-title-sm">R1 080.00</p>
+</div>
+</div>
+<div class="flex gap-2 items-start bg-secondary-container/10 p-3 rounded-lg border border-secondary-container/20">
+<span class="material-symbols-outlined text-secondary-container text-[18px]">info</span>
+<p class="text-secondary-container text-caption-xs font-semibold leading-tight">
+                                * 1 free retrieval every 3 months included.
+                            </p>
+</div>
+<div class="space-y-3 pt-4">
+<button class="w-full bg-secondary-container text-on-secondary-container py-4 rounded-lg font-bold hover:brightness-110 active:scale-95 transition-all shadow-lg">
+                                Accept Quote
+                            </button>
+<button class="w-full border border-on-primary text-on-primary py-3 rounded-lg font-semibold hover:bg-on-primary/10 transition-colors">
+                                Save Quote
+                            </button>
+<button class="w-full flex items-center justify-center gap-2 text-on-primary/80 py-2 hover:text-on-primary transition-colors">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24">
+<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path>
+</svg>
+                                Share via WhatsApp
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Additional Information Section -->
+<div class="mt-stack_lg grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="bg-surface border border-outline-variant/30 p-6 rounded-xl flex items-center gap-4">
+<div class="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">security</span>
+</div>
+<div>
+<h4 class="font-title-sm text-title-sm text-primary">Fully Insured</h4>
+<p class="text-caption-xs text-on-surface-variant">Coverage up to R50,000 included for all items stored.</p>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant/30 p-6 rounded-xl flex items-center gap-4">
+<div class="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">schedule</span>
+</div>
+<div>
+<h4 class="font-title-sm text-title-sm text-primary">Flexible Access</h4>
+<p class="text-caption-xs text-on-surface-variant">Request returns 24/7 via the portal with 48hr delivery.</p>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant/30 p-6 rounded-xl flex items-center gap-4">
+<div class="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">verified</span>
+</div>
+<div>
+<h4 class="font-title-sm text-title-sm text-primary">Price Lock</h4>
+<p class="text-caption-xs text-on-surface-variant">Monthly rate guaranteed for the first 12 months.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Shell Component) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 md:hidden bg-surface shadow-[0_-2px_8px_rgba(0,0,0,0.08)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-sm font-label-sm">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-label-sm font-label-sm">Items</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-label-sm font-label-sm">Schedule</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-sm font-label-sm">Account</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for the volume progress bar
+        window.addEventListener('DOMContentLoaded', () => {
+            const progress = document.querySelector('.bg-secondary-container');
+            if (progress) {
+                progress.style.width = '0%';
+                setTimeout(() => {
+                    progress.style.width = '80%';
+                }, 300);
+            }
+        });
+    </script>
+</body></html>

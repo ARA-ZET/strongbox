@@ -1,0 +1,265 @@
+<!DOCTYPE html><html lang="en" class="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b6c6ee",
+                        "on-tertiary-container": "#ba8943",
+                        "on-primary-container": "#8293b7",
+                        "on-secondary-container": "#6b4500",
+                        "outline": "#75777e",
+                        "secondary": "#835500",
+                        "secondary-fixed-dim": "#ffb954",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "tertiary-container": "#3e2600",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#b6c6ee",
+                        "on-surface-variant": "#44474e",
+                        "surface-variant": "#e4e1ee",
+                        "inverse-on-surface": "#f2effc",
+                        "outline-variant": "#c5c6cf",
+                        "tertiary": "#231300",
+                        "on-tertiary-fixed": "#291800",
+                        "secondary-fixed": "#ffddb4",
+                        "surface-container-high": "#e9e6f3",
+                        "surface-tint": "#4e5e80",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#1a2b4a",
+                        "surface-container": "#efecf9",
+                        "inverse-surface": "#302f39",
+                        "on-error": "#ffffff",
+                        "primary": "#031634",
+                        "on-primary-fixed": "#081b39",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f5f2ff",
+                        "surface-container-highest": "#e4e1ee",
+                        "surface-dim": "#dbd8e5",
+                        "primary-fixed": "#d8e2ff",
+                        "secondary-container": "#feae2c",
+                        "tertiary-fixed-dim": "#f4bd71",
+                        "on-background": "#1b1b24",
+                        "tertiary-fixed": "#ffddb3",
+                        "surface": "#fcf8ff",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1b1b24",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#fcf8ff",
+                        "on-secondary-fixed": "#291800",
+                        "background": "#fcf8ff",
+                        "on-primary-fixed-variant": "#364767",
+                        "on-tertiary-fixed-variant": "#633f00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "desktop-padding": "24px",
+                        "mobile-padding": "16px",
+                        "gutter": "16px",
+                        "component-gap": "8px",
+                        "section-gap": "32px"
+                    },
+                    "fontFamily": {
+                        "caption": ["Inter"],
+                        "headline": ["Inter"],
+                        "label": ["Inter"],
+                        "body": ["Inter"],
+                        "title": ["Inter"],
+                        "display": ["Inter"],
+                        "display-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "headline": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "body": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "display": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="bg-surface-container-low text-on-surface font-body min-h-screen">
+<!-- Desktop TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-desktop-padding max-w-full bg-surface dark:bg-surface-container-highest border-b border-outline-variant dark:border-outline shadow-sm h-[64px]">
+<div class="flex items-center gap-8">
+<span class="text-headline font-headline font-bold text-primary dark:text-primary-fixed">StrongBox</span>
+<div class="hidden md:flex gap-6 h-full items-center"><a class="font-label text-label text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors" href="#">Home</a><a class="font-label text-label text-secondary-container border-b-2 border-secondary-container pb-1" href="#">My Storage</a><a class="font-label text-label text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors" href="#">Deliveries</a><a class="font-label text-label text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors" href="#">Billing</a></div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a corporate user with a clean, friendly expression. The person is wearing a navy blazer over a crisp white shirt, photographed against a soft-focus office background with warm lighting and a modern, high-end feel consistent with a premium logistics application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWS56hnotQKjdnyH54WfdlHbkrgL82NnlcbngNbEPWVLd8LscoDLeFu5pYH0NtqhNQ6Oo3xQ-0SQQZOUng0KhgmA_Wh0h9Nn8bmwXfBt52xBYS6ZD1EDCtBxilfKv416JG6HgijKKchm3asuSoxjQ6ygOvzzeoux-lhCP5vXWf5-gHwTvPfITvKyBKaAlCE0HH2HhugI4v9xLQxho6ZBUtdYEpqJzyg_LeZ2h3-SditsOQZT_UkPZQ6lpGrjZjL9l0Db7GY5tNIk6p">
+</div>
+</div>
+</nav>
+<!-- Content Canvas -->
+<main class="pt-[88px] px-desktop-padding pb-section-gap max-w-7xl mx-auto">
+<!-- Header Section -->
+<header class="mb-section-gap">
+<h1 class="font-display text-display text-primary mb-6">My Storage</h1>
+<!-- Search & Filter Bar -->
+<div class="flex flex-col md:flex-row gap-4 items-center">
+<div class="relative w-full md:max-w-md">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-12 pr-12 py-3 bg-surface-container border-none rounded-full focus:ring-2 focus:ring-secondary transition-all font-body text-body" placeholder="Search storage units, items, or IDs..." type="text">
+<button class="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">tune</span>
+</button>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto scrollbar-hide">
+<button class="px-5 py-2 rounded-full bg-primary text-on-primary font-label text-label shrink-0 transition-transform active:scale-95">All</button>
+<button class="px-5 py-2 rounded-full bg-surface border border-outline-variant text-on-surface-variant font-label text-label shrink-0 hover:bg-surface-container-low transition-colors active:scale-95">In Storage</button>
+<button class="px-5 py-2 rounded-full bg-surface border border-outline-variant text-on-surface-variant font-label text-label shrink-0 hover:bg-surface-container-low transition-colors active:scale-95">In Transit</button>
+<button class="px-5 py-2 rounded-full bg-surface border border-outline-variant text-on-surface-variant font-label text-label shrink-0 hover:bg-surface-container-low transition-colors active:scale-95">Pending Pickup</button>
+<button class="px-5 py-2 rounded-full bg-surface border border-outline-variant text-on-surface-variant font-label text-label shrink-0 hover:bg-surface-container-low transition-colors active:scale-95">Delivered</button>
+</div>
+</div>
+</header>
+<!-- Storage Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Unit Card 1 -->
+<article class="bg-surface rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant overflow-hidden group cursor-pointer hover:translate-y-[-2px] transition-all duration-300">
+<div class="relative h-[150px] w-full">
+<img class="w-full h-full object-cover" data-alt="A professionally organized storage unit filled with clearly labeled seasonal gear like skis, snowboards, and heavy winter bins. The lighting is bright and industrial, emphasizing a secure and clean environment. The color palette features cool blues and neutral grays, maintaining the corporate logistics aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwOpkkceiRx1kBKValw8-7CvGoO9m0uuqt_W_fWY2mgZdjJUrEZzvOsLbm5zmHQZpMYR4hxxyx6TGZ822Kd8qjFFw4hFOK-6sJQm__JYsfh4vNN2hVh97VkDbx-qf9Gt2ezCbQ63XIGN5PPaoOpswUF3v6h3_sJM7_QNb71kSPO9BkrxupTjbvd_kKMUVbjgZwjnNbzuBqFwTXkwwcPr4CnRCIKUWb4b81zlq52rqrssGJSzxoEZSG4gI_TFmE--gAcaGougIR4eAA">
+<div class="absolute top-3 left-3 bg-green-100 text-green-800 px-3 py-1 rounded-full text-[12px] font-bold flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+                        IN STORAGE
+                    </div>
+<div class="absolute top-3 right-3 bg-outline text-surface px-3 py-1 rounded-full text-[12px] font-bold shadow-sm">
+                        CLOSED
+                    </div>
+</div>
+<div class="p-4">
+<h3 class="font-title text-title text-primary group-hover:text-secondary transition-colors">Seasonal Gear</h3>
+<div class="flex justify-between items-center mt-1">
+<span class="font-caption text-caption text-on-surface-variant">#SBX-9942-A1</span>
+<span class="font-caption text-caption text-outline">Updated 2h ago</span>
+</div>
+</div>
+</article>
+<!-- Unit Card 2 -->
+<article class="bg-surface rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant overflow-hidden group cursor-pointer hover:translate-y-[-2px] transition-all duration-300">
+<div class="relative h-[150px] w-full">
+<img class="w-full h-full object-cover" data-alt="High-resolution close-up of a secure logistics container being loaded with high-value office electronics. The scene is illuminated by crisp, white daylight filtering through a warehouse skylight. The focus is sharp on the metallic texture of the container and the pristine organization of the tech assets within, aligning with a brand of reliability and precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5MCRk8TuqU5iEHA6NoeTtfoNPOHAS3r1cjLpmBtKy4qSdZgraiZ-KsQrqSrgYevpO8ypI81Nq_9OwQ2BdTSKErQQsiSxBj45Qo_wDk6RuuunKH-2geoXlBZ9rOOoVD0nALc3NuhdSbosU393WTPDeQperoWGa6w0fZcp1w3ai4X2BhBTPkpFM6gsZwK60lNSrsEGykt7R-lKm-SeXHgiDhUMSHfDShdRHP5_CrsUuuc5twFt3WRED6WhzAf63uOu8F7WDea4yDbq7">
+<div class="absolute top-3 left-3 bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-full text-[12px] font-bold flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                        IN TRANSIT
+                    </div>
+<div class="absolute top-3 right-3 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[12px] font-bold shadow-sm">
+                        OPEN
+                    </div>
+</div>
+<div class="p-4">
+<h3 class="font-title text-title text-primary group-hover:text-secondary transition-colors">Tech Inventory</h3>
+<div class="flex justify-between items-center mt-1">
+<span class="font-caption text-caption text-on-surface-variant">#SBX-2188-B4</span>
+<span class="font-caption text-caption text-outline">Updated 15m ago</span>
+</div>
+</div>
+</article>
+<!-- Unit Card 3 -->
+<article class="bg-surface rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant overflow-hidden group cursor-pointer hover:translate-y-[-2px] transition-all duration-300">
+<div class="relative h-[150px] w-full">
+<img class="w-full h-full object-cover" data-alt="A collection of heirloom furniture wrapped in protective moving blankets and secured with high-grade industrial tape. The items are neatly stacked against a clean, white warehouse wall. The lighting is warm and directional, creating soft shadows that emphasize the care and security provided by the storage service." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDC1IACmOEXxAruPvVK22UpmfOe3iCZGLhY7R2fSXH5tFji__Ps5XuSapWz_xXUAlhJZzEiCCd0UdeM24Ewg8xOo75Jrn9dbb2t_S6hp7nK0z9sP8f1rBA0f4my771veWVHsnBvbOak21iAMcc91kiPk1yw2JwZ9K4P_y-RumvvaOuyHNvc7_1bHDorx1h2fXFigYb_OtbvXFgwU0P3nU8vpwg2PGJeMlAZT6lTI0SzzVm_DsVXUk80ZRX47Y4cEuRxGVbJ8kVK9pgC">
+<div class="absolute top-3 left-3 bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full text-[12px] font-bold flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                        PENDING PICKUP
+                    </div>
+<div class="absolute top-3 right-3 bg-outline text-surface px-3 py-1 rounded-full text-[12px] font-bold shadow-sm">
+                        CLOSED
+                    </div>
+</div>
+<div class="p-4">
+<h3 class="font-title text-title text-primary group-hover:text-secondary transition-colors">Heirloom Furniture</h3>
+<div class="flex justify-between items-center mt-1">
+<span class="font-caption text-caption text-on-surface-variant">#SBX-7703-C2</span>
+<span class="font-caption text-caption text-outline">Updated 1d ago</span>
+</div>
+</div>
+</article>
+<!-- Unit Card 4 -->
+<article class="bg-surface rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant overflow-hidden group cursor-pointer hover:translate-y-[-2px] transition-all duration-300">
+<div class="relative h-[150px] w-full">
+<img class="w-full h-full object-cover" data-alt="Interior of a modern, climatized storage vault containing neatly filed document boxes on metal shelving units. The atmosphere is extremely professional and secure, featuring a minimalist corporate design with cool-toned lighting and a sense of high-level organization and data protection." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdMRbXrec-mUEhZeFDRKvb9nDvIyi_mJKdj3gwn1feY1zujOe-oGmL4EHW73kn9wNcTll-F1uoPj4oAPBa9u_YgmtSGGqf5dqfYUvF0Ry8zoULYUE_ucjUOExylLgECDiZRyTJCY1jl0tT45ItK_hLAsGkuV4yM9CGwbyAGygs5O14jBwcBWGrc2VpYVnEe0xsy62zgQQqsWWlly4bGPz6ZBa1o6w7FP6Xqm6aZe3s0ztA7uGSMNX1cTmIFEEKUIt7UErZBHDtQk5v">
+<div class="absolute top-3 left-3 bg-green-100 text-green-800 px-3 py-1 rounded-full text-[12px] font-bold flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+                        IN STORAGE
+                    </div>
+<div class="absolute top-3 right-3 bg-outline text-surface px-3 py-1 rounded-full text-[12px] font-bold shadow-sm">
+                        CLOSED
+                    </div>
+</div>
+<div class="p-4">
+<h3 class="font-title text-title text-primary group-hover:text-secondary transition-colors">Archive Records</h3>
+<div class="flex justify-between items-center mt-1">
+<span class="font-caption text-caption text-on-surface-variant">#SBX-0042-Z9</span>
+<span class="font-caption text-caption text-outline">Updated 5h ago</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Hidden Empty State (Demonstration) -->
+<section class="hidden flex flex-col items-center justify-center py-24 text-center" id="empty-state">
+<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[64px] text-outline-variant">inventory_2</span>
+</div>
+<h2 class="font-title text-headline text-on-surface mb-2">No items in storage yet</h2>
+<p class="font-body text-body text-on-surface-variant max-w-xs">Once you schedule a pickup or deposit items into your StrongBox, they will appear here.</p>
+<button class="mt-6 px-6 py-3 bg-primary text-on-primary rounded-lg font-label text-label hover:shadow-lg transition-all active:scale-95">Schedule Your First Deposit</button>
+</section>
+</main>
+<!-- Mobile BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-mobile-padding py-component-gap md:hidden bg-surface dark:bg-surface-container-highest shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-mobile text-label-mobile">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-mobile text-label-mobile">Storage</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-label-mobile text-label-mobile">Requests</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-mobile text-label-mobile">Account</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for search input focus
+        const searchInput = document.querySelector('input[type="text"]');
+        const searchContainer = searchInput.parentElement;
+        
+        searchInput.addEventListener('focus', () => {
+            searchContainer.classList.add('ring-2', 'ring-secondary');
+        });
+        
+        searchInput.addEventListener('blur', () => {
+            searchContainer.classList.remove('ring-2', 'ring-secondary');
+        });
+
+        // Filter chip toggling (Visual only)
+        const filterChips = document.querySelectorAll('header .flex.gap-2 button');
+        filterChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                filterChips.forEach(c => {
+                    c.className = "px-5 py-2 rounded-full bg-surface border border-outline-variant text-on-surface-variant font-label text-label shrink-0 hover:bg-surface-container-low transition-colors active:scale-95";
+                });
+                chip.className = "px-5 py-2 rounded-full bg-primary text-on-primary font-label text-label shrink-0 transition-transform active:scale-95";
+            });
+        });
+    </script>
+</body></html>

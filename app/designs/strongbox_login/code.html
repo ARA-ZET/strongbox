@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | StrongBox Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#fcf8ff",
+                        "primary-container": "#1a2b4a",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#081b39",
+                        "surface-container": "#efecff",
+                        "tertiary-container": "#003316",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#44474e",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "surface-dim": "#dad7f3",
+                        "inverse-surface": "#2f2e43",
+                        "surface-tint": "#4e5e80",
+                        "on-tertiary-fixed": "#00210c",
+                        "on-primary-fixed-variant": "#364767",
+                        "secondary": "#835500",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "secondary-fixed-dim": "#ffb955",
+                        "tertiary": "#001c09",
+                        "surface-container-high": "#e8e5ff",
+                        "inverse-on-surface": "#f2efff",
+                        "on-surface": "#1a1a2e",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c5c6cf",
+                        "on-primary-container": "#8293b7",
+                        "secondary-container": "#feae2c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "outline": "#75777e",
+                        "surface-container-low": "#f5f2ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#291800",
+                        "surface-bright": "#fcf8ff",
+                        "primary-fixed": "#d8e2ff",
+                        "inverse-primary": "#b6c6ee",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "primary": "#031634",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e2e0fc",
+                        "on-tertiary-container": "#00a858",
+                        "secondary-fixed": "#ffddb4",
+                        "surface-variant": "#e2e0fc",
+                        "on-background": "#1a1a2e",
+                        "on-secondary-container": "#6b4500",
+                        "surface": "#fcf8ff",
+                        "tertiary-fixed": "#6bfe9c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "3xl": "64px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "2xl": "48px",
+                        "margin": "24px",
+                        "gutter": "16px",
+                        "md": "16px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+        }
+        .bg-pattern {
+            background-color: #1a2b4a;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-primary-container text-on-surface selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Screen Wrapper -->
+<main class="relative min-h-screen w-full flex items-center justify-center bg-pattern p-margin">
+<!-- Animated Atmospheric Element -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden">
+<div class="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary opacity-30 rounded-full blur-[120px] animate-pulse"></div>
+<div class="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-secondary opacity-10 rounded-full blur-[120px]"></div>
+</div>
+<!-- Login Card -->
+<div class="relative z-10 w-full max-w-[480px]">
+<div class="glass-panel rounded-xl p-xl md:p-2xl flex flex-col items-center">
+<!-- Logo & Brand Identity -->
+<div class="flex flex-col items-center mb-xl text-center">
+<div class="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mb-md shadow-lg">
+<span class="material-symbols-outlined text-on-primary text-[40px]" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">StrongBox Logistics</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Your stuff. Safe. Tracked. Delivered.</p>
+</div>
+<!-- Form Section -->
+<form class="w-full space-y-lg" onsubmit="event.preventDefault();">
+<!-- Email Field -->
+<div class="space-y-xs">
+<label class="font-label-lg text-label-lg text-on-surface-variant" for="email">Email Address</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">mail</span>
+<input class="w-full h-[48px] pl-[48px] pr-md rounded-lg border border-outline-variant bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md" id="email" placeholder="name@company.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-lg text-label-lg text-on-surface-variant" for="password">Password</label>
+<a class="font-label-md text-label-md text-primary hover:underline" href="#">Forgot password?</a>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full h-[48px] pl-[48px] pr-md rounded-lg border border-outline-variant bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all font-body-md text-body-md" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-md top-1/2 -translate-y-1/2 text-outline hover:text-on-surface-variant" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Login Button -->
+<button class="w-full h-[48px] bg-secondary-container hover:bg-[#e89c1c] active:scale-[0.98] text-on-secondary-container font-label-lg text-label-lg rounded-lg shadow-md transition-all flex items-center justify-center gap-sm" type="submit">
+<span>Sign In</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<!-- Divider -->
+<div class="relative flex items-center py-sm">
+<div class="flex-grow border-t border-outline-variant"></div>
+<span class="flex-shrink mx-md font-label-md text-label-md text-outline">or continue with</span>
+<div class="flex-grow border-t border-outline-variant"></div>
+</div>
+<!-- Social Login -->
+<button class="w-full h-[48px] border border-outline-variant bg-white hover:bg-surface-container-low active:bg-surface-container-high text-on-surface font-label-lg text-label-lg rounded-lg transition-all flex items-center justify-center gap-sm" type="button">
+<div class="w-5 h-5 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-contain" data-alt="Official Google G-logo in its original brand colors of red, yellow, green, and blue, rendered as a crisp vector icon on a clean white background for professional software authentication." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmwBDIY4dF_QUiBr7czyWSv5HXFEwuNSUthdDvXO8Qu4rWJPnurO123LKO7Io3KByjbOC3gONBvECXpGopo6HjHbLOmSN5bDA_LP-ZQS7p9SOsKygF6hyLpXb4LhVFzRRgdE-DZ67sRIIciD8WvBU6dzqCUInWOnkWgzHta9g9V4KYBkAYkVHw0T3qVjBUaIUIjv8AjFhPmyMBQ7RCmj5N9PFvfoc2rody2fzR74hxoIfW14hu8Ug1WFrPEXEj7wUUh6N44JrnWMI"/>
+</div>
+<span>Continue with Google</span>
+</button>
+</form>
+<!-- Footer Links -->
+<div class="mt-xl text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Don't have an account? 
+                        <a class="text-primary font-label-lg hover:underline ml-xs" href="#">Create an account</a>
+</p>
+</div>
+</div>
+<!-- Contextual Graphics / Proof of Scale -->
+<div class="mt-xl grid grid-cols-3 gap-md opacity-60">
+<div class="bg-white/5 rounded-lg p-md text-center border border-white/10">
+<p class="font-headline-sm text-headline-sm text-on-primary">2.4M</p>
+<p class="font-label-md text-label-md text-on-primary-container">Packages</p>
+</div>
+<div class="bg-white/5 rounded-lg p-md text-center border border-white/10">
+<p class="font-headline-sm text-headline-sm text-on-primary">99.9%</p>
+<p class="font-label-md text-label-md text-on-primary-container">Uptime</p>
+</div>
+<div class="bg-white/5 rounded-lg p-md text-center border border-white/10">
+<p class="font-headline-sm text-headline-sm text-on-primary">12k+</p>
+<p class="font-label-md text-label-md text-on-primary-container">Fleet</p>
+</div>
+</div>
+</div>
+<!-- Footer Legal (Subtle) -->
+<footer class="absolute bottom-lg left-0 w-full text-center px-margin">
+<p class="font-label-md text-label-md text-on-primary-container/60">
+                © 2024 StrongBox Logistics Inc. All rights reserved. | <a class="hover:text-on-primary" href="#">Privacy Policy</a> | <a class="hover:text-on-primary" href="#">Terms of Service</a>
+</p>
+</footer>
+</main>
+<script>
+        // Simple input focus interaction
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('ring-offset-background');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('ring-offset-background');
+            });
+        });
+
+        // Toggle password visibility (UI Only)
+        const visibilityBtn = document.querySelector('button .material-symbols-outlined:contains("visibility")');
+        if (visibilityBtn) {
+            visibilityBtn.parentElement.addEventListener('click', () => {
+                const input = visibilityBtn.parentElement.previousElementSibling;
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    visibilityBtn.innerText = 'visibility_off';
+                } else {
+                    input.type = 'password';
+                    visibilityBtn.innerText = 'visibility';
+                }
+            });
+        }
+    </script>
+</body></html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox - Request Delivery Step 1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#f4bd71",
+                    "on-tertiary-fixed": "#291800",
+                    "on-surface": "#1b1b24",
+                    "surface-container": "#efecf9",
+                    "on-surface-variant": "#44474e",
+                    "secondary-fixed": "#ffddb4",
+                    "inverse-primary": "#b6c6ee",
+                    "surface-container-low": "#f5f2ff",
+                    "on-primary-container": "#8293b7",
+                    "secondary-container": "#feae2c",
+                    "on-secondary-container": "#6b4500",
+                    "surface-container-highest": "#e4e1ee",
+                    "on-error-container": "#93000a",
+                    "inverse-on-surface": "#f2effc",
+                    "error-container": "#ffdad6",
+                    "surface": "#fcf8ff",
+                    "primary-container": "#1a2b4a",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-high": "#e9e6f3",
+                    "surface-variant": "#e4e1ee",
+                    "tertiary-fixed": "#ffddb3",
+                    "outline-variant": "#c5c6cf",
+                    "secondary": "#835500",
+                    "on-primary-fixed": "#081b39",
+                    "error": "#ba1a1a",
+                    "primary": "#031634",
+                    "primary-fixed": "#d8e2ff",
+                    "on-secondary-fixed": "#291800",
+                    "on-secondary": "#ffffff",
+                    "outline": "#75777e",
+                    "surface-bright": "#fcf8ff",
+                    "on-tertiary-fixed-variant": "#633f00",
+                    "surface-container-lowest": "#ffffff",
+                    "background": "#fcf8ff",
+                    "secondary-fixed-dim": "#ffb954",
+                    "surface-dim": "#dbd8e5",
+                    "tertiary": "#231300",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "on-primary-fixed-variant": "#364767",
+                    "on-tertiary-container": "#ba8943",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-tint": "#4e5e80",
+                    "on-background": "#1b1b24",
+                    "tertiary-container": "#3e2600",
+                    "primary-fixed-dim": "#b6c6ee",
+                    "inverse-surface": "#302f39"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "mobile-padding": "16px",
+                    "gutter": "16px",
+                    "component-gap": "8px",
+                    "section-gap": "32px",
+                    "desktop-padding": "24px"
+            },
+            "fontFamily": {
+                    "display-mobile": ["Inter"],
+                    "label": ["Inter"],
+                    "headline": ["Inter"],
+                    "title": ["Inter"],
+                    "caption": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"]
+            },
+            "fontSize": {
+                    "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "headline": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            background-color: #fcf8ff;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .progress-bar-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 100%;
+            height: 2px;
+            background-color: #e4e1ee;
+            z-index: -1;
+        }
+        .progress-bar-step:last-child::after {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface flex justify-between items-center px-mobile-padding h-[64px] shadow-sm">
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="text-headline-mobile font-headline-mobile text-primary font-bold">Request Delivery</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
+</div>
+</header>
+<main class="pt-[64px] pb-[120px] px-mobile-padding">
+<!-- Progress Indicator -->
+<section class="py-section-gap">
+<div class="flex justify-between items-center max-w-sm mx-auto relative">
+<!-- Step 1 -->
+<div class="flex flex-col items-center gap-2 z-10">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white font-bold text-label relative progress-bar-step">
+                        1
+                    </div>
+<span class="text-caption font-bold text-secondary">Items</span>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center gap-2 z-10">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-on-surface-variant text-label relative progress-bar-step">
+                        2
+                    </div>
+<span class="text-caption text-on-surface-variant">Date</span>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center gap-2 z-10">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-on-surface-variant text-label relative progress-bar-step">
+                        3
+                    </div>
+<span class="text-caption text-on-surface-variant">Address</span>
+</div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center gap-2 z-10">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-on-surface-variant text-label">
+                        4
+                    </div>
+<span class="text-caption text-on-surface-variant">Confirm</span>
+</div>
+<!-- Connector Line Overlay (Simplified Visual) -->
+<div class="absolute top-4 left-0 w-full h-[2px] bg-surface-container-highest -z-10"></div>
+<div class="absolute top-4 left-0 w-[15%] h-[2px] bg-secondary -z-10"></div>
+</div>
+</section>
+<!-- Unit List Header -->
+<section class="mb-gutter">
+<h2 class="text-title font-title text-primary">Select Items to Deliver</h2>
+<p class="text-body text-on-surface-variant mt-1">Choose the units currently in storage that you wish to have delivered.</p>
+</section>
+<!-- Scrollable Units List -->
+<section class="flex flex-col gap-component-gap">
+<!-- Unit Card 1 -->
+<label class="flex items-center gap-4 bg-surface border border-outline-variant rounded-xl p-4 shadow-sm active:scale-[0.98] transition-transform">
+<input checked="" class="w-6 h-6 rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+<div class="flex-shrink-0 w-16 h-16 rounded-lg bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A clean, professionally lit storage unit containing a high-end Executive Office Suite. The image shows organized mahogany desks, leather chairs, and filing cabinets in a pristine, climate-controlled environment with neutral grey walls and bright overhead lighting, reflecting security and professional logistics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuTz1U0NKB3hGZ_nhwtuBCrnfCGEE46j4mEPj2Hgvyy_QnVbp1dcCFPRDbhKDcRQIMGGcB6jdUxE6U9U281qEhW7AJJJ211DqnlVwjtMx-msRWbMW2a20nNg8BhMb-RKLq4WIYj4fWfUvTUUr_2G7BCscAaJaVwUeQ8RDlfJGbVtKWqjj5kn2_Q6fcnIKVJ5MRLsryRXm9p-r9L17taort9NnV82Ec7hI2QuOZsiT0NyzGHrW8cvC9v2CBJb_pCsjC9iuiCU5uZerQ"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-title text-on-surface">Executive Office Suite</h3>
+<p class="text-caption text-on-surface-variant">ID: STR-9920 • Unit 4B</p>
+<div class="mt-2 inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold uppercase tracking-wider">
+                        In Storage
+                    </div>
+</div>
+</label>
+<!-- Unit Card 2 -->
+<label class="flex items-center gap-4 bg-surface border border-outline-variant rounded-xl p-4 shadow-sm active:scale-[0.98] transition-transform">
+<input class="w-6 h-6 rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+<div class="flex-shrink-0 w-16 h-16 rounded-lg bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional AV Equipment Rack standing in a clean, high-tech storage facility. The rack is filled with sleek electronic servers and networking hardware with tidy cabling. The lighting is crisp and cool-toned, emphasizing the technological precision and security of the StrongBox storage brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqc-QRBqCPzqgSZf2XN4s_UVsdCtRPFJfeDltkNW5EyMG9D2e-cyrV-9fPLCw6C9mcTi50F6-rXCA3LIN98h6WlhgR4SnZ478RSp9Oabc8d5gsVIPRL06F7-i1ySX_3-cIdAWiqD7fKO8siwNBkQAQGrHp3SILxOnVbyWabLAuSY-jJ8vBuRnoiOsFmStrGvpheSbBRqfL13mLhZSdRSVS9ds-DpBVOVqFkY79U1zjhEegfWosIBgONF4eDLJScViGFIciC4q7VSmd"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-title text-on-surface">AV Equipment Rack</h3>
+<p class="text-caption text-on-surface-variant">ID: STR-4451 • Unit 12A</p>
+<div class="mt-2 inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold uppercase tracking-wider">
+                        In Storage
+                    </div>
+</div>
+</label>
+<!-- Unit Card 3 -->
+<label class="flex items-center gap-4 bg-surface border border-outline-variant rounded-xl p-4 shadow-sm active:scale-[0.98] transition-transform">
+<input class="w-6 h-6 rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+<div class="flex-shrink-0 w-16 h-16 rounded-lg bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Stacks of branded professional archive boxes stored in a clean, secure warehouse. The boxes are uniform, labeled with barcodes, and arranged neatly on industrial shelving. The atmosphere is quiet, organized, and secure, suggesting a reliable document management service with a corporate light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsFOekSrldKcB_SbWipbt18-zjeKVl-C0RA_IMSP1tIAtD7OByFvoXr8-4BasCD_hNzLdWLVEk8S9p08EbHr0KFRBCz_DA0amdFzOdzU91lyaqMMD4DE_GAaVt-YieGcUWtZeFzyDE9TAGdvbEtV-Vfyb5g0ohX8P5vARiol2SPVFV7nA4ClZqJ44POxjM88YXIocUIdY2kHywn9L7b2XJy9uRcyPvGq1AxTFOV6nxoKFH0SpxITbshe9BC-ATMczu3IobiQYrN7al"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-title text-on-surface">Archive Pallet 04</h3>
+<p class="text-caption text-on-surface-variant">ID: STR-2239 • Unit 8F</p>
+<div class="mt-2 inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold uppercase tracking-wider">
+                        In Storage
+                    </div>
+</div>
+</label>
+<!-- Unit Card 4 -->
+<label class="flex items-center gap-4 bg-surface border border-outline-variant rounded-xl p-4 shadow-sm active:scale-[0.98] transition-transform">
+<input class="w-6 h-6 rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+<div class="flex-shrink-0 w-16 h-16 rounded-lg bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A modern, sleek conference table being carefully stored in a professional logistics center. The table is made of light wood and metal, partially covered in protective padding. The setting is a brightly lit, high-end storage facility that communicates reliability and care for expensive corporate assets." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXQXITlAm3vjIRoHGgmTR_3Fu-Be-MJaPT2nkOlJ1RlQlChWgJCV2Gj9poIj3GfEyQNdah9DO1HfPvmZURoNaesgh0vEHdTi1t0yHFiIWWlGwMGyHId-mwDwaECZyYSFyP8CydcGWea76u2kAz211scodRVtz_kvhBcDalvmHXJIeDD28mAF21Pkb1PBLT-_67h8mZXKcQe9WTa2OwaigncLQns9o_dCBe4dsorKF2sr1elPQpbxxPsJy0Taju8HZno11pVImgog6Z"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-title text-on-surface">Conference Table</h3>
+<p class="text-caption text-on-surface-variant">ID: STR-1120 • Unit 2C</p>
+<div class="mt-2 inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold uppercase tracking-wider">
+                        In Storage
+                    </div>
+</div>
+</label>
+</section>
+</main>
+<!-- Floating Job Summary Bar -->
+<div class="fixed bottom-0 left-0 w-full z-50 bg-surface shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl p-mobile-padding border-t border-outline-variant">
+<div class="max-w-md mx-auto">
+<div class="flex justify-between items-center mb-4">
+<div>
+<p class="text-caption text-on-surface-variant">Delivery Selection</p>
+<p class="text-title font-bold text-primary"><span id="item-count">1</span> Item(s) Selected</p>
+</div>
+<div class="text-right">
+<p class="text-caption text-on-surface-variant">Est. Volume</p>
+<p class="text-title font-bold text-primary">12.5 m³</p>
+</div>
+</div>
+<button class="w-full bg-secondary-container hover:bg-secondary text-on-secondary-container hover:text-white py-4 rounded-xl font-bold text-title flex items-center justify-center gap-2 transition-all active:scale-95">
+                Continue to Date
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Hidden Mobile Nav (Suppressed for focused task) -->
+<!-- As per instructions: "exclude the navigation shell if the page intent is: Linear/Transactional... or sub-page featuring a Back action" -->
+<script>
+        // Micro-interaction for item selection
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const itemCountDisplay = document.getElementById('item-count');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                itemCountDisplay.textContent = checkedCount;
+                
+                // Visual feedback for the card
+                const card = checkbox.closest('label');
+                if(checkbox.checked) {
+                    card.classList.add('border-secondary', 'bg-surface-container-low');
+                    card.classList.remove('border-outline-variant', 'bg-surface');
+                } else {
+                    card.classList.remove('border-secondary', 'bg-surface-container-low');
+                    card.classList.add('border-outline-variant', 'bg-surface');
+                }
+            });
+        });
+
+        // Initialize view based on default checked items
+        window.addEventListener('DOMContentLoaded', () => {
+            checkboxes.forEach(checkbox => {
+                if(checkbox.checked) {
+                    const card = checkbox.closest('label');
+                    card.classList.add('border-secondary', 'bg-surface-container-low');
+                    card.classList.remove('border-outline-variant', 'bg-surface');
+                }
+            });
+        });
+    </script>
+</body></html>

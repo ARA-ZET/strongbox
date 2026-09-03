@@ -1,0 +1,157 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ---- Helpers -------------------------------------------------------
+    function signedIn() { return request.auth != null; }
+    function me() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    function isAdmin() { return signedIn() && me().role == 'admin'; }
+    function isDriver() { return signedIn() && me().role == 'driver'; }
+    function isClient() { return signedIn() && me().role == 'client'; }
+    function myClientId() { return me().clientId; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function ownsClientDoc(data) {
+      return isClient() &&
+        (data.primaryUserId == request.auth.uid || data.id == myClientId());
+    }
+
+    // ---- Users ---------------------------------------------------------
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid) || isAdmin();
+      allow update: if isOwner(uid) || isAdmin();
+    }
+
+    // ---- Clients -------------------------------------------------------
+    match /clients/{clientId} {
+      allow read: if isAdmin() || ownsClientDoc(resource.data);
+      allow create: if isAdmin() ||
+        (isClient() && request.resource.data.primaryUserId == request.auth.uid) ||
+        (signedIn() && request.resource.data.primaryUserId == request.auth.uid);
+      allow update: if isAdmin() || ownsClientDoc(resource.data);
+    }
+
+    // ---- Storage units & items ----------------------------------------
+    match /storageUnits/{unitId} {
+      allow read: if isAdmin() || isDriver() ||
+        (isClient() && resource.data.clientId == myClientId());
+      allow write: if isAdmin() || isDriver();
+    }
+    match /items/{itemId} {
+      allow read: if isAdmin() || isDriver() ||
+        (isClient() && resource.data.clientId == myClientId());
+      allow write: if isAdmin() || isDriver();
+    }
+
+    // ---- QR ------------------------------------------------------------
+    match /qrCodes/{codeId} {
+      allow read: if isAdmin() || isDriver();
+      allow write: if isAdmin();
+    }
+    match /qrBatches/{batchId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ---- Jobs ----------------------------------------------------------
+    match /jobs/{jobId} {
+      allow read: if isAdmin() ||
+        (isDriver() && resource.data.driverId == request.auth.uid) ||
+        (isClient() && resource.data.clientId == myClientId());
+      // Clients may create delivery requests for their own account, and the
+      // pickup that an accepted quote opens. Both start unassigned and
+      // scheduled; dispatch stays an admin action.
+      allow create: if isAdmin() ||
+        (isClient() &&
+          request.resource.data.clientId == myClientId() &&
+          (request.resource.data.type == 'delivery' ||
+            (request.resource.data.type == 'pickup' &&
+              request.resource.data.status == 'scheduled' &&
+              request.resource.data.driverId == null)));
+      allow update: if isAdmin() ||
+        (isDriver() && resource.data.driverId == request.auth.uid);
+      match /events/{eventId} {
+        allow read: if signedIn();
+        allow create: if isAdmin() || isDriver();
+      }
+    }
+
+    // ---- Quotes --------------------------------------------------------
+    // The public calculator never writes here: a quote is drafted in the
+    // browser and only lands once a signed-in client accepts it. Accepted
+    // quotes are immutable except for the status changes ops drive.
+    match /quotes/{quoteId} {
+      allow read: if isAdmin() ||
+        (isClient() && resource.data.clientId == myClientId());
+      allow create: if isAdmin() ||
+        (isClient() &&
+          request.resource.data.clientId == myClientId() &&
+          request.resource.data.userId == request.auth.uid &&
+          request.resource.data.status == 'accepted');
+      allow update: if isAdmin() ||
+        (isClient() && resource.data.clientId == myClientId() &&
+          request.resource.data.status == 'cancelled');
+      allow delete: if false;
+    }
+
+    // ---- Photos --------------------------------------------------------
+    match /photos/{photoId} {
+      allow read: if signedIn();
+      allow create: if isAdmin() || isDriver();
+      allow update: if isAdmin();
+    }
+
+    // ---- Audit trail (append-only) ------------------------------------
+    match /auditEvents/{eventId} {
+      allow read: if isAdmin() || isDriver();
+      allow create: if signedIn();
+      allow update, delete: if false;
+    }
+
+    // ---- Notifications -------------------------------------------------
+    match /notifications/{notifId} {
+      allow read: if isAdmin() ||
+        (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if signedIn();
+      allow update: if isAdmin() ||
+        (signedIn() && resource.data.userId == request.auth.uid);
+    }
+
+    // ---- Driver ops ----------------------------------------------------
+    match /issueReports/{reportId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() || isDriver();
+      allow update: if isAdmin();
+    }
+    match /driverShifts/{shiftId} {
+      allow read: if isAdmin() ||
+        (isDriver() && resource.data.driverId == request.auth.uid);
+      allow create: if isDriver() &&
+        request.resource.data.driverId == request.auth.uid;
+      allow update: if isAdmin() ||
+        (isDriver() && resource.data.driverId == request.auth.uid);
+    }
+
+    // ---- Billing (written by Stripe webhook only) ---------------------
+    match /invoices/{invoiceId} {
+      allow read: if isAdmin() ||
+        (isClient() && resource.data.clientId == myClientId());
+      allow write: if false;
+    }
+    match /subscriptions/{subId} {
+      allow read: if isAdmin() ||
+        (isClient() && resource.data.clientId == myClientId());
+      allow write: if false;
+    }
+    match /customers/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow write: if false;
+    }
+
+    // ---- Tenant --------------------------------------------------------
+    match /tenants/{tenantId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+  }
+}

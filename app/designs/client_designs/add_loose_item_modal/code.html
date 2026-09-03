@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        /* Custom scrollbar for better UI feel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c5c6cf; border-radius: 10px; }
+        
+        .modal-animate-in {
+            animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#291800",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "surface-variant": "#e4e2e5",
+                    "background": "#fbf8fc",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-bright": "#fbf8fc",
+                    "primary-container": "#1a2b4a",
+                    "secondary": "#835500",
+                    "surface-container": "#efedf0",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed": "#081b39",
+                    "outline-variant": "#c5c6cf",
+                    "on-tertiary-fixed-variant": "#633f00",
+                    "on-background": "#1b1b1e",
+                    "on-primary-fixed-variant": "#364767",
+                    "surface-tint": "#4e5e80",
+                    "surface-container-high": "#e9e7eb",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f5f3f6",
+                    "inverse-primary": "#b6c6ee",
+                    "secondary-container": "#feae2c",
+                    "tertiary-fixed": "#ffddb3",
+                    "on-primary-container": "#8293b7",
+                    "primary-fixed-dim": "#b6c6ee",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#6b4500",
+                    "tertiary-fixed-dim": "#f4bd71",
+                    "outline": "#75777e",
+                    "surface": "#fbf8fc",
+                    "surface-container-highest": "#e4e2e5",
+                    "surface-dim": "#dbd9dc",
+                    "inverse-on-surface": "#f2f0f3",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#031634",
+                    "tertiary-container": "#3e2600",
+                    "on-tertiary-container": "#ba8943",
+                    "secondary-fixed-dim": "#ffb954",
+                    "on-surface": "#1b1b1e",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#303033",
+                    "secondary-fixed": "#ffddb4",
+                    "tertiary": "#231300",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#44474e",
+                    "on-secondary-fixed": "#291800"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack_md": "16px",
+                    "container_max": "1200px",
+                    "page_padding": "24px",
+                    "stack_lg": "24px",
+                    "gutter": "16px",
+                    "stack_sm": "8px"
+            },
+            "fontFamily": {
+                    "caption-xs": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "caption-xs": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md overflow-hidden">
+<!-- Background Content: Dashboard / Inventory View -->
+<div class="h-screen w-full p-page_padding overflow-y-auto">
+<!-- Dashboard Mockup Header -->
+<header class="flex justify-between items-center mb-stack_lg">
+<div>
+<h1 class="font-display-lg text-display-lg text-primary">Storage Inventory</h1>
+<p class="text-on-surface-variant font-body-md">Managing 24 items in your ZAR account</p>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-title-sm flex items-center gap-2">
+<span class="material-symbols-outlined">add</span> New Pickup
+            </button>
+</header>
+<!-- Inventory Grid Mockup -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<!-- Mock Card 1 -->
+<div class="bg-surface p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant">
+<div class="h-40 rounded-lg bg-surface-container-high mb-3 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A clean professional studio shot of a well-organized wooden storage crate containing various household items, shot from a high angle with soft corporate lighting. The background is a clean, neutral gray, emphasizing security and order. The image aesthetic is high-end, professional, and dependable, following a light-mode color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmV5vTUK8mwocIOoYWBUYrXoE_cmKPzpwA5O53TAzz0NTto-KSGxOrnXNci_yb7WfPPT59uc6bn6uWhmJk6l47E_KfVp7YZs8remdBam_k-kVwkbsdkwY_jfd4I5RbfRGe9ZqfWStU2fi8xrz4ik_9O-MqYZLUzKtE_SsxGt6CjP2ScdPpEgIj7XhkI7xr5Z2ztOWRq77x2JVhTWUZP7HdUS1n2MF5vC0CihSPdpbE89K-sy77rdO6ebB2cDVPrtJ82eDzQwEP_Inu"/>
+</div>
+<h3 class="font-title-sm">Box #234 - Living Room</h3>
+<span class="text-caption-xs text-on-surface-variant uppercase tracking-wider">In Storage</span>
+</div>
+<!-- Mock Card 2 -->
+<div class="bg-surface p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant">
+<div class="h-40 rounded-lg bg-surface-container-high mb-3 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A detailed image of a sleek, modern ergonomic office chair placed inside a spacious, brightly lit valet storage facility. The lighting is crisp and professional, highlighting the textures of the fabric and the polished frame. The surrounding environment is clean and systematic, reflecting a high-utility, dependable corporate atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbIyonql7EZ91Zru4fV8vvp3ypkDlJbkpN_I9bycw3yPBBV215YY-NYiFNYxJMct_O8FpIV5miXXxNz-mgvl9QILy6Q5jznB7MscmLVKXeO3goFreQXd7Wvs8R5_9kDkdZgi1sesaXeA6P-m9unqfN6ByW8Py4Hi5xwBgZ5HPtTFssrmbZwy8D_Q5grwzOwlZWR155CNux-jGp2KEoe4LBvB4tYezbYgk0UuDEWK4rbv9S_w3MBETqY_uPM4lvE4_7eTFbKXVrQZu1"/>
+</div>
+<h3 class="font-title-sm">Ergonomic Office Chair</h3>
+<span class="text-caption-xs text-on-surface-variant uppercase tracking-wider">In Storage</span>
+</div>
+<!-- Mock Card 3 -->
+<div class="bg-surface p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant opacity-50">
+<div class="h-40 rounded-lg bg-surface-container-high mb-3 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A collection of neatly packed wardrobe boxes arranged in a grid-like fashion within a professional warehouse setting. The lighting is bright and even, casting soft shadows that suggest depth and volume. The scene is clean, systematic, and secure, utilizing a palette of whites, grays, and deep navy accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVleGZ75aeP8j-J0xQOE9jfBcAprO3A28_7HHTCUeGgyqoR_MvJ6AlS-DbhpxaUVHNluhJKb_O-ehOBI9igLh-nRuiwOddRvOoToljmXZI0Y2YVIJz48x7zqJIHrDOSfytVpt9N3eY_BcP0L3l9kEt6QlNoMPhBfuDZu6hk7qhxHU_M2QywHgiiYQ_4r8rPHNyW1onXk_QLC-iIf2J3cyRER4uWwI6e8-lk5JA0TvAu-EATgjUJWB1wYLPfq6Ju6Yfr62XiJS41e5u"/>
+</div>
+<h3 class="font-title-sm">Winter Clothing #2</h3>
+<span class="text-caption-xs text-on-surface-variant uppercase tracking-wider">Returned</span>
+</div>
+<!-- Mock Card 4 -->
+<div class="bg-surface p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-outline-variant">
+<div class="h-40 rounded-lg bg-surface-container-high mb-3 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A high-resolution photograph of a large modern flat-screen television carefully wrapped in protective industrial-grade plastic, standing upright in a clean storage unit. The professional lighting emphasizes the protective layers and the systematic organization of the space. The mood is dependable and highly organized." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcoOQ7mYzQM7qZMDOaCyt38uNX59oiZ1wDWuCnxDNgge1qguJ9D777TXCUA-j47qpMGXSn3UVT5UWCwngz7N13ypELf6Z_qM2ftMG5naLTdzkSz2ON-CFIIQXgUkwYg0_2_af_inPUnwig9_KLdCwxhfWEshWO5ZP5UQhYxcgKkAXVQCpBRIfxAZmpp4hxjHh4ejHn6uSRqSNr0vGvSjil4kb22oC91uogM-cyFFsSHvPS_Pbcv5Wtf7sGbfSk_JkDGbPLDcrHf5Ra"/>
+</div>
+<h3 class="font-title-sm">65" Samsung TV</h3>
+<span class="text-caption-xs text-on-surface-variant uppercase tracking-wider">In Storage</span>
+</div>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-primary/40 backdrop-blur-sm p-4">
+<!-- Modal Card -->
+<div class="modal-animate-in bg-surface w-full max-w-[480px] rounded-xl p-page_padding shadow-2xl flex flex-col gap-6 max-h-[921px] overflow-y-auto">
+<!-- Header -->
+<div class="flex justify-between items-center">
+<h2 class="text-title-sm font-bold text-primary">Add Loose Item</h2>
+<button class="text-outline hover:text-primary transition-colors h-8 w-8 flex items-center justify-center rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Search Section -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-primary-fixed-variant">search</span>
+<input class="w-full pl-10 pr-4 py-3 bg-[#EFECFF] border-none rounded-lg focus:ring-2 focus:ring-primary-container text-body-md placeholder:text-on-primary-fixed-variant/60" placeholder="Search standard items..." type="text"/>
+</div>
+<!-- Popular Items Suggestions -->
+<div class="flex flex-col gap-3">
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">Popular Items</span>
+<div class="grid grid-cols-3 gap-2">
+<button class="px-3 py-2 border border-outline-variant rounded-full text-caption-xs font-semibold hover:bg-surface-container-low transition-all">Chair</button>
+<button class="px-3 py-2 border border-outline-variant rounded-full text-caption-xs font-semibold hover:bg-surface-container-low transition-all">Bed</button>
+<button class="px-3 py-2 border border-outline-variant rounded-full text-caption-xs font-semibold hover:bg-surface-container-low transition-all">Desk</button>
+<button class="px-3 py-2 border border-outline-variant rounded-full text-caption-xs font-semibold hover:bg-surface-container-low transition-all">TV</button>
+<button class="px-3 py-2 border border-outline-variant rounded-full text-caption-xs font-semibold hover:bg-surface-container-low transition-all">Dining Table</button>
+<button class="px-3 py-2 border border-outline-variant rounded-full text-caption-xs font-semibold hover:bg-surface-container-low transition-all">Fridge</button>
+<button class="px-3 py-2 border border-outline-variant rounded-full text-caption-xs font-semibold hover:bg-surface-container-low transition-all">Mirror</button>
+<button class="px-3 py-2 border border-outline-variant rounded-full text-caption-xs font-semibold hover:bg-surface-container-low transition-all">Bicycle</button>
+<button class="px-3 py-2 border border-outline-variant rounded-full text-caption-xs font-semibold hover:bg-surface-container-low transition-all">Cabinet</button>
+</div>
+</div>
+<!-- Divider -->
+<div class="relative flex items-center py-2">
+<div class="flex-grow border-t border-outline-variant"></div>
+<span class="flex-shrink mx-4 text-on-surface-variant font-caption-xs uppercase">or</span>
+<div class="flex-grow border-t border-outline-variant"></div>
+</div>
+<!-- Custom Item Form -->
+<div class="border-2 border-secondary-container rounded-xl p-4 flex flex-col gap-4 bg-surface-container-lowest">
+<div class="flex flex-col gap-1">
+<label class="text-caption-xs font-bold text-on-surface-variant">Description</label>
+<input class="w-full border border-outline-variant rounded-lg p-2 focus:border-primary focus:ring-0" id="item-desc" placeholder="e.g. Large antique mirror" type="text"/>
+</div>
+<div class="grid grid-cols-3 gap-3">
+<div class="flex flex-col gap-1">
+<label class="text-caption-xs font-bold text-on-surface-variant">Length (m)</label>
+<input class="w-full border border-outline-variant rounded-lg p-2 focus:border-primary focus:ring-0 dimension-input" id="dim-l" step="0.1" type="number" value="0.8"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-caption-xs font-bold text-on-surface-variant">Width (m)</label>
+<input class="w-full border border-outline-variant rounded-lg p-2 focus:border-primary focus:ring-0 dimension-input" id="dim-w" step="0.1" type="number" value="0.6"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-caption-xs font-bold text-on-surface-variant">Height (m)</label>
+<input class="w-full border border-outline-variant rounded-lg p-2 focus:border-primary focus:ring-0 dimension-input" id="dim-h" step="0.1" type="number" value="0.5"/>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex flex-col gap-1">
+<label class="text-caption-xs font-bold text-on-surface-variant">Quantity</label>
+<div class="flex items-center gap-3 bg-surface-container rounded-lg px-2 py-1">
+<button class="w-8 h-8 flex items-center justify-center text-primary font-bold hover:bg-surface-variant rounded-md" onclick="decrementQty()">-</button>
+<span class="font-bold w-4 text-center" id="qty-val">1</span>
+<button class="w-8 h-8 flex items-center justify-center text-primary font-bold hover:bg-surface-variant rounded-md" onclick="incrementQty()">+</button>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-caption-xs text-on-surface-variant">Estimated volume</span>
+<span class="text-title-sm font-bold text-secondary" id="volume-display">0.24 m³</span>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<button class="w-full bg-secondary-container text-on-secondary-container py-4 rounded-lg font-title-sm hover:opacity-90 transition-opacity active:scale-95 duration-150">
+                Add to Quote
+            </button>
+</div>
+</div>
+<script>
+        const dimL = document.getElementById('dim-l');
+        const dimW = document.getElementById('dim-w');
+        const dimH = document.getElementById('dim-h');
+        const qtyVal = document.getElementById('qty-val');
+        const volDisplay = document.getElementById('volume-display');
+
+        function updateVolume() {
+            const l = parseFloat(dimL.value) || 0;
+            const w = parseFloat(dimW.value) || 0;
+            const h = parseFloat(dimH.value) || 0;
+            const q = parseInt(qtyVal.innerText) || 1;
+            const vol = (l * w * h * q).toFixed(2);
+            volDisplay.innerText = `${vol} m³`;
+        }
+
+        function incrementQty() {
+            let current = parseInt(qtyVal.innerText);
+            qtyVal.innerText = current + 1;
+            updateVolume();
+        }
+
+        function decrementQty() {
+            let current = parseInt(qtyVal.innerText);
+            if (current > 1) {
+                qtyVal.innerText = current - 1;
+                updateVolume();
+            }
+        }
+
+        // Add event listeners to all dimension inputs
+        document.querySelectorAll('.dimension-input').forEach(input => {
+            input.addEventListener('input', updateVolume);
+        });
+
+        // Initialize volume on load
+        updateVolume();
+    </script>
+</body></html>

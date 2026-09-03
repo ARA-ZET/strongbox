@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scan-line {
+            animation: scanMove 2.5s infinite ease-in-out;
+        }
+        @keyframes scanMove {
+            0% { transform: translateY(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(240px); opacity: 0; }
+        }
+        .viewfinder-bracket {
+            width: 40px;
+            height: 40px;
+            border-color: #feae2c; /* secondary-container (Amber) */
+        }
+        .bottom-sheet-active {
+            transform: translateY(0) !important;
+        }
+        .shimmer {
+            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2f2e43",
+                        "tertiary-fixed": "#6bfe9c",
+                        "outline-variant": "#c5c6cf",
+                        "on-background": "#1a1a2e",
+                        "tertiary": "#001c09",
+                        "primary-container": "#1a2b4a",
+                        "on-tertiary-fixed": "#00210c",
+                        "background": "#fcf8ff",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "inverse-on-surface": "#f2efff",
+                        "surface-variant": "#e2e0fc",
+                        "surface-container-high": "#e8e5ff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "surface": "#fcf8ff",
+                        "secondary-container": "#feae2c",
+                        "outline": "#75777e",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffddb4",
+                        "surface-tint": "#4e5e80",
+                        "on-primary-container": "#8293b7",
+                        "surface-dim": "#dad7f3",
+                        "surface-container-highest": "#e2e0fc",
+                        "surface-container-low": "#f5f2ff",
+                        "primary": "#031634",
+                        "on-surface": "#1a1a2e",
+                        "tertiary-container": "#003316",
+                        "on-primary-fixed-variant": "#364767",
+                        "secondary-fixed-dim": "#ffb955",
+                        "on-surface-variant": "#44474e",
+                        "on-primary-fixed": "#081b39",
+                        "secondary": "#835500",
+                        "inverse-primary": "#b6c6ee",
+                        "on-tertiary-container": "#00a858",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#6b4500",
+                        "on-secondary-fixed": "#291800",
+                        "surface-container": "#efecff",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "surface-bright": "#fcf8ff",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "primary-fixed": "#d8e2ff",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "3xl": "64px",
+                        "2xl": "48px",
+                        "margin": "24px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "display-lg": ["488px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-primary overflow-hidden">
+<!-- Camera Feed Mockup (Background) -->
+<div class="fixed inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center" data-alt="A POV shot from a smartphone camera perspective inside a busy logistics warehouse. The foreground shows a slightly blurred cardboard box with a large white logistics label and a clear QR code. The background is filled with high-shelf industrial racking, wooden pallets, and bright fluorescent overhead lights, maintaining a professional logistics atmosphere with deep navy shadows and high-contrast amber accents." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuChSWGO3JFhaBj8wNEp5im7PkMyyXlyZzNQZTkJP1-4YacsroQbxBwhEFEGCT1bUc4dDGB9uBr6aYl_eDY4zFeIjG79ZvAoHGNTjOIx_m0rWbSpT0bWls_woXZq_SacE1Peesf7gNCzTfNoRMIEA2MmecnSh0TSr2vpVk6ouWd6r8Z3HIiAkW26AWg7y2kWkoA_nIXToYMwu64Ahk4t59-zhe4ctPkE5_G_ONr5gS2LzwR6B-zR4zQjP5zi_myVeXq5FvP0xVL8rks')"></div>
+<!-- Dark Overlay -->
+<div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+</div>
+<!-- UI Layer -->
+<div class="relative z-10 flex flex-col h-screen text-white">
+<!-- Top Controls -->
+<div class="flex justify-between items-center px-margin pt-12">
+<button class="w-10 h-10 flex items-center justify-center bg-black/50 rounded-full backdrop-blur-md">
+<span class="material-symbols-outlined text-white">close</span>
+</button>
+<div class="flex gap-4">
+<button class="w-10 h-10 flex items-center justify-center bg-black/50 rounded-full backdrop-blur-md transition-colors" onclick="toggleFlash(this)">
+<span class="material-symbols-outlined text-white" id="flash-icon">flash_on</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center bg-black/50 rounded-full backdrop-blur-md">
+<span class="material-symbols-outlined text-white">help</span>
+</button>
+</div>
+</div>
+<!-- Scanning Area -->
+<div class="flex-1 flex flex-col items-center justify-center">
+<div class="relative w-64 h-64 md:w-80 md:h-80">
+<!-- Brackets -->
+<div class="absolute top-0 left-0 viewfinder-bracket border-t-4 border-l-4 rounded-tl-xl"></div>
+<div class="absolute top-0 right-0 viewfinder-bracket border-t-4 border-r-4 rounded-tr-xl"></div>
+<div class="absolute bottom-0 left-0 viewfinder-bracket border-b-4 border-l-4 rounded-bl-xl"></div>
+<div class="absolute bottom-0 right-0 viewfinder-bracket border-b-4 border-r-4 rounded-br-xl"></div>
+<!-- Scan Line -->
+<div class="scan-line absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-secondary-container to-transparent shadow-[0_0_15px_#feae2c]"></div>
+<!-- Viewfinder Mask (Clear center) -->
+<div class="absolute inset-4 border border-white/20 rounded-lg"></div>
+</div>
+<!-- Scanning Status -->
+<div class="mt-8 text-center">
+<p class="font-label-lg text-label-lg tracking-widest uppercase animate-pulse text-secondary-container">Scanning...</p>
+<p class="font-body-sm text-body-sm text-white/70 mt-2">Align the QR code within the frame</p>
+</div>
+<!-- Manual Link -->
+<button class="mt-12 text-white font-label-lg text-label-lg underline underline-offset-4 decoration-secondary-container/50 hover:decoration-secondary-container transition-all">
+                Enter Tracking Number Manually
+            </button>
+</div>
+<!-- Hidden Simulation Button -->
+<button class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 opacity-0 cursor-default" onclick="simulateScan()">Simulate Scan</button>
+</div>
+<!-- Bottom Sheet (Success Result) -->
+<div class="fixed inset-x-0 bottom-0 z-[60] bg-white rounded-t-3xl shadow-2xl transition-transform duration-500 translate-y-full transform px-margin pb-10 pt-4" id="result-sheet">
+<div class="w-12 h-1.5 bg-outline-variant rounded-full mx-auto mb-6"></div>
+<div class="flex items-start gap-4 mb-6">
+<div class="w-20 h-20 rounded-xl overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A close-up photograph of a medium-sized corrugated cardboard box with a professional shipping label showing various barcodes and logistics icons. The lighting is clean and industrial, highlighting the texture of the cardboard and the crisp printing on the label. The style is modern and functional, matching a high-end corporate logistics application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlpfYPRc4tE5Ep1aN0UGBZk2opRs5aHMwKDBFb8BZPkGN84I3mjmUF6RMGFZyazvwEjWUQtBJPDkKkD1GcHbBlUVVeTf-0KwFFOhfQH8qk7_9VuO4OP0lpy3_eV_5zkaOhv0khl5IIZPQpNNFmC3K9GPiDwB4HEg7MDCGSHc-prHuuj1g4_pIAkuofiDLWQ8pduldzo1YRlKG4CQIIsx_zFyNfjSImwVOwESZpA46K9pG_EA4FFrSsJSacG_vHXZ2Xlmu0bfTn_IA"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold rounded uppercase">Verified</span>
+<span class="text-on-surface-variant font-label-md text-label-md">#SB-99201-LX</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary">Heavy Duty Engine Parts</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Client: Global Dynamics Inc.</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="bg-surface-container-low p-4 rounded-xl">
+<p class="font-label-md text-label-md text-on-surface-variant">Weight</p>
+<p class="font-headline-sm text-headline-sm text-primary">12.4 kg</p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl">
+<p class="font-label-md text-label-md text-on-surface-variant">Route</p>
+<p class="font-headline-sm text-headline-sm text-primary">Zone B-4</p>
+</div>
+</div>
+<button class="w-full py-4 bg-secondary-container text-on-secondary-container font-headline-sm text-headline-sm rounded-xl shadow-lg active:scale-[0.98] transition-transform" onclick="closeSheet()">
+            Confirm Pickup
+        </button>
+</div>
+<!-- Bottom Navigation (Shared Component) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter pb-4 pt-2 bg-surface border-t border-outline-variant shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined mb-1">assignment</span>
+<span class="font-label-md text-label-md">Jobs</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+<span class="font-label-md text-label-md">Scan</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined mb-1">box</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-md text-label-md">Account</span>
+</a>
+</nav>
+<script>
+        function toggleFlash(btn) {
+            const icon = document.getElementById('flash-icon');
+            if (icon.textContent === 'flash_on') {
+                icon.textContent = 'flash_off';
+                btn.classList.add('bg-secondary-container');
+                btn.classList.remove('bg-black/50');
+            } else {
+                icon.textContent = 'flash_on';
+                btn.classList.remove('bg-secondary-container');
+                btn.classList.add('bg-black/50');
+            }
+        }
+
+        function simulateScan() {
+            const sheet = document.getElementById('result-sheet');
+            sheet.classList.add('bottom-sheet-active');
+            
+            // Subtle haptic feedback feel
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate(50);
+            }
+        }
+
+        function closeSheet() {
+            const sheet = document.getElementById('result-sheet');
+            sheet.classList.remove('bottom-sheet-active');
+        }
+
+        // Auto-simulate after 3 seconds for demo purposes
+        setTimeout(simulateScan, 3500);
+    </script>
+</body></html>

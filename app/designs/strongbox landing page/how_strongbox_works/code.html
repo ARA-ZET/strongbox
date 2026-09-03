@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>How It Works | StrongBox Valet Storage</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "lavender-haze": "#F5F2FF",
+                        "background": "#fcf8ff",
+                        "surface-bright": "#fcf8ff",
+                        "primary": "#031634",
+                        "on-error-container": "#93000a",
+                        "secondary": "#835500",
+                        "surface-variant": "#e4e1ee",
+                        "on-tertiary-fixed-variant": "#5c4217",
+                        "on-surface": "#1b1b24",
+                        "tertiary": "#221400",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#291800",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#4e5e80",
+                        "on-primary-fixed-variant": "#364767",
+                        "tertiary-fixed-dim": "#e7c18a",
+                        "surface-container": "#efecf9",
+                        "on-surface-variant": "#44474e",
+                        "on-primary-container": "#8293b7",
+                        "surface-container-highest": "#e4e1ee",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "outline": "#75777e",
+                        "surface-container-high": "#e9e6f3",
+                        "surface": "#fcf8ff",
+                        "primary-container": "#1a2b4a",
+                        "on-tertiary-fixed": "#281800",
+                        "inverse-on-surface": "#f2effc",
+                        "action-text": "#6B4500",
+                        "on-tertiary-container": "#af8d5b",
+                        "inverse-primary": "#b6c6ee",
+                        "surface-dim": "#dbd8e5",
+                        "primary-fixed": "#d8e2ff",
+                        "on-primary-fixed": "#081b39",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#3d2700",
+                        "secondary-fixed-dim": "#ffb954",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "surface-container-low": "#f5f2ff",
+                        "surface-white": "#FFFFFF",
+                        "on-background": "#1b1b24",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#feae2c",
+                        "on-secondary-container": "#6b4500",
+                        "secondary-fixed": "#ffddb4",
+                        "inverse-surface": "#302f39",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffddaf",
+                        "outline-variant": "#c5c6cf"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "48px",
+                        "margin-mobile": "16px",
+                        "container-max": "1200px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "display-bold": ["Inter"],
+                        "body-strong": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-main": ["Inter"],
+                        "headline-h2": ["Inter"],
+                        "headline-h1-mobile": ["Inter"],
+                        "headline-h1": ["Inter"],
+                        "headline-h3": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-bold": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-strong": ["16px", { "lineHeight": "1.6", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-main": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-h2": ["28px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-h1-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-h1": ["36px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-h3": ["22px", { "lineHeight": "1.4", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .shadow-soft {
+            box-shadow: 0px 4px 20px rgba(3, 22, 52, 0.04);
+        }
+        .timeline-line {
+            background: linear-gradient(180deg, #FEAE2C 0%, #FEAE2C 100%);
+        }
+    </style>
+</head>
+<body class="bg-lavender-haze font-body-main text-on-background antialiased overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full h-[72px] bg-surface-white z-50 shadow-[0px_4px_20px_rgba(3,22,52,0.04)]">
+<div class="flex justify-between items-center h-full max-w-container-max mx-auto px-margin-desktop">
+<div class="font-display-bold text-headline-h2 text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                StrongBox
+            </div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-primary font-body-main hover:text-secondary transition-colors duration-200" href="#">Home</a>
+<a class="text-secondary font-body-strong border-b-2 border-secondary pb-1" href="#">How It Works</a>
+<a class="text-primary font-body-main hover:text-secondary transition-colors duration-200" href="#">Pricing</a>
+<a class="text-primary font-body-main hover:text-secondary transition-colors duration-200" href="#">About</a>
+<a class="text-primary font-body-main hover:text-secondary transition-colors duration-200" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary font-body-strong hover:text-secondary transition-colors px-4 py-2">Log In</button>
+<button class="bg-secondary-container text-on-secondary-container font-body-strong px-6 py-3 rounded-lg hover:scale-95 transition-transform">Get Started Free</button>
+</div>
+</div>
+</nav>
+<main class="pt-[72px]">
+<!-- Hero Section -->
+<section class="relative bg-lavender-haze pt-24 pb-32 overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-desktop text-center">
+<span class="inline-block px-4 py-1.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps mb-6">Concierge Experience</span>
+<h1 class="font-display-bold text-display-bold text-primary mb-6">How Valet Storage Works</h1>
+<p class="max-w-2xl mx-auto text-on-surface-variant text-body-main leading-relaxed">
+                    Say goodbye to industrial warehouses and weekend truck rentals. We bring your storage unit to your door, professionalize the packing, and return your items whenever you need them.
+                </p>
+</div>
+<!-- Decorative atmospheric element -->
+<div class="absolute -bottom-48 -right-48 w-96 h-96 bg-primary opacity-5 rounded-full blur-3xl"></div>
+<div class="absolute -top-24 -left-24 w-72 h-72 bg-secondary opacity-5 rounded-full blur-3xl"></div>
+</section>
+<!-- Timeline Section -->
+<section class="bg-surface-white py-32 relative">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="relative">
+<!-- Vertical Amber Line -->
+<div class="absolute left-1/2 top-0 bottom-0 w-1 bg-secondary-container -translate-x-1/2 hidden md:block"></div>
+<div class="space-y-32">
+<!-- Step 1 -->
+<div class="relative flex flex-col md:flex-row items-center gap-16">
+<div class="md:w-1/2 text-right hidden md:block">
+<h3 class="font-headline-h2 text-primary mb-4">1. Get Your Quote</h3>
+<p class="text-on-surface-variant text-body-main">Choose your plan based on how much space you need. Our transparent pricing means no hidden fees or surprise costs.</p>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 flex items-center justify-center w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container font-display-bold z-10 hidden md:flex">1</div>
+<div class="md:w-1/2 md:pl-16">
+<div class="bg-lavender-haze p-8 rounded-xl shadow-soft border border-primary/5">
+<div class="md:hidden mb-4">
+<h3 class="font-headline-h2 text-primary mb-2">1. Get Your Quote</h3>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-white p-4 rounded-lg text-center border border-primary/10">
+<span class="material-symbols-outlined text-secondary block mb-2">inventory</span>
+<span class="text-label-caps text-primary">Small Bin</span>
+</div>
+<div class="bg-surface-white p-4 rounded-lg text-center border border-primary/10">
+<span class="material-symbols-outlined text-secondary block mb-2">garage</span>
+<span class="text-label-caps text-primary">Full Closet</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative flex flex-col md:flex-row-reverse items-center gap-16">
+<div class="md:w-1/2 text-left hidden md:block">
+<h3 class="font-headline-h2 text-primary mb-4">2. We Collect</h3>
+<p class="text-on-surface-variant text-body-main">Our professional specialists arrive at your doorstep, help you load your items, and document everything for your digital inventory.</p>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 flex items-center justify-center w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container font-display-bold z-10 hidden md:flex">2</div>
+<div class="md:w-1/2 md:pr-16">
+<div class="rounded-xl overflow-hidden shadow-soft aspect-square max-w-[400px] ml-auto">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLvXF1RBNya_75g659VVkhxyQJ73DoxLu5pZ_C5gGGZTQe1c3U9xraTNdVgz-sl8i93WGW5myzfVb-_UuWOUsZ7KOhMbmjYUpXd4O9TwqEviubf38OfYlKFo2iPjJOl83OmxXp-CKZC_RxiuggweBtoOJPqDNYO1pm3XJGFpVNjEox4XrQWjKI2CwC9FQyiB-IH20U7tQn2HHp9sNI07IVxg_7tjV3C2tCdwCIh0lGAJmtQE6j_WFiatCxs"/>
+</div>
+</div>
+<div class="md:hidden">
+<h3 class="font-headline-h2 text-primary mb-4 text-center">2. We Collect</h3>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="relative flex flex-col md:flex-row items-center gap-16">
+<div class="md:w-1/2 text-right hidden md:block">
+<h3 class="font-headline-h2 text-primary mb-4">3. Stored Securely</h3>
+<p class="text-on-surface-variant text-body-main">Your items are kept in our high-end, temperature-controlled facility. Each unit is monitored 24/7 with domestic-grade security.</p>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 flex items-center justify-center w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container font-display-bold z-10 hidden md:flex">3</div>
+<div class="md:w-1/2 md:pl-16">
+<div class="rounded-xl overflow-hidden shadow-soft aspect-video">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLuNfNR0Wf2655uwsQGboKRJ17ihP8EZ3opub-6pywvcgh7rG7fGD1xuMBm5uDYwTlErPkLRxmOfP7H_gJ5bPvnzzHCNgJMBmGxuKwbUWkR8tYVT638KKFubpkb_T6ceFiC7LwRsG3dMAdqJxGN0wnddQ2tNruvcJ1UkKrfSbtLASG3qeL-2j4tjZPUdROwEwDisq-2BPUtT6Owo3CUxLSaWaYvbgklAJ4qUioSmmJsMz31muqq1z34WYhw"/>
+</div>
+</div>
+<div class="md:hidden">
+<h3 class="font-headline-h2 text-primary mb-4 text-center">3. Stored Securely</h3>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="relative flex flex-col md:flex-row-reverse items-center gap-16">
+<div class="md:w-1/2 text-left hidden md:block">
+<h3 class="font-headline-h2 text-primary mb-4">4. Request Back Anytime</h3>
+<p class="text-on-surface-variant text-body-main">Need your items back? Just tap "Request Delivery" in our app. We'll bring your boxes back as soon as tomorrow morning.</p>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 flex items-center justify-center w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container font-display-bold z-10 hidden md:flex">4</div>
+<div class="md:w-1/2 md:pr-16">
+<div class="bg-lavender-haze p-8 rounded-xl shadow-soft border border-primary/5">
+<div class="flex flex-col gap-3">
+<div class="bg-surface-white p-4 rounded-lg flex items-center justify-between border border-primary/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">local_shipping</span>
+<span class="text-body-strong text-primary">Delivery Tomorrow</span>
+</div>
+<span class="bg-secondary-fixed px-3 py-1 rounded text-label-caps text-on-secondary-fixed">Confirmed</span>
+</div>
+<div class="bg-surface-white/50 p-4 rounded-lg border border-primary/5 opacity-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">schedule</span>
+<span class="text-body-main">Scheduled: 10:00 AM</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md:hidden">
+<h3 class="font-headline-h2 text-primary mb-4 text-center">4. Request Back Anytime</h3>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ Section -->
+<section class="bg-lavender-haze py-32">
+<div class="max-w-[800px] mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-headline-h1 text-primary mb-4">Common Questions</h2>
+<p class="text-on-surface-variant">Everything you need to know about our valet storage service.</p>
+</div>
+<div class="space-y-4">
+<!-- Accordion Item 1 -->
+<div class="bg-surface-white rounded-xl shadow-soft overflow-hidden border border-primary/5 transition-all hover:border-secondary/20">
+<button class="w-full px-8 py-6 flex items-center justify-between text-left group" onclick="toggleFaq(this)">
+<span class="font-body-strong text-primary group-hover:text-secondary transition-colors">What is the insurance coverage?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-300">expand_more</span>
+</button>
+<div class="px-8 max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-surface-container-low">
+<p class="py-6 text-on-surface-variant text-body-main">
+                                Every StrongBox plan includes standard R10,000 protection for your items. For valuable collections, we offer premium "Peace of Mind" add-ons that cover up to R150,000 in personal property.
+                            </p>
+</div>
+</div>
+<!-- Accordion Item 2 -->
+<div class="bg-surface-white rounded-xl shadow-soft overflow-hidden border border-primary/5 transition-all hover:border-secondary/20">
+<button class="w-full px-8 py-6 flex items-center justify-between text-left group" onclick="toggleFaq(this)">
+<span class="font-body-strong text-primary group-hover:text-secondary transition-colors">How quickly can I get my items back?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-300">expand_more</span>
+</button>
+<div class="px-8 max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-surface-container-low">
+<p class="py-6 text-on-surface-variant text-body-main">
+                                Requests made before 5:00 PM are eligible for next-day morning delivery. We operate 6 days a week to ensure you have access when it matters.
+                            </p>
+</div>
+</div>
+<!-- Accordion Item 3 -->
+<div class="bg-surface-white rounded-xl shadow-soft overflow-hidden border border-primary/5 transition-all hover:border-secondary/20">
+<button class="w-full px-8 py-6 flex items-center justify-between text-left group" onclick="toggleFaq(this)">
+<span class="font-body-strong text-primary group-hover:text-secondary transition-colors">Do you provide packing materials?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-300">expand_more</span>
+</button>
+<div class="px-8 max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-surface-container-low">
+<p class="py-6 text-on-surface-variant text-body-main">
+                                Yes! Our specialists arrive with heavy-duty reusable totes, bubble wrap, and protective padding for larger furniture items as part of our premium pickup service.
+                            </p>
+</div>
+</div>
+<!-- Accordion Item 4 -->
+<div class="bg-surface-white rounded-xl shadow-soft overflow-hidden border border-primary/5 transition-all hover:border-secondary/20">
+<button class="w-full px-8 py-6 flex items-center justify-between text-left group" onclick="toggleFaq(this)">
+<span class="font-body-strong text-primary group-hover:text-secondary transition-colors">Is there a minimum storage period?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-300">expand_more</span>
+</button>
+<div class="px-8 max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-surface-container-low">
+<p class="py-6 text-on-surface-variant text-body-main">
+                                We pride ourselves on flexibility. While our standard billing is monthly, there are no long-term contracts. You can store for as little as 30 days.
+                            </p>
+</div>
+</div>
+<!-- Accordion Item 5 -->
+<div class="bg-surface-white rounded-xl shadow-soft overflow-hidden border border-primary/5 transition-all hover:border-secondary/20">
+<button class="w-full px-8 py-6 flex items-center justify-between text-left group" onclick="toggleFaq(this)">
+<span class="font-body-strong text-primary group-hover:text-secondary transition-colors">How do you handle fragile items?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-300">expand_more</span>
+</button>
+<div class="px-8 max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-surface-container-low">
+<p class="py-6 text-on-surface-variant text-body-main">
+                                Our staff are trained valet professionals. We use double-walled boxes and customized padding for ceramics, electronics, and artwork, ensuring total protection during transit and storage.
+                            </p>
+</div>
+</div>
+<!-- Accordion Item 6 -->
+<div class="bg-surface-white rounded-xl shadow-soft overflow-hidden border border-primary/5 transition-all hover:border-secondary/20">
+<button class="w-full px-8 py-6 flex items-center justify-between text-left group" onclick="toggleFaq(this)">
+<span class="font-body-strong text-primary group-hover:text-secondary transition-colors">Where is the storage facility located?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-300">expand_more</span>
+</button>
+<div class="px-8 max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-surface-container-low">
+<p class="py-6 text-on-surface-variant text-body-main">
+                                To maximize security, we do not disclose the exact location to the public. However, our main Cape Town hub is situated in a high-security industrial park with climate control and 24-hour manned patrols.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Banner -->
+<section class="bg-primary py-24">
+<div class="max-w-container-max mx-auto px-margin-desktop text-center">
+<h2 class="font-display-bold text-headline-h1 text-surface-white mb-8">Start Storing Today</h2>
+<div class="flex flex-col md:flex-row gap-6 justify-center">
+<button class="bg-secondary-container text-on-secondary-container font-body-strong px-12 py-5 rounded-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform group">
+                        Book Now
+                        <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+<button class="border-2 border-surface-white text-surface-white font-body-strong px-12 py-5 rounded-lg hover:bg-surface-white hover:text-primary transition-all">
+                        View Pricing
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-16 pb-8 bg-primary border-t-4 border-secondary">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="space-y-6">
+<div class="font-display-bold text-headline-h3 text-surface-white flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-fixed">inventory_2</span>
+                    StrongBox
+                </div>
+<p class="text-surface-variant/60 font-body-main max-w-xs">
+                    Cape Town's premier valet storage service. Modernizing the way you manage your space with a domestic-first approach.
+                </p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-4">
+<span class="text-label-caps text-secondary-fixed font-bold block">Company</span>
+<ul class="space-y-2">
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors text-body-main" href="#">Home</a></li>
+<li><a class="text-secondary-fixed font-bold text-body-main" href="#">How It Works</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors text-body-main" href="#">Pricing</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors text-body-main" href="#">About</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<span class="text-label-caps text-secondary-fixed font-bold block">Legal</span>
+<ul class="space-y-2">
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors text-body-main" href="#">Privacy Policy</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors text-body-main" href="#">Terms of Service</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors text-body-main" href="#">FAQ</a></li>
+<li><a class="text-surface-variant/60 hover:text-secondary-fixed transition-colors text-body-main" href="#">Contact</a></li>
+</ul>
+</div>
+</div>
+<div class="space-y-6">
+<span class="text-label-caps text-secondary-fixed font-bold block">Get In Touch</span>
+<div class="flex items-center gap-3 text-surface-variant/60">
+<span class="material-symbols-outlined text-secondary-fixed">mail</span>
+<span>hello@strongbox.co.za</span>
+</div>
+<div class="flex items-center gap-3 text-surface-variant/60">
+<span class="material-symbols-outlined text-secondary-fixed">call</span>
+<span>+27 (021) 555-0123</span>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop mt-16 pt-8 border-t border-surface-variant/10 text-center">
+<p class="text-surface-variant/60 text-label-caps">© 2024 StrongBox Valet Storage. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('.material-symbols-outlined');
+            
+            // Close all other FAQs
+            document.querySelectorAll('.max-h-0').forEach(el => {
+                if (el !== content && el.style.maxHeight) {
+                    el.style.maxHeight = null;
+                    el.previousElementSibling.querySelector('.material-symbols-outlined').style.transform = 'rotate(0deg)';
+                }
+            });
+
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+</body></html>

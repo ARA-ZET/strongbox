@@ -1,0 +1,33 @@
+{
+  "folders": [
+    { "name": "app (Flutter)", "path": "app" },
+    { "name": "web (Next.js)", "path": "web" },
+    { "name": "packages", "path": "packages" },
+    { "name": "docs", "path": "docs" },
+    { "name": "· root", "path": "." }
+  ],
+  "settings": {
+    "files.exclude": {
+      "app": true,
+      "web": true,
+      "packages": true,
+      "docs": true
+    },
+    "dart.flutterSdkPath": null,
+    "search.exclude": {
+      "**/build": true,
+      "**/.dart_tool": true,
+      "**/node_modules": true,
+      "**/.next": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "dart-code.flutter",
+      "dart-code.dart-code",
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode",
+      "toba.vsfire"
+    ]
+  }
+}

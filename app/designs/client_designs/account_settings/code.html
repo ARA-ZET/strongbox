@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Settings | StrongBox Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav-border {
+            border-left: 4px solid #feae2c;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b6c6ee",
+                        "on-tertiary-container": "#ba8943",
+                        "on-primary-container": "#8293b7",
+                        "on-secondary-container": "#6b4500",
+                        "outline": "#75777e",
+                        "secondary": "#835500",
+                        "secondary-fixed-dim": "#ffb954",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "tertiary-container": "#3e2600",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#b6c6ee",
+                        "on-surface-variant": "#44474e",
+                        "surface-variant": "#e4e1ee",
+                        "inverse-on-surface": "#f2effc",
+                        "outline-variant": "#c5c6cf",
+                        "tertiary": "#231300",
+                        "on-tertiary-fixed": "#291800",
+                        "secondary-fixed": "#ffddb4",
+                        "surface-container-high": "#e9e6f3",
+                        "surface-tint": "#4e5e80",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#1a2b4a",
+                        "surface-container": "#efecf9",
+                        "inverse-surface": "#302f39",
+                        "on-error": "#ffffff",
+                        "primary": "#031634",
+                        "on-primary-fixed": "#081b39",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f5f2ff",
+                        "surface-container-highest": "#e4e1ee",
+                        "surface-dim": "#dbd8e5",
+                        "primary-fixed": "#d8e2ff",
+                        "secondary-container": "#feae2c",
+                        "tertiary-fixed-dim": "#f4bd71",
+                        "on-background": "#1b1b24",
+                        "tertiary-fixed": "#ffddb3",
+                        "surface": "#fcf8ff",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1b1b24",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#fcf8ff",
+                        "on-secondary-fixed": "#291800",
+                        "background": "#fcf8ff",
+                        "on-primary-fixed-variant": "#364767",
+                        "on-tertiary-fixed-variant": "#633f00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "desktop-padding": "24px",
+                        "mobile-padding": "16px",
+                        "gutter": "16px",
+                        "component-gap": "8px",
+                        "section-gap": "32px"
+                    },
+                    "fontFamily": {
+                        "caption": ["Inter"],
+                        "headline": ["Inter"],
+                        "label": ["Inter"],
+                        "body": ["Inter"],
+                        "title": ["Inter"],
+                        "display": ["Inter"],
+                        "display-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "headline": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "body": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "display": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface-container-low min-h-screen font-body text-on-surface">
+<!-- Desktop TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-desktop-padding h-[64px] bg-surface shadow-sm border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-secondary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary font-bold">inventory_2</span>
+</div>
+<span class="text-headline font-headline font-bold text-primary">StrongBox</span>
+</div>
+<nav class="hidden md:flex items-center gap-8 h-full">
+<a class="font-title text-title text-on-surface-variant hover:text-primary transition-colors pb-1" href="#">Home</a>
+<a class="font-title text-title text-on-surface-variant hover:text-primary transition-colors pb-1" href="#">My Storage</a>
+<a class="font-title text-title text-on-surface-variant hover:text-primary transition-colors pb-1" href="#">Deliveries</a>
+<a class="font-title text-title text-on-surface-variant hover:text-primary transition-colors pb-1" href="#">Billing</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors">notifications</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a woman in her early 30s with a confident, friendly expression, set against a clean corporate gradient background. She represents a modern logistics professional, with soft professional lighting and a crisp, high-resolution finish that aligns with the premium StrongBox brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8tPho-j9Z_XawFynf-n63mPd501aqSY761iXv14g0Woge2d_GjRIeZd_X9C-PTBEa1CaB0ohlC7Kb8EZNgfyVDvBQgc7Tu7w6RGMjlLoHLvp-Npx8QduMQKSZQT0CkuQ5KyilGqryUDAGjXfOWRLB3qdLeN00iVorP_y7o7oR-C-oGdMWwQ1ea6cE0-PTytn_iqvdOvsLiI1KHEiwPFEhVbRS3hr5I7gXVElqnxWNWm_-Z-YQrwLzsW5V0GVGGoC8zghrMnGI-Xp3"/>
+</div>
+</div>
+</header>
+<main class="pt-[64px] flex min-h-screen max-w-[1440px] mx-auto">
+<!-- Left Sidebar -->
+<aside class="w-[260px] fixed h-[calc(100vh-64px)] bg-surface border-r border-outline-variant p-gutter flex flex-col justify-between">
+<div>
+<!-- Profile Section -->
+<div class="flex flex-col items-center text-center mb-8 pt-4">
+<div class="w-20 h-20 rounded-full p-1 ring-2 ring-secondary-container mb-3 overflow-hidden">
+<img class="w-full h-full rounded-full object-cover" data-alt="Close up headshot of Sarah Johnson, a professional business client with auburn hair and a kind smile, looking directly at the camera. The image uses soft, warm studio lighting that complements the amber accents of the UI. The background is a subtle, neutral architectural blur to maintain focus on her identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0ACxfyqFmV1_k9Gsf_fxNOziPIxiCLpFO5M9G-u5D_YWmdi2lhjmxVFf0cKG-4SR3NDUERvO-jXM6csaKwtz5f01IdyVsLUzo5yoxiI2ZCIqzryFbPOtEJymToivyGNXxXSxoh4y11GAI5zkDL-zavnFRsAT43RSCKxS0heTPtHRyxYMqCsDT78eH0bCsBs30VrkJOTUnHb9eyzv20qU6Jip3vbE2sAiM42XPpwmgOyaXIkGCQ0KWXv3rdcx-7Q1VtF02XP1L0y83"/>
+</div>
+<h2 class="font-title text-title text-primary">Sarah Johnson</h2>
+<p class="font-caption text-caption text-on-surface-variant">sarah.j@enterprise.com</p>
+<div class="mt-2 inline-flex items-center px-2 py-0.5 rounded bg-surface-container text-[10px] font-bold text-primary uppercase tracking-wider">
+                        Client ID: SB-9921
+                    </div>
+</div>
+<!-- Nav List -->
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 active-nav-border bg-surface-container-low text-secondary font-title" href="#">
+<span class="material-symbols-outlined text-[20px]">person</span>
+<span class="text-label">Personal Info</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">shield</span>
+<span class="text-label">Security</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="text-label">Notification Settings</span>
+</a>
+</nav>
+</div>
+<!-- Footer Action -->
+<button class="w-full mt-auto mb-4 py-2 border-2 border-primary text-primary font-title rounded-lg hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+                Sign Out
+            </button>
+</aside>
+<!-- Right Content Panel -->
+<section class="ml-[260px] flex-1 p-desktop-padding overflow-y-auto">
+<div class="max-w-3xl mx-auto space-y-section-gap">
+<!-- Personal Info Card -->
+<div class="bg-surface rounded-xl p-8 shadow-sm border border-outline-variant">
+<h1 class="font-headline text-headline text-primary mb-6">Personal Settings</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-1">
+<label class="text-label text-on-surface-variant ml-1">Full Name</label>
+<input class="w-full bg-surface-container border-0 border-b border-outline-variant focus:border-secondary-container focus:ring-0 rounded-t-lg p-3 text-body font-body transition-colors" type="text" value="Sarah Johnson"/>
+</div>
+<div class="space-y-1">
+<label class="text-label text-on-surface-variant ml-1">Email Address</label>
+<div class="relative">
+<input class="w-full bg-surface-container border-0 border-b border-outline-variant rounded-t-lg p-3 text-on-surface-variant cursor-not-allowed font-body" readonly="" type="email" value="sarah.j@enterprise.com"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline text-[18px]">lock</span>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-label text-on-surface-variant ml-1">Phone Number</label>
+<input class="w-full bg-surface-container border-0 border-b border-outline-variant focus:border-secondary-container focus:ring-0 rounded-t-lg p-3 text-body font-body transition-colors" type="tel" value="+1 (555) 012-3456"/>
+</div>
+<div class="space-y-1 md:col-span-2">
+<label class="text-label text-on-surface-variant ml-1">Default Delivery Address</label>
+<input class="w-full bg-surface-container border-0 border-b border-outline-variant focus:border-secondary-container focus:ring-0 rounded-t-lg p-3 text-body font-body transition-colors" type="text" value="742 Corporate Way, Suite 200, San Francisco, CA 94105"/>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant flex justify-end gap-4">
+<button class="px-6 py-2.5 text-on-surface-variant font-title hover:bg-surface-container-low rounded-lg transition-colors">Discard</button>
+<button class="px-8 py-2.5 bg-secondary-container text-primary font-title rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all">Save Changes</button>
+</div>
+</div>
+<!-- Security Section -->
+<div class="bg-surface rounded-xl p-8 shadow-sm border border-outline-variant">
+<h2 class="font-title text-title text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined">security</span>
+                        Security & Access
+                    </h2>
+<div class="space-y-6">
+<!-- Change Password -->
+<div class="flex items-center justify-between py-4 border-b border-outline-variant last:border-0">
+<div>
+<h3 class="font-title text-body text-primary">Account Password</h3>
+<p class="text-caption text-on-surface-variant">Last updated 3 months ago</p>
+</div>
+<button class="px-4 py-2 border border-outline text-primary font-label rounded-lg hover:bg-surface-container-low transition-all">Change Password</button>
+</div>
+<!-- 2FA -->
+<div class="flex items-center justify-between py-4 border-b border-outline-variant last:border-0 opacity-70">
+<div>
+<div class="flex items-center gap-3">
+<h3 class="font-title text-body text-primary">Two-Factor Authentication</h3>
+<span class="bg-surface-container-highest text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-tight">Coming soon</span>
+</div>
+<p class="text-caption text-on-surface-variant">Add an extra layer of security to your vault</p>
+</div>
+<div class="w-12 h-6 bg-outline-variant rounded-full relative cursor-not-allowed">
+<div class="absolute left-1 top-1 w-4 h-4 bg-surface rounded-full shadow-sm"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Danger Zone -->
+<div class="bg-[#FFEBEE] rounded-xl p-8 border-2 border-dashed border-error shadow-sm">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 bg-error-container text-error rounded-full flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div class="flex-1">
+<h2 class="font-headline text-headline text-error mb-2">Danger Zone</h2>
+<p class="text-body text-on-surface-variant mb-6 leading-relaxed">
+                                Deleting your account is a permanent action. All stored data, delivery history, and billing records associated with StrongBox Client SB-9921 will be archived and then permanently removed after 30 days. This action cannot be undone.
+                            </p>
+<button class="px-6 py-3 bg-error text-white font-title rounded-lg hover:bg-on-error-container shadow-md transition-all active:scale-95">
+                                Request Account Deletion
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Spacer -->
+<div class="h-12"></div>
+</section>
+</main>
+<!-- Mobile Navigation (Bottom Bar) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-mobile-padding py-component-gap bg-surface shadow-lg rounded-t-xl md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low p-2" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-mobile text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low p-2" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-mobile text-[10px]">Storage</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low p-2" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label-mobile text-[10px]">Requests</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold p-2" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-mobile text-[10px]">Account</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Form field focus effects
+        document.querySelectorAll('input').forEach(input => {
+            if(!input.readOnly) {
+                input.addEventListener('focus', () => {
+                    input.parentElement.querySelector('label')?.classList.add('text-secondary');
+                });
+                input.addEventListener('blur', () => {
+                    input.parentElement.querySelector('label')?.classList.remove('text-secondary');
+                });
+            }
+        });
+    </script>
+</body></html>

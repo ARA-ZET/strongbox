@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox Admin - Reports &amp; Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#633f00",
+                        "on-secondary-fixed": "#291800",
+                        "surface-container": "#efecff",
+                        "surface-bright": "#fcf8ff",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "primary-fixed": "#d8e2ff",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#00a858",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#6b4500",
+                        "on-surface-variant": "#44474e",
+                        "on-primary-fixed": "#081b39",
+                        "on-primary-fixed-variant": "#364767",
+                        "secondary-fixed-dim": "#ffb955",
+                        "inverse-primary": "#b6c6ee",
+                        "secondary": "#835500",
+                        "surface-container-highest": "#e2e0fc",
+                        "surface-container-low": "#f5f2ff",
+                        "primary": "#031634",
+                        "tertiary-container": "#003316",
+                        "on-surface": "#1a1a2e",
+                        "surface-tint": "#4e5e80",
+                        "on-primary-container": "#8293b7",
+                        "secondary-fixed": "#ffddb4",
+                        "surface-dim": "#dad7f3",
+                        "surface": "#fcf8ff",
+                        "secondary-container": "#feae2c",
+                        "outline": "#75777e",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "primary-container": "#1a2b4a",
+                        "on-tertiary-fixed": "#00210c",
+                        "background": "#fcf8ff",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "inverse-on-surface": "#f2efff",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e2e0fc",
+                        "surface-container-high": "#e8e5ff",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2f2e43",
+                        "outline-variant": "#c5c6cf",
+                        "on-background": "#1a1a2e",
+                        "tertiary": "#001c09",
+                        "tertiary-fixed": "#6bfe9c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "margin": "24px",
+                        "base": "4px",
+                        "3xl": "64px",
+                        "2xl": "48px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .chart-bar { transition: height 1s ease-in-out; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen flex overflow-hidden">
+<!-- SideNavBar (The Anchor) -->
+<aside class="hidden lg:flex flex-col h-full border-r border-outline-variant/20 bg-primary dark:bg-surface-container-lowest w-64 fixed inset-y-0 left-0 z-40">
+<div class="p-lg flex flex-col gap-xs">
+<h1 class="font-headline-md text-headline-md font-black text-secondary-fixed">StrongBox Admin</h1>
+<p class="text-primary-fixed-dim text-label-md opacity-80">Logistics Control</p>
+</div>
+<nav class="flex-1 mt-md">
+<!-- Reports is Active -->
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-lg text-label-lg">Inventory</span>
+</a>
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-label-lg text-label-lg">Job Tracking</span>
+</a>
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="conveyor_belt">conveyor_belt</span>
+<span class="font-label-lg text-label-lg">Fleet</span>
+</a>
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-lg text-label-lg">Clients</span>
+</a>
+<a class="bg-secondary-container text-on-secondary-container rounded-lg mx-2 my-1 px-4 py-3 flex items-center gap-md shadow-md" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-lg text-label-lg">Reports</span>
+</a>
+</nav>
+<div class="p-margin border-t border-primary-container">
+<button class="w-full bg-secondary-container text-on-secondary-container py-3 px-4 rounded-xl font-label-lg flex items-center justify-center gap-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                Create New Job
+            </button>
+<div class="mt-lg space-y-1">
+<a class="text-primary-fixed-dim hover:text-primary-fixed flex items-center gap-md px-4 py-2 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                    Help Center
+                </a>
+<a class="text-primary-fixed-dim hover:text-primary-fixed flex items-center gap-md px-4 py-2 font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                    Logout
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 lg:ml-64 flex flex-col h-screen overflow-y-auto">
+<!-- TopNavBar (The Blueprint) -->
+<header class="flex justify-between items-center w-full px-margin h-16 bg-surface dark:bg-primary-container border-b border-outline-variant dark:border-outline shadow-sm sticky top-0 z-30">
+<div class="flex items-center gap-md">
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed">Reports &amp; Analytics</span>
+<div class="hidden md:flex items-center bg-surface-container rounded-full px-4 py-2 ml-lg border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant mr-2" data-icon="calendar_month">calendar_month</span>
+<select class="bg-transparent border-none text-label-lg focus:ring-0 cursor-pointer">
+<option>Last 30 Days</option>
+<option>Last Quarter</option>
+<option>Fiscal Year 2023</option>
+<option>Custom Range</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex gap-md">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+<div class="w-10 h-10 rounded-full bg-secondary-container overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="Professional headshot of a senior logistics administrator with a clean, corporate background, sharp lighting, and a focused expression. The style is modern and professional, reflecting the reliable brand identity of StrongBox." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_opu-57ncpo94HrQm0Vpkf65vpwsUNqt_NY35ESDqTURX-qAek8v5b5-csbZ35XqZKSkN2Ny0ry7NAAFm9yljsm5rtfTZUuRaUisCPKDatzFtIt4AMokAeMKsY2yJDBmrSa1pWo9XsVtAjlfr3_3KjrUJSLI3jEP6inyzcxUKZfzQ4R69iNhSLOYA3Oo0-Xlq8b8LQDqYqOVQqqIprYI9lfpGFWJRHeL0HwqBuKiQCpyIYjXem4rjcEFd0ZdQ1Kmf3nxnXd3H2c8"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-margin space-y-margin max-w-7xl mx-auto w-full pb-32">
+<!-- Quick Actions & Stats -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div>
+<h2 class="font-headline-md text-on-surface">Operational Overview</h2>
+<p class="text-on-surface-variant font-body-sm">Data synchronized 2 minutes ago</p>
+</div>
+<div class="flex gap-sm">
+<button class="flex items-center gap-sm bg-surface border border-outline text-primary font-label-lg px-lg py-sm rounded-lg hover:bg-surface-container-high transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+                        Export CSV
+                    </button>
+<button class="flex items-center gap-sm bg-secondary text-on-secondary font-label-lg px-lg py-sm rounded-lg hover:shadow-lg transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
+                        Generate PDF
+                    </button>
+</div>
+</div>
+<!-- Bento Grid - Analytics -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-margin">
+<!-- Main Chart: Monthly Job Volume -->
+<div class="md:col-span-8 bg-surface p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col h-96">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-headline-sm text-on-surface">Monthly Job Volume</h3>
+<div class="flex items-center gap-sm">
+<div class="flex items-center gap-xs">
+<span class="w-3 h-3 rounded-full bg-secondary-container"></span>
+<span class="text-label-md">Current</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="w-3 h-3 rounded-full bg-outline-variant"></span>
+<span class="text-label-md">Target</span>
+</div>
+</div>
+</div>
+<div class="flex-1 flex items-end justify-between gap-sm px-md pb-md">
+<!-- Simulated Chart Bars -->
+<div class="flex flex-col items-center gap-2 w-full">
+<div class="w-full bg-secondary-container/20 rounded-t-sm relative h-48 overflow-hidden">
+<div class="chart-bar absolute bottom-0 left-0 right-0 bg-secondary-container rounded-t-sm" style="height: 65%;"></div>
+</div>
+<span class="text-label-md text-on-surface-variant">JAN</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full">
+<div class="w-full bg-secondary-container/20 rounded-t-sm relative h-48 overflow-hidden">
+<div class="chart-bar absolute bottom-0 left-0 right-0 bg-secondary-container rounded-t-sm" style="height: 82%;"></div>
+</div>
+<span class="text-label-md text-on-surface-variant">FEB</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full">
+<div class="w-full bg-secondary-container/20 rounded-t-sm relative h-48 overflow-hidden">
+<div class="chart-bar absolute bottom-0 left-0 right-0 bg-secondary-container rounded-t-sm" style="height: 45%;"></div>
+</div>
+<span class="text-label-md text-on-surface-variant">MAR</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full">
+<div class="w-full bg-secondary-container/20 rounded-t-sm relative h-48 overflow-hidden">
+<div class="chart-bar absolute bottom-0 left-0 right-0 bg-secondary-container rounded-t-sm" style="height: 94%;"></div>
+</div>
+<span class="text-label-md text-on-surface-variant">APR</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full">
+<div class="w-full bg-secondary-container/20 rounded-t-sm relative h-48 overflow-hidden">
+<div class="chart-bar absolute bottom-0 left-0 right-0 bg-secondary-container rounded-t-sm" style="height: 78%;"></div>
+</div>
+<span class="text-label-md text-on-surface-variant">MAY</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-full">
+<div class="w-full bg-secondary-container/20 rounded-t-sm relative h-48 overflow-hidden">
+<div class="chart-bar absolute bottom-0 left-0 right-0 bg-secondary-container rounded-t-sm" style="height: 88%;"></div>
+</div>
+<span class="text-label-md text-on-surface-variant">JUN</span>
+</div>
+</div>
+</div>
+<!-- Secondary Metric: Revenue Growth -->
+<div class="md:col-span-4 bg-primary text-on-primary p-lg rounded-xl shadow-sm border border-primary-container flex flex-col justify-between overflow-hidden relative">
+
+<div class="relative z-10">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm">Revenue Growth</h3>
+<span class="bg-tertiary-container text-tertiary-fixed px-sm py-xs rounded-full font-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+                                +14.2%
+                            </span>
+</div>
+<p class="text-display-lg font-display-lg mt-md">$842,500</p>
+<p class="text-primary-fixed-dim font-label-md">Total Revenue (Q2)</p>
+</div>
+<div class="mt-xl h-24 flex items-end gap-1 relative z-10">
+<div class="flex-1 bg-primary-fixed-dim/30 h-1/4 rounded-full"></div>
+<div class="flex-1 bg-primary-fixed-dim/30 h-2/4 rounded-full"></div>
+<div class="flex-1 bg-primary-fixed-dim/30 h-1/3 rounded-full"></div>
+<div class="flex-1 bg-primary-fixed-dim/30 h-3/4 rounded-full"></div>
+<div class="flex-1 bg-primary-fixed-dim h-full rounded-full"></div>
+</div>
+</div>
+<!-- Fleet Efficiency -->
+<div class="md:col-span-4 glass-card p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col items-center text-center">
+<h3 class="font-headline-sm text-on-surface w-full text-left mb-xl">Fleet Efficiency</h3>
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-secondary" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-dasharray="440" stroke-dashoffset="66" stroke-width="12"></circle>
+</svg>
+<div class="absolute flex flex-col">
+<span class="text-headline-lg font-headline-lg text-on-surface">85%</span>
+<span class="text-label-md text-on-surface-variant">Utilization</span>
+</div>
+</div>
+<div class="grid grid-cols-2 w-full mt-lg gap-md">
+<div class="text-left">
+<p class="text-label-md text-on-surface-variant">Active Vehicles</p>
+<p class="font-headline-sm text-on-surface">42/50</p>
+</div>
+<div class="text-left">
+<p class="text-label-md text-on-surface-variant">On-Time %</p>
+<p class="font-headline-sm text-on-surface">98.2</p>
+</div>
+</div>
+</div>
+<!-- Top Clients Table -->
+<div class="md:col-span-8 bg-surface rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-sm text-on-surface">Top Clients by Volume</h3>
+<button class="text-secondary font-label-lg hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-md">
+<th class="px-lg py-md">CLIENT NAME</th>
+<th class="px-lg py-md">STORAGE VOLUME</th>
+<th class="px-lg py-md">JOBS (MTD)</th>
+<th class="px-lg py-md">REVENUE</th>
+<th class="px-lg py-md text-right">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary font-bold">G</div>
+<span class="font-label-lg">Global Logistics Inc.</span>
+</div>
+</td>
+<td class="px-lg py-md text-body-sm">4,200 m³</td>
+<td class="px-lg py-md text-body-sm">124</td>
+<td class="px-lg py-md text-body-sm font-bold">$42,300</td>
+<td class="px-lg py-md text-right">
+<button class="text-secondary p-1 hover:bg-secondary/10 rounded-full">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-lg bg-secondary-container flex items-center justify-center text-on-secondary font-bold">S</div>
+<span class="font-label-lg">Swift Retailers</span>
+</div>
+</td>
+<td class="px-lg py-md text-body-sm">3,850 m³</td>
+<td class="px-lg py-md text-body-sm">98</td>
+<td class="px-lg py-md text-body-sm font-bold">$38,150</td>
+<td class="px-lg py-md text-right">
+<button class="text-secondary p-1 hover:bg-secondary/10 rounded-full">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary font-bold">H</div>
+<span class="font-label-lg">Heirloom Antiques</span>
+</div>
+</td>
+<td class="px-lg py-md text-body-sm">2,100 m³</td>
+<td class="px-lg py-md text-body-sm">45</td>
+<td class="px-lg py-md text-body-sm font-bold">$18,400</td>
+<td class="px-lg py-md text-right">
+<button class="text-secondary p-1 hover:bg-secondary/10 rounded-full">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Fleet Performance Summary -->
+<div class="md:col-span-12 bg-surface p-lg rounded-xl shadow-sm border border-outline-variant">
+<h3 class="font-headline-sm text-on-surface mb-lg">Fleet Performance: Top Drivers</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg">
+<!-- Driver Card 1 -->
+<div class="bg-surface-container-low p-md rounded-lg border border-outline-variant/30 flex items-center gap-md">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary">
+<img class="w-full h-full object-cover" data-alt="Portrait of a smiling professional delivery driver wearing a company uniform and cap, high-quality professional lighting, logistics background, trustworthy and efficient look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5IjX4uLJ6oHafaEup108sND4incSfFq5XGauos5K8ynK7H3YCDes6ish3WZcsDPuyu7nYnzJzIEShijuezuRhjX0XpwD82sopohUInzBWR5aYoYAQZPy5NWhxPF4zXjStXb_alacQVhhrd1HPXAD7hA8nBRcuSTmq1DgxCkR2XnfNclOctnNcbTbbBmrFBN7gInEpJr6nP9XtWoV1tJBj6cePpgk7dmbk6QUn-FCenFan5KJ_g9QEDPTduFGd3L4atvBDeAlUseI"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-lg text-on-surface truncate">Marcus Chen</p>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="star" data-weight="fill">star</span>
+<span class="text-label-md">4.98 Rating</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-label-md text-tertiary font-bold">128 Jobs</p>
+</div>
+</div>
+<!-- Driver Card 2 -->
+<div class="bg-surface-container-low p-md rounded-lg border border-outline-variant/30 flex items-center gap-md">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary">
+<img class="w-full h-full object-cover" data-alt="Portrait of a professional female logistics coordinator and driver, wearing a safety vest and headset, modern industrial background, focused and reliable expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXaZwbhov0qn2WM5yiTXNQw_19vMI_TxJpAfuesrhAIhvqxP_DKU0vKVF-pYN00ycQODQoSAvKXbL1qNAW1uUuaoe92KMo4PPN0FAR7Dr-MBCNe4NA1f3-ohqNqrBPbOyTGuHbrLn4cbmBS6F0xDEhierhc8Awx6blc4kC6dl6Do4FCvyouSALJMr4DcOEp22Kh-qKplEpj9idz7NOODC6Jx3BsBl4SPOVt54lZlfO6blUFZVrsxQ6vQMfHjrwL3Q6IoHNKwE8WZg"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-lg text-on-surface truncate">Sarah Jenkins</p>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="star" data-weight="fill">star</span>
+<span class="text-label-md">4.95 Rating</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-label-md text-tertiary font-bold">115 Jobs</p>
+</div>
+</div>
+<!-- Driver Card 3 -->
+<div class="bg-surface-container-low p-md rounded-lg border border-outline-variant/30 flex items-center gap-md opacity-80">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-outline">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a senior logistics driver with years of experience, professional studio lighting, grey hair, warm and dependable smile, wearing a professional navy blue company jacket." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-xSfo1fcFob3GQ44TfMn1yu8jDwZplpQL_CNi-J0bTUelCK_LoZaN34TsnsJVrVxc_WXy04Uy6VOqaw8H3JAa6zFoNBetwuRWsJF-iiHsw9c6eUNQFqk-XqRTvEBumgINfI46du9HHy5xNOEwTAAHSvNI1KX4GXRQlmklTeOXV6dXi3fFb16qC7vj78SpDNn9J1kJ5neX8-c_Tv22OY9OmsPRGvTJ5xnGcDF9I_CfGMZJnlPsjsc6ZweQbZ8bZGuR4h4JSKTxFXI"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-lg text-on-surface truncate">David Miller</p>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="star" data-weight="fill">star</span>
+<span class="text-label-md">4.92 Rating</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-label-md text-tertiary font-bold">104 Jobs</p>
+</div>
+</div>
+<!-- Vehicle Stat Card -->
+<div class="bg-primary text-on-primary p-md rounded-lg border border-primary-container flex flex-col justify-center">
+<div class="flex justify-between items-center">
+<span class="text-label-md text-primary-fixed-dim">Average Vehicle Uptime</span>
+<span class="material-symbols-outlined" data-icon="precision_manufacturing">precision_manufacturing</span>
+</div>
+<p class="text-headline-sm font-bold">99.4%</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (The Responsive Pivot) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-safe bg-surface dark:bg-surface-container shadow-[0_-2px_10px_rgba(0,0,0,0.05)] border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+<span class="font-label-md text-label-md">Jobs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span class="font-label-md text-label-md">Scan</span>
+</a>
+<!-- Reports/Analytics context maps to Inventory for mobile shell mapping in JSON, but we use a custom 'Reports' active state if needed -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-6 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for the chart bars on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const bars = document.querySelectorAll('.chart-bar');
+            bars.forEach(bar => {
+                const finalHeight = bar.style.height;
+                bar.style.height = '0%';
+                setTimeout(() => {
+                    bar.style.height = finalHeight;
+                }, 300);
+            });
+        });
+    </script>
+</body></html>

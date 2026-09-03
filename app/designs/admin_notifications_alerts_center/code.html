@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox Logistics | Admin Portal - Notifications</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c5c6cf;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #75777e;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline": "#75777e",
+                      "on-tertiary-container": "#00a858",
+                      "tertiary-fixed-dim": "#4ae183",
+                      "primary-fixed-dim": "#b6c6ee",
+                      "surface-variant": "#e2e0fc",
+                      "primary": "#031634",
+                      "surface-dim": "#dad7f3",
+                      "on-tertiary-fixed-variant": "#005228",
+                      "on-primary-container": "#8293b7",
+                      "inverse-on-surface": "#f2efff",
+                      "tertiary": "#001c09",
+                      "surface-container": "#efecff",
+                      "on-secondary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed-variant": "#364767",
+                      "surface-container-lowest": "#ffffff",
+                      "background": "#fcf8ff",
+                      "primary-container": "#1a2b4a",
+                      "surface-container-high": "#e8e5ff",
+                      "tertiary-fixed": "#6bfe9c",
+                      "secondary-fixed": "#ffddb4",
+                      "on-tertiary-fixed": "#00210c",
+                      "secondary": "#835500",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary-fixed": "#291800",
+                      "outline-variant": "#c5c6cf",
+                      "secondary-fixed-dim": "#ffb955",
+                      "tertiary-container": "#003316",
+                      "on-surface-variant": "#44474e",
+                      "error-container": "#ffdad6",
+                      "on-surface": "#1a1a2e",
+                      "on-primary-fixed": "#081b39",
+                      "inverse-surface": "#2f2e43",
+                      "surface-tint": "#4e5e80",
+                      "secondary-container": "#feae2c",
+                      "on-background": "#1a1a2e",
+                      "primary-fixed": "#d8e2ff",
+                      "on-error-container": "#93000a",
+                      "surface-container-low": "#f5f2ff",
+                      "surface-container-highest": "#e2e0fc",
+                      "on-secondary-container": "#6b4500",
+                      "on-primary": "#ffffff",
+                      "surface": "#fcf8ff",
+                      "on-secondary-fixed-variant": "#633f00",
+                      "surface-bright": "#fcf8ff",
+                      "inverse-primary": "#b6c6ee",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin": "24px",
+                      "gutter": "16px",
+                      "3xl": "64px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "lg": "24px",
+                      "xl": "32px",
+                      "2xl": "48px",
+                      "xs": "4px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "label-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-background flex h-screen overflow-hidden">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="hidden lg:flex flex-col h-full border-r border-outline-variant/20 bg-primary w-64 shadow-md">
+<div class="p-lg">
+<h1 class="font-headline-md text-headline-md font-black text-secondary-fixed">StrongBox Admin</h1>
+<p class="text-primary-fixed-dim text-label-md">Logistics Control</p>
+</div>
+<nav class="flex-1 px-2 space-y-1 mt-4 overflow-y-auto">
+<!-- Navigation Items Mapping -->
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-lg text-label-lg">Inventory</span>
+</a>
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label-lg text-label-lg">Job Tracking</span>
+</a>
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">conveyor_belt</span>
+<span class="font-label-lg text-label-lg">Fleet</span>
+</a>
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-lg text-label-lg">Clients</span>
+</a>
+<a class="text-primary-fixed-dim hover:text-primary-fixed mx-2 my-1 px-4 py-3 flex items-center gap-md hover:bg-primary-container/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-lg text-label-lg">Reports</span>
+</a>
+</nav>
+<div class="p-lg mt-auto border-t border-outline-variant/10">
+<button class="w-full bg-secondary-container text-on-secondary-container py-3 rounded-lg font-label-lg transition-transform active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add</span>
+                Create New Job
+            </button>
+<div class="mt-4 flex flex-col gap-2">
+<a class="text-primary-fixed-dim text-label-lg flex items-center gap-2 px-2" href="#">
+<span class="material-symbols-outlined">help</span> Help Center
+                </a>
+<a class="text-primary-fixed-dim text-label-lg flex items-center gap-2 px-2" href="#">
+<span class="material-symbols-outlined">logout</span> Logout
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0 bg-background overflow-hidden relative">
+<!-- TopAppBar (Authority: JSON) -->
+<header class="flex justify-between items-center w-full px-margin h-16 bg-surface border-b border-outline-variant shadow-sm z-20">
+<div class="flex items-center gap-lg">
+<div class="relative w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full pl-10 pr-4 py-2 font-body-sm focus:ring-2 focus:ring-secondary focus:border-transparent outline-none" placeholder="Search notifications, job IDs, or drivers..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-2 text-secondary font-bold hover:bg-surface-container-high transition-colors rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-px h-6 bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3">
+<span class="text-label-lg text-on-surface text-right hidden sm:block">
+                        Admin User<br/>
+<span class="text-label-md text-on-surface-variant font-normal">Super User</span>
+</span>
+<img class="w-10 h-10 rounded-full border-2 border-primary-fixed-dim" data-alt="A professional headshot of a middle-aged logistics administrator with a warm smile, wearing a clean navy blue polo shirt with a subtle corporate logo. The background is a blurred high-tech logistics command center with soft amber and blue glowing monitors. The lighting is bright, clean, and modern, reflecting a corporate professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWybfLslmeWXBaMHsNBA0gx3yu61f8nQ5iK0Gljm4pHg_Gw-hj3P6_zo5LBPbEyiQaEiImXv8uk_aiOQ5kRrmvSNYEWt2KJiOLvvoX1KInSmLX6OxTmZ859TSn-B3RPXGSMvQAx5tCLrxnO25_sH1XAtzSPqoNEhXZIrE2nSg7jZnDjPM8Os-TEdzR8AfQEE-QOvCKO5ez35GM5lGv-17Tlr94hDj66bMigC19oAHXkyRaIiOs4l9k2Kxl2TXObd9JIWIck8Jq_Bs"/>
+</div>
+</div>
+</header>
+<!-- Notification Workspace -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Category Sidebar -->
+<div class="w-72 bg-surface-container-low border-r border-outline-variant/30 flex flex-col p-lg">
+<h2 class="font-headline-sm text-headline-sm text-primary mb-6">Notifications</h2>
+<div class="space-y-1">
+<button class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-primary text-on-primary shadow-sm group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">all_inbox</span>
+<span class="font-label-lg">All Notifications</span>
+</div>
+<span class="bg-secondary text-on-secondary px-2 py-0.5 rounded-full text-label-md">12</span>
+</button>
+<button class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error">report</span>
+<span class="font-label-lg">Critical Alerts</span>
+</div>
+<span class="bg-error-container text-on-error-container px-2 py-0.5 rounded-full text-label-md">3</span>
+</button>
+<button class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">local_shipping</span>
+<span class="font-label-lg">Operational</span>
+</div>
+<span class="text-label-md font-bold">7</span>
+</button>
+<button class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-primary-container">dns</span>
+<span class="font-label-lg">System</span>
+</div>
+<span class="text-label-md font-bold">2</span>
+</button>
+</div>
+<div class="mt-xl">
+<h3 class="text-label-md text-outline uppercase tracking-wider mb-4 px-4">Recents</h3>
+<div class="space-y-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-error animate-pulse"></div>
+<span class="text-body-sm text-on-surface-variant truncate">Vehicle Breakdown: #DX-99</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-body-sm text-on-surface-variant truncate">Job Completed: #SJ-12</span>
+</div>
+</div>
+</div>
+<div class="mt-auto bg-primary-container p-4 rounded-2xl relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="text-primary-fixed font-bold text-label-lg">Fleet Sync Active</h4>
+<p class="text-primary-fixed-dim text-body-sm mt-1">Real-time GPS tracking is operational across all 42 vehicles.</p>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-20">
+<span class="material-symbols-outlined text-6xl text-primary-fixed">hub</span>
+</div>
+</div>
+</div>
+<!-- Notification List Canvas -->
+<div class="flex-1 overflow-y-auto p-lg space-y-4 bg-surface-dim/20">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-lg">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Inbox <span class="font-normal text-on-surface-variant text-body-md">(12 items)</span></h2>
+<div class="flex items-center bg-surface border border-outline-variant rounded-lg p-0.5">
+<button class="px-4 py-1 text-label-md rounded-md bg-surface-container-highest text-on-surface shadow-sm">Latest</button>
+<button class="px-4 py-1 text-label-md rounded-md text-on-surface-variant hover:bg-surface-container-low transition-colors">Oldest</button>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<button class="flex items-center gap-2 px-4 py-2 text-label-lg text-primary border border-primary rounded-lg hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-[18px]">done_all</span>
+                            Mark all as read
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 text-label-lg text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                            Filter
+                        </button>
+</div>
+</div>
+<!-- Notification Card: Critical Alert (Delayed) -->
+<div class="bg-surface rounded-xl p-md border-l-4 border-error shadow-sm flex items-start gap-lg transition-all hover:shadow-md group">
+<div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-error fill-icon">warning</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-headline-sm text-[18px] text-on-surface font-bold">Shipment Delayed: #ORD-998234</h3>
+<span class="text-label-md text-outline">Just now</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4">Route 12B is experiencing a 45-minute delay due to a traffic incident on I-95. Driver <strong>Marcus Evans</strong> is currently stationary.</p>
+<div class="flex items-center gap-sm">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-label-lg hover:bg-primary-container transition-colors shadow-sm">View Job</button>
+<button class="bg-surface border border-outline-variant text-on-surface px-4 py-2 rounded-lg text-label-lg hover:bg-surface-container-high transition-colors">Contact Driver</button>
+<button class="ml-auto text-on-surface-variant hover:text-error transition-colors p-2 rounded-full hover:bg-error-container/20">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="w-3 h-3 bg-error rounded-full mt-2"></div>
+</div>
+<!-- Notification Card: Operational (New Client) -->
+<div class="bg-surface rounded-xl p-md border-l-4 border-secondary shadow-sm flex items-start gap-lg transition-all hover:shadow-md group">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-secondary fill-icon">person_add</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-headline-sm text-[18px] text-on-surface font-bold">New Client Onboarding</h3>
+<span class="text-label-md text-outline">14 mins ago</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4"><strong>Lumina Tech Group</strong> has successfully completed their enterprise profile. Pending documentation review for fleet integration.</p>
+<div class="flex items-center gap-sm">
+<button class="bg-secondary text-on-secondary px-4 py-2 rounded-lg text-label-lg hover:opacity-90 transition-opacity shadow-sm">Review Documents</button>
+<button class="bg-surface border border-outline-variant text-on-surface px-4 py-2 rounded-lg text-label-lg hover:bg-surface-container-high transition-colors">Assign Manager</button>
+<button class="ml-auto text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined">check_circle</span>
+</button>
+</div>
+</div>
+<div class="w-3 h-3 bg-secondary rounded-full mt-2"></div>
+</div>
+<!-- Notification Card: Critical Alert (Breakdown) -->
+<div class="bg-surface rounded-xl p-md border-l-4 border-error shadow-sm flex items-start gap-lg transition-all hover:shadow-md group opacity-90">
+<div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-error">emergency_share</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-headline-sm text-[18px] text-on-surface font-bold">Vehicle Breakdown: Van #DX-99</h3>
+<span class="text-label-md text-outline">1 hour ago</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4">Diagnostic alert: Engine coolant over temperature. Location: 4.5km North of Distribution Center B. Immediate tow required.</p>
+<div class="flex items-center gap-sm">
+<button class="bg-error text-on-error px-4 py-2 rounded-lg text-label-lg hover:bg-on-error-container transition-colors shadow-sm">Dispatch Recovery</button>
+<button class="bg-surface border border-outline-variant text-on-surface px-4 py-2 rounded-lg text-label-lg hover:bg-surface-container-high transition-colors">Route Replacement</button>
+<button class="ml-auto text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined">archive</span>
+</button>
+</div>
+</div>
+<!-- Status Indicator: Read -->
+<div class="w-3 h-3 border-2 border-outline-variant rounded-full mt-2"></div>
+</div>
+<!-- Notification Card: System (Subscription) -->
+<div class="bg-surface rounded-xl p-md border-l-4 border-on-primary-container shadow-sm flex items-start gap-lg transition-all hover:shadow-md group">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary">update</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-headline-sm text-[18px] text-on-surface font-bold">System Maintenance Completed</h3>
+<span class="text-label-md text-outline">3 hours ago</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4">The core dispatch API was updated to v2.4.1. Real-time routing efficiency has been improved by 12% across high-density urban routes.</p>
+<div class="flex items-center gap-sm">
+<button class="bg-surface border border-outline-variant text-on-surface px-4 py-2 rounded-lg text-label-lg hover:bg-surface-container-high transition-colors">Release Notes</button>
+<button class="ml-auto text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined">device_reset</span>
+</button>
+</div>
+</div>
+<div class="w-3 h-3 border-2 border-outline-variant rounded-full mt-2"></div>
+</div>
+<!-- More Button -->
+<div class="py-8 flex justify-center">
+<button class="bg-surface border border-outline-variant px-8 py-3 rounded-full text-label-lg text-primary font-bold hover:bg-surface-container-high transition-all flex items-center gap-2">
+                        Load Older Notifications
+                        <span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Right Info Panel (Bento Grid Style) -->
+<div class="hidden xl:flex w-80 bg-surface border-l border-outline-variant/30 flex-col p-lg gap-lg overflow-y-auto">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Operational Health</h3>
+<div class="bg-surface-container border border-outline-variant/50 p-md rounded-2xl">
+<div class="flex items-center justify-between mb-4">
+<span class="text-label-lg text-on-surface-variant">Active Fleet</span>
+<span class="text-headline-sm text-primary font-black">94%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-on-tertiary-container" style="width: 94%"></div>
+</div>
+<p class="text-label-md text-on-surface-variant mt-2">3 vehicles in maintenance</p>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-error-container/20 p-md rounded-2xl border border-error/10">
+<span class="material-symbols-outlined text-error mb-2">speed</span>
+<div class="text-headline-sm text-error font-bold">12.4m</div>
+<div class="text-label-md text-on-error-container">Avg Latency</div>
+</div>
+<div class="bg-secondary-container/10 p-md rounded-2xl border border-secondary/10">
+<span class="material-symbols-outlined text-secondary mb-2">task_alt</span>
+<div class="text-headline-sm text-secondary font-bold">142</div>
+<div class="text-label-md text-on-secondary-container">Jobs Today</div>
+</div>
+</div>
+<div class="bg-primary-container text-on-primary-fixed p-lg rounded-2xl shadow-lg relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="font-headline-sm text-headline-sm mb-2 text-primary-fixed">Need Assistance?</h4>
+<p class="text-body-sm text-primary-fixed-dim mb-4">Contact our priority 24/7 technical dispatch team for immediate breakdown support.</p>
+<button class="w-full bg-secondary-container text-on-secondary-container py-3 rounded-xl font-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">call</span>
+                            Call Dispatch
+                        </button>
+</div>
+<div class="absolute -right-8 -top-8 opacity-10">
+<span class="material-symbols-outlined text-[120px]">support_agent</span>
+</div>
+</div>
+<div class="mt-auto">
+<div class="flex items-center justify-between p-md bg-surface-container-high rounded-2xl">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">schedule</span>
+<span class="text-label-lg text-on-surface">Timezone</span>
+</div>
+<span class="text-label-md font-bold text-primary">UTC -05:00</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Interactive Layer -->
+<script>
+        // Tab switching logic (simple visual toggle)
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.classList.contains('active:scale-95')) {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => this.style.transform = 'scale(1)', 100);
+                }
+            });
+        });
+
+        // Hover effects and micro-interactions
+        const cards = document.querySelectorAll('.bg-surface.rounded-xl');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

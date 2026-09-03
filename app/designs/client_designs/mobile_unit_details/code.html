@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrongBox - Box Detail View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#031634",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#1b1b24",
+                        "background": "#fcf8ff",
+                        "secondary-container": "#feae2c",
+                        "on-tertiary-fixed-variant": "#633f00",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#ffddb4",
+                        "on-secondary-container": "#6b4500",
+                        "tertiary-fixed-dim": "#f4bd71",
+                        "primary-fixed": "#d8e2ff",
+                        "inverse-on-surface": "#f2effc",
+                        "on-primary-container": "#8293b7",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#efecf9",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffddb3",
+                        "surface-container-high": "#e9e6f3",
+                        "surface-dim": "#dbd8e5",
+                        "on-tertiary-fixed": "#291800",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#231300",
+                        "on-surface-variant": "#44474e",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e4e1ee",
+                        "on-tertiary-container": "#ba8943",
+                        "on-primary-fixed-variant": "#364767",
+                        "secondary-fixed-dim": "#ffb954",
+                        "outline": "#75777e",
+                        "surface-tint": "#4e5e80",
+                        "surface-container-highest": "#e4e1ee",
+                        "surface-container-low": "#f5f2ff",
+                        "surface": "#fcf8ff",
+                        "surface-bright": "#fcf8ff",
+                        "secondary": "#835500",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "inverse-surface": "#302f39",
+                        "on-secondary-fixed": "#291800",
+                        "tertiary-container": "#3e2600",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#b6c6ee",
+                        "on-primary-fixed": "#081b39",
+                        "on-surface": "#1b1b24",
+                        "primary-container": "#1a2b4a",
+                        "outline-variant": "#c5c6cf",
+                        "on-secondary-fixed-variant": "#633f00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "mobile-padding": "16px",
+                        "section-gap": "32px",
+                        "component-gap": "8px",
+                        "desktop-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "label": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "headline": ["Inter"],
+                        "display-mobile": ["Inter"],
+                        "caption": ["Inter"],
+                        "title": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "label-mobile": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "display": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "headline-mobile": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                        "display-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "title": ["16px", {"lineHeight": "24px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body text-body selection:bg-secondary-container">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-mobile-padding h-[64px] bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-mobile text-headline-mobile text-primary">SBX-9942-A1</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-[10px] text-white font-bold overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up professional headshot of a logistics manager in a modern office. The lighting is crisp and neutral, reflecting a corporate professional aesthetic with a clean white and navy blue background. The style is sharp, high-resolution photography with a shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDan1hHSdh5tNBBDumdPzJivewcn7mDnGipv9TogHw_g9zVdTl2lqgjFrrRxkXdJMarunwnDP9cYqCi5ZXxID-S7N2n8KptzKKV3zNe1L0DcjResG5nwvFYy9J1m8XqcteWMiTSpYtKl0HoBRM31RJ0bUnA74xUO3EFiLxHh-_gCJ93b8QSSI2z6x8-6YywLPUPbI0fJLaX4YOxgjo-pcUiddW-yaqAKiwgFNvO2hAUiE2E1TabjAWYoTKlgzXBgvXDKrtyp-S_5D6-"/>
+</div>
+</div>
+</header>
+<main class="pt-[64px] pb-[100px] px-mobile-padding max-w-md mx-auto">
+<!-- Hero Section: Bento Inspired Detail -->
+<section class="mt-component-gap space-y-4">
+<!-- Hero Image -->
+<div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-sm border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A high-security, heavy-duty black storage vault container situated in a pristine, brightly lit industrial facility. The lighting is cool-toned with strong overhead LEDs creating a secure and professional atmosphere. The vault features reinforced steel edges and a prominent digital lock mechanism, perfectly aligned with the StrongBox brand's reliability and security identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVLIQiLSpNHqs8Bq3Oigf8q3g6RhiX2ektLnknQByDnI9x9i7YQh_9dDxNxAMARJ5T7wQHwhVvU5WItiUUu1UqOlpcYrnfw0n_xMMVr7wXg2NtCP2pr77x1HPmgy5rDu4M3VWtvMnp3ip9x4JXSTQ944RnKMC3ZGwrcgvKx2E6ClsGhsjwdFZgyWAnFjaFbZcNd5OGjxM5uBcGiHLT6RjUAotUPlvm7_JcTwn7A6um0Nicy6d5OKN46spU7S2NkcDapAlEBot7kDgg"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-secondary-container text-on-secondary-container font-label-mobile text-[10px] rounded-full uppercase tracking-wider font-bold shadow-sm">
+                    MAIN EXTERIOR
+                </div>
+</div>
+<!-- Horizontal Gallery -->
+<div class="flex gap-3 overflow-x-auto hide-scrollbar snap-x pb-2">
+<div class="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border border-outline-variant snap-start">
+<img class="w-full h-full object-cover" data-alt="A detailed close-up shot of a sophisticated electronic security seal on a storage unit. The metallic surface reflects soft blue and white industrial lighting. The composition is focused and tight, emphasizing precision, technology, and robust protection in a high-end corporate logistics environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDauWWdKKmZmroM7irS0IBUF4bLomvuI9OuABbsYvRSGWVKUpHu1E7M1XwGFok229E3DqkbkrgfX-7UGT4pjYjuV7eu87BP6Mga02EXGowZqvltkG7jr3kGUpnfbwwzCfdLTYzHA13NccP0sqB4CphSpdYylKU_ivPY5Rwb458kuBKMxNeq5EIabVw43Xufa91GW9A_tLrOuEFdfwAdIOLWKIAVMuOj8Ml_Ztv4AOaL0If9PhS8jGGKkb4E1PQzt4rV5wx4YDGNCj6C"/>
+</div>
+<div class="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border border-outline-variant snap-start">
+<img class="w-full h-full object-cover" data-alt="The interior of a neatly organized storage unit containing high-value electronics in professional-grade protective cases. The lighting is bright and even, highlighting the clean, climate-controlled environment of the StrongBox facility. The aesthetic is orderly and highly efficient." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5oPvaVyFAsdbeVBCgHZU3q-3q42ibNDDRwv-969dmeoMioL9QRq3RgVFs_mtm5v4HhDSn3d96rerJOm6e6TJS-jDDHN6g_LTfZrTFIvVr7zSAsH-qw-hJi2NG7nFpuauIB4YncvD291iPh8baw7omjLzXrF6fFaOAKZ27ULQDzbJsa18ij8Jgcu778vYVVhP-pAFyOBqDMgnuX3NR3LitL0TBIh-fvA8m1VLEKtXaVHszxGT9WN7CRaig7DoZ7ibUmhIW94TVmwUN"/>
+</div>
+<div class="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border border-outline-variant snap-start">
+<img class="w-full h-full object-cover" data-alt="A thermal imaging view of a storage unit, showing consistent temperature levels across the vault. The display uses a professional technical color palette of oranges and deep blues, signaling precision climate control and high-tech monitoring capabilities of the logistics center." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkvJUtNhqjw32lPL9px4DtzVAsbyWuDSHmRAiqEPLwkofcV46mKwy8pRbIPpH360rt4oiTuDG1JlaBUP64abQM2EkidJ88hi5K3X3FbWrst6tQgaUPwPQiaoRR_3Vo_wbxnqECrwHBz4s5lsUcc8aosz6w1lmEqCrW2HD8YDQP8xKHWB6OwNy706AXFh1902VGJu2fIyf4IksVk6kp7lOCUvQ8Nw_xyUPOhaLwDh6UjKIgSfryv3s7Z_jL8IxK3sdKpVzUAETt8-9s"/>
+</div>
+<div class="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border border-outline-variant snap-start">
+<img class="w-full h-full object-cover" data-alt="Close-up of a QR code and identification label SBX-9942-A1 laser-etched onto a brushed aluminum surface. The lighting is cinematic with sharp highlights, emphasizing the high-quality industrial materials used in the StrongBox security system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkE36kOWBuafTJRRcWN-G0fzJXE2yp2Zz74mbAOzm61QwNRglnmWfkDkr0Sn3dXkLe8BQwM3gBscM3Dt0AaQfjFg-hzuzPJDxGCcmldHBQd-e7n8J10coJHUEr4_RK45YI63LKsQx1Fz3DH67rkal8fso7ESM1FnStqjSbvKPOAXsYo7ugbnBevsF_DzUmWZy8rkMNDxW3vDA7I5fbDa6yWDmeiFUj7RAE1H5aHzovR4YKOW4GQcg8y9ytuCo0tSqHaxysK8NBkqUK"/>
+</div>
+</div>
+</section>
+<!-- Location & Action Card -->
+<div class="mt-section-gap p-4 bg-surface-container-low rounded-xl border border-outline-variant shadow-sm space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-primary border border-outline-variant">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<h3 class="font-title text-primary">Secure Facility</h3>
+<p class="text-caption text-on-surface-variant">Zone D-14 • Unit 882</p>
+</div>
+</div>
+<button class="w-full py-3 bg-secondary-container text-on-secondary-container font-title text-title rounded-lg active:scale-[0.98] transition-transform shadow-sm">
+                Request This Back
+            </button>
+</div>
+<!-- Vertical Status Timeline -->
+<section class="mt-section-gap">
+<h2 class="font-title text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">history</span>
+                Status History
+            </h2>
+<div class="relative ml-4 border-l-2 border-surface-container-high pl-8 space-y-8">
+<!-- Step 1: Completed -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white">check</span>
+</div>
+<div>
+<p class="font-title text-primary leading-tight">Pickup</p>
+<p class="text-caption text-on-surface-variant">Completed Oct 12, 09:14 AM</p>
+</div>
+</div>
+<!-- Step 2: Completed -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white">check</span>
+</div>
+<div>
+<p class="font-title text-primary leading-tight">In Transit</p>
+<p class="text-caption text-on-surface-variant">Completed Oct 12, 02:30 PM</p>
+</div>
+</div>
+<!-- Step 3: Active -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-5 h-5 bg-secondary-container rounded-full flex items-center justify-center ring-4 ring-secondary-container/20">
+<div class="w-2 h-2 bg-on-secondary-container rounded-full"></div>
+</div>
+<div>
+<p class="font-title text-secondary font-bold leading-tight">In Storage</p>
+<p class="text-caption text-on-surface-variant">Current State • Facility D-14</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Unit Info 2-Col Grid -->
+<section class="mt-section-gap">
+<h2 class="font-title text-primary mb-4">Unit Information</h2>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-3 bg-surface rounded-lg border border-outline-variant">
+<p class="text-caption text-on-surface-variant uppercase text-[10px] tracking-widest font-bold">Label</p>
+<p class="font-title text-primary">SBX-9942-A1</p>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-outline-variant flex justify-between items-center">
+<div>
+<p class="text-caption text-on-surface-variant uppercase text-[10px] tracking-widest font-bold">QR</p>
+<p class="font-title text-primary">Active</p>
+</div>
+<span class="material-symbols-outlined text-primary">qr_code_2</span>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-outline-variant">
+<p class="text-caption text-on-surface-variant uppercase text-[10px] tracking-widest font-bold">Type</p>
+<p class="font-title text-primary">High-Security</p>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-outline-variant">
+<p class="text-caption text-on-surface-variant uppercase text-[10px] tracking-widest font-bold">Status</p>
+<div class="flex items-center gap-1.5 mt-1">
+<div class="w-2 h-2 bg-green-500 rounded-full"></div>
+<span class="font-title text-primary">Vaulted</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Items List -->
+<section class="mt-section-gap">
+<div class="flex justify-between items-end mb-4">
+<h2 class="font-title text-primary">Contained Items</h2>
+<p class="text-caption text-on-surface-variant">3 Items Total</p>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-surface-container-high rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">laptop_mac</span>
+</div>
+<div>
+<p class="font-title text-primary">MacBook Pro 16"</p>
+<p class="text-caption text-on-surface-variant">Asset #LPT-044</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-surface-container-high rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">description</span>
+</div>
+<div>
+<p class="font-title text-primary">Legal Portfolio</p>
+<p class="text-caption text-on-surface-variant">Folder A-Z</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-surface-container-high rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">hard_drive</span>
+</div>
+<div>
+<p class="font-title text-primary">Backup Drive</p>
+<p class="text-caption text-on-surface-variant">2TB SSD</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-mobile-padding py-component-gap md:hidden bg-surface-container-lowest border-t border-outline-variant">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-mobile text-label-mobile mt-1">Home</span>
+</a>
+<!-- Storage (Active) -->
+<a class="flex flex-col items-center justify-center text-secondary font-bold active:scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-mobile text-label-mobile mt-1">Storage</span>
+</a>
+<!-- Requests -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label-mobile text-label-mobile mt-1">Requests</span>
+</a>
+<!-- Account -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-mobile text-label-mobile mt-1">Account</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for horizontal scroll snap indicators
+        const gallery = document.querySelector('.hide-scrollbar');
+        gallery.addEventListener('scroll', () => {
+            // Logic for potential pagination dots can go here
+        });
+
+        // Simple active state feedback
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => el.classList.add('opacity-80'));
+            el.addEventListener('mouseup', () => el.classList.remove('opacity-80'));
+            el.addEventListener('mouseleave', () => el.classList.remove('opacity-80'));
+        });
+    </script>
+</body></html>

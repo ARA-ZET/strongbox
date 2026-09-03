@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>StrongBox Driver Portal - Cargo Capture</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fcf8ff",
+                        "inverse-primary": "#b6c6ee",
+                        "secondary": "#835500",
+                        "on-secondary-fixed-variant": "#633f00",
+                        "primary": "#031634",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb955",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#001c09",
+                        "error": "#ba1a1a",
+                        "primary-container": "#1a2b4a",
+                        "on-secondary-fixed": "#291800",
+                        "secondary-container": "#feae2c",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-dim": "#dad7f3",
+                        "on-tertiary-container": "#00a858",
+                        "on-background": "#1a1a2e",
+                        "tertiary-fixed": "#6bfe9c",
+                        "tertiary-container": "#003316",
+                        "primary-fixed-dim": "#b6c6ee",
+                        "on-tertiary-fixed": "#00210c",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e0fc",
+                        "outline": "#75777e",
+                        "surface-tint": "#4e5e80",
+                        "surface-variant": "#e2e0fc",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1a1a2e",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "on-primary-fixed": "#081b39",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "surface-container-low": "#f5f2ff",
+                        "surface-container-high": "#e8e5ff",
+                        "on-surface": "#1a1a2e",
+                        "secondary-fixed": "#ffddb4",
+                        "on-secondary-container": "#6b4500",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#efecff",
+                        "inverse-surface": "#2f2e43",
+                        "on-surface-variant": "#44474e",
+                        "surface-bright": "#fcf8ff",
+                        "outline-variant": "#c5c6cf",
+                        "on-primary-fixed-variant": "#364767",
+                        "inverse-on-surface": "#f2efff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin": "24px",
+                        "xs": "4px",
+                        "gutter": "16px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "3xl": "64px",
+                        "2xl": "48px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .camera-overlay { background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.4) 100%); }
+        .capture-active-ring { animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite; }
+        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.3); opacity: 0; } }
+        .shutter-flash { animation: flash 0.15s ease-out; }
+        @keyframes flash { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+        .glass-blur { backdrop-filter: blur(12px); background: rgba(3, 22, 52, 0.7); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-primary text-on-primary overflow-hidden h-screen flex flex-col">
+<!-- Top Bar: Transactional/Task focused context (No Nav Shell) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-16 glass-blur">
+<button class="p-2 rounded-full hover:bg-white/10 active:scale-90 transition-all" onclick="window.history.back()">
+<span class="material-symbols-outlined text-white">close</span>
+</button>
+<div class="flex flex-col items-center">
+<span class="font-label-lg text-label-lg text-secondary-fixed">JOB #4829-X</span>
+<span class="font-label-md text-label-md text-white/70">Cargo Verification</span>
+</div>
+<button class="p-2 rounded-full hover:bg-white/10">
+<span class="material-symbols-outlined text-white">help</span>
+</button>
+</header>
+<!-- Camera Viewport Canvas -->
+<main class="relative flex-grow flex items-center justify-center overflow-hidden bg-black">
+<!-- Live Preview Placeholder -->
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center" data-alt="A POV perspective of a high-resolution smartphone camera interface aiming at a stack of professional logistics shipping boxes in a clean, brightly lit industrial warehouse. The lighting is crisp and cool, typical of a high-tech logistics hub. The composition shows the cargo centered with digital focus indicators, emphasizing the authoritative and operational nature of the StrongBox brand. The scene is sharp and professional with deep navy and amber accents integrated into the environmental signage." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgnBS8Lyu67t7QNwl8adkPEcFH6_I6HaWx7uVAyys-oaGAt8WHM8wFoNzxCWn8PG9tcoCnzyshhD2V0iLcxNWVTsvGf80NhTQ1UgJV5UOfHxGixV0Wz6ubXZtT6BnKQ9Hdronz6Kmd2T3hAb5D7ykwdM6YmcJwyBDCsP01FIRWl0E6Y9Aqg2Oc75ggp51kYRxJ-6EPUuIaunIzRjyBCudljXLsqagnrpKjyAzG3HTh82sn0nmfQh6836TPxK3phziaUVYdGMdSqrc')"></div>
+</div>
+<!-- Camera Overlays & Scanning Guides -->
+<div class="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center">
+<div class="w-72 h-72 border-2 border-secondary-container/50 rounded-xl relative">
+<div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-secondary-container rounded-tl-lg"></div>
+<div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-secondary-container rounded-tr-lg"></div>
+<div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-secondary-container rounded-bl-lg"></div>
+<div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-secondary-container rounded-br-lg"></div>
+</div>
+<p class="mt-8 px-6 py-2 bg-black/40 backdrop-blur-md rounded-full font-label-md text-label-md text-white">Center cargo inside the frame</p>
+</div>
+<!-- Shutter Flash Effect (Triggered via JS) -->
+<div class="fixed inset-0 bg-white z-[100] pointer-events-none opacity-0" id="flash"></div>
+</main>
+<!-- Bottom Controls & Gallery -->
+<footer class="relative z-40 bg-primary/90 backdrop-blur-xl px-margin pt-6 pb-10 rounded-t-3xl shadow-2xl transition-all duration-300" id="camera-controls">
+<!-- Thumbnail Strip -->
+<div class="flex items-center gap-4 overflow-x-auto pb-6 scrollbar-hide">
+<div class="flex-shrink-0 w-14 h-14 rounded-lg border-2 border-secondary-container overflow-hidden bg-surface-container-highest">
+<div class="w-full h-full bg-cover bg-center" data-alt="A small thumbnail showing a macro shot of a shipping label on a cardboard box, illuminated by bright warehouse lighting. The label shows a barcode and the StrongBox logo clearly. The style is industrial and functional, matching the clean operational aesthetic of the app." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCpVnKm6yqhcOmbAuZyEVTYgcdmAlzj5BCaH7eolr5-ec0hRl2ZvO0J05660Wwb2Sdf2Ne9pRSbg2RPJcPbJJ4zG8gZTyKK8seanFSLURdGxi8Wm5sR3CxE7q07L9wwgveJCDh39JosU_9-_h4LhgeqHItnwrizrpjMfN_ByD3M6ybHY_oVP0fYS_CD3d6h3zzvxuk5Xo5C8U8_E1jwESjhpy5VPEVqIO5-8nx9bu3a5IY2JBLt2em07egfyQKR2sXEOGOm3Xv_xhY')"></div>
+</div>
+<div class="flex-shrink-0 w-14 h-14 rounded-lg border-2 border-white/20 overflow-hidden bg-surface-container-highest opacity-70">
+<div class="w-full h-full bg-cover bg-center" data-alt="A small thumbnail showing the side view of a large wooden pallet loaded with various rectangular packages, wrapped in transparent industrial film. The background is a bright logistics terminal. The image is crisp and professional." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA_V6OxwqvEtAtT0ta5cDX2APwb7oAYBT2Msdow1M66PHLkC2WXh2rvco_1aafTvZusSh2C8qEUAviVxIY8ar70Su81nH8ouTjpXPJOSXhTZXe0npDYNOUR7JUMJyCI4c7t9NZErXo42WQCN2JGyIr0SF41MuYpiZ03Ow7u3zycdCyEKOIs922dto68zkgtiLNm2JmJUkIcSOdBEJ3Ar12JflMHxDUpSZw0hb8i_-3aUMxIgKPruTt_thGMoOEQfEWL5MynXaLM7oA')"></div>
+</div>
+<div class="flex-shrink-0 w-14 h-14 rounded-lg border-2 border-dashed border-white/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-white/30">add_photo_alternate</span>
+</div>
+<div class="flex-grow"></div>
+<div class="font-label-md text-label-md text-white/50 whitespace-nowrap">2 / 4 Photos</div>
+</div>
+<!-- Main Capture Button UI -->
+<div class="flex items-center justify-around w-full py-2">
+<!-- Flash Toggle -->
+<button class="p-4 rounded-full bg-white/5 text-white active:bg-white/20">
+<span class="material-symbols-outlined">flash_on</span>
+</button>
+<!-- Shutter Button -->
+<div class="relative group">
+<div class="absolute inset-0 bg-white rounded-full capture-active-ring"></div>
+<button class="relative z-10 w-20 h-20 bg-white rounded-full flex items-center justify-center p-1 active:scale-90 transition-transform shadow-xl" id="shutter" onclick="capturePhoto()">
+<div class="w-full h-full border-4 border-primary/10 rounded-full flex items-center justify-center">
+<div class="w-16 h-16 bg-white rounded-full"></div>
+</div>
+</button>
+</div>
+<!-- Switch Camera -->
+<button class="p-4 rounded-full bg-white/5 text-white active:bg-white/20">
+<span class="material-symbols-outlined">flip_camera_ios</span>
+</button>
+</div>
+</footer>
+<!-- Post-Capture Action Sheet (Hidden by default) -->
+<div class="fixed inset-x-0 bottom-0 z-50 bg-surface translate-y-full transition-transform duration-500 ease-out rounded-t-3xl px-margin pt-8 pb-10 flex flex-col gap-6 shadow-[0_-20px_40px_rgba(0,0,0,0.3)]" id="post-capture">
+<div class="w-12 h-1.5 bg-outline-variant/30 rounded-full self-center -mt-2 mb-2"></div>
+<div class="flex flex-col gap-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">Confirm Capture</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Ensure the label and cargo condition are clearly visible before proceeding.</p>
+</div>
+<!-- Preview of the just-taken photo -->
+<div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-black shadow-inner">
+<div class="w-full h-full bg-cover bg-center" data-alt="A full-screen high-quality preview of a captured photo showing a delivered package at a doorstep. The image is bright with high contrast, showing the package's condition perfectly. The StrongBox branding is subtly integrated through high-quality lighting and a clean, reliable aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB56vbQuugVxeOBVmpMTvCEkcJ6DrjEJilRsRCRcM_zswkBL5RcxyDMMvg4sWhoVay-fza3_2BXvLluyqRgvklHZJ85chHuE5oDQDD0ijwnxPdL1ZL57Z8tDOkbjnmxPgluqvKJ9GbVPwFRwflLzb1nUFOsbdUoFi3cqs2tikjCij0m2PYWMxV38RAtZ7RtgIu3eXdC8JnhXO4BQPyo2OkpV3dKO4WzPYF4EAPB9Qki6x_d17dbsI7ea0nAWbx4THk3O8duwltWbbs')"></div>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 py-4 px-6 rounded-xl border border-outline font-label-lg text-label-lg text-on-surface flex items-center justify-center gap-2 active:bg-surface-container-high transition-colors" onclick="retakePhoto()">
+<span class="material-symbols-outlined">replay</span>
+                Retake
+            </button>
+<button class="flex-[1.5] py-4 px-6 rounded-xl bg-secondary-container font-label-lg text-label-lg text-on-secondary-container flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all" onclick="usePhoto()">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                Use Photo
+            </button>
+</div>
+</div>
+<script>
+        function capturePhoto() {
+            const flash = document.getElementById('flash');
+            const controls = document.getElementById('camera-controls');
+            const postCapture = document.getElementById('post-capture');
+
+            // Visual feedback
+            flash.classList.add('shutter-flash');
+            
+            setTimeout(() => {
+                flash.classList.remove('shutter-flash');
+                
+                // Show post-capture UI
+                controls.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10');
+                postCapture.classList.remove('translate-y-full');
+            }, 150);
+        }
+
+        function retakePhoto() {
+            const controls = document.getElementById('camera-controls');
+            const postCapture = document.getElementById('post-capture');
+
+            postCapture.classList.add('translate-y-full');
+            setTimeout(() => {
+                controls.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-10');
+            }, 300);
+        }
+
+        function usePhoto() {
+            // In a real app, this would upload or save
+            alert('Photo saved to cargo log.');
+            retakePhoto();
+        }
+
+        // Handle native mobile-like swipe to dismiss or pull up
+        let touchstartY = 0;
+        let touchendY = 0;
+
+        const gestureZone = document.getElementById('post-capture');
+
+        gestureZone.addEventListener('touchstart', e => {
+            touchstartY = e.changedTouches[0].screenY;
+        }, false);
+
+        gestureZone.addEventListener('touchend', e => {
+            touchendY = e.changedTouches[0].screenY;
+            handleGesture();
+        }, false);
+
+        function handleGesture() {
+            if (touchendY > touchstartY + 50) {
+                // Swiped down
+                retakePhoto();
+            }
+        }
+    </script>
+</body></html>
