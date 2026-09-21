@@ -139,9 +139,9 @@ class _VolumeChartCard extends ConsumerWidget {
               Text('Monthly Job Volume', style: textTheme.titleMedium),
               Row(
                 children: [
-                  _legendDot(AppColors.amber, 'Completed', textTheme),
+                  _legendDot(AppColors.accent, 'Completed', textTheme),
                   const SizedBox(width: 12),
-                  _legendDot(const Color(0xFFFCE8C6), 'All Jobs', textTheme),
+                  _legendDot(AppColors.skyTint, 'All Jobs', textTheme),
                 ],
               ),
             ],
@@ -206,13 +206,13 @@ class _VolumeChartCard extends ConsumerWidget {
                             BarChartRodData(
                               toY: month.total.toDouble(),
                               width: 18,
-                              color: const Color(0xFFFCE8C6),
+                              color: AppColors.skyTint,
                               borderRadius: BorderRadius.circular(4),
                             ),
                             BarChartRodData(
                               toY: month.completed.toDouble(),
                               width: 18,
-                              color: AppColors.amber,
+                              color: AppColors.accent,
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ],
@@ -299,7 +299,7 @@ class _RevenueCard extends ConsumerWidget {
               height: 12 + 78.0 * (month.completed / peak),
               decoration: BoxDecoration(
                 color: index == volume.length - 1
-                    ? const Color(0xFFAEB9E1)
+                    ? AppColors.sky
                     : Colors.white24,
                 borderRadius: BorderRadius.circular(6),
               ),
@@ -348,7 +348,7 @@ class _FleetEfficiencyCard extends ConsumerWidget {
                     strokeWidth: 14,
                     backgroundColor: AppColors.surfaceContainer,
                     valueColor: const AlwaysStoppedAnimation<Color>(
-                        AppColors.amber),
+                        AppColors.accent),
                     strokeCap: StrokeCap.round,
                   ),
                   Center(

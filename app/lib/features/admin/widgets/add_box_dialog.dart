@@ -8,8 +8,10 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/photo_upload_zone.dart';
 import '../providers/clients_providers.dart';
 import '../providers/inventory_providers.dart';
+import 'unit_size_field.dart';
 
-/// Register-a-box modal: client, type, label, photos.
+/// Register-a-box modal: client, size (sets the monthly price), type,
+/// label, photos.
 /// Returns the new box id on save.
 class AddBoxDialog extends ConsumerStatefulWidget {
   const AddBoxDialog({super.key, this.initialClientId});
@@ -33,6 +35,7 @@ class _AddBoxDialogState extends ConsumerState<AddBoxDialog> {
   final _label = TextEditingController();
   late String? _clientId = widget.initialClientId;
   UnitType _type = UnitType.closed;
+  String? _priceKey;
   List<Uint8List> _photos = [];
   bool _saving = false;
 
@@ -50,12 +53,20 @@ class _AddBoxDialogState extends ConsumerState<AddBoxDialog> {
       );
       return;
     }
+    final priceKey = _priceKey;
+    if (priceKey == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Choose a size — it sets the price')),
+      );
+      return;
+    }
     setState(() => _saving = true);
     try {
       final id = await ref.read(unitMutationsProvider.notifier).addUnit(
             clientId: clientId,
             type: _type,
             label: _label.text.trim(),
+            priceKey: priceKey,
             photos: _photos,
           );
       if (mounted) Navigator.of(context).pop(id);
@@ -104,6 +115,13 @@ class _AddBoxDialogState extends ConsumerState<AddBoxDialog> {
                 onChanged: (value) => setState(() => _clientId = value),
               ),
               const SizedBox(height: 16),
+              Text('Size', style: textTheme.labelLarge),
+              const SizedBox(height: 6),
+              UnitSizeField(
+                value: _priceKey,
+                onChanged: (value) => setState(() => _priceKey = value),
+              ),
+              const SizedBox(height: 16),
               Text('Box Type', style: textTheme.labelLarge),
               const SizedBox(height: 6),
               SegmentedButton<UnitType>(
@@ -116,8 +134,8 @@ class _AddBoxDialogState extends ConsumerState<AddBoxDialog> {
                 onSelectionChanged: (selection) =>
                     setState(() => _type = selection.first),
                 style: SegmentedButton.styleFrom(
-                  selectedBackgroundColor: AppColors.amber,
-                  selectedForegroundColor: AppColors.amberDark,
+                  selectedBackgroundColor: AppColors.skyTint,
+                  selectedForegroundColor: AppColors.accentDeep,
                 ),
               ),
               const SizedBox(height: 16),
@@ -153,7 +171,7 @@ class _AddBoxDialogState extends ConsumerState<AddBoxDialog> {
                             width: 18,
                             height: 18,
                             child: CircularProgressIndicator(
-                                strokeWidth: 2, color: AppColors.amberDark),
+                                strokeWidth: 2, color: AppColors.accentDeep),
                           )
                         : const Text('Register Box'),
                   ),

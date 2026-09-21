@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/constants/app_constants.dart';
+import '../../../core/utils/currency.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/item.dart';
 import '../../../core/models/storage_unit.dart';
@@ -101,14 +101,10 @@ class _StatCards extends ConsumerWidget {
     final items = ref.watch(myItemsProvider).valueOrNull ?? const [];
     final tt = Theme.of(context).textTheme;
 
-    final plan = client?.subscriptionPlan ?? SubscriptionPlan.starter;
-    final price = AppConstants.planPricesZar[plan.name] ?? 0;
+    final bill = ref.watch(myStorageBillProvider);
     final active = units
         .where((unit) => unit.status != StorageStatus.archived)
         .toList();
-    final priceLabel = price == 0
-        ? 'Custom'
-        : 'R${NumberFormat.decimalPattern().format(price)}';
 
     Widget card(String label, String value,
         {Widget? chip, String? caption, IconData? icon}) {
@@ -131,7 +127,7 @@ class _StatCards extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis),
                 ),
                 if (icon != null)
-                  Icon(icon, size: 18, color: AppColors.amberDark),
+                  Icon(icon, size: 18, color: AppColors.accentDeep),
               ],
             ),
             const SizedBox(height: AppSpacing.sm),
@@ -155,7 +151,7 @@ class _StatCards extends ConsumerWidget {
     final cards = [
       card(
         'Monthly Storage',
-        priceLabel,
+        formatZar(bill.monthlyZar),
         chip: StatusChip(
             status: (client?.subscriptionStatus ?? SubscriptionStatus.active)
                 .name),
@@ -303,8 +299,8 @@ class _YourStorageSection extends ConsumerWidget {
               boxShadow: AppShadow.card,
             ),
             child: Text(
-              'You have no items in storage yet. Request a quote to '
-              'arrange your first pickup.',
+              'You have no items in storage yet. Get in touch to arrange '
+              'your first pickup.',
               style:
                   tt.bodyMedium?.copyWith(color: AppColors.textSecondary),
             ),
@@ -340,7 +336,7 @@ class _YourStorageSection extends ConsumerWidget {
                     ),
                     child: Row(
                       children: [
-                        Icon(icon, color: AppColors.amberDark),
+                        Icon(icon, color: AppColors.accentDeep),
                         const SizedBox(width: AppSpacing.sm + 4),
                         Expanded(
                           child: Text(entry.key,
@@ -352,14 +348,14 @@ class _YourStorageSection extends ConsumerWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppSpacing.sm + 2, vertical: 4),
                           decoration: const BoxDecoration(
-                            color: AppColors.statusWarningBg,
+                            color: AppColors.skyTint,
                             borderRadius: AppRadius.pill,
                           ),
                           child: Text(
                             '${entry.value.length} '
                             'unit${entry.value.length == 1 ? '' : 's'}',
                             style: tt.bodySmall
-                                ?.copyWith(color: AppColors.amberDark),
+                                ?.copyWith(color: AppColors.accentDeep),
                           ),
                         ),
                       ],
@@ -446,16 +442,12 @@ class _RightRail extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final delivery = ref.watch(activeDeliveryProvider);
-    final client = ref.watch(currentClientProvider).valueOrNull;
     final units = ref.watch(myUnitsProvider).valueOrNull ?? const [];
     final tt = Theme.of(context).textTheme;
 
     final inStorage =
         units.where((u) => u.status == StorageStatus.inStorage).length;
-    final plan = client?.subscriptionPlan ?? SubscriptionPlan.starter;
-    final limit = AppConstants.planUnitLimits[plan.name] ?? 0;
-    final fraction =
-        limit > 0 ? (inStorage / limit).clamp(0.0, 1.0) : 0.0;
+    final bill = ref.watch(myStorageBillProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -468,7 +460,7 @@ class _RightRail extends ConsumerWidget {
               color: AppColors.surface,
               borderRadius: AppRadius.md,
               border: const Border(
-                  left: BorderSide(color: AppColors.amberDark, width: 4)),
+                  left: BorderSide(color: AppColors.accentDeep, width: 4)),
               boxShadow: AppShadow.card,
             ),
             child: Column(
@@ -477,7 +469,7 @@ class _RightRail extends ConsumerWidget {
                 Row(
                   children: [
                     const Icon(Icons.local_shipping_outlined,
-                        color: AppColors.amberDark),
+                        color: AppColors.accentDeep),
                     const SizedBox(width: AppSpacing.sm + 4),
                     Expanded(
                       child: Column(
@@ -528,29 +520,17 @@ class _RightRail extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    limit > 0 ? '$inStorage / $limit units' : '$inStorage units',
-                    style: tt.bodyMedium,
-                  ),
-                  if (limit > 0)
-                    Text('${(fraction * 100).round()}% Full',
-                        style: tt.labelLarge
-                            ?.copyWith(color: AppColors.amberDark)),
+                  Text('$inStorage in storage', style: tt.bodyMedium),
+                  Text('${formatZar(bill.monthlyZar)}/mo',
+                      style: tt.labelLarge
+                          ?.copyWith(color: AppColors.accentDeep)),
                 ],
               ),
               const SizedBox(height: AppSpacing.sm),
-              ClipRRect(
-                borderRadius: AppRadius.pill,
-                child: LinearProgressIndicator(
-                  value: fraction,
-                  minHeight: 8,
-                  backgroundColor: AppColors.surfaceContainer,
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(AppColors.amber),
-                ),
+              Text(
+                '${units.length} units total · billed monthly',
+                style: tt.bodySmall,
               ),
-              const SizedBox(height: AppSpacing.sm),
-              Text('${units.length} units total', style: tt.bodySmall),
             ],
           ),
         ),
@@ -565,20 +545,20 @@ class _RightRail extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Need more space?',
+              Text('Need something back?',
                   style: tt.titleMedium?.copyWith(color: Colors.white)),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Upgrade your plan for a bigger allowance and priority '
-                'retrieval.',
+                'Request a delivery and we\'ll bring your items back to '
+                'your door.',
                 style: tt.bodySmall?.copyWith(color: Colors.white70),
               ),
               const SizedBox(height: AppSpacing.sm + 4),
               TextButton.icon(
                 style:
-                    TextButton.styleFrom(foregroundColor: AppColors.amber),
-                onPressed: () => context.go('/client/subscription'),
-                icon: const Text('View Plans'),
+                    TextButton.styleFrom(foregroundColor: AppColors.sky),
+                onPressed: () => context.go('/client/requests/new'),
+                icon: const Text('Request delivery'),
                 label: const Icon(Icons.arrow_forward, size: 16),
               ),
             ],

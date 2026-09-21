@@ -23,7 +23,6 @@ class Client with _$Client {
     String? stripeCustomerId,
     String? subscriptionId,
     @Default(SubscriptionStatus.incomplete) SubscriptionStatus subscriptionStatus,
-    @Default(SubscriptionPlan.starter) SubscriptionPlan subscriptionPlan,
     @Default([]) List<String> memberIds,
     @Default(0) int storageUnitCount,
     String? notes,

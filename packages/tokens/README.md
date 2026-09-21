@@ -24,15 +24,8 @@ Writes (both committed to git):
 - CI (`.github/workflows/deploy-app.yml`) runs the generator before building, so
   a stale committed file is caught there too.
 
-## Note — the marketing site has its own palette
+## Note — the marketing site's palette
 
-`web/lib/palette.ts` / `web/tailwind.config.ts` currently use a **blue** identity
-(`#1d6fe0`, `#0a1a33`), distinct from the app's navy/amber. The generator emits
-`web/lib/tokens.g.ts` but the site does **not** adopt it yet. Decide one of:
-
-1. **Converge** — point `palette.ts` and the Tailwind `colors` block at
-   `tokens.g.ts` so the site matches the app.
-2. **Split the token set** — add a `brand.web.*` group to `tokens.json` for the
-   marketing palette, keep `brand.app.*` for the product, one file still owns both.
-
-Until then, treat the site palette as intentionally separate.
+The colour values mirror `web/tailwind.config.ts` (navy + blue accent). The site
+styles itself from Tailwind and does not import `tokens.g.ts` yet, so when the
+web palette changes, update `tokens.json` to match and regenerate.

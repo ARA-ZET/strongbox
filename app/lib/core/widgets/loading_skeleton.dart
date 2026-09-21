@@ -56,7 +56,7 @@ class _LoadingSkeletonState extends State<LoadingSkeleton>
               end: Alignment(1 - 2 * _controller.value, 0),
               colors: const [
                 AppColors.surfaceContainer,
-                Color(0xFFF7F5FF),
+                AppColors.scaffold,
                 AppColors.surfaceContainer,
               ],
             ),

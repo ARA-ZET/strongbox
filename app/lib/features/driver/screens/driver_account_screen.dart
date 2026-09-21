@@ -32,7 +32,7 @@ class DriverAccountScreen extends ConsumerWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0xFFFDECD3), AppColors.scaffold],
+              colors: [AppColors.skyTint, AppColors.scaffold],
             ),
           ),
           child: Column(
@@ -41,7 +41,7 @@ class DriverAccountScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.amber, width: 3),
+                  border: Border.all(color: AppColors.accent, width: 3),
                 ),
                 child: InitialsAvatar(name: user?.name, size: 96),
               ),
@@ -144,7 +144,7 @@ class DriverAccountScreen extends ConsumerWidget {
                   badgeGood
                       ? Icons.check_circle_outline
                       : Icons.inventory_2_outlined,
-                  color: AppColors.amberDark,
+                  color: AppColors.accentDeep,
                   size: 20,
                 ),
                 Container(
@@ -160,7 +160,7 @@ class DriverAccountScreen extends ConsumerWidget {
                       style: tt.bodySmall?.copyWith(
                         color: badgeGood
                             ? AppColors.statusSuccess
-                            : AppColors.amberDark,
+                            : AppColors.statusPastDue,
                         fontWeight: FontWeight.w600,
                       )),
                 ),

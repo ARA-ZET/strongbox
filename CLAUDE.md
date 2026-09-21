@@ -15,6 +15,7 @@ strongbox/
 ├─ web/         Next.js marketing site (strongboxstorage.co.za) — separate stack, separate deploy
 ├─ packages/
 │  ├─ tokens/   design tokens: packages/tokens/tokens.json → app/lib/core/theme/tokens.g.dart + web/lib/tokens.g.ts
+│  ├─ pricing/  price list: packages/pricing/pricing.json → app/lib/core/constants/price_list.g.dart + web/lib/pricing.g.ts
 │  └─ schema/   shared domain-model contract (not built yet)
 ├─ docs/        the 25 spec docs — shared
 ├─ firestore.rules · firebase.json · .firebaserc   at repo root
@@ -25,6 +26,13 @@ strongbox/
 - **Never hardcode a colour, spacing or radius.** Edit `packages/tokens/tokens.json`, run
   `node packages/tokens/build.mjs`, then use `AppColors` / `AppSpacing` / `AppRadius`
   (they delegate to the generated `DesignTokens`). `app/test/core/design_tokens_test.dart` guards drift.
+- **Never hardcode a price.** Prices (boxes, loose items, pickup vehicles) live in
+  `packages/pricing/pricing.json`; run `node packages/pricing/build.mjs`. The app reads them via
+  `Pricing` / `PriceList` (`lib/core/constants/pricing.dart`), the site via `web/lib/constants.ts`.
+  `app/test/core/pricing_test.dart` guards drift.
+- **The app is for account holders.** Marketing, pricing, calculators and quotes live on the
+  website. The app opens on `/login` (or the user's portal when signed in); `/register` stays
+  because the site's "Get Started" buttons link to it. Old `/quote` links redirect to `/register`.
 - Deployment: `app/` → classic Firebase Hosting via GitHub Action; `web/` → Firebase App Hosting
   (root dir `web`). Both on project `strongbox-app`. See `README.md`.
 - **Secrets are gitignored.** `app/lib/core/firebase_options.dart`,
@@ -38,6 +46,12 @@ strongbox/
 ## What This App Is
 
 **StrongBox Logistics** is a Flutter web app (responsive: desktop + mobile) for a storage-and-transport business. Clients hand over belongings in boxes. Staff pick them up, store them at a secure facility, and deliver them back on demand — without the client leaving home.
+
+**Billing model (matches the website):** storage is charged per unit per month — each
+`StorageUnit` has a `priceKey` (box size or loose item) and a `monthlyRateZar` recorded when it is
+registered. Units in `inTransit` / `inStorage` / `pendingDelivery` are billable. Billing is monthly
+with no contract, no minimum term and **no term/prepay discounts**. Pickup is a once-off fee by
+vehicle. There are no subscription plans. `StorageBill` does the arithmetic.
 
 Three user roles share one Firebase backend:
 - **Admin/Staff** — operations dashboard, inventory, QR management, job dispatch
@@ -206,18 +220,30 @@ Every status change writes the entity update AND an `AuditEvent` in the same Fir
 
 ### Colours — always use AppColors constants, never raw hex
 
+The palette mirrors the marketing site (`web/tailwind.config.ts`). Values live in
+`packages/tokens/tokens.json` — when the web palette changes, update both together.
+
 ```dart
 // lib/core/theme/app_colors.dart
-navy           #1A2B4A   ← sidebar bg, dark buttons, text headings
-amber          #FEAE2C   ← primary CTA buttons, active nav, highlights
-amberDark      #6B4500   ← text ON amber buttons
-scaffold       #F5F2FF   ← page background
+navyDeep       #0A1A33   ← admin sidebar, dark panels, headings (Display/Headline/Title)
+navy           #0F2A52   ← dark cards / summary panels
+navySoft       #1B3E6F   ← borders + hover on dark grounds
+accent         #1D6FE0   ← primary CTA fill, FAB, active fills, progress (ColorScheme.primary)
+accentDeep     #1557B5   ← links, emphasis text, selected borders/icons on light grounds
+onAccent       #FFFFFF   ← text/icons ON an accent fill (never accentDeep on accent)
+sky            #5EA6F5   ← accent for icons/labels on navy or camera backgrounds
+skyTint        #E8F1FD   ← chips, icon wells, nav indicator, selected-card fill
+scaffold       #F4F8FD   ← page background + input fill (web "mist")
 surface        #FFFFFF   ← cards, modals
-surfaceContainer #EFECFF ← table rows, input bg
-textPrimary    #1A1A2E
-textSecondary  #44474E
-border         #C5C6CF
+surfaceContainer #E3ECF7 ← table rows, progress track
+textPrimary    #10203A
+textSecondary  #4A5A72
+textHint       #6B7F9C
+border         #C3D2E6
 ```
+
+Buttons and cards use 12px radius (`AppRadius.md`), inputs 8px (`AppRadius.sm`).
+Shadows are navy-tinted: use `AppShadow.card` / `AppTheme.cardShadow`.
 
 ### Status Chip Colours
 ```
@@ -240,9 +266,9 @@ Caption   12px Regular  ← timestamps, hints
 
 ### Spacing & Shape (AppSpacing / AppRadius constants)
 - Card border radius: **12px** (`AppRadius.md`)
-- Button / input border radius: **8px** (`AppRadius.sm`)
+- Button border radius: **12px** (`AppRadius.md`); input radius: **8px** (`AppRadius.sm`)
 - Status chips: **full pill** (`AppRadius.pill`)
-- Card shadow: `BoxShadow(blurRadius: 8, color: Color(0x14000000), offset: Offset(0, 2))`
+- Card shadow: `AppShadow.card` (blur 20, 4% navyDeep, offset 0,4 — web `shadow-tactile`)
 - Page padding: **24px** desktop (`AppSpacing.lg`), **16px** mobile (`AppSpacing.md`)
 
 ---
@@ -256,7 +282,7 @@ Always use these — do not rebuild them inline. See `docs/11_COMPONENT_LIBRARY.
 | `StatusChip` | `status: String` | Auto-selects colour from status string |
 | `SummaryCard` | `icon, value, label, trend?` | Dashboard stat cards |
 | `AppSearchBar` | `hint, onChanged, onFilter?` | Debounced search bar |
-| `PrimaryButton` | `label, onPressed, loading?` | Amber full-width button |
+| `PrimaryButton` | `label, onPressed, loading?` | Accent-blue full-width button |
 | `SecondaryButton` | `label, onPressed` | Navy outline button |
 | `DestructiveButton` | `label, onPressed` | Red button for dangerous actions |
 | `StorageUnitCard` | `unit: StorageUnit, onTap` | Inventory grid card with photo |
@@ -288,6 +314,7 @@ isDeleted, deletedAt?
 ```dart
 id, tenantId, clientId
 type: UnitType (closed | open)
+priceKey?: String (box size / loose-item id from the price list), monthlyRateZar: int
 qrCodeId: String (unique SBX-XXXX-XX format)
 photoIds: List<String> (Photo doc IDs, not Storage URLs)
 label, notes?
@@ -377,7 +404,7 @@ customers/{uid}            ← managed by Stripe Firebase Extension
 /client/notifications
 ```
 
-Root `/` redirects based on role. Unauthenticated → `/login`.
+Root `/` redirects based on role. Unauthenticated → `/login`. `/quote` (legacy website link) → `/register`.
 
 ---
 
@@ -387,7 +414,7 @@ Root `/` redirects based on role. Unauthenticated → `/login`.
 - **Desktop (>900px):** Fixed 240px navy sidebar + scrollable main content
 - **Mobile:** Bottom NavigationBar (5 tabs) + Drawer for overflow items
 - Sidebar nav items: Dashboard, Inventory, Job Tracking, Fleet, Clients, Reports, Settings, Support
-- Bottom of sidebar: amber "Quick Scan" button, then Settings, Support, Logout
+- Bottom of sidebar: accent "Quick Scan" button, then Settings, Support, Logout
 
 ### Driver Shell
 - **Mobile-first** (all driver screens are mobile-sized)

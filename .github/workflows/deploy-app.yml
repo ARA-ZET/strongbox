@@ -29,6 +29,9 @@ jobs:
       - name: Regenerate design tokens
         run: node packages/tokens/build.mjs
 
+      - name: Regenerate price list
+        run: node packages/pricing/build.mjs
+
       - name: Write Firebase options (gitignored — see docs/SECURITY.md)
         run: |
           if [ -z "${FIREBASE_OPTIONS_DART}" ]; then
@@ -54,11 +57,20 @@ jobs:
         working-directory: app
         run: flutter build web --release
 
+      # action-hosting-deploy only ships Hosting — rules need their own deploy.
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_STRONGBOX_APP }}
+
+      - name: Deploy Firestore rules
+        run: npx --yes firebase-tools@latest deploy --only firestore:rules --project strongbox-app --non-interactive
+
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_STRONGBOX_APP }}
           projectId: strongbox-app
           channelId: live
           entryPoint: "."

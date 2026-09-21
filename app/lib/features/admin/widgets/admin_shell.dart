@@ -90,7 +90,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
   Widget _buildSidebar() {
     return Container(
       width: 240,
-      color: AppColors.navy,
+      color: AppColors.navyDeep,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -102,11 +102,11 @@ class _AdminShellState extends ConsumerState<AdminShell> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.amber,
+                    color: AppColors.accent,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(Icons.inventory_2,
-                      color: AppColors.navy, size: 24),
+                      color: AppColors.onAccent, size: 24),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -118,7 +118,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
                         style: GoogleFonts.inter(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.amber,
+                          color: AppColors.sky,
                         ),
                       ),
                       Text(
@@ -181,7 +181,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Material(
-        color: active ? AppColors.amber : Colors.transparent,
+        color: active ? AppColors.accent : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
@@ -194,7 +194,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
                 Icon(
                   item.icon,
                   size: 22,
-                  color: active ? AppColors.amberDark : Colors.white70,
+                  color: active ? AppColors.onAccent : Colors.white70,
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -202,7 +202,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                    color: active ? AppColors.amberDark : Colors.white70,
+                    color: active ? AppColors.onAccent : Colors.white70,
                   ),
                 ),
               ],
@@ -224,7 +224,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
 
     return NavigationBar(
       selectedIndex: moreActive ? 4 : selected,
-      indicatorColor: AppColors.amber,
+      indicatorColor: AppColors.skyTint,
       backgroundColor: AppColors.surface,
       onDestinationSelected: (index) {
         if (index < 4) {

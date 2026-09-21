@@ -233,7 +233,7 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(Icons.inventory_2_outlined,
-                    color: AppColors.amberDark),
+                    color: AppColors.accentDeep),
               ),
               const SizedBox(width: 12),
               Column(
@@ -260,7 +260,7 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
                     width: 18,
                     height: 18,
                     child: CircularProgressIndicator(
-                        strokeWidth: 2, color: AppColors.amberDark),
+                        strokeWidth: 2, color: AppColors.accentDeep),
                   )
                 : const Icon(Icons.check_circle_outline),
             label: const Text('Confirm Signature'),
@@ -279,7 +279,7 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: selected ? AppColors.amberDark : AppColors.border,
+          color: selected ? AppColors.accentDeep : AppColors.border,
           width: selected ? 2 : 1,
         ),
       ),
@@ -287,7 +287,7 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon,
-              color: selected ? AppColors.amberDark : AppColors.textSecondary),
+              color: selected ? AppColors.accentDeep : AppColors.textSecondary),
           const SizedBox(height: 8),
           Text(title,
               style: tt.bodyMedium?.copyWith(

@@ -41,8 +41,8 @@ class _AdminFleetScreenState extends ConsumerState<AdminFleetScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.amber,
-        foregroundColor: AppColors.amberDark,
+        backgroundColor: AppColors.accent,
+        foregroundColor: AppColors.onAccent,
         onPressed: _addDriver,
         child: const Icon(Icons.person_add),
       ),
@@ -283,12 +283,12 @@ class _SummaryRow extends StatelessWidget {
             style: Theme.of(context).textTheme.bodySmall,
           )),
       card('On Job', '$onJob',
-          accent: AppColors.amberDark,
+          accent: AppColors.accentDeep,
           extra: Text('Active transits',
               style: Theme.of(context).textTheme.bodySmall)),
       card('Avg. Rating', '4.8',
           extra: Row(children: [
-            const Icon(Icons.star, size: 16, color: AppColors.amberDark),
+            const Icon(Icons.star, size: 16, color: AppColors.accentDeep),
             const SizedBox(width: 4),
             Text('Fleet standard: High',
                 style: Theme.of(context).textTheme.bodySmall),
@@ -387,7 +387,7 @@ class _DriverRowState extends State<_DriverRow> {
                   style: textTheme.bodyMedium?.copyWith(
                     color: job == null
                         ? AppColors.textSecondary
-                        : AppColors.amberDark,
+                        : AppColors.accentDeep,
                     fontWeight:
                         job == null ? FontWeight.w400 : FontWeight.w600,
                   ),
@@ -534,7 +534,7 @@ class _AddDriverDialogState extends ConsumerState<_AddDriverDialog> {
                               height: 18,
                               child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: AppColors.amberDark),
+                                  color: AppColors.accentDeep),
                             )
                           : const Text('Add Driver'),
                     ),
@@ -661,7 +661,7 @@ class _EditDriverDialogState extends ConsumerState<_EditDriverDialog> {
                             height: 18,
                             child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: AppColors.amberDark),
+                                color: AppColors.accentDeep),
                           )
                         : const Text('Save'),
                   ),

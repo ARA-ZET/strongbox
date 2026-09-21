@@ -146,7 +146,7 @@ class _ItemsStep extends ConsumerWidget {
                       borderRadius: AppRadius.md,
                       border: Border.all(
                         color: isSelected
-                            ? AppColors.amberDark
+                            ? AppColors.accentDeep
                             : AppColors.border,
                         width: isSelected ? 2 : 1,
                       ),
@@ -158,18 +158,18 @@ class _ItemsStep extends ConsumerWidget {
                           height: 24,
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? AppColors.amber
+                                ? AppColors.accent
                                 : AppColors.surface,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(6)),
                             border: Border.all(
                                 color: isSelected
-                                    ? AppColors.amber
+                                    ? AppColors.accent
                                     : AppColors.border),
                           ),
                           child: isSelected
                               ? const Icon(Icons.check,
-                                  size: 16, color: AppColors.amberDark)
+                                  size: 16, color: AppColors.onAccent)
                               : null,
                         ),
                         const SizedBox(width: AppSpacing.sm + 4),
@@ -286,13 +286,13 @@ class _ItemsStep extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.sm + 4, vertical: 4),
           decoration: const BoxDecoration(
-            color: AppColors.amber,
+            color: AppColors.accent,
             borderRadius: AppRadius.pill,
           ),
           child: Text(
             '${selected.length} item${selected.length == 1 ? '' : 's'} selected',
             style: tt.bodySmall?.copyWith(
-                fontWeight: FontWeight.w700, color: AppColors.amberDark),
+                fontWeight: FontWeight.w700, color: AppColors.onAccent),
           ),
         ),
         const SizedBox(width: AppSpacing.sm + 4),
@@ -404,10 +404,10 @@ class _DateStep extends ConsumerWidget {
                   label: Text(window.label),
                   selected: draft.timeWindow == window,
                   showCheckmark: false,
-                  selectedColor: AppColors.amber,
+                  selectedColor: AppColors.skyTint,
                   labelStyle: tt.labelLarge?.copyWith(
                     color: draft.timeWindow == window
-                        ? AppColors.amberDark
+                        ? AppColors.accentDeep
                         : AppColors.textPrimary,
                   ),
                   shape: const RoundedRectangleBorder(
@@ -707,7 +707,7 @@ class _ConfirmStep extends ConsumerWidget {
             child: Row(
               children: [
                 const Icon(Icons.verified_user_outlined,
-                    size: 18, color: AppColors.amberDark),
+                    size: 18, color: AppColors.accentDeep),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
@@ -740,7 +740,7 @@ class _ConfirmStep extends ConsumerWidget {
                         width: 18,
                         height: 18,
                         child: CircularProgressIndicator(
-                            strokeWidth: 2, color: AppColors.amberDark),
+                            strokeWidth: 2, color: AppColors.accentDeep),
                       )
                     : const Icon(Icons.check_circle_outline, size: 18),
                 label: const Text('Confirm Request'),

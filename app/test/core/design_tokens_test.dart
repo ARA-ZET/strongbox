@@ -26,7 +26,7 @@ void main() {
   test('generated colours match tokens.json', () {
     final colors = json['color'] as Map<String, dynamic>;
     expect(DesignTokens.navy.toARGB32(), hexToArgb(colors['navy'] as String));
-    expect(DesignTokens.amber.toARGB32(), hexToArgb(colors['amber'] as String));
+    expect(DesignTokens.accent.toARGB32(), hexToArgb(colors['accent'] as String));
     expect(
       DesignTokens.statusPastDueBg.toARGB32(),
       hexToArgb(colors['statusPastDueBg'] as String),
@@ -42,7 +42,7 @@ void main() {
 
   test('App* constants still delegate to DesignTokens', () {
     expect(AppColors.navy, DesignTokens.navy);
-    expect(AppColors.amber, DesignTokens.amber);
+    expect(AppColors.accent, DesignTokens.accent);
     expect(AppSpacing.lg, DesignTokens.spaceLg);
     expect(AppRadius.md, BorderRadius.circular(DesignTokens.radiusMd));
   });

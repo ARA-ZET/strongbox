@@ -172,7 +172,7 @@ class _TypeStep extends ConsumerWidget {
             _TypeCard(
               selected: draft.type == JobType.delivery,
               icon: Icons.local_shipping,
-              iconBg: AppColors.amber,
+              iconBg: AppColors.accent,
               title: 'Delivery Request',
               description:
                   'Schedule an outbound shipment back to the client. '
@@ -204,18 +204,18 @@ class _TypeStep extends ConsumerWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.statusWarningBg,
+            color: AppColors.skyTint,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
             children: [
-              const Icon(Icons.bolt, color: AppColors.amberDark),
+              const Icon(Icons.bolt, color: AppColors.accentDeep),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   'Rush Processing — available for delivery within 4 hours.',
                   style: textTheme.bodyMedium
-                      ?.copyWith(color: AppColors.amberDark),
+                      ?.copyWith(color: AppColors.accentDeep),
                 ),
               ),
             ],
@@ -283,7 +283,7 @@ class _TypeCard extends StatelessWidget {
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: selected ? AppColors.amberDark : AppColors.border,
+                color: selected ? AppColors.accentDeep : AppColors.border,
                 width: selected ? 2 : 1,
               ),
               boxShadow: const [AppTheme.cardShadow],
@@ -297,9 +297,9 @@ class _TypeCard extends StatelessWidget {
                   decoration:
                       BoxDecoration(color: iconBg, shape: BoxShape.circle),
                   child: Icon(icon,
-                      color: iconBg == AppColors.amber
-                          ? AppColors.amberDark
-                          : AppColors.amber,
+                      color: iconBg == AppColors.accent
+                          ? AppColors.onAccent
+                          : AppColors.accent,
                       size: 28),
                 ),
                 const SizedBox(height: 16),
@@ -330,7 +330,7 @@ class _TypeCard extends StatelessWidget {
             const Positioned(
               top: 16,
               right: 16,
-              child: Icon(Icons.check_circle, color: AppColors.amberDark),
+              child: Icon(Icons.check_circle, color: AppColors.accentDeep),
             ),
         ],
       ),
@@ -492,7 +492,7 @@ class _SelectableBoxCard extends StatelessWidget {
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: selected ? AppColors.amberDark : AppColors.border,
+            color: selected ? AppColors.accentDeep : AppColors.border,
             width: selected ? 2 : 1,
           ),
         ),
@@ -517,16 +517,16 @@ class _SelectableBoxCard extends StatelessWidget {
                     width: 24,
                     height: 24,
                     decoration: BoxDecoration(
-                      color: selected ? AppColors.amber : Colors.white,
+                      color: selected ? AppColors.accent : Colors.white,
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
                           color: selected
-                              ? AppColors.amber
+                              ? AppColors.accent
                               : AppColors.border),
                     ),
                     child: selected
                         ? const Icon(Icons.check,
-                            size: 16, color: AppColors.amberDark)
+                            size: 16, color: AppColors.onAccent)
                         : null,
                   ),
                 ),
@@ -596,7 +596,7 @@ class _JobSummarySidebar extends StatelessWidget {
                       textTheme.bodyMedium?.copyWith(color: Colors.white70)),
               Text('${selected.length}',
                   style: textTheme.headlineSmall
-                      ?.copyWith(color: AppColors.amber)),
+                      ?.copyWith(color: AppColors.sky)),
             ],
           ),
           const SizedBox(height: 8),
@@ -605,7 +605,7 @@ class _JobSummarySidebar extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 6),
               child: Row(
                 children: [
-                  const Icon(Icons.circle, size: 6, color: AppColors.amber),
+                  const Icon(Icons.circle, size: 6, color: AppColors.sky),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -1043,8 +1043,8 @@ class _ConfirmStep extends ConsumerWidget {
                         ? null
                         : driverNames[draft.driverId],
                     size: 36,
-                    backgroundColor: AppColors.amber,
-                    foregroundColor: AppColors.amberDark,
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: AppColors.onAccent,
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -1098,7 +1098,7 @@ class _ConfirmStep extends ConsumerWidget {
                     width: 18,
                     height: 18,
                     child: CircularProgressIndicator(
-                        strokeWidth: 2, color: AppColors.amberDark),
+                        strokeWidth: 2, color: AppColors.accentDeep),
                   )
                 : const Icon(Icons.send, size: 18),
             label: const Text('Submit Job'),

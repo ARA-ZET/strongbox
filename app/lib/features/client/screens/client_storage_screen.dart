@@ -185,10 +185,10 @@ class _ClientUnitCard extends ConsumerWidget {
                   child: _overlayChip(
                     unit.type == UnitType.open ? 'OPEN' : 'CLOSED',
                     unit.type == UnitType.open
-                        ? AppColors.amber
+                        ? AppColors.accent
                         : AppColors.navy,
                     unit.type == UnitType.open
-                        ? AppColors.amberDark
+                        ? AppColors.onAccent
                         : Colors.white,
                     tt: tt,
                   ),

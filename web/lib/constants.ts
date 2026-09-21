@@ -1,3 +1,10 @@
+import {
+  BOX_TYPES,
+  LOOSE_ITEM_CATEGORIES,
+  LOOSE_ITEMS,
+  VEHICLES,
+} from "./pricing.g";
+
 // Overridable per-environment via apphosting.yaml; falls back to production
 export const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL ?? "https://app.strongboxstorage.co.za";
@@ -85,74 +92,17 @@ export const OPENING_HOURS_LINES = OPENING_HOURS.map(
   ({ label, opens, closes }) => `${label}: ${opens} – ${closes}`
 );
 
-export const BOX_TYPES = [
-  { id: "small", label: "Small Box (45L)", desc: "Documents, books, small tech", price: 195 },
-  { id: "medium", label: "Medium Box (80L)", desc: "Clothing, kitchenware", price: 295 },
-  { id: "large", label: "Large Box (120L)", desc: "Bulky bedding, winter gear", price: 395 },
-  { id: "xl", label: "XL Heavy-Duty Box", desc: "Heavy or oversized boxable items", price: 595 },
-] as const;
-
-export const LOOSE_ITEM_CATEGORIES = [
-  "All", "Beds", "Tables", "Office", "Appliances", "Outdoor", "Other",
-] as const;
-
-export const LOOSE_ITEMS = [
-  { id: "dining-table", name: "Dining Table", category: "Tables", icon: "table_restaurant", price: 145 },
-  { id: "coffee-table", name: "Coffee Table", category: "Tables", icon: "table_bar", price: 85 },
-  { id: "desk", name: "Desk", category: "Office", icon: "desk", price: 110 },
-  { id: "tv-stand", name: "TV Stand", category: "Tables", icon: "tv", price: 95 },
-  { id: "office-chair", name: "Office Chair", category: "Office", icon: "chair", price: 85 },
-  { id: "bookshelf", name: "Bookshelf", category: "Office", icon: "shelves", price: 100 },
-  { id: "single-bed", name: "Single Bed", category: "Beds", icon: "single_bed", price: 120 },
-  { id: "double-bed", name: "Double Bed", category: "Beds", icon: "bed", price: 175 },
-  { id: "queen-bed", name: "Queen Bed", category: "Beds", icon: "king_bed", price: 195 },
-  { id: "bicycle", name: "Bicycle", category: "Outdoor", icon: "pedal_bike", price: 110 },
-  { id: "surfboard", name: "Surfboard", category: "Outdoor", icon: "surfing", price: 95 },
-  { id: "fridge", name: "Fridge", category: "Appliances", icon: "kitchen", price: 195 },
-  { id: "washing-machine", name: "Washing Machine", category: "Appliances", icon: "local_laundry_service", price: 175 },
-  { id: "mirror", name: "Mirror", category: "Other", icon: "wall_art", price: 75 },
-  { id: "golf-bag", name: "Golf Bag", category: "Outdoor", icon: "sports_golf", price: 85 },
-  { id: "luggage", name: "Large Suitcase", category: "Other", icon: "luggage", price: 75 },
-  { id: "kayak", name: "Kayak", category: "Outdoor", icon: "kayaking", price: 145 },
-  { id: "sofa", name: "2-Seater Sofa", category: "Other", icon: "weekend", price: 220 },
-] as const;
-
-// `recommended` is declared on every entry so the union stays uniform — the
-// calculator reads `v.recommended` directly.
-export const VEHICLES = [
-  { id: "small-van", label: "Small Van", desc: "Up to 1 m³", price: 250, icon: "airport_shuttle", recommended: false },
-  { id: "medium-truck", label: "Medium Truck", desc: "Up to 3 m³", price: 450, icon: "open_in_full", recommended: true },
-  { id: "large-fleet", label: "Large Fleet", desc: "Up to 8 m³", price: 850, icon: "local_shipping", recommended: false },
-] as const;
-
-/**
- * Prepay commitments. Storage is billed monthly by default; paying a term up
- * front buys a discount on the monthly rate. The pickup fee is a one-off and
- * is never discounted, so it sits outside this.
+/*
+ * The price list — boxes, loose items and pickup vehicles — is generated
+ * from packages/pricing/pricing.json, which the Flutter app reads too, so
+ * the site and the client portal can never quote different numbers. Edit
+ * the JSON and run `node packages/pricing/build.mjs`; do not add prices
+ * here.
  *
- * TODO — the discount percentages are a proposal, not signed-off numbers.
- * They are read by `PrepayToggle` and both calculators and appear nowhere
- * else, so changing them here changes them everywhere.
+ * Storage is billed monthly per box or item, with no term or prepay
+ * discounts. The pickup fee is a one-off per collection.
  */
-export const PREPAY_TIERS = [
-  { id: "monthly", label: "Monthly", months: 1, discount: 0, note: "Cancel anytime" },
-  { id: "quarterly", label: "3 months", months: 3, discount: 0.05, note: "Save 5%" },
-  { id: "biannual", label: "6 months", months: 6, discount: 0.1, note: "Save 10%" },
-  { id: "annual", label: "12 months", months: 12, discount: 0.2, note: "Save 20%" },
-] as const;
-
-export type PrepayTier = (typeof PREPAY_TIERS)[number];
-
-/** The default — what an unqualified "R195/mo" on the site refers to. */
-export const DEFAULT_TIER = PREPAY_TIERS[0];
-
-/** Deepest discount available, for the "save up to X%" line. */
-export const MAX_PREPAY_SAVING = Math.max(...PREPAY_TIERS.map((t) => t.discount));
-
-/** Monthly rate after a tier's prepay discount, rounded to the rand. */
-export function tierMonthly(monthly: number, tier: PrepayTier): number {
-  return Math.round(monthly * (1 - tier.discount));
-}
+export { BOX_TYPES, LOOSE_ITEM_CATEGORIES, LOOSE_ITEMS, VEHICLES };
 
 /**
  * Headline trust figures, shown on the about page, the homepage and the

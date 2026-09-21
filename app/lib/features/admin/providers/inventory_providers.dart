@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/constants/storage_paths.dart';
+import '../../../core/constants/pricing.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/job.dart';
 import '../../../core/models/item.dart';
@@ -130,6 +131,7 @@ class UnitMutations extends _$UnitMutations {
     required String clientId,
     required UnitType type,
     required String label,
+    required String priceKey,
     List<Uint8List> photos = const [],
     String? qrCodeId,
   }) async {
@@ -143,6 +145,8 @@ class UnitMutations extends _$UnitMutations {
         qrCodeId: qrCodeId ?? generateBoxQrCode(),
         type: type,
         label: label,
+        priceKey: priceKey,
+        monthlyRateZar: Pricing.monthlyFor(priceKey) ?? 0,
       );
       final id = await repo.create(unit, actorId: _actorId);
       if (photos.isNotEmpty) {
@@ -153,6 +157,18 @@ class UnitMutations extends _$UnitMutations {
     });
     state = result;
     return result.requireValue;
+  }
+
+  /// Sets a unit's size from the price list and records today's rate —
+  /// used to price units registered before sizes existed, or to correct one.
+  Future<void> updatePriceKey(String unitId, String priceKey) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => ref
+        .read(storageUnitRepositoryProvider)
+        .update(unitId, {
+          'priceKey': priceKey,
+          'monthlyRateZar': Pricing.monthlyFor(priceKey) ?? 0,
+        }, actorId: _actorId));
   }
 
   Future<void> updateLabel(String unitId, String label) async {

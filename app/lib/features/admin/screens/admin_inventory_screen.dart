@@ -296,11 +296,11 @@ class _AddBoxGhostCard extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: AppColors.amber.withValues(alpha: 0.15),
+                color: AppColors.accent.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.add_box_outlined,
-                  color: AppColors.amberDark, size: 28),
+                  color: AppColors.accentDeep, size: 28),
             ),
             const SizedBox(height: 12),
             Text('Add New Box',

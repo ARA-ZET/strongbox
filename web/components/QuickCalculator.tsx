@@ -2,15 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import PrepayToggle from "@/components/PrepayToggle";
 import {
   BOX_TYPES,
   PICKUP_FROM,
   LOOSE_ITEM_FROM,
-  DEFAULT_TIER,
-  MAX_PREPAY_SAVING,
-  tierMonthly,
-  type PrepayTier,
 } from "@/lib/constants";
 
 /**
@@ -30,15 +25,10 @@ export default function QuickCalculator() {
     Object.fromEntries(BOX_TYPES.map((b, i) => [b.id, i === 0 ? 2 : i === 1 ? 1 : 0]))
   );
 
-  const [tier, setTier] = useState<PrepayTier>(DEFAULT_TIER);
-
   const update = (id: string, delta: number) =>
     setCounts((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] ?? 0) + delta) }));
 
-  /** List price per month, before any prepay discount. */
-  const listTotal = BOX_TYPES.reduce((sum, b) => sum + (counts[b.id] ?? 0) * b.price, 0);
-  const total = tierMonthly(listTotal, tier);
-  const upfront = total * tier.months;
+  const total = BOX_TYPES.reduce((sum, b) => sum + (counts[b.id] ?? 0) * b.price, 0);
 
   return (
     <section className="py-24 bg-mist" id="calculator">
@@ -60,7 +50,6 @@ export default function QuickCalculator() {
               {[
                 "No long-term contracts",
                 "Billed monthly, cancel anytime",
-                `Prepay a term and save up to ${Math.round(MAX_PREPAY_SAVING * 100)}%`,
                 "Photo inventory of every box included",
               ].map((text) => (
                 <div key={text} className="flex items-center gap-3 text-navy-deep font-body-strong">
@@ -143,14 +132,6 @@ export default function QuickCalculator() {
                     )}
                   </div>
 
-                  <PrepayToggle
-                    value={tier}
-                    onChange={setTier}
-                    tone="dark"
-                    name="quick-prepay"
-                    className="mb-5"
-                  />
-
                   <div className="flex items-baseline gap-1">
                     <span className="text-xl font-bold">R</span>
                     <span key={total} className="text-5xl font-bold tabular-nums transition-all duration-200">
@@ -158,18 +139,6 @@ export default function QuickCalculator() {
                     </span>
                     <span className="text-on-navy-variant text-sm">/mo</span>
                   </div>
-                  {/* The list price is only worth showing once it differs — on
-                      the monthly tier a struck-through identical number reads
-                      as a bug rather than as a saving. */}
-                  {tier.discount > 0 && listTotal > 0 && (
-                    <p className="text-xs text-on-navy-variant mt-2">
-                      <s>R{listTotal.toLocaleString("en-ZA")}/mo</s> billed monthly ·{" "}
-                      <span className="text-sky font-body-strong">
-                        R{upfront.toLocaleString("en-ZA")}
-                      </span>{" "}
-                      for {tier.months} months up front
-                    </p>
-                  )}
                   <p className="text-xs text-on-navy-variant mt-4">
                     Boxes only. One-off pickup from R{PICKUP_FROM}, depending on the
                     vehicle your load needs.

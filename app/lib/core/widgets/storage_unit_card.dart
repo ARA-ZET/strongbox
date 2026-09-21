@@ -94,7 +94,7 @@ class StorageUnitCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: isClosed
                               ? AppColors.statusPendingBg
-                              : AppColors.statusWarningBg,
+                              : AppColors.skyTint,
                           borderRadius: AppRadius.pill,
                         ),
                         child: Text(
@@ -104,7 +104,7 @@ class StorageUnitCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             color: isClosed
                                 ? AppColors.textSecondary
-                                : AppColors.amberDark,
+                                : AppColors.accentDeep,
                           ),
                         ),
                       ),

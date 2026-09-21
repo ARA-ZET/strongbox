@@ -33,8 +33,8 @@ class _DriverJobsScreenState extends ConsumerState<DriverJobsScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.amber,
-        foregroundColor: AppColors.amberDark,
+        backgroundColor: AppColors.accent,
+        foregroundColor: AppColors.onAccent,
         onPressed: () => context.go('/driver/scan'),
         child: const Icon(Icons.qr_code_scanner),
       ),
@@ -191,7 +191,7 @@ class _JobCard extends ConsumerWidget {
                       horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: pickup
-                        ? AppColors.statusWarningBg
+                        ? AppColors.skyTint
                         : AppColors.statusSuccessBg,
                     borderRadius: BorderRadius.circular(999),
                   ),
@@ -200,7 +200,7 @@ class _JobCard extends ConsumerWidget {
                     style: tt.bodySmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: pickup
-                          ? AppColors.amberDark
+                          ? AppColors.accentDeep
                           : AppColors.statusSuccess,
                     ),
                   ),
@@ -222,7 +222,7 @@ class _JobCard extends ConsumerWidget {
             Row(
               children: [
                 const Icon(Icons.location_on_outlined,
-                    size: 16, color: AppColors.amberDark),
+                    size: 16, color: AppColors.accentDeep),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -320,11 +320,11 @@ class _ScanPromoCard extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: const BoxDecoration(
-              color: AppColors.amber,
+              color: AppColors.accent,
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.qr_code_scanner,
-                color: AppColors.amberDark),
+                color: AppColors.onAccent),
           ),
           const SizedBox(width: 14),
           Expanded(

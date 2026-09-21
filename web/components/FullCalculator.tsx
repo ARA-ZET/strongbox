@@ -1,14 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import PrepayToggle from "@/components/PrepayToggle";
 import {
   BOX_TYPES,
   VEHICLES,
   APP_URL,
-  DEFAULT_TIER,
-  tierMonthly,
-  type PrepayTier,
 } from "@/lib/constants";
 
 interface LooseItem {
@@ -34,7 +30,6 @@ export default function FullCalculator() {
   ]);
   const [vehicleId, setVehicleId] = useState("small-van");
   const [showAddLoose, setShowAddLoose] = useState(false);
-  const [tier, setTier] = useState<PrepayTier>(DEFAULT_TIER);
 
   const updateBox = (id: string, delta: number) => {
     setBoxes((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] ?? 0) + delta) }));
@@ -51,10 +46,7 @@ export default function FullCalculator() {
 
   const boxTotal = BOX_TYPES.reduce((s, b) => s + (boxes[b.id] ?? 0) * b.price, 0);
   const looseTotal = looseItems.reduce((s, i) => s + i.price, 0);
-  /** List price per month, before the prepay discount. */
-  const listMonthly = boxTotal + looseTotal;
-  const monthlyTotal = tierMonthly(listMonthly, tier);
-  const upfront = monthlyTotal * tier.months;
+  const monthlyTotal = boxTotal + looseTotal;
   const vehicle = VEHICLES.find((v) => v.id === vehicleId)!;
 
   return (
@@ -206,19 +198,6 @@ export default function FullCalculator() {
               ))}
             </div>
           </div>
-
-          {/* Step 4: Prepay term */}
-          <div>
-            <h4 className="font-body-strong text-navy-deep mb-5 flex items-center gap-2 text-headline-h3">
-              <span className="material-symbols-outlined text-accent-deep">event_repeat</span>
-              4. Choose Your Term
-            </h4>
-            <PrepayToggle value={tier} onChange={setTier} name="full-prepay" />
-            <p className="text-xs text-on-surface-variant mt-3">
-              Storage is billed monthly by default. Paying a term up front discounts the
-              monthly rate — the once-off pickup fee is charged either way.
-            </p>
-          </div>
         </div>
 
         {/* Right — summary */}
@@ -245,7 +224,7 @@ export default function FullCalculator() {
               )}
             </div>
 
-            <div className="flex justify-between items-end mb-4">
+            <div className="flex justify-between items-end mb-8">
               <div>
                 <p className="text-label-caps text-on-navy-variant uppercase tracking-widest mb-1 text-xs">
                   Est. Total Monthly
@@ -261,33 +240,11 @@ export default function FullCalculator() {
                 <p className="text-2xl font-bold">R{vehicle.price}</p>
               </div>
             </div>
-
-            {/* Shown only once a prepay tier is actually selected — on the
-                monthly tier this would restate the number above it. */}
-            {tier.discount > 0 && listMonthly > 0 && (
-              <div className="mb-8 rounded-xl bg-surface-white/5 border border-surface-white/10 p-4 text-sm">
-                <div className="flex justify-between text-on-navy-variant">
-                  <span>Billed monthly</span>
-                  <s>R{listMonthly.toLocaleString("en-ZA")}/mo</s>
-                </div>
-                <div className="flex justify-between text-on-navy-variant mt-1">
-                  <span>You save</span>
-                  <span className="text-sky font-body-strong">
-                    R{((listMonthly - monthlyTotal) * tier.months).toLocaleString("en-ZA")} over{" "}
-                    {tier.months} months
-                  </span>
-                </div>
-                <div className="flex justify-between text-surface-white font-body-strong mt-3 pt-3 border-t border-surface-white/10">
-                  <span>Paid up front</span>
-                  <span className="tabular-nums">R{upfront.toLocaleString("en-ZA")}</span>
-                </div>
-              </div>
-            )}
           </div>
 
           <div>
             <a
-              href={`${APP_URL}/quote`}
+              href={`${APP_URL}/register`}
               className="w-full h-[64px] bg-accent text-on-accent rounded-xl font-body-strong text-lg shadow-lg hover:opacity-90 transition-all flex items-center justify-center gap-3 active:scale-95"
             >
               Book Your Pickup

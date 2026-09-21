@@ -68,21 +68,6 @@ final jobRepositoryProvider = Provider<JobRepository>.internal(
 );
 
 typedef JobRepositoryRef = ProviderRef<JobRepository>;
-String _$quoteRepositoryHash() => r'c409d865f0a0fa13bbd9c9007edab1a7405ba1f6';
-
-/// See also [quoteRepository].
-@ProviderFor(quoteRepository)
-final quoteRepositoryProvider = Provider<QuoteRepository>.internal(
-  quoteRepository,
-  name: r'quoteRepositoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$quoteRepositoryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef QuoteRepositoryRef = ProviderRef<QuoteRepository>;
 String _$clientRepositoryHash() => r'3158df0747df78ec614a693ec49792fedc1d2e3f';
 
 /// See also [clientRepository].

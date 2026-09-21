@@ -18,7 +18,6 @@ import {
   BOX_FROM,
   APP_URL,
   CUSTOMER_COUNT,
-  MAX_PREPAY_SAVING,
 } from "@/lib/constants";
 
 export const metadata: Metadata = pageMeta({
@@ -326,8 +325,7 @@ export default function HomePage() {
               </h2>
               <p className="text-on-navy text-lg mb-8">
                 No rigid plans and no paying for empty space. You pay for the boxes and
-                items you actually store, billed monthly — or prepay a term and save up
-                to {Math.round(MAX_PREPAY_SAVING * 100)}%.
+                items you actually store, billed monthly — cancel any time.
               </p>
               <div className="space-y-5">
                 {[

@@ -33,6 +33,37 @@ Stream<AppUser?> currentUser(Ref ref) {
 String currentActorId(Ref ref) =>
     ref.watch(authStateProvider).valueOrNull?.uid ?? '';
 
+/// Turns a Firebase Auth failure into a message a person can act on,
+/// instead of Firebase's raw `[firebase_auth/…]` text.
+///
+/// With email-enumeration protection on (the Firebase default), a wrong
+/// password, an unknown email and a Google-only account all come back as
+/// the same `invalid-credential`, so that message has to cover all three.
+AppException friendlyAuthError(FirebaseAuthException error) {
+  final message = switch (error.code) {
+    'invalid-credential' || 'wrong-password' || 'user-not-found' =>
+      'That email and password don\'t match an account. Check your '
+          'password, use "Forgot password?" to reset it — or, if you signed '
+          'up with Google, use "Continue with Google".',
+    'invalid-email' => 'That doesn\'t look like a valid email address.',
+    'user-disabled' =>
+      'This account has been disabled. Please contact us to restore it.',
+    'too-many-requests' =>
+      'Too many attempts. Wait a few minutes, or reset your password.',
+    'network-request-failed' =>
+      'Can\'t reach the server. Check your connection and try again.',
+    'weak-password' => 'Choose a stronger password (at least 8 characters).',
+    'popup-closed-by-user' || 'cancelled-popup-request' =>
+      'Google sign-in was closed before it finished.',
+    'popup-blocked' =>
+      'Your browser blocked the Google sign-in window. Allow pop-ups for '
+          'this site and try again.',
+    _ => 'Sign-in failed (${error.code}). Please try again, or contact us '
+        'if it keeps happening.',
+  };
+  return AppException(code: error.code, message: message, original: error);
+}
+
 /// Auth error codes the screens react to (surfaced via [AppException]).
 abstract final class AuthErrorCodes {
   /// The email belongs to a Google-only account — use Google sign-in.
@@ -142,7 +173,7 @@ class AuthNotifier extends _$AuthNotifier {
             );
           }
         }
-        rethrow;
+        throw friendlyAuthError(error);
       }
     });
   }
@@ -166,7 +197,7 @@ class AuthNotifier extends _$AuthNotifier {
                 'sign-in method. Sign in with your original method first.',
           );
         }
-        rethrow;
+        throw friendlyAuthError(error);
       }
     });
   }
@@ -212,7 +243,7 @@ class AuthNotifier extends _$AuthNotifier {
                 'with Google to link a password to the same account.',
           );
         }
-        rethrow;
+        throw friendlyAuthError(error);
       }
     });
   }
@@ -266,7 +297,12 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<void> resetPassword(String email) async {
     state = const AsyncLoading();
-    state =
-        await AsyncValue.guard(() => _auth.sendPasswordResetEmail(email: email));
+    state = await AsyncValue.guard(() async {
+      try {
+        await _auth.sendPasswordResetEmail(email: email);
+      } on FirebaseAuthException catch (error) {
+        throw friendlyAuthError(error);
+      }
+    });
   }
 }

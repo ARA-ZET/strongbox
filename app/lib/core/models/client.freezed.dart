@@ -32,7 +32,6 @@ mixin _$Client {
   String? get subscriptionId => throw _privateConstructorUsedError;
   SubscriptionStatus get subscriptionStatus =>
       throw _privateConstructorUsedError;
-  SubscriptionPlan get subscriptionPlan => throw _privateConstructorUsedError;
   List<String> get memberIds => throw _privateConstructorUsedError;
   int get storageUnitCount => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
@@ -65,7 +64,6 @@ abstract class $ClientCopyWith<$Res> {
       String? stripeCustomerId,
       String? subscriptionId,
       SubscriptionStatus subscriptionStatus,
-      SubscriptionPlan subscriptionPlan,
       List<String> memberIds,
       int storageUnitCount,
       String? notes,
@@ -101,7 +99,6 @@ class _$ClientCopyWithImpl<$Res, $Val extends Client>
     Object? stripeCustomerId = freezed,
     Object? subscriptionId = freezed,
     Object? subscriptionStatus = null,
-    Object? subscriptionPlan = null,
     Object? memberIds = null,
     Object? storageUnitCount = null,
     Object? notes = freezed,
@@ -155,10 +152,6 @@ class _$ClientCopyWithImpl<$Res, $Val extends Client>
           ? _value.subscriptionStatus
           : subscriptionStatus // ignore: cast_nullable_to_non_nullable
               as SubscriptionStatus,
-      subscriptionPlan: null == subscriptionPlan
-          ? _value.subscriptionPlan
-          : subscriptionPlan // ignore: cast_nullable_to_non_nullable
-              as SubscriptionPlan,
       memberIds: null == memberIds
           ? _value.memberIds
           : memberIds // ignore: cast_nullable_to_non_nullable
@@ -218,7 +211,6 @@ abstract class _$$ClientImplCopyWith<$Res> implements $ClientCopyWith<$Res> {
       String? stripeCustomerId,
       String? subscriptionId,
       SubscriptionStatus subscriptionStatus,
-      SubscriptionPlan subscriptionPlan,
       List<String> memberIds,
       int storageUnitCount,
       String? notes,
@@ -253,7 +245,6 @@ class __$$ClientImplCopyWithImpl<$Res>
     Object? stripeCustomerId = freezed,
     Object? subscriptionId = freezed,
     Object? subscriptionStatus = null,
-    Object? subscriptionPlan = null,
     Object? memberIds = null,
     Object? storageUnitCount = null,
     Object? notes = freezed,
@@ -307,10 +298,6 @@ class __$$ClientImplCopyWithImpl<$Res>
           ? _value.subscriptionStatus
           : subscriptionStatus // ignore: cast_nullable_to_non_nullable
               as SubscriptionStatus,
-      subscriptionPlan: null == subscriptionPlan
-          ? _value.subscriptionPlan
-          : subscriptionPlan // ignore: cast_nullable_to_non_nullable
-              as SubscriptionPlan,
       memberIds: null == memberIds
           ? _value._memberIds
           : memberIds // ignore: cast_nullable_to_non_nullable
@@ -358,7 +345,6 @@ class _$ClientImpl implements _Client {
       this.stripeCustomerId,
       this.subscriptionId,
       this.subscriptionStatus = SubscriptionStatus.incomplete,
-      this.subscriptionPlan = SubscriptionPlan.starter,
       final List<String> memberIds = const [],
       this.storageUnitCount = 0,
       this.notes,
@@ -400,9 +386,6 @@ class _$ClientImpl implements _Client {
   @override
   @JsonKey()
   final SubscriptionStatus subscriptionStatus;
-  @override
-  @JsonKey()
-  final SubscriptionPlan subscriptionPlan;
   final List<String> _memberIds;
   @override
   @JsonKey()
@@ -432,7 +415,7 @@ class _$ClientImpl implements _Client {
 
   @override
   String toString() {
-    return 'Client(id: $id, tenantId: $tenantId, primaryUserId: $primaryUserId, displayName: $displayName, email: $email, phone: $phone, address: $address, type: $type, stripeCustomerId: $stripeCustomerId, subscriptionId: $subscriptionId, subscriptionStatus: $subscriptionStatus, subscriptionPlan: $subscriptionPlan, memberIds: $memberIds, storageUnitCount: $storageUnitCount, notes: $notes, isActive: $isActive, isDeleted: $isDeleted, deletedAt: $deletedAt, createdAt: $createdAt)';
+    return 'Client(id: $id, tenantId: $tenantId, primaryUserId: $primaryUserId, displayName: $displayName, email: $email, phone: $phone, address: $address, type: $type, stripeCustomerId: $stripeCustomerId, subscriptionId: $subscriptionId, subscriptionStatus: $subscriptionStatus, memberIds: $memberIds, storageUnitCount: $storageUnitCount, notes: $notes, isActive: $isActive, isDeleted: $isDeleted, deletedAt: $deletedAt, createdAt: $createdAt)';
   }
 
   @override
@@ -457,8 +440,6 @@ class _$ClientImpl implements _Client {
                 other.subscriptionId == subscriptionId) &&
             (identical(other.subscriptionStatus, subscriptionStatus) ||
                 other.subscriptionStatus == subscriptionStatus) &&
-            (identical(other.subscriptionPlan, subscriptionPlan) ||
-                other.subscriptionPlan == subscriptionPlan) &&
             const DeepCollectionEquality()
                 .equals(other._memberIds, _memberIds) &&
             (identical(other.storageUnitCount, storageUnitCount) ||
@@ -476,28 +457,26 @@ class _$ClientImpl implements _Client {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hashAll([
-        runtimeType,
-        id,
-        tenantId,
-        primaryUserId,
-        displayName,
-        email,
-        phone,
-        address,
-        type,
-        stripeCustomerId,
-        subscriptionId,
-        subscriptionStatus,
-        subscriptionPlan,
-        const DeepCollectionEquality().hash(_memberIds),
-        storageUnitCount,
-        notes,
-        isActive,
-        isDeleted,
-        deletedAt,
-        createdAt
-      ]);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      tenantId,
+      primaryUserId,
+      displayName,
+      email,
+      phone,
+      address,
+      type,
+      stripeCustomerId,
+      subscriptionId,
+      subscriptionStatus,
+      const DeepCollectionEquality().hash(_memberIds),
+      storageUnitCount,
+      notes,
+      isActive,
+      isDeleted,
+      deletedAt,
+      createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -526,7 +505,6 @@ abstract class _Client implements Client {
       final String? stripeCustomerId,
       final String? subscriptionId,
       final SubscriptionStatus subscriptionStatus,
-      final SubscriptionPlan subscriptionPlan,
       final List<String> memberIds,
       final int storageUnitCount,
       final String? notes,
@@ -559,8 +537,6 @@ abstract class _Client implements Client {
   String? get subscriptionId;
   @override
   SubscriptionStatus get subscriptionStatus;
-  @override
-  SubscriptionPlan get subscriptionPlan;
   @override
   List<String> get memberIds;
   @override

@@ -155,7 +155,7 @@ class _ClientNotificationsScreenState
                             height: 18,
                             child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: AppColors.amberDark),
+                                color: AppColors.accentDeep),
                           )
                         : const Icon(Icons.save_outlined, size: 18),
                     label: const Text('Save Preferences'),
@@ -208,7 +208,7 @@ class _ClientNotificationsScreenState
             style: tt.bodySmall?.copyWith(
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.8,
-                color: AppColors.amberDark)),
+                color: AppColors.accentDeep)),
       );
 
   Widget _prefRow(
@@ -246,7 +246,7 @@ class _ClientNotificationsScreenState
               child: Switch(
                 value: email,
                 activeThumbColor: Colors.white,
-                activeTrackColor: AppColors.amber,
+                activeTrackColor: AppColors.accent,
                 onChanged: onEmail,
               ),
             ),
@@ -255,7 +255,7 @@ class _ClientNotificationsScreenState
               child: Switch(
                 value: sms,
                 activeThumbColor: Colors.white,
-                activeTrackColor: AppColors.amber,
+                activeTrackColor: AppColors.accent,
                 onChanged: onSms,
               ),
             ),

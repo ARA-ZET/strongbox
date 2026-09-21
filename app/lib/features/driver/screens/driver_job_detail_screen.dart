@@ -96,7 +96,7 @@ class _JobDetailBody extends ConsumerWidget {
                         horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: pickup
-                          ? AppColors.statusWarningBg
+                          ? AppColors.skyTint
                           : AppColors.statusSuccessBg,
                       borderRadius: BorderRadius.circular(999),
                     ),
@@ -105,7 +105,7 @@ class _JobDetailBody extends ConsumerWidget {
                       style: tt.bodySmall?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: pickup
-                            ? AppColors.amberDark
+                            ? AppColors.accentDeep
                             : AppColors.statusSuccess,
                       ),
                     ),
@@ -124,11 +124,11 @@ class _JobDetailBody extends ConsumerWidget {
                 child: Row(
                   children: [
                     const Icon(Icons.map_outlined,
-                        size: 18, color: AppColors.amberDark),
+                        size: 18, color: AppColors.accentDeep),
                     const SizedBox(width: 6),
                     Text('Open in Maps',
                         style: tt.labelLarge
-                            ?.copyWith(color: AppColors.amberDark)),
+                            ?.copyWith(color: AppColors.accentDeep)),
                   ],
                 ),
               ),
@@ -348,9 +348,9 @@ class _BottomBar extends ConsumerWidget {
         color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-              blurRadius: 8,
-              color: Color(0x14000000),
-              offset: Offset(0, -2)),
+              blurRadius: 20,
+              color: AppColors.cardShadowStrong,
+              offset: Offset(0, -4)),
         ],
       ),
       child: SafeArea(
@@ -381,10 +381,10 @@ class _BottomBar extends ConsumerWidget {
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: allConfirmed
-                            ? AppColors.amber
+                            ? AppColors.accent
                             : AppColors.surfaceContainer,
                         foregroundColor: allConfirmed
-                            ? AppColors.amberDark
+                            ? AppColors.onAccent
                             : AppColors.textSecondary,
                       ),
                       onPressed: allConfirmed

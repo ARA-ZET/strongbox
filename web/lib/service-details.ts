@@ -195,7 +195,7 @@ export const BILLING_POINTS = [
   {
     icon: "lock_open",
     title: "No minimum term",
-    body: "There is no lock-in and no notice period. Prepay three, six or twelve months if you want the discount — that is a choice, not a condition.",
+    body: "There is no lock-in and no notice period. You are billed monthly for what we store, and you can cancel any time.",
   },
   {
     icon: "u_turn_left",

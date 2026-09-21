@@ -263,7 +263,7 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
               width: 260,
               height: 200,
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.amber, width: 3),
+                border: Border.all(color: AppColors.sky, width: 3),
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
@@ -289,7 +289,7 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text(
-                                    'Align the QR code within the amber frame.')),
+                                    'Align the QR code within the blue frame.')),
                           );
                         }),
                       ],
@@ -311,7 +311,7 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
                   children: [
                     Text('SCANNING…',
                         style: tt.labelLarge?.copyWith(
-                            color: AppColors.amber,
+                            color: AppColors.sky,
                             fontWeight: FontWeight.w700)),
                     const SizedBox(height: 4),
                     Text('Align the QR code within the frame',

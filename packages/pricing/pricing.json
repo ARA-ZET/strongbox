@@ -1,0 +1,195 @@
+{
+  "$comment": "Single source of truth for StrongBox prices (ZAR). Edit here, then run `node packages/pricing/build.mjs` to regenerate web/lib/pricing.g.ts and app/lib/core/constants/price_list.g.dart. Box and loose-item prices are per unit per month; vehicle prices are a once-off pickup fee. There are no term or prepay discounts — storage is billed monthly.",
+  "boxes": [
+    {
+      "id": "small",
+      "label": "Small Box (45L)",
+      "desc": "Documents, books, small tech",
+      "price": 195
+    },
+    {
+      "id": "medium",
+      "label": "Medium Box (80L)",
+      "desc": "Clothing, kitchenware",
+      "price": 295
+    },
+    {
+      "id": "large",
+      "label": "Large Box (120L)",
+      "desc": "Bulky bedding, winter gear",
+      "price": 395
+    },
+    {
+      "id": "xl",
+      "label": "XL Heavy-Duty Box",
+      "desc": "Heavy or oversized boxable items",
+      "price": 595
+    }
+  ],
+  "looseItemCategories": [
+    "All",
+    "Beds",
+    "Tables",
+    "Office",
+    "Appliances",
+    "Outdoor",
+    "Other"
+  ],
+  "looseItems": [
+    {
+      "id": "dining-table",
+      "name": "Dining Table",
+      "category": "Tables",
+      "icon": "table_restaurant",
+      "price": 145
+    },
+    {
+      "id": "coffee-table",
+      "name": "Coffee Table",
+      "category": "Tables",
+      "icon": "table_bar",
+      "price": 85
+    },
+    {
+      "id": "desk",
+      "name": "Desk",
+      "category": "Office",
+      "icon": "desk",
+      "price": 110
+    },
+    {
+      "id": "tv-stand",
+      "name": "TV Stand",
+      "category": "Tables",
+      "icon": "tv",
+      "price": 95
+    },
+    {
+      "id": "office-chair",
+      "name": "Office Chair",
+      "category": "Office",
+      "icon": "chair",
+      "price": 85
+    },
+    {
+      "id": "bookshelf",
+      "name": "Bookshelf",
+      "category": "Office",
+      "icon": "shelves",
+      "price": 100
+    },
+    {
+      "id": "single-bed",
+      "name": "Single Bed",
+      "category": "Beds",
+      "icon": "single_bed",
+      "price": 120
+    },
+    {
+      "id": "double-bed",
+      "name": "Double Bed",
+      "category": "Beds",
+      "icon": "bed",
+      "price": 175
+    },
+    {
+      "id": "queen-bed",
+      "name": "Queen Bed",
+      "category": "Beds",
+      "icon": "king_bed",
+      "price": 195
+    },
+    {
+      "id": "bicycle",
+      "name": "Bicycle",
+      "category": "Outdoor",
+      "icon": "pedal_bike",
+      "price": 110
+    },
+    {
+      "id": "surfboard",
+      "name": "Surfboard",
+      "category": "Outdoor",
+      "icon": "surfing",
+      "price": 95
+    },
+    {
+      "id": "fridge",
+      "name": "Fridge",
+      "category": "Appliances",
+      "icon": "kitchen",
+      "price": 195
+    },
+    {
+      "id": "washing-machine",
+      "name": "Washing Machine",
+      "category": "Appliances",
+      "icon": "local_laundry_service",
+      "price": 175
+    },
+    {
+      "id": "mirror",
+      "name": "Mirror",
+      "category": "Other",
+      "icon": "wall_art",
+      "price": 75
+    },
+    {
+      "id": "golf-bag",
+      "name": "Golf Bag",
+      "category": "Outdoor",
+      "icon": "sports_golf",
+      "price": 85
+    },
+    {
+      "id": "luggage",
+      "name": "Large Suitcase",
+      "category": "Other",
+      "icon": "luggage",
+      "price": 75
+    },
+    {
+      "id": "kayak",
+      "name": "Kayak",
+      "category": "Outdoor",
+      "icon": "kayaking",
+      "price": 145
+    },
+    {
+      "id": "sofa",
+      "name": "2-Seater Sofa",
+      "category": "Other",
+      "icon": "weekend",
+      "price": 220
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "small-van",
+      "label": "Small Van",
+      "desc": "Up to 1 m³",
+      "capacityM3": 1,
+      "price": 250,
+      "icon": "airport_shuttle",
+      "recommended": false
+    },
+    {
+      "id": "medium-truck",
+      "label": "Medium Truck",
+      "desc": "Up to 3 m³",
+      "capacityM3": 3,
+      "price": 450,
+      "icon": "open_in_full",
+      "recommended": true
+    },
+    {
+      "id": "large-fleet",
+      "label": "Large Fleet",
+      "desc": "Up to 8 m³",
+      "capacityM3": 8,
+      "price": 850,
+      "icon": "local_shipping",
+      "recommended": false
+    }
+  ]
+}

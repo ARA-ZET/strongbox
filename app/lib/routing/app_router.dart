@@ -44,32 +44,14 @@ import '../features/client/widgets/client_shell.dart';
 import '../features/auth/providers/auth_provider.dart';
 import '../features/auth/screens/login_screen.dart';
 import '../features/auth/screens/register_screen.dart';
-import '../features/quote/providers/quote_submission_provider.dart';
-import '../features/quote/screens/quote_boxes_screen.dart';
-import '../features/quote/screens/quote_calculator_screen.dart';
-import '../features/quote/screens/quote_confirmation_screen.dart';
-import '../features/quote/screens/quote_loose_items_screen.dart';
-import '../features/quote/screens/quote_services_screen.dart';
-import '../features/quote/screens/quote_summary_screen.dart';
 
 part 'app_router.g.dart';
 
-/// Whether [location] is part of the public quote flow.
-///
-/// These are the only routes reachable without signing in: a visitor can
-/// price up a whole storage plan and only meets the auth gate when they
-/// accept the quote. Signed-in clients may use them too, so the flow is
-/// exempt from both the sign-in redirect and the role guards.
-bool isPublicQuoteRoute(String location) =>
-    location == '/quote' || location.startsWith('/quote/');
-
-/// App router. Redirect rules:
-/// - The public quote flow is always reachable, signed in or not
-/// - Unauthenticated at the root → /quote, the marketing landing page
-/// - Unauthenticated deeper in → /login, since a portal was asked for
+/// App router. The app is for account holders — marketing, pricing and
+/// quotes live on the website (web/). Redirect rules:
+/// - Unauthenticated → /login (or /register, which the site links to)
 /// - Authenticated → role home (/admin/dashboard, /driver/jobs,
 ///   /client/dashboard); each portal is guarded by role.
-/// - Authenticated with a quote waiting to be accepted → back to the quote
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
   // Re-run redirects whenever auth state or the user doc changes.
@@ -77,8 +59,7 @@ GoRouter appRouter(Ref ref) {
   ref
     ..onDispose(refresh.dispose)
     ..listen(authStateProvider, (previous, next) => refresh.value++)
-    ..listen(currentUserProvider, (previous, next) => refresh.value++)
-    ..listen(quoteReturnPathProvider, (previous, next) => refresh.value++);
+    ..listen(currentUserProvider, (previous, next) => refresh.value++);
 
   return GoRouter(
     initialLocation: '/',
@@ -91,32 +72,22 @@ GoRouter appRouter(Ref ref) {
       final location = state.matchedLocation;
       final onAuthPage = location == '/login' || location == '/register';
 
-      // The quote flow belongs to everyone, so it is settled before any
-      // auth state is consulted — no guest is ever bounced out of it, and
-      // no signed-in client is ever bounced back to their portal.
-      if (isPublicQuoteRoute(location)) return null;
+      // The quote calculator moved to the website; older site links still
+      // land on /quote. Send them to sign-up, which forwards anyone already
+      // signed in to their portal on the next pass.
+      if (location == '/quote' || location.startsWith('/quote/')) {
+        return '/register';
+      }
 
       // Firebase restores a session asynchronously. Hold at the splash
-      // instead of flashing the landing page at a returning user.
+      // instead of flashing the sign-in form at a returning user.
       if (authState.isLoading) return location == '/' ? null : '/';
 
-      if (authUser == null) {
-        if (onAuthPage) return null;
-        // A visitor opening the app meets the calculator, not a sign-in
-        // wall. Anyone who asked for a portal page still signs in first.
-        return location == '/' ? '/quote' : '/login';
-      }
+      if (authUser == null) return onAuthPage ? null : '/login';
 
       // Signed in but the users/{uid} doc hasn't loaded yet — hold at splash.
       if (appUser == null) {
         return location == '/' ? null : '/';
-      }
-
-      // Someone who signed in mid-quote goes back to finish it rather than
-      // landing on their portal. The quote screen clears the path on arrival.
-      final returnPath = ref.read(quoteReturnPathProvider);
-      if (returnPath != null && isPublicQuoteRoute(returnPath)) {
-        return returnPath;
       }
 
       final home = switch (appUser.role) {
@@ -141,31 +112,8 @@ GoRouter appRouter(Ref ref) {
         path: '/register',
         builder: (context, state) => const RegisterScreen(),
       ),
-      // Public quote flow — no sign-in required until the quote is accepted.
-      GoRoute(
-        path: '/quote',
-        builder: (context, state) => const QuoteCalculatorScreen(),
-      ),
-      GoRoute(
-        path: '/quote/boxes',
-        builder: (context, state) => const QuoteBoxesScreen(),
-      ),
-      GoRoute(
-        path: '/quote/items',
-        builder: (context, state) => const QuoteLooseItemsScreen(),
-      ),
-      GoRoute(
-        path: '/quote/services',
-        builder: (context, state) => const QuoteServicesScreen(),
-      ),
-      GoRoute(
-        path: '/quote/summary',
-        builder: (context, state) => const QuoteSummaryScreen(),
-      ),
-      GoRoute(
-        path: '/quote/confirmation',
-        builder: (context, state) => const QuoteConfirmationScreen(),
-      ),
+      // Legacy quote links — redirected to /register above.
+      GoRoute(path: '/quote', redirect: (context, state) => '/register'),
 
       // Admin portal — all screens share the AdminShell layout.
       // Inventory/QR arrive in Stage 3, jobs/fleet/reports in Stage 4.
@@ -346,7 +294,7 @@ class _SplashScreen extends ConsumerWidget {
       backgroundColor: AppColors.navy,
       body: Center(
         child: error == null
-            ? const CircularProgressIndicator(color: AppColors.amber)
+            ? const CircularProgressIndicator(color: AppColors.sky)
             : _SplashError(
                 error: error,
                 onRetry: () =>
@@ -372,7 +320,7 @@ class _SplashError extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.error_outline, color: AppColors.amber, size: 40),
+          const Icon(Icons.error_outline, color: AppColors.sky, size: 40),
           const SizedBox(height: 16),
           Text(
             message,

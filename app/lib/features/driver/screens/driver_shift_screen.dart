@@ -91,7 +91,7 @@ class _StartShiftCard extends ConsumerWidget {
       child: Column(
         children: [
           const Icon(Icons.play_circle_outline,
-              color: AppColors.amber, size: 48),
+              color: AppColors.sky, size: 48),
           const SizedBox(height: 12),
           Text('No active shift',
               style: tt.titleMedium?.copyWith(color: Colors.white)),
@@ -275,7 +275,7 @@ class _EidCard extends StatelessWidget {
             ),
             child: Text('Clearance: Level 4',
                 style: tt.bodySmall?.copyWith(
-                    color: AppColors.amberDark,
+                    color: AppColors.statusPastDue,
                     fontWeight: FontWeight.w600)),
           ),
           const Divider(height: 32),
@@ -283,7 +283,7 @@ class _EidCard extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.amberDark, width: 2),
+              border: Border.all(color: AppColors.accentDeep, width: 2),
             ),
             child: QrImageView(
               data: gateCode,

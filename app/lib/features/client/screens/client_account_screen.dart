@@ -129,7 +129,7 @@ class _ClientAccountScreenState extends ConsumerState<ClientAccountScreen> {
               padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.amber, width: 2.5),
+                border: Border.all(color: AppColors.accent, width: 2.5),
               ),
               child: InitialsAvatar(name: user?.name, size: 72),
             ),
@@ -239,7 +239,7 @@ class _ClientAccountScreenState extends ConsumerState<ClientAccountScreen> {
                               height: 18,
                               child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: AppColors.amberDark),
+                                  color: AppColors.accentDeep),
                             )
                           : const Text('Save Changes'),
                     ),

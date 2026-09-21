@@ -77,7 +77,7 @@ class DriverShell extends ConsumerWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: selected,
         backgroundColor: AppColors.surface,
-        indicatorColor: AppColors.amber,
+        indicatorColor: AppColors.skyTint,
         onDestinationSelected: (index) => context.go(tabs[index].route),
         destinations: [
           for (final tab in tabs)

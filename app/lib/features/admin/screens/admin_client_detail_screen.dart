@@ -7,7 +7,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../../core/widgets/status_chip.dart';
-import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/pricing.dart';
+import '../../../core/utils/currency.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/storage_unit.dart';
 import '../../../core/models/client.dart';
@@ -160,7 +161,7 @@ class _HeaderCard extends StatelessWidget {
           padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: AppColors.amber, width: 2.5),
+            border: Border.all(color: AppColors.accent, width: 2.5),
           ),
           child: InitialsAvatar(name: client.displayName, size: 72),
         ),
@@ -243,8 +244,10 @@ class _HeaderCard extends StatelessWidget {
   }
 }
 
-// ------------------------------------------------------- subscription card
+// ------------------------------------------------------------ billing card
 
+/// Storage billing for one client: per-unit monthly rates from the shared
+/// price list (the same numbers as the website), billed monthly.
 class _SubscriptionCard extends ConsumerWidget {
   const _SubscriptionCard({required this.client});
 
@@ -253,9 +256,9 @@ class _SubscriptionCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
-    final used = client.storageUnitCount;
-    final limit = AppConstants.planUnitLimits[client.subscriptionPlan.name] ?? 0;
-    final fraction = limit > 0 ? (used / limit).clamp(0.0, 1.0) : 0.0;
+    final units = ref.watch(clientUnitsProvider(client.id)).valueOrNull ??
+        const <StorageUnit>[];
+    final bill = StorageBill.fromUnits(units);
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -270,79 +273,72 @@ class _SubscriptionCard extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Subscription', style: textTheme.titleMedium),
+              Text('Billing', style: textTheme.titleMedium),
               StatusChip(status: client.subscriptionStatus.name),
             ],
           ),
           const SizedBox(height: 20),
-          Text('CURRENT PLAN',
+          Text('MONTHLY STORAGE',
               style: textTheme.bodySmall?.copyWith(letterSpacing: 0.8)),
           const SizedBox(height: 4),
-          Text(client.subscriptionPlan.label, style: textTheme.headlineSmall),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(formatZar(bill.monthlyZar), style: textTheme.headlineSmall),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 3),
+                child: Text(' /mo', style: textTheme.bodySmall),
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: _fieldColumn(
-                  'Status',
-                  Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: AppColors.statusSuccess,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text('Billed Monthly', style: textTheme.bodyMedium),
-                    ],
-                  ),
+                  'Billing',
+                  Text('Monthly', style: textTheme.bodyMedium),
                   textTheme,
                 ),
               ),
               Expanded(
                 child: _fieldColumn(
-                  'Renewal Date',
-                  Text(
-                    '—',
-                    style: textTheme.bodyMedium,
-                  ),
+                  'Units billed',
+                  Text('${bill.billableUnits.length}',
+                      style: textTheme.bodyMedium),
                   textTheme,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Storage Capacity', style: textTheme.labelLarge),
-              Text(
-                limit > 0 ? '${(fraction * 100).round()}%' : '—',
-                style: textTheme.labelLarge,
+          if (bill.unpricedUnits > 0) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.statusWarningBg,
+                borderRadius: BorderRadius.circular(8),
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: LinearProgressIndicator(
-              value: fraction,
-              minHeight: 8,
-              backgroundColor: AppColors.surfaceContainer,
-              valueColor:
-                  const AlwaysStoppedAnimation<Color>(AppColors.amber),
+              child: Row(
+                children: [
+                  const Icon(Icons.warning_amber_rounded,
+                      size: 18, color: AppColors.statusWarning),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '${bill.unpricedUnits} '
+                      'unit${bill.unpricedUnits == 1 ? ' has' : 's have'} '
+                      'no size, so ${bill.unpricedUnits == 1 ? 'it is' : 'they are'} '
+                      'not billed. Set a size on the unit page.',
+                      style: textTheme.bodySmall
+                          ?.copyWith(color: AppColors.textPrimary),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            limit > 0
-                ? '$used of $limit units used'
-                : '$used units in storage',
-            style: textTheme.bodySmall,
-          ),
+          ],
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
@@ -402,12 +398,12 @@ class _InsightCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.insights, color: AppColors.amber, size: 22),
+              const Icon(Icons.insights, color: AppColors.sky, size: 22),
               const SizedBox(width: 10),
               Text(
                 'Logistics Insight',
                 style: textTheme.titleMedium
-                    ?.copyWith(color: AppColors.amber),
+                    ?.copyWith(color: AppColors.sky),
               ),
             ],
           ),

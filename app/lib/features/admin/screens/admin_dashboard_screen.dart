@@ -373,7 +373,7 @@ class _JobRowState extends State<_JobRow> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: pickup ? AppColors.amber : AppColors.navy,
+                      color: pickup ? AppColors.accent : AppColors.navy,
                       borderRadius: BorderRadius.circular(999),
                     ),
                     child: Text(
@@ -381,7 +381,7 @@ class _JobRowState extends State<_JobRow> {
                       style: textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w700,
                         color:
-                            pickup ? AppColors.amberDark : Colors.white,
+                            pickup ? AppColors.onAccent : Colors.white,
                       ),
                     ),
                   ),

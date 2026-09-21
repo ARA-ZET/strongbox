@@ -46,8 +46,12 @@ for (const file of ROOTS.flatMap((r) => walk(r))) {
     const bare = body.trim();
     if (/^[a-z0-9_]+$/.test(bare)) icons.add(bare);
   }
-  // Icons carried as data, rendered through {icon} into such a span.
-  for (const m of src.matchAll(/\bicon:\s*"([a-z0-9_]+)"/g)) icons.add(m[1]);
+  // Icons carried as data, rendered through {icon} into such a span —
+  // `icon: "bed"` in source, or `"icon": "bed"` in the generated price list
+  // (lib/pricing.g.ts, from packages/pricing/pricing.json).
+  for (const m of src.matchAll(/(?<![A-Za-z0-9_])"?icon"?\s*:\s*"([a-z0-9_]+)"/g)) {
+    icons.add(m[1]);
+  }
 }
 
 const list = [...icons].sort();

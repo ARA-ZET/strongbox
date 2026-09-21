@@ -108,13 +108,13 @@ class _JobTile extends StatelessWidget {
             height: 44,
             decoration: BoxDecoration(
               color: pickup
-                  ? AppColors.statusWarningBg
+                  ? AppColors.skyTint
                   : AppColors.statusSuccessBg,
               borderRadius: AppRadius.sm,
             ),
             child: Icon(
               pickup ? Icons.archive_outlined : Icons.local_shipping_outlined,
-              color: pickup ? AppColors.amberDark : AppColors.statusSuccess,
+              color: pickup ? AppColors.accentDeep : AppColors.statusSuccess,
             ),
           ),
           const SizedBox(width: AppSpacing.sm + 4),

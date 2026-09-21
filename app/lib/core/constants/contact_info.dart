@@ -12,4 +12,8 @@ abstract final class ContactInfo {
 
   static const email = 'info@strongbox.co.za';
   static const emailUri = 'mailto:info@strongbox.co.za';
+
+  /// The marketing site — pricing, calculators and sign-up CTAs live there.
+  static const websiteUrl = 'https://strongboxstorage.co.za';
+  static const pricingUrl = '$websiteUrl/pricing';
 }

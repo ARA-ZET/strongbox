@@ -34,7 +34,6 @@ enum SubscriptionStatus {
   unpaid,
 }
 
-enum SubscriptionPlan { starter, professional, enterprise }
 
 enum ClientType { personal, business }
 
@@ -98,18 +97,6 @@ enum ShiftStatus { active, onBreak, ended }
 
 enum ScanType { pickup, delivery, audit, lookup }
 
-/// Storage box tiers offered in the public quote calculator.
-enum BoxSize { small, medium, large, xl }
-
-/// Collection vehicle options, priced once-off.
-enum VehicleSize { smallVan, mediumVan, largeTruck }
-
-/// Filter tabs on the loose-items step.
-enum LooseItemCategory { beds, tables, office, appliances, outdoor, other }
-
-/// Lifecycle of a quote (doc 20). A guest builds a `draft`; accepting it
-/// requires an account, which is when it is first written to Firestore.
-enum QuoteStatus { draft, accepted, expired, converted, cancelled }
 
 // ---------------------------------------------------------------- helpers
 
@@ -128,6 +115,17 @@ extension UserRoleX on UserRole {
 
 extension StorageStatusX on StorageStatus {
   String get label => _title(name);
+
+  /// Whether a unit in this status is charged for. Billing runs from
+  /// collection until it is back with the client: anything we are holding
+  /// or moving on the client's behalf.
+  bool get isBillable => switch (this) {
+        StorageStatus.inTransit ||
+        StorageStatus.inStorage ||
+        StorageStatus.pendingDelivery =>
+          true,
+        _ => false,
+      };
 
   Color get chipBgColour => switch (this) {
         StorageStatus.inStorage ||
@@ -207,10 +205,6 @@ extension SubscriptionStatusX on SubscriptionStatus {
   String get label => _title(name);
 }
 
-extension SubscriptionPlanX on SubscriptionPlan {
-  String get label => _title(name);
-}
-
 extension TimeWindowX on TimeWindow {
   String get label => switch (this) {
         TimeWindow.morning => 'Morning (08:00–12:00)',
@@ -223,42 +217,9 @@ extension IssueTypeX on IssueType {
   String get label => _title(name);
 }
 
-extension BoxSizeX on BoxSize {
-  String get label => switch (this) {
-        BoxSize.small => 'Small',
-        BoxSize.medium => 'Medium',
-        BoxSize.large => 'Large',
-        BoxSize.xl => 'XL',
-      };
-}
 
-extension VehicleSizeX on VehicleSize {
-  String get label => _title(name);
-}
 
-extension LooseItemCategoryX on LooseItemCategory {
-  String get label => _title(name);
-}
 
-extension QuoteStatusX on QuoteStatus {
-  String get label => _title(name);
-
-  Color get chipBgColour => switch (this) {
-        QuoteStatus.accepted ||
-        QuoteStatus.converted =>
-          AppColors.statusSuccessBg,
-        QuoteStatus.draft => AppColors.statusPendingBg,
-        QuoteStatus.expired => AppColors.statusWarningBg,
-        QuoteStatus.cancelled => AppColors.statusErrorBg,
-      };
-
-  Color get chipTextColour => switch (this) {
-        QuoteStatus.accepted || QuoteStatus.converted => AppColors.statusSuccess,
-        QuoteStatus.draft => AppColors.statusPending,
-        QuoteStatus.expired => AppColors.statusWarning,
-        QuoteStatus.cancelled => AppColors.statusError,
-      };
-}
 
 extension ShiftStatusX on ShiftStatus {
   String get label => switch (this) {

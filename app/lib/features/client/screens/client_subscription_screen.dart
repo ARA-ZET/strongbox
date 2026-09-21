@@ -1,145 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/contact_info.dart';
+import '../../../core/constants/pricing.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadow.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/utils/currency.dart';
 import '../../../core/widgets/contact_us_card.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../providers/client_providers.dart';
 
-/// Billing & subscription (ZAR). Design:
-/// client_designs/subscription_billing/screen.png.
+/// Billing (ZAR). Storage is charged per box or loose item per month at the
+/// shared price list — the same numbers as strongboxstorage.co.za — with no
+/// contract or term discounts. Pickups are a once-off fee per collection.
 class ClientSubscriptionScreen extends ConsumerWidget {
   const ClientSubscriptionScreen({super.key});
-
-  static String _priceLabel(SubscriptionPlan plan) {
-    final price = AppConstants.planPricesZar[plan.name] ?? 0;
-    return price == 0
-        ? 'Custom'
-        : 'R${NumberFormat.decimalPattern().format(price)}';
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final client = ref.watch(currentClientProvider).valueOrNull;
-    final units = ref.watch(myUnitsProvider).valueOrNull ?? const [];
+    final bill = ref.watch(myStorageBillProvider);
     final tt = Theme.of(context).textTheme;
-
-    final plan = client?.subscriptionPlan ?? SubscriptionPlan.starter;
-    final limit = AppConstants.planUnitLimits[plan.name] ?? 0;
-    final used = units
-        .where((unit) => unit.status != StorageStatus.archived)
-        .length;
-    final fraction = limit > 0 ? (used / limit).clamp(0.0, 1.0) : 0.0;
 
     return LayoutBuilder(builder: (context, constraints) {
       final desktop = constraints.maxWidth > 900;
 
-      final capacity = Container(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: AppRadius.md,
-          boxShadow: AppShadow.card,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Warehouse Capacity', style: tt.titleMedium),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('$used', style: tt.displaySmall),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  limit > 0 ? '/ $limit units used' : 'units stored',
-                  style: tt.bodyMedium
-                      ?.copyWith(color: AppColors.textSecondary),
-                ),
-                const Spacer(),
-                if (limit > 0 && fraction >= 0.8)
-                  Row(
-                    children: [
-                      const Icon(Icons.warning_amber_rounded,
-                          size: 16, color: AppColors.statusWarning),
-                      const SizedBox(width: AppSpacing.xs),
-                      Text('Approaching plan limit',
-                          style: tt.bodySmall?.copyWith(
-                              color: AppColors.statusWarning,
-                              fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.sm + 4),
-            ClipRRect(
-              borderRadius: AppRadius.pill,
-              child: LinearProgressIndicator(
-                value: fraction,
-                minHeight: 10,
-                backgroundColor: AppColors.surfaceContainer,
-                valueColor:
-                    const AlwaysStoppedAnimation<Color>(AppColors.amber),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Wrap(
-              spacing: AppSpacing.sm + 4,
-              runSpacing: AppSpacing.sm,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.navy,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(0, 44),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md),
-                  ),
-                  onPressed: () => _stripeComingSoon(context),
-                  child: const Text('Upgrade Plan'),
-                ),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(0, 44),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md),
-                  ),
-                  onPressed: () => _stripeComingSoon(context),
-                  child: const Text('View Analytics'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
+      final summary = _MonthlySummary(bill: bill);
 
-      final activePlan = Container(
+      final termCard = Container(
         padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: const BoxDecoration(
-          color: AppColors.navy,
+          color: AppColors.navyDeep,
           borderRadius: AppRadius.md,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('ACTIVE PLAN',
-                style: tt.bodySmall?.copyWith(
-                    color: AppColors.amber, letterSpacing: 1)),
+            Text('BILLING',
+                style: tt.bodySmall
+                    ?.copyWith(color: AppColors.sky, letterSpacing: 1)),
             const SizedBox(height: AppSpacing.xs),
-            Text(plan.label,
+            Text('Monthly',
                 style: tt.displaySmall?.copyWith(color: Colors.white)),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              plan == SubscriptionPlan.enterprise
-                  ? 'Custom pricing • talk to us'
-                  : '${_priceLabel(plan)} / month',
-              style: tt.bodyMedium?.copyWith(color: Colors.white70),
+              'No contract, no minimum term — cancel any time.',
+              style: tt.bodyMedium?.copyWith(color: AppColors.onNavyVariant),
             ),
             const SizedBox(height: AppSpacing.sm),
             StatusChip(
@@ -163,30 +74,34 @@ class ClientSubscriptionScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Billing & Subscription', style: tt.displaySmall),
+            Text('Billing', style: tt.displaySmall),
             const SizedBox(height: AppSpacing.xs),
-            Text('Manage your warehouse allocation and subscription plans.',
+            Text(
+                'You pay per box or item each month — only for what we are '
+                'storing for you.',
                 style:
                     tt.bodyMedium?.copyWith(color: AppColors.textSecondary)),
             const SizedBox(height: AppSpacing.lg),
             if (desktop)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(flex: 55, child: capacity),
-                  const SizedBox(width: AppSpacing.lg),
-                  Expanded(flex: 45, child: activePlan),
-                ],
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(flex: 55, child: summary),
+                    const SizedBox(width: AppSpacing.lg),
+                    Expanded(flex: 45, child: termCard),
+                  ],
+                ),
               )
             else ...[
-              capacity,
+              summary,
               const SizedBox(height: AppSpacing.lg),
-              activePlan,
+              termCard,
             ],
             const SizedBox(height: AppSpacing.lg),
-            Text('Available Plans', style: tt.headlineSmall),
+            Text('Price List', style: tt.headlineSmall),
             const SizedBox(height: AppSpacing.sm + 4),
-            _PlanComparison(current: plan),
+            const _PriceListCard(),
             const SizedBox(height: AppSpacing.lg),
             Text('Payment History', style: tt.headlineSmall),
             const SizedBox(height: AppSpacing.sm + 4),
@@ -208,161 +123,208 @@ class ClientSubscriptionScreen extends ConsumerWidget {
   }
 }
 
-// ------------------------------------------------------------ plan compare
+// --------------------------------------------------------- monthly summary
 
-class _PlanComparison extends StatelessWidget {
-  const _PlanComparison({required this.current});
+class _MonthlySummary extends StatelessWidget {
+  const _MonthlySummary({required this.bill});
 
-  final SubscriptionPlan current;
+  final StorageBill bill;
 
-  static const _features = <SubscriptionPlan, List<String>>{
-    SubscriptionPlan.starter: ['20 Storage Units', 'Basic Analytics'],
-    SubscriptionPlan.professional: [
-      '100 Storage Units',
-      'Advanced Analytics',
-      'Priority Support',
-    ],
-    SubscriptionPlan.enterprise: [
-      'Unlimited Units',
-      'Dedicated Account Mgr',
-    ],
-  };
+  static const _shown = 6;
 
-  static const _taglines = <SubscriptionPlan, String>{
-    SubscriptionPlan.starter: 'Ideal for individuals & small setups.',
-    SubscriptionPlan.professional: 'Scaling logistics for growing teams.',
-    SubscriptionPlan.enterprise: 'Custom solutions for heavy logistics.',
-  };
+  @override
+  Widget build(BuildContext context) {
+    final tt = Theme.of(context).textTheme;
+    final units = bill.billableUnits;
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: AppRadius.md,
+        border: Border.all(color: AppColors.border),
+        boxShadow: AppShadow.card,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Monthly Storage', style: tt.titleMedium),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(formatZar(bill.monthlyZar), style: tt.displaySmall),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(' /mo', style: tt.bodyMedium),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          const Divider(),
+          if (units.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+              child: Text(
+                'Nothing in storage yet — billing starts once we collect.',
+                style: tt.bodyMedium?.copyWith(color: AppColors.textSecondary),
+              ),
+            )
+          else ...[
+            for (final unit in units.take(_shown))
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        unit.label.isEmpty ? unit.qrCodeId : unit.label,
+                        style: tt.bodyMedium,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(Pricing.labelFor(unit.priceKey) ?? 'Being sized',
+                        style: tt.bodySmall),
+                    const SizedBox(width: AppSpacing.md),
+                    SizedBox(
+                      width: 72,
+                      child: Text(
+                        _rateLabel(unit.monthlyRateZar > 0
+                            ? unit.monthlyRateZar
+                            : Pricing.monthlyFor(unit.priceKey)),
+                        textAlign: TextAlign.right,
+                        style: tt.bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            if (units.length > _shown)
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xs),
+                child: Text('and ${units.length - _shown} more',
+                    style: tt.bodySmall),
+              ),
+          ],
+          if (bill.unpricedUnits > 0) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              '${bill.unpricedUnits} '
+              '${bill.unpricedUnits == 1 ? 'unit is' : 'units are'} still '
+              'being sized by our team and not yet included.',
+              style: tt.bodySmall,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  static String _rateLabel(int? rate) =>
+      rate == null || rate == 0 ? '—' : formatZar(rate);
+}
+
+// -------------------------------------------------------------- price list
+
+class _PriceListCard extends StatelessWidget {
+  const _PriceListCard();
 
   @override
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
 
-    Widget planCard(SubscriptionPlan plan) {
-      final isCurrent = plan == current;
-      final price = AppConstants.planPricesZar[plan.name] ?? 0;
-
-      return Container(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: AppRadius.md,
-          border: Border.all(
-            color: isCurrent ? AppColors.amberDark : AppColors.border,
-            width: isCurrent ? 2 : 1,
-          ),
-          boxShadow: AppShadow.card,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (isCurrent) ...[
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm + 4, vertical: 4),
-                decoration: const BoxDecoration(
-                  color: AppColors.amberDark,
-                  borderRadius: AppRadius.pill,
-                ),
-                child: Text('CURRENT PLAN',
-                    style: tt.bodySmall?.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white)),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-            ],
-            Text(plan.label, style: tt.titleMedium),
-            const SizedBox(height: AppSpacing.xs),
-            Text(_taglines[plan]!, style: tt.bodySmall),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  price == 0
-                      ? 'Custom'
-                      : 'R${NumberFormat.decimalPattern().format(price)}',
-                  style: tt.displaySmall,
-                ),
-                if (price != 0)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Text(' /mo', style: tt.bodySmall),
-                  ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            for (final feature in _features[plan]!)
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                child: Row(
+    Widget row(String label, String detail, String price) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.check_circle_outline,
-                        size: 16, color: AppColors.statusSuccess),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                        child: Text(feature, style: tt.bodyMedium)),
+                    Text(label, style: tt.bodyMedium),
+                    Text(detail, style: tt.bodySmall),
                   ],
                 ),
               ),
-            const SizedBox(height: AppSpacing.sm),
-            SizedBox(
-              width: double.infinity,
-              child: isCurrent
-                  ? const ElevatedButton(
-                      onPressed: null,
-                      child: Text('Current Subscription'),
-                    )
-                  : plan == SubscriptionPlan.enterprise
-                      ? ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.navy,
-                            foregroundColor: Colors.white,
-                          ),
-                          onPressed: () =>
-                              ClientSubscriptionScreen._stripeComingSoon(
-                                  context),
-                          child: const Text('Contact Sales'),
-                        )
-                      : OutlinedButton(
-                          onPressed: () =>
-                              ClientSubscriptionScreen._stripeComingSoon(
-                                  context),
-                          child: Text(
-                              plan.index < current.index
-                                  ? 'Switch to ${plan.label}'
-                                  : 'Upgrade Now'),
-                        ),
-            ),
-          ],
-        ),
-      );
-    }
+              Text(price,
+                  style: tt.bodyMedium?.copyWith(
+                      color: AppColors.accentDeep,
+                      fontWeight: FontWeight.w700)),
+            ],
+          ),
+        );
 
-    return LayoutBuilder(builder: (context, constraints) {
-      final wide = constraints.maxWidth > 900;
-      final cards = SubscriptionPlan.values.map(planCard).toList();
-      if (wide) {
-        return Row(
+    Widget section(String title, List<Widget> rows) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final (index, card) in cards.indexed) ...[
-              if (index > 0) const SizedBox(width: AppSpacing.md),
-              Expanded(child: card),
-            ],
+            Text(title,
+                style: tt.labelSmall?.copyWith(
+                    color: AppColors.textSecondary, letterSpacing: 0.8)),
+            const SizedBox(height: AppSpacing.xs),
+            ...rows,
           ],
         );
-      }
-      return Column(
+
+    final boxes = section('STORAGE BOXES · PER MONTH', [
+      for (final box in PriceList.boxes)
+        row(box.label, box.description, '${formatZar(box.monthlyZar)}/mo'),
+    ]);
+    final pickups = section('PICKUP · ONCE-OFF PER COLLECTION', [
+      for (final vehicle in PriceList.vehicles)
+        row(vehicle.label, vehicle.description,
+            formatZar(vehicle.onceOffZar)),
+    ]);
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: AppRadius.md,
+        border: Border.all(color: AppColors.border),
+        boxShadow: AppShadow.card,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final (index, card) in cards.indexed) ...[
-            if (index > 0) const SizedBox(height: AppSpacing.md),
-            card,
-          ],
+          LayoutBuilder(builder: (context, constraints) {
+            if (constraints.maxWidth > 640) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: boxes),
+                  const SizedBox(width: AppSpacing.xl),
+                  Expanded(child: pickups),
+                ],
+              );
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [boxes, const SizedBox(height: AppSpacing.md), pickups],
+            );
+          }),
+          const Divider(height: AppSpacing.xl),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Loose items (furniture, bikes, appliances) from '
+                  '${formatZar(Pricing.looseItemFrom)}/mo. Prices include '
+                  '15% VAT.',
+                  style: tt.bodySmall,
+                ),
+              ),
+              TextButton(
+                onPressed: () => launchUrl(Uri.parse(ContactInfo.pricingUrl),
+                    mode: LaunchMode.externalApplication),
+                child: const Text('Full price list'),
+              ),
+            ],
+          ),
         ],
-      );
-    });
+      ),
+    );
   }
 }
 

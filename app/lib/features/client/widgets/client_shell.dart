@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_shadow.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../auth/providers/auth_provider.dart';
@@ -23,8 +24,9 @@ const _tabs = [
   _Tab('Billing', Icons.receipt_long_outlined, '/client/subscription'),
 ];
 
-/// Persistent client layout (doc 15). Desktop: white top bar with logo,
-/// nav links, bell and avatar. Mobile: bottom NavigationBar + slim top bar.
+/// Persistent client layout (doc 15), styled after the marketing site's
+/// navbar. Desktop: white top bar with logo, nav links, bell and avatar.
+/// Mobile: bottom NavigationBar + slim top bar.
 class ClientShell extends ConsumerWidget {
   const ClientShell({super.key, required this.child});
 
@@ -44,23 +46,14 @@ class ClientShell extends ConsumerWidget {
       final logo = Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 34,
-            height: 34,
-            decoration: const BoxDecoration(
-              color: AppColors.amber,
-              borderRadius: AppRadius.sm,
-            ),
-            child: const Icon(Icons.inventory_2,
-                color: AppColors.navy, size: 20),
-          ),
+          const Icon(Icons.inventory_2, color: AppColors.accentDeep, size: 28),
           const SizedBox(width: AppSpacing.sm),
           Text(
             'StrongBox',
             style: GoogleFonts.inter(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: AppColors.navyDeep,
             ),
           ),
         ],
@@ -84,13 +77,12 @@ class ClientShell extends ConsumerWidget {
           body: Column(
             children: [
               Container(
-                height: 64,
+                height: 72,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                    const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
                 decoration: const BoxDecoration(
                   color: AppColors.surface,
-                  border:
-                      Border(bottom: BorderSide(color: AppColors.border)),
+                  boxShadow: AppShadow.card,
                 ),
                 child: Row(
                   children: [
@@ -132,8 +124,6 @@ class ClientShell extends ConsumerWidget {
         body: child,
         bottomNavigationBar: NavigationBar(
           selectedIndex: onAccount ? 4 : selected,
-          backgroundColor: AppColors.surface,
-          indicatorColor: AppColors.amber,
           onDestinationSelected: (index) => index < 4
               ? context.go(_tabs[index].route)
               : context.go('/client/account'),
@@ -171,8 +161,8 @@ class _NavLink extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: active ? AppColors.amberDark : Colors.transparent,
-              width: 2.5,
+              color: active ? AppColors.accentDeep : Colors.transparent,
+              width: 2,
             ),
           ),
         ),
@@ -180,8 +170,8 @@ class _NavLink extends StatelessWidget {
           label,
           style: GoogleFonts.inter(
             fontSize: 14,
-            fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-            color: active ? AppColors.textPrimary : AppColors.textSecondary,
+            fontWeight: FontWeight.w600,
+            color: active ? AppColors.accentDeep : AppColors.navyDeep,
           ),
         ),
       ),

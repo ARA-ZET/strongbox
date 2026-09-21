@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BOX_TYPES, VEHICLES, PREPAY_TIERS } from "@/lib/constants";
+import { BOX_TYPES, VEHICLES } from "@/lib/constants";
 
 /**
  * Self-storage unit vs pay-per-box, over twelve months.
@@ -32,7 +32,6 @@ const UNITS = [
 const TRIP_COST = 95;
 
 const SMALL_VAN = VEHICLES.find((v) => v.id === "small-van")!;
-const ANNUAL_TIER = PREPAY_TIERS.find((t) => t.id === "annual")!;
 
 /** What the price gap actually buys, listed whichever way the gap falls. */
 const INCLUDED = [
@@ -51,7 +50,6 @@ export default function SavingsCalculator() {
   const [unitId, setUnitId] = useState("small");
   const [rent, setRent] = useState(UNITS[0].rent);
   const [tripsPerMonth, setTripsPerMonth] = useState(2);
-  const [prepay, setPrepay] = useState(false);
 
   const unit = UNITS.find((u) => u.id === unitId)!;
   const boxType = BOX_TYPES.find((b) => b.id === boxTypeId)!;
@@ -68,9 +66,7 @@ export default function SavingsCalculator() {
   const selfStorageYear = unitYear + tripsYear;
 
   // ── StrongBox side ──
-  const rate = prepay
-    ? Math.round(boxType.price * (1 - ANNUAL_TIER.discount))
-    : boxType.price;
+  const rate = boxType.price;
   const strongboxYear = rate * boxes * 12 + SMALL_VAN.price;
 
   const gap = selfStorageYear - strongboxYear;
@@ -228,23 +224,6 @@ export default function SavingsCalculator() {
             </div>
           </div>
 
-          <label className="flex items-start gap-3 cursor-pointer rounded-xl border border-outline-variant bg-mist p-4">
-            <input
-              type="checkbox"
-              checked={prepay}
-              onChange={(e) => setPrepay(e.target.checked)}
-              className="mt-1 w-4 h-4 accent-accent"
-            />
-            <span>
-              <span className="font-body-strong text-navy-deep block">
-                Prepay 12 months with StrongBox
-              </span>
-              <span className="text-sm text-on-surface-variant">
-                Takes {Math.round(ANNUAL_TIER.discount * 100)}% off the monthly storage
-                rate. Optional — monthly billing has no lock-in.
-              </span>
-            </span>
-          </label>
         </div>
 
         {/* ── Result ── */}

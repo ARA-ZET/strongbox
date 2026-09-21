@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Full-width amber CTA button with a trailing arrow and loading state.
+/// Full-width accent CTA button with a trailing arrow and loading state.
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     super.key,
@@ -32,7 +32,7 @@ class PrimaryButton extends StatelessWidget {
                 height: 22,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
-                  color: AppColors.amberDark,
+                  color: AppColors.accentDeep,
                 ),
               )
             : Row(

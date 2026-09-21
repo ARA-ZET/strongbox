@@ -91,7 +91,7 @@ class _QuickScanDrawerState extends ConsumerState<QuickScanDrawer> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.qr_code_scanner,
-                          color: AppColors.amber, size: 56),
+                          color: AppColors.sky, size: 56),
                       const SizedBox(height: 12),
                       Text(
                         'Camera scanner arrives with the\nQR module (Stage 3)',
@@ -120,7 +120,7 @@ class _QuickScanDrawerState extends ConsumerState<QuickScanDrawer> {
                         width: 16,
                         height: 16,
                         child: CircularProgressIndicator(
-                            strokeWidth: 2, color: AppColors.amberDark),
+                            strokeWidth: 2, color: AppColors.accentDeep),
                       )
                     : const Icon(Icons.search, size: 18),
                 label: const Text('Look Up'),

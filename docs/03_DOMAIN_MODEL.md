@@ -67,7 +67,6 @@ Every entity in the system is defined here. This is the single source of truth f
 | stripeCustomerId | String? | |
 | subscriptionId | String? | |
 | subscriptionStatus | SubscriptionStatus | |
-| subscriptionPlan | SubscriptionPlan | |
 | memberIds | List<String> | User IDs of team members |
 | storageUnitCount | int | Denormalised count |
 | notes | String? | Admin notes |
@@ -113,6 +112,8 @@ Every entity in the system is defined here. This is the single source of truth f
 | qrCodeId | String | Linked QR code |
 | parentId | String? | If nested inside another unit |
 | type | UnitType | closed \| open |
+| priceKey | String? | Box size or loose-item id from packages/pricing/pricing.json |
+| monthlyRateZar | int | Rate recorded at registration (0 = predates pricing) |
 | label | String | Human-readable name |
 | description | String? | |
 | status | StorageStatus | |

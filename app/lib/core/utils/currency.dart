@@ -6,7 +6,7 @@ final _decimal = NumberFormat('#,##0.00');
 /// `R1,450` — whole Rand, used for headline totals and tariffs.
 String formatZar(num amount) => 'R${_whole.format(amount)}';
 
-/// `R1,450.00` — used on line items and the quote breakdown, where the
+/// `R1,450.00` — used on line items and invoices, where the
 /// designs show cents.
 String formatZarExact(num amount) => 'R${_decimal.format(amount)}';
 

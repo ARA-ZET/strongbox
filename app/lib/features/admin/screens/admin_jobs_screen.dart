@@ -413,7 +413,7 @@ class _JobRowState extends State<_JobRow> {
                       horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: pickup
-                        ? AppColors.statusWarningBg
+                        ? AppColors.skyTint
                         : AppColors.statusPendingBg,
                     borderRadius: BorderRadius.circular(999),
                   ),
@@ -422,7 +422,7 @@ class _JobRowState extends State<_JobRow> {
                     style: textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: pickup
-                          ? AppColors.amberDark
+                          ? AppColors.accentDeep
                           : AppColors.textSecondary,
                     ),
                   ),

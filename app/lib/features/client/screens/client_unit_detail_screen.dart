@@ -1,4 +1,6 @@
 // ignore_for_file: use_null_aware_elements
+import '../../../core/constants/pricing.dart';
+import '../../../core/utils/currency.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -222,14 +224,14 @@ class _PhotoCollage extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.sm + 4, vertical: 4),
                       decoration: const BoxDecoration(
-                        color: AppColors.amber,
+                        color: AppColors.accent,
                         borderRadius: AppRadius.pill,
                       ),
                       child: Text('MAIN EXTERIOR',
                           style: tt.bodySmall?.copyWith(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.amberDark)),
+                              color: AppColors.onAccent)),
                     ),
                   ),
                 ],
@@ -406,7 +408,7 @@ class _JourneyCard extends StatelessWidget {
                         child: Container(
                           height: 3,
                           color: index <= current
-                              ? AppColors.amberDark
+                              ? AppColors.accentDeep
                               : AppColors.border,
                         ),
                       ),
@@ -418,7 +420,7 @@ class _JourneyCard extends StatelessWidget {
                           height: 36,
                           decoration: BoxDecoration(
                             color: index <= current
-                                ? AppColors.amberDark
+                                ? AppColors.accentDeep
                                 : AppColors.surfaceContainer,
                             shape: BoxShape.circle,
                           ),
@@ -442,7 +444,7 @@ class _JourneyCard extends StatelessWidget {
                                 ? FontWeight.w700
                                 : FontWeight.w400,
                             color: index <= current
-                                ? AppColors.amberDark
+                                ? AppColors.accentDeep
                                 : AppColors.textHint,
                           ),
                         ),
@@ -612,6 +614,39 @@ class _VaultSpecCard extends StatelessWidget {
                   label('Status'),
                   const SizedBox(height: AppSpacing.xs),
                   StatusChip(status: unit.status.name),
+                ],
+              ),
+            ],
+          ),
+          const Divider(height: AppSpacing.lg),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    label('Size'),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(Pricing.labelFor(unit.priceKey) ?? 'Being sized',
+                        style: tt.bodyMedium),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  label('Monthly rate'),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    switch (unit.monthlyRateZar > 0
+                        ? unit.monthlyRateZar
+                        : Pricing.monthlyFor(unit.priceKey)) {
+                      final int rate when rate > 0 => '${formatZar(rate)}/mo',
+                      _ => '—',
+                    },
+                    style: tt.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w600),
+                  ),
                 ],
               ),
             ],

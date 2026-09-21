@@ -134,7 +134,7 @@ export const COMPARISON_ROWS: ComparisonRow[] = [
   {
     label: "Contract and cancellation",
     values: {
-      strongbox: "Monthly, cancel anytime — or prepay for a discount",
+      strongbox: "Monthly, cancel anytime",
       "self-storage": "Often a minimum term with a notice period",
       diy: "None",
       removals: "Typically 3–6 months minimum",

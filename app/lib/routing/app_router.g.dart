@@ -6,13 +6,13 @@ part of 'app_router.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appRouterHash() => r'85a746af111209abc6f51f6277a794cf40542686';
+String _$appRouterHash() => r'08bc98be4bfd929e33e5af5e229d09ac7b086cfb';
 
-/// App router. Redirect rules:
-/// - Unauthenticated → /login, except on the public quote flow
+/// App router. The app is for account holders — marketing, pricing and
+/// quotes live on the website (web/). Redirect rules:
+/// - Unauthenticated → /login (or /register, which the site links to)
 /// - Authenticated → role home (/admin/dashboard, /driver/jobs,
 ///   /client/dashboard); each portal is guarded by role.
-/// - Authenticated with a quote waiting to be accepted → back to the quote
 ///
 /// Copied from [appRouter].
 @ProviderFor(appRouter)

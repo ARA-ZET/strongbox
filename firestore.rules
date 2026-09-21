@@ -29,7 +29,12 @@ service cloud.firestore {
       allow create: if isAdmin() ||
         (isClient() && request.resource.data.primaryUserId == request.auth.uid) ||
         (signedIn() && request.resource.data.primaryUserId == request.auth.uid);
-      allow update: if isAdmin() || ownsClientDoc(resource.data);
+      // Clients may edit their own profile, but billing fields
+      // (subscription state, Stripe ids) are set by ops or Stripe.
+      allow update: if isAdmin() ||
+        (ownsClientDoc(resource.data) &&
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(
+            ['subscriptionStatus', 'subscriptionId', 'stripeCustomerId']));
     }
 
     // ---- Storage units & items ----------------------------------------

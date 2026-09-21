@@ -10,7 +10,7 @@ import '../theme/app_spacing.dart';
 ///
 /// StrongBox is a new business; this is the trust signal that a real
 /// person is reachable at any stage, not just a self-serve flow. Used on
-/// the pre-signup quote flow, login/register, and across the client
+/// login/register and across the client
 /// portal (doc: not in the original spec docs — added on direct request).
 class ContactUsCard extends StatelessWidget {
   const ContactUsCard({

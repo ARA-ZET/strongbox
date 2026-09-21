@@ -26,6 +26,15 @@ mixin _$StorageUnit {
   String get qrCodeId => throw _privateConstructorUsedError;
   String? get parentId => throw _privateConstructorUsedError;
   UnitType get type => throw _privateConstructorUsedError;
+
+  /// Box size or loose-item id from the shared price list
+  /// (packages/pricing/pricing.json), e.g. `medium` or `dining-table`.
+  String? get priceKey => throw _privateConstructorUsedError;
+
+  /// Monthly rate in Rand recorded when the unit was registered, so a
+  /// later price-list change never re-prices goods already in storage.
+  /// 0 when the unit predates pricing — see [StorageBill].
+  int get monthlyRateZar => throw _privateConstructorUsedError;
   String get label => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   StorageStatus get status => throw _privateConstructorUsedError;
@@ -62,6 +71,8 @@ abstract class $StorageUnitCopyWith<$Res> {
       String qrCodeId,
       String? parentId,
       UnitType type,
+      String? priceKey,
+      int monthlyRateZar,
       String label,
       String? description,
       StorageStatus status,
@@ -96,6 +107,8 @@ class _$StorageUnitCopyWithImpl<$Res, $Val extends StorageUnit>
     Object? qrCodeId = null,
     Object? parentId = freezed,
     Object? type = null,
+    Object? priceKey = freezed,
+    Object? monthlyRateZar = null,
     Object? label = null,
     Object? description = freezed,
     Object? status = null,
@@ -135,6 +148,14 @@ class _$StorageUnitCopyWithImpl<$Res, $Val extends StorageUnit>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as UnitType,
+      priceKey: freezed == priceKey
+          ? _value.priceKey
+          : priceKey // ignore: cast_nullable_to_non_nullable
+              as String?,
+      monthlyRateZar: null == monthlyRateZar
+          ? _value.monthlyRateZar
+          : monthlyRateZar // ignore: cast_nullable_to_non_nullable
+              as int,
       label: null == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
@@ -206,6 +227,8 @@ abstract class _$$StorageUnitImplCopyWith<$Res>
       String qrCodeId,
       String? parentId,
       UnitType type,
+      String? priceKey,
+      int monthlyRateZar,
       String label,
       String? description,
       StorageStatus status,
@@ -238,6 +261,8 @@ class __$$StorageUnitImplCopyWithImpl<$Res>
     Object? qrCodeId = null,
     Object? parentId = freezed,
     Object? type = null,
+    Object? priceKey = freezed,
+    Object? monthlyRateZar = null,
     Object? label = null,
     Object? description = freezed,
     Object? status = null,
@@ -277,6 +302,14 @@ class __$$StorageUnitImplCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as UnitType,
+      priceKey: freezed == priceKey
+          ? _value.priceKey
+          : priceKey // ignore: cast_nullable_to_non_nullable
+              as String?,
+      monthlyRateZar: null == monthlyRateZar
+          ? _value.monthlyRateZar
+          : monthlyRateZar // ignore: cast_nullable_to_non_nullable
+              as int,
       label: null == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
@@ -343,6 +376,8 @@ class _$StorageUnitImpl implements _StorageUnit {
       this.qrCodeId = '',
       this.parentId,
       this.type = UnitType.closed,
+      this.priceKey,
+      this.monthlyRateZar = 0,
       this.label = '',
       this.description,
       this.status = StorageStatus.pendingPickup,
@@ -376,6 +411,18 @@ class _$StorageUnitImpl implements _StorageUnit {
   @override
   @JsonKey()
   final UnitType type;
+
+  /// Box size or loose-item id from the shared price list
+  /// (packages/pricing/pricing.json), e.g. `medium` or `dining-table`.
+  @override
+  final String? priceKey;
+
+  /// Monthly rate in Rand recorded when the unit was registered, so a
+  /// later price-list change never re-prices goods already in storage.
+  /// 0 when the unit predates pricing — see [StorageBill].
+  @override
+  @JsonKey()
+  final int monthlyRateZar;
   @override
   @JsonKey()
   final String label;
@@ -425,7 +472,7 @@ class _$StorageUnitImpl implements _StorageUnit {
 
   @override
   String toString() {
-    return 'StorageUnit(id: $id, tenantId: $tenantId, clientId: $clientId, qrCodeId: $qrCodeId, parentId: $parentId, type: $type, label: $label, description: $description, status: $status, photoIds: $photoIds, tags: $tags, category: $category, weight: $weight, jobId: $jobId, warehouseLocationId: $warehouseLocationId, isDeleted: $isDeleted, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'StorageUnit(id: $id, tenantId: $tenantId, clientId: $clientId, qrCodeId: $qrCodeId, parentId: $parentId, type: $type, priceKey: $priceKey, monthlyRateZar: $monthlyRateZar, label: $label, description: $description, status: $status, photoIds: $photoIds, tags: $tags, category: $category, weight: $weight, jobId: $jobId, warehouseLocationId: $warehouseLocationId, isDeleted: $isDeleted, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -443,6 +490,10 @@ class _$StorageUnitImpl implements _StorageUnit {
             (identical(other.parentId, parentId) ||
                 other.parentId == parentId) &&
             (identical(other.type, type) || other.type == type) &&
+            (identical(other.priceKey, priceKey) ||
+                other.priceKey == priceKey) &&
+            (identical(other.monthlyRateZar, monthlyRateZar) ||
+                other.monthlyRateZar == monthlyRateZar) &&
             (identical(other.label, label) || other.label == label) &&
             (identical(other.description, description) ||
                 other.description == description) &&
@@ -475,6 +526,8 @@ class _$StorageUnitImpl implements _StorageUnit {
         qrCodeId,
         parentId,
         type,
+        priceKey,
+        monthlyRateZar,
         label,
         description,
         status,
@@ -512,6 +565,8 @@ abstract class _StorageUnit implements StorageUnit {
           final String qrCodeId,
           final String? parentId,
           final UnitType type,
+          final String? priceKey,
+          final int monthlyRateZar,
           final String label,
           final String? description,
           final StorageStatus status,
@@ -542,6 +597,17 @@ abstract class _StorageUnit implements StorageUnit {
   String? get parentId;
   @override
   UnitType get type;
+  @override
+
+  /// Box size or loose-item id from the shared price list
+  /// (packages/pricing/pricing.json), e.g. `medium` or `dining-table`.
+  String? get priceKey;
+  @override
+
+  /// Monthly rate in Rand recorded when the unit was registered, so a
+  /// later price-list change never re-prices goods already in storage.
+  /// 0 when the unit predates pricing — see [StorageBill].
+  int get monthlyRateZar;
   @override
   String get label;
   @override

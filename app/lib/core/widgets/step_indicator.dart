@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Horizontal stepper. Completed steps: amber filled circle with checkmark.
-/// Active step: amber outlined circle with number. Future steps: grey.
+/// Horizontal stepper. Completed steps: accent filled circle with checkmark.
+/// Active step: accent outlined circle with number. Future steps: grey.
 class StepIndicator extends StatelessWidget {
   const StepIndicator({
     super.key,
@@ -29,7 +29,7 @@ class StepIndicator extends StatelessWidget {
                 height: 2,
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 color:
-                    i <= currentStep ? AppColors.amberDark : AppColors.border,
+                    i <= currentStep ? AppColors.accentDeep : AppColors.border,
               ),
             ),
           Column(
@@ -71,21 +71,21 @@ class _StepCircle extends StatelessWidget {
       height: 32,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: completed ? AppColors.amber : Colors.transparent,
+        color: completed ? AppColors.accent : Colors.transparent,
         border: Border.all(
-          color: completed || active ? AppColors.amberDark : AppColors.border,
+          color: completed || active ? AppColors.accentDeep : AppColors.border,
           width: 2,
         ),
       ),
       child: Center(
         child: completed
-            ? const Icon(Icons.check, size: 18, color: AppColors.amberDark)
+            ? const Icon(Icons.check, size: 18, color: AppColors.onAccent)
             : Text(
                 '${index + 1}',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: active ? AppColors.amberDark : AppColors.textSecondary,
+                  color: active ? AppColors.accentDeep : AppColors.textSecondary,
                 ),
               ),
       ),

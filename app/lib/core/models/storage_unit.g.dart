@@ -15,6 +15,8 @@ _$StorageUnitImpl _$$StorageUnitImplFromJson(Map<String, dynamic> json) =>
       parentId: json['parentId'] as String?,
       type: $enumDecodeNullable(_$UnitTypeEnumMap, json['type']) ??
           UnitType.closed,
+      priceKey: json['priceKey'] as String?,
+      monthlyRateZar: (json['monthlyRateZar'] as num?)?.toInt() ?? 0,
       label: json['label'] as String? ?? '',
       description: json['description'] as String?,
       status: $enumDecodeNullable(_$StorageStatusEnumMap, json['status']) ??
@@ -44,6 +46,8 @@ Map<String, dynamic> _$$StorageUnitImplToJson(_$StorageUnitImpl instance) =>
       'qrCodeId': instance.qrCodeId,
       'parentId': instance.parentId,
       'type': _$UnitTypeEnumMap[instance.type]!,
+      'priceKey': instance.priceKey,
+      'monthlyRateZar': instance.monthlyRateZar,
       'label': instance.label,
       'description': instance.description,
       'status': _$StorageStatusEnumMap[instance.status]!,

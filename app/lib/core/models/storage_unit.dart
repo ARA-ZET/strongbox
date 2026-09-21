@@ -17,6 +17,15 @@ class StorageUnit with _$StorageUnit {
     @Default('') String qrCodeId,
     String? parentId,
     @Default(UnitType.closed) UnitType type,
+
+    /// Box size or loose-item id from the shared price list
+    /// (packages/pricing/pricing.json), e.g. `medium` or `dining-table`.
+    String? priceKey,
+
+    /// Monthly rate in Rand recorded when the unit was registered, so a
+    /// later price-list change never re-prices goods already in storage.
+    /// 0 when the unit predates pricing — see [StorageBill].
+    @Default(0) int monthlyRateZar,
     @Default('') String label,
     String? description,
     @Default(StorageStatus.pendingPickup) StorageStatus status,

@@ -813,7 +813,7 @@ final inventoryTypeFilterProvider =
 );
 
 typedef _$InventoryTypeFilter = AutoDisposeNotifier<String>;
-String _$unitMutationsHash() => r'2c4f270f02d0a4401d2f89504ca54f5309e25c70';
+String _$unitMutationsHash() => r'389ff3ba18ff0f67901e7eeff9193acbdf8270bd';
 
 /// Create/update actions on units and their items.
 ///

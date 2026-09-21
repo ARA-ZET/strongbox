@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/constants/pricing.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/app_notification.dart';
 import '../../../core/models/audit_event.dart';
@@ -37,6 +38,14 @@ Stream<List<StorageUnit>> myUnits(Ref ref) {
   return ref
       .watch(storageUnitRepositoryProvider)
       .watchAll(tenantId: tenantId, clientId: client.id);
+}
+
+/// What the client pays for storage each month: per-unit rates from the
+/// shared price list (same numbers as the website).
+@riverpod
+StorageBill myStorageBill(Ref ref) {
+  final units = ref.watch(myUnitsProvider).valueOrNull ?? const [];
+  return StorageBill.fromUnits(units);
 }
 
 /// The client's individually catalogued items (across all open units).

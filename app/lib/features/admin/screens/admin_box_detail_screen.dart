@@ -1,3 +1,6 @@
+import '../../../core/constants/pricing.dart';
+import '../../../core/utils/currency.dart';
+import '../widgets/unit_size_field.dart';
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -293,7 +296,7 @@ class _PhotosCard extends ConsumerWidget {
               Text('Inspection Photos', style: textTheme.headlineSmall),
               TextButton.icon(
                 style: TextButton.styleFrom(
-                    foregroundColor: AppColors.amberDark),
+                    foregroundColor: AppColors.accentDeep),
                 onPressed: () => _addPhotos(ref),
                 icon: const Icon(Icons.add_a_photo_outlined, size: 18),
                 label: const Text('Add New'),
@@ -473,7 +476,7 @@ class _AddItemGhost extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.add, color: AppColors.amberDark),
+            const Icon(Icons.add, color: AppColors.accentDeep),
             const SizedBox(width: 8),
             Text('Add Item',
                 style: Theme.of(context).textTheme.labelLarge),
@@ -594,7 +597,7 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
                             width: 18,
                             height: 18,
                             child: CircularProgressIndicator(
-                                strokeWidth: 2, color: AppColors.amberDark),
+                                strokeWidth: 2, color: AppColors.accentDeep),
                           )
                         : const Text('Add Item'),
                   ),
@@ -610,15 +613,62 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
 
 // ----------------------------------------------------------- details card
 
-class _DetailsCard extends StatelessWidget {
+class _DetailsCard extends ConsumerWidget {
   const _DetailsCard({required this.box, this.ownerName});
 
   final StorageUnit box;
   final String? ownerName;
 
+  Future<void> _editSize(BuildContext context, WidgetRef ref) async {
+    var selected = box.priceKey;
+    final priceKey = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Set Size'),
+        content: SizedBox(
+          width: 360,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'The size sets the monthly rate, at today\'s price list.',
+                style: Theme.of(dialogContext).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 12),
+              UnitSizeField(
+                value: selected,
+                onChanged: (value) => selected = value,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(dialogContext).pop(selected),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    if (priceKey != null && priceKey != box.priceKey) {
+      await ref
+          .read(unitMutationsProvider.notifier)
+          .updatePriceKey(box.id, priceKey);
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
+    final sizeLabel = Pricing.labelFor(box.priceKey);
+    final rate = box.monthlyRateZar > 0
+        ? box.monthlyRateZar
+        : Pricing.monthlyFor(box.priceKey);
 
     Widget row(String label, Widget value) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -662,6 +712,37 @@ class _DetailsCard extends StatelessWidget {
                 style: textTheme.bodyMedium),
           ),
           row(
+            'Size',
+            InkWell(
+              onTap: () => _editSize(context, ref),
+              borderRadius: BorderRadius.circular(4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    sizeLabel ?? 'Not set',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: sizeLabel == null
+                          ? AppColors.statusWarning
+                          : AppColors.textPrimary,
+                      fontWeight:
+                          sizeLabel == null ? FontWeight.w600 : null,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.edit_outlined,
+                      size: 16, color: AppColors.accentDeep),
+                ],
+              ),
+            ),
+          ),
+          row(
+            'Monthly Rate',
+            Text(rate == null ? '—' : '${formatZar(rate)}/mo',
+                style: textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w600)),
+          ),
+          row(
             'Security Seal',
             Row(
               children: [
@@ -699,7 +780,7 @@ class _ScannerPromoCard extends StatelessWidget {
       child: Column(
         children: [
           const Icon(Icons.qr_code_scanner,
-              color: AppColors.amber, size: 32),
+              color: AppColors.sky, size: 32),
           const SizedBox(height: 12),
           Text('Need an Update?',
               style: textTheme.titleMedium?.copyWith(color: Colors.white)),
@@ -789,7 +870,7 @@ class _JobHistoryTimeline extends ConsumerWidget {
                 height: 12,
                 margin: const EdgeInsets.only(top: 4),
                 decoration: BoxDecoration(
-                  color: isLatest ? AppColors.amberDark : AppColors.navy,
+                  color: isLatest ? AppColors.accentDeep : AppColors.navy,
                   shape: BoxShape.circle,
                 ),
               ),

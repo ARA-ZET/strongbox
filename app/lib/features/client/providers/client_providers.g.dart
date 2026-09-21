@@ -39,6 +39,24 @@ final myUnitsProvider = AutoDisposeStreamProvider<List<StorageUnit>>.internal(
 );
 
 typedef MyUnitsRef = AutoDisposeStreamProviderRef<List<StorageUnit>>;
+String _$myStorageBillHash() => r'8b7838ac0b54bd37b4ee294eb2a225ebbb98b327';
+
+/// What the client pays for storage each month: per-unit rates from the
+/// shared price list (same numbers as the website).
+///
+/// Copied from [myStorageBill].
+@ProviderFor(myStorageBill)
+final myStorageBillProvider = AutoDisposeProvider<StorageBill>.internal(
+  myStorageBill,
+  name: r'myStorageBillProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$myStorageBillHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef MyStorageBillRef = AutoDisposeProviderRef<StorageBill>;
 String _$myItemsHash() => r'09534f8650a72db60c4d79e27ace5fbffbf42c5a';
 
 /// The client's individually catalogued items (across all open units).

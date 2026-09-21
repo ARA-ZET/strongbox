@@ -11,7 +11,6 @@ import 'job_repository.dart';
 import 'notification_repository.dart';
 import 'photo_repository.dart';
 import 'qr_repository.dart';
-import 'quote_repository.dart';
 import 'shift_repository.dart';
 import 'storage_unit_repository.dart';
 import 'subscription_repository.dart';
@@ -33,10 +32,6 @@ StorageUnitRepository storageUnitRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 JobRepository jobRepository(Ref ref) =>
     FirestoreJobRepository(ref.watch(firestoreProvider));
-
-@Riverpod(keepAlive: true)
-QuoteRepository quoteRepository(Ref ref) =>
-    FirestoreQuoteRepository(ref.watch(firestoreProvider));
 
 @Riverpod(keepAlive: true)
 ClientRepository clientRepository(Ref ref) =>

@@ -40,8 +40,8 @@ class _AdminClientsScreenState extends ConsumerState<AdminClientsScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.amber,
-        foregroundColor: AppColors.amberDark,
+        backgroundColor: AppColors.accent,
+        foregroundColor: AppColors.onAccent,
         onPressed: _addClient,
         child: const Icon(Icons.add),
       ),

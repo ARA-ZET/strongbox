@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LOOSE_ITEMS, LOOSE_ITEM_CATEGORIES, APP_URL } from "@/lib/constants";
+import { LOOSE_ITEMS, LOOSE_ITEM_CATEGORIES } from "@/lib/constants";
 import Illustration from "@/components/graphics/Illustration";
 import SitePhoto from "@/components/SitePhoto";
 import Link from "next/link";
@@ -69,12 +69,12 @@ export default function LooseItemsPage() {
                 </div>
                 <h3 className="font-body-strong text-navy-deep text-sm mb-1">{item.name}</h3>
                 <p className="text-accent-deep font-bold text-sm">R{item.price}/mo</p>
-                <a
-                  href={`${APP_URL}/quote?item=${item.id}`}
+                <Link
+                  href="/pricing#calculator"
                   className="mt-4 w-full border border-accent-deep text-accent-deep py-2 rounded-lg font-body-strong text-sm hover:bg-accent hover:text-on-accent transition-colors"
                 >
                   Add to Quote
-                </a>
+                </Link>
               </div>
             ))}
 
@@ -85,12 +85,12 @@ export default function LooseItemsPage() {
               </div>
               <h3 className="font-body-strong text-navy-deep text-sm mb-1">Custom Item</h3>
               <p className="text-on-surface-variant text-xs mb-4">Specify dimensions</p>
-              <a
-                href={`${APP_URL}/quote?custom=1`}
+              <Link
+                href="/contact"
                 className="w-full border border-accent-deep text-accent-deep py-2 rounded-lg font-body-strong text-sm hover:bg-accent hover:text-on-accent transition-colors"
               >
-                Specify
-              </a>
+                Ask Us
+              </Link>
             </div>
           </div>
         </div>

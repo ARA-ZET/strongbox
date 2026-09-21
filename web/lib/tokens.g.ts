@@ -2,20 +2,28 @@
 // See packages/tokens/tokens.json.
 
 export const tokens = {
-  "$comment": "Single source of truth for StrongBox visual design. Edit here, then run `node packages/tokens/build.mjs` to regenerate app/ and web/ outputs.",
+  "$comment": "Single source of truth for StrongBox visual design. Edit here, then run `node packages/tokens/build.mjs` to regenerate app/ and web/ outputs. Colour values mirror the marketing site's Tailwind palette (web/tailwind.config.ts) — change both together.",
   "color": {
-    "navy": "#1A2B4A",
-    "amber": "#FEAE2C",
-    "amberDark": "#8A5A00",
-    "scaffold": "#F5F2FF",
+    "navyDeep": "#0A1A33",
+    "navy": "#0F2A52",
+    "navySoft": "#1B3E6F",
+    "accent": "#1D6FE0",
+    "accentDeep": "#1557B5",
+    "onAccent": "#FFFFFF",
+    "sky": "#5EA6F5",
+    "skyTint": "#E8F1FD",
+    "scaffold": "#F4F8FD",
     "surface": "#FFFFFF",
-    "surfaceContainer": "#EFECFF",
-    "textPrimary": "#1A1A2E",
-    "textSecondary": "#44474E",
-    "textHint": "#75777E",
-    "border": "#C5C6CF",
-    "overlay": "#00000080",
-    "cardShadow": "#00000014",
+    "surfaceContainer": "#E3ECF7",
+    "textPrimary": "#10203A",
+    "textSecondary": "#4A5A72",
+    "textHint": "#6B7F9C",
+    "onNavy": "#DCE9FA",
+    "onNavyVariant": "#9FB8DA",
+    "border": "#C3D2E6",
+    "overlay": "#0A1A3380",
+    "cardShadow": "#0A1A330A",
+    "cardShadowStrong": "#0A1A3314",
     "statusSuccess": "#00A858",
     "statusSuccessBg": "#E8F5F0",
     "statusWarning": "#E67E22",
@@ -61,18 +69,26 @@ export const tokens = {
 } as const;
 
 export const cssVariables = `:root {
-  --color-navy: #1A2B4A;
-  --color-amber: #FEAE2C;
-  --color-amber-dark: #8A5A00;
-  --color-scaffold: #F5F2FF;
+  --color-navy-deep: #0A1A33;
+  --color-navy: #0F2A52;
+  --color-navy-soft: #1B3E6F;
+  --color-accent: #1D6FE0;
+  --color-accent-deep: #1557B5;
+  --color-on-accent: #FFFFFF;
+  --color-sky: #5EA6F5;
+  --color-sky-tint: #E8F1FD;
+  --color-scaffold: #F4F8FD;
   --color-surface: #FFFFFF;
-  --color-surface-container: #EFECFF;
-  --color-text-primary: #1A1A2E;
-  --color-text-secondary: #44474E;
-  --color-text-hint: #75777E;
-  --color-border: #C5C6CF;
-  --color-overlay: rgba(0, 0, 0, 0.502);
-  --color-card-shadow: rgba(0, 0, 0, 0.078);
+  --color-surface-container: #E3ECF7;
+  --color-text-primary: #10203A;
+  --color-text-secondary: #4A5A72;
+  --color-text-hint: #6B7F9C;
+  --color-on-navy: #DCE9FA;
+  --color-on-navy-variant: #9FB8DA;
+  --color-border: #C3D2E6;
+  --color-overlay: rgba(10, 26, 51, 0.502);
+  --color-card-shadow: rgba(10, 26, 51, 0.039);
+  --color-card-shadow-strong: rgba(10, 26, 51, 0.078);
   --color-status-success: #00A858;
   --color-status-success-bg: #E8F5F0;
   --color-status-warning: #E67E22;

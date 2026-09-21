@@ -10,7 +10,6 @@ class Collections {
   static const qrCodes = 'qrCodes';
   static const qrBatches = 'qrBatches';
   static const jobs = 'jobs';
-  static const quotes = 'quotes';
   static const photos = 'photos';
   static const auditEvents = 'auditEvents';
   static const notifications = 'notifications';

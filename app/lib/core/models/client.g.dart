@@ -23,9 +23,6 @@ _$ClientImpl _$$ClientImplFromJson(Map<String, dynamic> json) => _$ClientImpl(
       subscriptionStatus: $enumDecodeNullable(
               _$SubscriptionStatusEnumMap, json['subscriptionStatus']) ??
           SubscriptionStatus.incomplete,
-      subscriptionPlan: $enumDecodeNullable(
-              _$SubscriptionPlanEnumMap, json['subscriptionPlan']) ??
-          SubscriptionPlan.starter,
       memberIds: (json['memberIds'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -52,7 +49,6 @@ Map<String, dynamic> _$$ClientImplToJson(_$ClientImpl instance) =>
       'subscriptionId': instance.subscriptionId,
       'subscriptionStatus':
           _$SubscriptionStatusEnumMap[instance.subscriptionStatus]!,
-      'subscriptionPlan': _$SubscriptionPlanEnumMap[instance.subscriptionPlan]!,
       'memberIds': instance.memberIds,
       'storageUnitCount': instance.storageUnitCount,
       'notes': instance.notes,
@@ -76,10 +72,4 @@ const _$SubscriptionStatusEnumMap = {
   SubscriptionStatus.cancelled: 'cancelled',
   SubscriptionStatus.incomplete: 'incomplete',
   SubscriptionStatus.unpaid: 'unpaid',
-};
-
-const _$SubscriptionPlanEnumMap = {
-  SubscriptionPlan.starter: 'starter',
-  SubscriptionPlan.professional: 'professional',
-  SubscriptionPlan.enterprise: 'enterprise',
 };

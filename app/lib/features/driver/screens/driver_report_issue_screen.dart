@@ -170,7 +170,7 @@ class _DriverReportIssueScreenState
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: AppColors.amberDark),
+                          strokeWidth: 2, color: AppColors.accentDeep),
                     )
                   : const Icon(Icons.send, size: 18),
               label: const Text('Submit Report'),

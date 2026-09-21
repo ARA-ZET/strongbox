@@ -126,7 +126,7 @@ class _ClientFormDialogState extends ConsumerState<ClientFormDialog> {
                               height: 18,
                               child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: AppColors.amberDark),
+                                  color: AppColors.accentDeep),
                             )
                           : Text(editing ? 'Save Changes' : 'Create Client'),
                     ),

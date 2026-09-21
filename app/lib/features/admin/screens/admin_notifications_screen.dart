@@ -170,7 +170,7 @@ class _CategoryRail extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: value == 'critical'
                           ? AppColors.statusError
-                          : AppColors.amber,
+                          : AppColors.accent,
                       borderRadius: BorderRadius.circular(999),
                     ),
                     child: Text('$count',
@@ -179,7 +179,7 @@ class _CategoryRail extends ConsumerWidget {
                             fontWeight: FontWeight.w700,
                             color: value == 'critical'
                                 ? Colors.white
-                                : AppColors.amberDark)),
+                                : AppColors.onAccent)),
                   ),
               ],
             ),
@@ -267,7 +267,7 @@ class _NotificationCard extends StatelessWidget {
 
     final (borderColor, icon) = switch (categoryOf(event)) {
       'critical' => (AppColors.statusError, Icons.warning_amber_rounded),
-      'operational' => (AppColors.amberDark, Icons.local_shipping_outlined),
+      'operational' => (AppColors.accentDeep, Icons.local_shipping_outlined),
       _ => (AppColors.border, Icons.dns_outlined),
     };
 

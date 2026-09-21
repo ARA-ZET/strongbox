@@ -10,6 +10,7 @@ import '../providers/clients_providers.dart';
 import '../providers/inventory_providers.dart';
 import '../providers/qr_providers.dart';
 import '../utils/qr_pdf_generator.dart';
+import '../widgets/unit_size_field.dart';
 
 /// QR Codes Management: batch label generation and linking pre-printed
 /// codes to boxes. Design: admin_qr_management/screen.png.
@@ -62,9 +63,9 @@ class _AdminQrScreenState extends ConsumerState<AdminQrScreen>
               controller: _tabs,
               isScrollable: true,
               tabAlignment: TabAlignment.start,
-              labelColor: AppColors.amberDark,
+              labelColor: AppColors.accentDeep,
               unselectedLabelColor: AppColors.textSecondary,
-              indicatorColor: AppColors.amberDark,
+              indicatorColor: AppColors.accentDeep,
               indicatorWeight: 3,
               labelStyle: textTheme.labelLarge,
               tabs: const [
@@ -403,6 +404,7 @@ class _LinkQrTabState extends ConsumerState<_LinkQrTab> {
   String? _clientId;
   bool _createNew = true;
   UnitType _newBoxType = UnitType.closed;
+  String? _newPriceKey;
   String? _existingBoxId;
 
   @override
@@ -436,6 +438,13 @@ class _LinkQrTabState extends ConsumerState<_LinkQrTab> {
     final clientId = _clientId;
     if (code == null || clientId == null) return;
     if (!_createNew && _existingBoxId == null) return;
+    final priceKey = _newPriceKey;
+    if (_createNew && priceKey == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Choose a size — it sets the price')),
+      );
+      return;
+    }
 
     setState(() => _busy = true);
     try {
@@ -444,6 +453,7 @@ class _LinkQrTabState extends ConsumerState<_LinkQrTab> {
               clientId: clientId,
               type: _newBoxType,
               label: _labelController.text.trim(),
+              priceKey: priceKey!,
               qrCodeId: code,
             );
         await ref.read(qrMutationsProvider.notifier).linkToUnit(code, unitId);
@@ -502,7 +512,7 @@ class _LinkQrTabState extends ConsumerState<_LinkQrTab> {
               child: Column(
                 children: [
                   const Icon(Icons.qr_code_scanner,
-                      color: AppColors.amber, size: 48),
+                      color: AppColors.sky, size: 48),
                   const SizedBox(height: 12),
                   Text(
                     'Enter a pre-printed QR code ID below to link it',
@@ -641,6 +651,11 @@ class _LinkQrTabState extends ConsumerState<_LinkQrTab> {
       ),
       const SizedBox(height: 8),
       if (_createNew) ...[
+        UnitSizeField(
+          value: _newPriceKey,
+          onChanged: (value) => setState(() => _newPriceKey = value),
+        ),
+        const SizedBox(height: 12),
         SegmentedButton<UnitType>(
           segments: const [
             ButtonSegment(value: UnitType.closed, label: Text('Closed Box')),
@@ -650,8 +665,8 @@ class _LinkQrTabState extends ConsumerState<_LinkQrTab> {
           onSelectionChanged: (selection) =>
               setState(() => _newBoxType = selection.first),
           style: SegmentedButton.styleFrom(
-            selectedBackgroundColor: AppColors.amber,
-            selectedForegroundColor: AppColors.amberDark,
+            selectedBackgroundColor: AppColors.skyTint,
+            selectedForegroundColor: AppColors.accentDeep,
           ),
         ),
         const SizedBox(height: 12),
@@ -675,7 +690,7 @@ class _LinkQrTabState extends ConsumerState<_LinkQrTab> {
                   width: 18,
                   height: 18,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: AppColors.amberDark),
+                      strokeWidth: 2, color: AppColors.accentDeep),
                 )
               : const Text('Confirm Link'),
         ),

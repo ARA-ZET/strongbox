@@ -181,7 +181,7 @@ class _DriverPhotoCaptureScreenState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(Icons.center_focus_strong,
-                        size: 64, color: AppColors.amber),
+                        size: 64, color: AppColors.sky),
                     const SizedBox(height: 16),
                     Text('Center cargo inside the frame',
                         style:
@@ -251,7 +251,7 @@ class _DriverPhotoCaptureScreenState
                             height: 18,
                             child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: AppColors.amberDark),
+                                color: AppColors.accentDeep),
                           )
                         : const Icon(Icons.check),
                     label: const Text('Done'),

@@ -264,7 +264,7 @@ class _StatsRow extends StatelessWidget {
     // Rating and on-time tracking wire up once driver sign-offs flow in
     // Stage 5; jobs-completed is live.
     final cards = [
-      card(Icons.star_outline, '—', 'Average Rating', AppColors.amberDark),
+      card(Icons.star_outline, '—', 'Average Rating', AppColors.accentDeep),
       card(Icons.schedule, '—', 'On-time Rate', AppColors.statusSuccess),
       card(Icons.check_circle_outline, completed?.toString() ?? '…',
           'Jobs Completed', AppColors.navy),
