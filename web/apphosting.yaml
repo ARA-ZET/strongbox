@@ -8,7 +8,7 @@ runConfig:
 
 env:
   - variable: NEXT_PUBLIC_APP_URL
-    value: https://app.strongboxstorage.co.za
+    value: https://app.strongbox.co.za
     availability:
       - BUILD
       - RUNTIME

@@ -7,7 +7,7 @@ import {
 
 // Overridable per-environment via apphosting.yaml; falls back to production
 export const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL ?? "https://app.strongboxstorage.co.za";
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://app.strongbox.co.za";
 
 // Human contact channels — shown in the navbar, footer, and contact page so
 // a prospect can reach a real person fast (new-business trust signal).

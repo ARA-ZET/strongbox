@@ -23,7 +23,7 @@ Both apps run on the **one** Firebase project `strongbox-app`
 
 | App | Engine | Trigger | URL |
 |---|---|---|---|
-| `app/` | classic **Firebase Hosting** (`firebase.json` → `app/build/web`) | GitHub Action `.github/workflows/deploy-app.yml` on push to `main` touching `app/**` or `packages/**` | `app.strongboxstorage.co.za` |
+| `app/` | classic **Firebase Hosting** (`firebase.json` → `app/build/web`) | GitHub Action `.github/workflows/deploy-app.yml` on push to `main` touching `app/**` or `packages/**` | `app.strongbox.co.za` |
 | `web/` | **Firebase App Hosting** backend `strongbox-web`, root dir `/web` | App Hosting's native GitHub connection, any push to `main` | `www.strongboxstorage.co.za` |
 
 ### One-time setup

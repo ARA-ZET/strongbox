@@ -66,6 +66,6 @@ The backend gets a `*.web.app` URL on creation. Attach
 `www.strongboxstorage.co.za` under **App Hosting → your backend → Custom
 domains** in the Firebase Console.
 
-Note `app.strongboxstorage.co.za` is intended for the **Flutter app**, which
+Note `app.strongbox.co.za` is intended for the **Flutter app**, which
 deploys separately to classic Firebase Hosting from the repo root
 (`firebase.json` → `build/web`). Two products, one project — they coexist.
