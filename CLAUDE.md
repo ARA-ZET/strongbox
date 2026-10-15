@@ -318,6 +318,7 @@ Always use these — do not rebuild them inline. See `docs/11_COMPONENT_LIBRARY.
 | `AppDataTable` | `columns, rows, onSort` | Sortable data table |
 | `PaginationRow` | `currentPage, totalPages, onPageChange` | Table pagination |
 | `ConfirmDialog` | `title, message, isDestructive, onConfirm` | Confirmation modal |
+| `DialogActions` | `saveLabel, onSave, saving?` | Cancel + save row for custom dialogs — never hand-build a Row of themed buttons (they're full-width and vanish in a Row) |
 | `ConnectivityBanner` | — | Offline warning auto-shown |
 
 ---

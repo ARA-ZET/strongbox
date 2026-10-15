@@ -1,3 +1,4 @@
+import '../../../core/widgets/dialog_actions.dart';
 import '../../../core/providers/price_catalog_provider.dart';
 import '../../../core/utils/currency.dart';
 import '../widgets/unit_size_field.dart';
@@ -595,28 +596,8 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
                     setState(() => _photos = [..._photos, ...bytes]),
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed:
-                        _saving ? null : () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: _saving ? null : _save,
-                    child: _saving
-                        ? const SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2, color: AppColors.accentDeep),
-                          )
-                        : const Text('Add Item'),
-                  ),
-                ],
-              ),
+              DialogActions(
+                saving: _saving, onSave: _save, saveLabel: 'Add Item'),
             ],
           ),
         ),

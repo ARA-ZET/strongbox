@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/widgets/dialog_actions.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/photo_upload_zone.dart';
@@ -155,28 +156,8 @@ class _AddBoxDialogState extends ConsumerState<AddBoxDialog> {
                     setState(() => _photos = [..._photos, ...bytes]),
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed:
-                        _saving ? null : () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: _saving ? null : _save,
-                    child: _saving
-                        ? const SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2, color: AppColors.accentDeep),
-                          )
-                        : const Text('Register Box'),
-                  ),
-                ],
-              ),
+              DialogActions(
+                saving: _saving, onSave: _save, saveLabel: 'Register Box'),
             ],
           ),
         ),

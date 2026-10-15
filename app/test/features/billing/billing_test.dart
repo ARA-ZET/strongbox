@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:strong_box/core/enums/app_enums.dart';
 import 'package:strong_box/core/models/client.dart';
 import 'package:strong_box/core/models/invoice.dart';
+import 'package:strong_box/core/theme/app_theme.dart';
 import 'package:strong_box/features/auth/providers/auth_provider.dart';
 import 'package:strong_box/features/billing/providers/billing_providers.dart';
 import 'package:strong_box/features/billing/widgets/invoice_table.dart';
@@ -142,6 +143,7 @@ void main() {
           currentActorIdProvider.overrideWithValue('admin-1'),
         ],
         child: MaterialApp(
+          theme: AppTheme.light,
           home: Scaffold(
             body: InvoiceTable(
               invoices: AsyncData([invoice]),

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:strong_box/core/errors/app_exception.dart';
 import 'package:strong_box/core/models/app_user.dart';
 import 'package:strong_box/core/models/job.dart';
+import 'package:strong_box/core/theme/app_theme.dart';
 import 'package:strong_box/features/admin/providers/clients_providers.dart';
 import 'package:strong_box/features/admin/providers/fleet_providers.dart';
 import 'package:strong_box/features/admin/screens/admin_fleet_screen.dart';
@@ -56,7 +57,7 @@ void main() {
             .overrideWith((ref) => Stream.value(const <AppUser>[])),
         activeJobsByDriverProvider.overrideWithValue(const <String, Job>{}),
       ],
-      child: MaterialApp.router(routerConfig: router),
+      child: MaterialApp.router(theme: AppTheme.light, routerConfig: router),
     ));
     await tester.pumpAndSettle();
   }

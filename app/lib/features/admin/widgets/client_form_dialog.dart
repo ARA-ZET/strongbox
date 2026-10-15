@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/widgets/dialog_actions.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/models/client.dart';
 import '../providers/clients_providers.dart';
@@ -109,29 +110,8 @@ class _ClientFormDialogState extends ConsumerState<ClientFormDialog> {
                     keyboardType: TextInputType.phone),
                 _field('Address', _address, maxLines: 2),
                 const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed:
-                          _saving ? null : () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton(
-                      onPressed: _saving ? null : _save,
-                      child: _saving
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: AppColors.accentDeep),
-                            )
-                          : Text(editing ? 'Save Changes' : 'Create Client'),
-                    ),
-                  ],
-                ),
+                DialogActions(
+                saving: _saving, onSave: _save, saveLabel: editing ? 'Save Changes' : 'Create Client'),
               ],
             ),
           ),
