@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/utils/async_value_ext.dart';
 import '../../../core/constants/storage_paths.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/job.dart';
@@ -71,8 +72,10 @@ Future<List<StorageUnit>> jobManifest(Ref ref, String jobId) async {
 Future<StorageUnit?> unitByScan(Ref ref, String code) async {
   final qr = await ref.read(qrRepositoryProvider).resolveCode(code);
   final unitId = qr?.storageUnitId;
-  if (unitId == null) return null;
-  return ref.read(storageUnitRepositoryProvider).getUnit(unitId);
+  final units = ref.read(storageUnitRepositoryProvider);
+  if (unitId != null) return units.getUnit(unitId);
+  // Units registered before their code was written to qrCodes.
+  return units.getByQrCode(ref.read(currentTenantIdProvider), code);
 }
 
 /// Units the driver has scanned today across today's jobs.
@@ -102,6 +105,7 @@ class DriverJobActions extends _$DriverJobActions {
     state = await AsyncValue.guard(() => ref
         .read(jobRepositoryProvider)
         .updateStatus(job, JobStatus.inProgress, actorId: _actorId));
+    state.throwIfError();
   }
 
   Future<void> confirmUnit(String jobId, String unitId) async {
@@ -129,14 +133,14 @@ class DriverJobActions extends _$DriverJobActions {
   Future<void> completeJob(Job job, Uint8List signaturePng) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final storageRef = ref
-          .read(firebaseStorageProvider)
-          .ref(StoragePaths.jobSignature(_tenantId, job.id));
-      final upload = await storageRef.putData(signaturePng);
-      final url = await upload.ref.getDownloadURL();
+      final url = await ref.read(photoRepositoryProvider).uploadSignature(
+            png: signaturePng,
+            storagePath: StoragePaths.jobSignature(_tenantId, job.id),
+          );
       await ref
           .read(jobRepositoryProvider)
           .completeSignOff(job, url, actorId: _actorId);
     });
+    state.throwIfError();
   }
 }

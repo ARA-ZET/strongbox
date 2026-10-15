@@ -39,7 +39,7 @@ final myUnitsProvider = AutoDisposeStreamProvider<List<StorageUnit>>.internal(
 );
 
 typedef MyUnitsRef = AutoDisposeStreamProviderRef<List<StorageUnit>>;
-String _$myStorageBillHash() => r'8b7838ac0b54bd37b4ee294eb2a225ebbb98b327';
+String _$myStorageBillHash() => r'd2cf58b53ab3ad7de1eeb4ca7b243c5285a56139';
 
 /// What the client pays for storage each month: per-unit rates from the
 /// shared price list (same numbers as the website).
@@ -426,24 +426,28 @@ class _ClientUnitPhotosProviderElement
   String get unitId => (origin as ClientUnitPhotosProvider).unitId;
 }
 
-String _$clientUnitItemsHash() => r'ad284cad49c59d511e207ace04aeecdd70b5ebd8';
+String _$clientUnitItemsHash() => r'a1d0847eda9bd9b6b288378ebe5d61f534c5d7b1';
 
-/// Items inside an open unit, live.
+/// Items inside an open unit, live. Queried by client (not unit) so the
+/// query stays within what the rules let a client read.
 ///
 /// Copied from [clientUnitItems].
 @ProviderFor(clientUnitItems)
 const clientUnitItemsProvider = ClientUnitItemsFamily();
 
-/// Items inside an open unit, live.
+/// Items inside an open unit, live. Queried by client (not unit) so the
+/// query stays within what the rules let a client read.
 ///
 /// Copied from [clientUnitItems].
 class ClientUnitItemsFamily extends Family<AsyncValue<List<Item>>> {
-  /// Items inside an open unit, live.
+  /// Items inside an open unit, live. Queried by client (not unit) so the
+  /// query stays within what the rules let a client read.
   ///
   /// Copied from [clientUnitItems].
   const ClientUnitItemsFamily();
 
-  /// Items inside an open unit, live.
+  /// Items inside an open unit, live. Queried by client (not unit) so the
+  /// query stays within what the rules let a client read.
   ///
   /// Copied from [clientUnitItems].
   ClientUnitItemsProvider call(
@@ -478,11 +482,13 @@ class ClientUnitItemsFamily extends Family<AsyncValue<List<Item>>> {
   String? get name => r'clientUnitItemsProvider';
 }
 
-/// Items inside an open unit, live.
+/// Items inside an open unit, live. Queried by client (not unit) so the
+/// query stays within what the rules let a client read.
 ///
 /// Copied from [clientUnitItems].
 class ClientUnitItemsProvider extends AutoDisposeStreamProvider<List<Item>> {
-  /// Items inside an open unit, live.
+  /// Items inside an open unit, live. Queried by client (not unit) so the
+  /// query stays within what the rules let a client read.
   ///
   /// Copied from [clientUnitItems].
   ClientUnitItemsProvider(
@@ -711,7 +717,7 @@ class _ClientUnitAuditProviderElement
 
 String _$myInvoicesHash() => r'40c94beb2d8f4b41e32aa573a7094a9cce806fb0';
 
-/// The client's invoices (written by Stripe in Stage 7).
+/// The client's monthly invoices (issued by the monthlyInvoices function).
 ///
 /// Copied from [myInvoices].
 @ProviderFor(myInvoices)
@@ -725,25 +731,6 @@ final myInvoicesProvider = AutoDisposeStreamProvider<List<Invoice>>.internal(
 );
 
 typedef MyInvoicesRef = AutoDisposeStreamProviderRef<List<Invoice>>;
-String _$myNotificationsHash() => r'4a890647e3f2c2c6a6ba9d439d9b75028c7812ff';
-
-/// Targeted notifications for the signed-in user.
-///
-/// Copied from [myNotifications].
-@ProviderFor(myNotifications)
-final myNotificationsProvider =
-    AutoDisposeStreamProvider<List<AppNotification>>.internal(
-  myNotifications,
-  name: r'myNotificationsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$myNotificationsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef MyNotificationsRef
-    = AutoDisposeStreamProviderRef<List<AppNotification>>;
 String _$storageSearchQueryHash() =>
     r'3673d098bdc1678f78884f7c035738984168e103';
 
@@ -798,7 +785,7 @@ final deliveryRequestProvider =
 );
 
 typedef _$DeliveryRequest = AutoDisposeNotifier<DeliveryRequestData>;
-String _$accountActionsHash() => r'4fee20e3a5bd29a3aeeb8e28037b3d7a7c9a434d';
+String _$accountActionsHash() => r'ff555412bd03dd39a4dceefac20e75dfb782c856';
 
 /// Profile, address, prefs and account-deletion writes for the client.
 ///

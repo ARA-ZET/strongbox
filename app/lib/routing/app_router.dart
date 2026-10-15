@@ -8,7 +8,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../core/enums/app_enums.dart';
 import '../core/errors/app_exception.dart';
 import '../core/theme/app_colors.dart';
-import '../core/widgets/placeholder_screen.dart';
 import '../core/widgets/primary_button.dart';
 import '../features/admin/screens/admin_box_detail_screen.dart';
 import '../features/admin/screens/admin_client_detail_screen.dart';
@@ -20,11 +19,14 @@ import '../features/admin/screens/admin_inventory_screen.dart';
 import '../features/admin/screens/admin_jobs_screen.dart';
 import '../features/admin/screens/admin_new_job_screen.dart';
 import '../features/admin/screens/admin_notifications_screen.dart';
+import '../features/admin/screens/admin_pricing_screen.dart';
+import '../features/admin/screens/admin_settings_screen.dart';
 import '../features/admin/screens/admin_qr_screen.dart';
 import '../features/admin/screens/admin_reports_screen.dart';
 import '../features/driver/screens/driver_account_screen.dart';
 import '../features/driver/screens/driver_job_detail_screen.dart';
 import '../features/driver/screens/driver_jobs_screen.dart';
+import '../features/driver/screens/driver_notifications_screen.dart';
 import '../features/driver/screens/driver_photo_capture_screen.dart';
 import '../features/driver/screens/driver_report_issue_screen.dart';
 import '../features/driver/screens/driver_scanner_screen.dart';
@@ -116,7 +118,6 @@ GoRouter appRouter(Ref ref) {
       GoRoute(path: '/quote', redirect: (context, state) => '/register'),
 
       // Admin portal — all screens share the AdminShell layout.
-      // Inventory/QR arrive in Stage 3, jobs/fleet/reports in Stage 4.
       ShellRoute(
         builder: (context, state, child) => AdminShell(child: child),
         routes: [
@@ -175,9 +176,12 @@ GoRouter appRouter(Ref ref) {
             builder: (context, state) => const AdminNotificationsScreen(),
           ),
           GoRoute(
+            path: '/admin/pricing',
+            builder: (context, state) => const AdminPricingScreen(),
+          ),
+          GoRoute(
             path: '/admin/settings',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Settings'),
+            builder: (context, state) => const AdminSettingsScreen(),
           ),
         ],
       ),
@@ -226,6 +230,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/driver/report-issue',
         builder: (context, state) => const DriverReportIssueScreen(),
+      ),
+      GoRoute(
+        path: '/driver/notifications',
+        builder: (context, state) => const DriverNotificationsScreen(),
       ),
 
       // Client portal — all screens share the ClientShell layout.

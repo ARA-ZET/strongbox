@@ -19,6 +19,7 @@ abstract class ItemRepository {
     StorageStatus status,
     List<String> photoIds,
   });
+  Future<void> addPhotoIds(String itemId, List<String> photoIds);
 }
 
 class FirestoreItemRepository
@@ -77,4 +78,11 @@ class FirestoreItemRepository
         });
         return doc.id;
       });
+
+  @override
+  Future<void> addPhotoIds(String itemId, List<String> photoIds) =>
+      guardRepo(() => _items.doc(itemId).update({
+            'photoIds': FieldValue.arrayUnion(photoIds),
+            'updatedAt': FieldValue.serverTimestamp(),
+          }));
 }

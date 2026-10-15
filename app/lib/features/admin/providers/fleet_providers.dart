@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/utils/async_value_ext.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/app_user.dart';
 import '../../../core/models/job.dart';
@@ -83,5 +84,21 @@ class DriverMutations extends _$DriverMutations {
               if (name != null) 'name': name,
               if (phone != null) 'phone': phone,
             }));
+    state.throwIfError();
+  }
+
+  /// Sends [driver] a message from dispatch — shown in their inbox and
+  /// pushed to their phone by the `onNotificationCreated` Cloud Function.
+  Future<void> sendMessage(AppUser driver, String message) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+        () => ref.read(notificationRepositoryProvider).create(
+              tenantId: ref.read(currentTenantIdProvider),
+              type: NotificationType.directMessage,
+              title: 'Message from dispatch',
+              body: message.trim(),
+              userId: driver.id,
+            ));
+    state.throwIfError();
   }
 }

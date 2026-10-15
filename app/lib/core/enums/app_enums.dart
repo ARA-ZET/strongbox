@@ -64,20 +64,33 @@ enum AuditAction {
   shiftStarted,
   shiftEnded,
   quoteAccepted,
+  priceListUpdated,
+  userRoleChanged,
+  settingsUpdated,
+  invoiceIssued,
+  invoicePaid,
+  invoiceVoided,
 }
 
 enum PaymentStatus { paid, open, voided, uncollectible }
 
+/// Also written by Cloud Functions (functions/src/constants.js — keep the
+/// names in sync).
 enum NotificationType {
   jobScheduled,
+  jobAssigned,
   jobStarted,
   jobCompleted,
+  jobCancelled,
   pickupConfirmed,
   deliveryCompleted,
+  deliveryRequested,
   invoiceReady,
+  invoicePaid,
   storageThreshold,
   qrUnlinkedAlert,
   issueReported,
+  directMessage,
   systemAlert,
 }
 
@@ -205,12 +218,10 @@ extension SubscriptionStatusX on SubscriptionStatus {
   String get label => _title(name);
 }
 
+/// The hours behind each window are an admin setting — show them with
+/// `BusinessSettings.windowLabel` (via `businessSettingsProvider`).
 extension TimeWindowX on TimeWindow {
-  String get label => switch (this) {
-        TimeWindow.morning => 'Morning (08:00–12:00)',
-        TimeWindow.afternoon => 'Afternoon (12:00–16:00)',
-        TimeWindow.evening => 'Evening (16:00–20:00)',
-      };
+  String get title => _title(name);
 }
 
 extension IssueTypeX on IssueType {

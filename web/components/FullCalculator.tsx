@@ -1,53 +1,61 @@
 "use client";
 
-import { useState } from "react";
-import {
-  BOX_TYPES,
-  VEHICLES,
-  APP_URL,
-} from "@/lib/constants";
+import { useEffect, useState } from "react";
+import { APP_URL } from "@/lib/constants";
+import type { Prices } from "@/lib/prices";
+import { parseQuote, quoteQuery } from "@/lib/quote";
+import LooseItemPicker from "@/components/LooseItemPicker";
 
-interface LooseItem {
-  name: string;
-  price: number;
-}
-
-const QUICK_LOOSE: LooseItem[] = [
-  { name: "Mountain Bike", price: 110 },
-  { name: "Surfboard", price: 95 },
-  { name: "Golf Bag", price: 85 },
-  { name: "Bicycle", price: 110 },
-  { name: "Large Suitcase", price: 75 },
-  { name: "Dining Table", price: 145 },
-];
-
-export default function FullCalculator() {
+/**
+ * The full quote builder on /pricing. Every number comes from the live
+ * `prices` — the loose-item picker is the real loose-item list, not a copy.
+ *
+ * It opens on any quote in the URL (see lib/quote.ts), which is how the home
+ * page's quick calculator and /loose-items "Add to Quote" hand over, and
+ * "Book Your Pickup" passes the finished quote on to the app's /register.
+ */
+export default function FullCalculator({ prices }: { prices: Prices }) {
+  const { boxes: BOX_TYPES, vehicles: VEHICLES, looseItems: LOOSE_ITEMS } = prices;
   const [boxes, setBoxes] = useState<Record<string, number>>(
     Object.fromEntries(BOX_TYPES.map((b) => [b.id, 0]))
   );
-  const [looseItems, setLooseItems] = useState<LooseItem[]>([
-    { name: "Mountain Bike", price: 110 },
-  ]);
-  const [vehicleId, setVehicleId] = useState("small-van");
+  // Opens with one bike so the summary shows a real line before any clicks.
+  const [loose, setLoose] = useState<Record<string, number>>(
+    LOOSE_ITEMS.some((i) => i.id === "bicycle") ? { bicycle: 1 } : {}
+  );
+  const [vehicleId, setVehicleId] = useState(
+    (VEHICLES.find((v) => v.recommended) ?? VEHICLES[0]).id
+  );
   const [showAddLoose, setShowAddLoose] = useState(false);
+
+  // Read after mount rather than via useSearchParams, so /pricing stays
+  // statically rendered.
+  useEffect(() => {
+    const quote = parseQuote(window.location.search, prices);
+    if (!quote) return;
+    setBoxes(Object.fromEntries(BOX_TYPES.map((b) => [b.id, quote.boxes[b.id] ?? 0])));
+    setLoose(quote.loose);
+    if (quote.vehicle) setVehicleId(quote.vehicle);
+  }, [prices, BOX_TYPES]);
 
   const updateBox = (id: string, delta: number) => {
     setBoxes((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] ?? 0) + delta) }));
   };
 
-  const addLooseItem = (item: LooseItem) => {
-    setLooseItems((prev) => [...prev, item]);
-    setShowAddLoose(false);
+  const updateLoose = (id: string, delta: number) => {
+    setLoose((prev) => {
+      const next = { ...prev, [id]: Math.max(0, (prev[id] ?? 0) + delta) };
+      if (!next[id]) delete next[id];
+      return next;
+    });
   };
 
-  const removeLoose = (idx: number) => {
-    setLooseItems((prev) => prev.filter((_, i) => i !== idx));
-  };
-
+  const selectedLoose = LOOSE_ITEMS.filter((i) => (loose[i.id] ?? 0) > 0);
   const boxTotal = BOX_TYPES.reduce((s, b) => s + (boxes[b.id] ?? 0) * b.price, 0);
-  const looseTotal = looseItems.reduce((s, i) => s + i.price, 0);
+  const looseTotal = selectedLoose.reduce((s, i) => s + loose[i.id] * i.price, 0);
   const monthlyTotal = boxTotal + looseTotal;
-  const vehicle = VEHICLES.find((v) => v.id === vehicleId)!;
+  const vehicle = VEHICLES.find((v) => v.id === vehicleId) ?? VEHICLES[0];
+  const registerHref = `${APP_URL}/register${quoteQuery({ boxes, loose, vehicle: vehicle.id })}`;
 
   return (
     <div className="bg-surface-white rounded-3xl shadow-tactile-lg overflow-hidden border border-navy-deep/5">
@@ -99,49 +107,45 @@ export default function FullCalculator() {
               2. Add Loose Items
             </h4>
             <div className="space-y-3">
-              {looseItems.map((item, idx) => (
+              {selectedLoose.map((item) => (
                 <div
-                  key={idx}
-                  className="flex justify-between items-center p-4 bg-mist rounded-xl border border-navy-deep/5"
+                  key={item.id}
+                  className="flex justify-between items-center gap-3 p-4 bg-mist rounded-xl border border-navy-deep/5"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-navy-deep/60">shopping_basket</span>
-                    <span className="font-body-main text-navy-deep">{item.name}</span>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="material-symbols-outlined text-navy-deep/60">{item.icon}</span>
+                    <div className="min-w-0">
+                      <p className="font-body-main text-navy-deep truncate">{item.name}</p>
+                      <p className="text-xs text-on-surface-variant">R{item.price}/mo each</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="font-body-strong text-navy-deep">R{item.price}/mo</span>
+                  <div className="flex items-center gap-2 shrink-0">
                     <button
-                      onClick={() => removeLoose(idx)}
-                      className="text-error hover:scale-110 transition-transform"
-                      aria-label="Remove item"
+                      onClick={() => updateLoose(item.id, -1)}
+                      aria-label={loose[item.id] === 1 ? `Remove ${item.name}` : `Remove one ${item.name}`}
+                      className="w-8 h-8 rounded-full bg-surface-white flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
                     >
-                      <span className="material-symbols-outlined">delete</span>
+                      −
+                    </button>
+                    <span aria-live="polite" className="font-bold text-navy-deep w-5 text-center tabular-nums">{loose[item.id]}</span>
+                    <button
+                      onClick={() => updateLoose(item.id, 1)}
+                      aria-label={`Add one ${item.name}`}
+                      className="w-8 h-8 rounded-full bg-surface-white flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                    >
+                      +
                     </button>
                   </div>
                 </div>
               ))}
 
               {showAddLoose ? (
-                <div className="p-4 border-2 border-accent-deep/40 rounded-xl bg-mist">
-                  <p className="font-body-strong text-navy-deep mb-3 text-sm">Quick add:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {QUICK_LOOSE.map((item) => (
-                      <button
-                        key={item.name}
-                        onClick={() => addLooseItem(item)}
-                        className="px-3 py-1.5 bg-surface-white border border-navy-deep/10 rounded-full text-sm text-navy-deep hover:border-accent-deep hover:text-accent-deep transition-colors font-body-strong"
-                      >
-                        {item.name} · R{item.price}
-                      </button>
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => setShowAddLoose(false)}
-                    className="mt-3 text-sm text-on-surface-variant hover:text-error transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
+                <LooseItemPicker
+                  looseItems={LOOSE_ITEMS}
+                  looseItemCategories={prices.looseItemCategories}
+                  onAdd={(id) => updateLoose(id, 1)}
+                  onClose={() => setShowAddLoose(false)}
+                />
               ) : (
                 <button
                   onClick={() => setShowAddLoose(true)}
@@ -213,13 +217,15 @@ export default function FullCalculator() {
                   </span>
                 </div>
               ))}
-              {looseItems.map((item, i) => (
-                <div key={i} className="flex justify-between text-on-navy-variant">
-                  <span>{item.name}</span>
-                  <span className="font-bold text-surface-white">R{item.price}/mo</span>
+              {selectedLoose.map((item) => (
+                <div key={item.id} className="flex justify-between text-on-navy-variant">
+                  <span>{loose[item.id]}× {item.name}</span>
+                  <span className="font-bold text-surface-white">
+                    R{(loose[item.id] * item.price).toLocaleString("en-ZA")}
+                  </span>
                 </div>
               ))}
-              {boxTotal === 0 && looseItems.length === 0 && (
+              {monthlyTotal === 0 && (
                 <p className="text-on-navy-variant/60 text-sm italic">No items selected yet.</p>
               )}
             </div>
@@ -244,7 +250,7 @@ export default function FullCalculator() {
 
           <div>
             <a
-              href={`${APP_URL}/register`}
+              href={registerHref}
               className="w-full h-[64px] bg-accent text-on-accent rounded-xl font-body-strong text-lg shadow-lg hover:opacity-90 transition-all flex items-center justify-center gap-3 active:scale-95"
             >
               Book Your Pickup

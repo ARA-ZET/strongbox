@@ -21,6 +21,12 @@ abstract class PhotoRepository {
     String? jobId,
     required String uploadedBy,
   });
+
+  /// Uploads a client sign-off signature (PNG) to [storagePath] and returns
+  /// its download URL, which the job records as `clientSignatureUrl`.
+  Future<String> uploadSignature(
+      {required Uint8List png, required String storagePath});
+
   Future<List<Photo>> getForEntity(String entityId);
   Stream<List<Photo>> watchForEntity(String entityId);
   Future<Map<String, String>> resolveUrls(List<String> photoIds);
@@ -37,6 +43,15 @@ class FirestorePhotoRepository
 
   CollectionReference<Map<String, dynamic>> get _photos =>
       col(Collections.photos);
+
+  @override
+  Future<String> uploadSignature(
+          {required Uint8List png, required String storagePath}) =>
+      guardRepo(() async {
+        final upload = await storage.ref(storagePath).putData(
+            png, SettableMetadata(contentType: 'image/png'));
+        return upload.ref.getDownloadURL();
+      });
 
   @override
   Future<String> upload({

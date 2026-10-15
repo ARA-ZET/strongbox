@@ -19,8 +19,24 @@ service cloud.firestore {
     // ---- Users ---------------------------------------------------------
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
-      allow create: if isOwner(uid) || isAdmin();
-      allow update: if isOwner(uid) || isAdmin();
+      // Self sign-up is always a client with no client record linked yet;
+      // staff roles are granted by an admin.
+      allow create: if isAdmin() ||
+        (isOwner(uid) &&
+          request.resource.data.role == 'client' &&
+          request.resource.data.get('clientId', null) == null);
+      // Users edit their own profile, never their role, tenant or billing
+      // state. clientId is set once, to a client record they own.
+      allow update: if isAdmin() ||
+        (isOwner(uid) &&
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(
+            ['role', 'tenantId', 'isDeleted', 'subscriptionStatus',
+             'stripeCustomerId']) &&
+          (!request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(['clientId']) ||
+            (resource.data.get('clientId', null) == null &&
+              get(/databases/$(database)/documents/clients/$(request.resource.data.clientId))
+                .data.primaryUserId == request.auth.uid)));
     }
 
     // ---- Clients -------------------------------------------------------
@@ -42,6 +58,14 @@ service cloud.firestore {
       allow read: if isAdmin() || isDriver() ||
         (isClient() && resource.data.clientId == myClientId());
       allow write: if isAdmin() || isDriver();
+      // A client's delivery request moves their stored units to
+      // pendingDelivery in the same batch that creates the job.
+      allow update: if isClient() &&
+        resource.data.clientId == myClientId() &&
+        resource.data.status == 'inStorage' &&
+        request.resource.data.status == 'pendingDelivery' &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'jobId', 'updatedAt']);
     }
     match /items/{itemId} {
       allow read: if isAdmin() || isDriver() ||
@@ -114,12 +138,22 @@ service cloud.firestore {
     }
 
     // ---- Notifications -------------------------------------------------
+    // Every new doc is pushed (and may be emailed) by the
+    // onNotificationCreated function, so only admins address people;
+    // anyone signed in may raise a plain alert to the admins (userId null).
     match /notifications/{notifId} {
       allow read: if isAdmin() ||
         (signedIn() && resource.data.userId == request.auth.uid);
-      allow create: if signedIn();
-      allow update: if isAdmin() ||
-        (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() ||
+        (signedIn() &&
+          request.resource.data.get('userId', null) == null &&
+          request.resource.data.type == 'systemAlert');
+      // Recipients only mark things read.
+      allow update: if (isAdmin() ||
+          (signedIn() && resource.data.userId == request.auth.uid)) &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['isRead', 'readAt']);
+      allow delete: if false;
     }
 
     // ---- Driver ops ----------------------------------------------------
@@ -137,11 +171,19 @@ service cloud.firestore {
         (isDriver() && resource.data.driverId == request.auth.uid);
     }
 
-    // ---- Billing (written by Stripe webhook only) ---------------------
+    // ---- Billing --------------------------------------------------------
+    // Invoices are issued by the monthlyInvoices function. Admins only
+    // settle an open one — paid (EFT received) or voided — never amounts.
     match /invoices/{invoiceId} {
       allow read: if isAdmin() ||
         (isClient() && resource.data.clientId == myClientId());
-      allow write: if false;
+      allow update: if isAdmin() &&
+        resource.data.status == 'open' &&
+        request.resource.data.status in ['paid', 'voided'] &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(
+          ['status', 'paidAt', 'paidBy', 'paymentNote', 'voidReason',
+           'updatedAt']);
+      allow create, delete: if false;
     }
     match /subscriptions/{subId} {
       allow read: if isAdmin() ||
@@ -153,10 +195,57 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // ---- Price list ----------------------------------------------------
+    // One doc per tenant, edited in Admin → Pricing. Prices are public —
+    // the website reads this doc without signing in — so reads are open;
+    // only admins publish, and only a well-formed list.
+    match /priceLists/{tenantId} {
+      allow read: if true;
+      allow create, update: if isAdmin() &&
+        request.resource.data.keys().hasOnly(['tenantId', 'boxes',
+          'looseItemCategories', 'looseItems', 'vehicles', 'updatedAt',
+          'updatedBy']) &&
+        request.resource.data.tenantId == tenantId &&
+        request.resource.data.updatedBy == request.auth.uid &&
+        request.resource.data.updatedAt == request.time &&
+        request.resource.data.boxes is list &&
+        request.resource.data.boxes.size() <= 50 &&
+        request.resource.data.looseItems is list &&
+        request.resource.data.looseItems.size() <= 300 &&
+        request.resource.data.vehicles is list &&
+        request.resource.data.vehicles.size() <= 20 &&
+        request.resource.data.looseItemCategories is list &&
+        request.resource.data.looseItemCategories.size() <= 30;
+      allow delete: if false;
+    }
+
     // ---- Tenant --------------------------------------------------------
+    // Business details and operations defaults (Admin → Settings). The
+    // login screen shows the contact details before anyone signs in, so
+    // reads are open — only public information may live on this doc, which
+    // the key allow-list enforces.
     match /tenants/{tenantId} {
-      allow read: if signedIn();
-      allow write: if isAdmin();
+      allow read: if true;
+      allow create, update: if isAdmin() &&
+        request.resource.data.keys().hasOnly(['tenantId', 'name',
+          'contactPhone', 'contactEmail', 'address', 'serviceArea',
+          'morning', 'afternoon', 'evening', 'paymentInstructions',
+          'updatedAt', 'updatedBy']) &&
+        request.resource.data.tenantId == tenantId &&
+        request.resource.data.updatedBy == request.auth.uid &&
+        request.resource.data.updatedAt == request.time &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() <= 120 &&
+        request.resource.data.contactPhone is string &&
+        request.resource.data.contactEmail is string &&
+        request.resource.data.serviceArea is string &&
+        request.resource.data.address is map &&
+        request.resource.data.morning is map &&
+        request.resource.data.afternoon is map &&
+        request.resource.data.evening is map &&
+        request.resource.data.get('paymentInstructions', '') is string &&
+        request.resource.data.get('paymentInstructions', '').size() <= 500;
+      allow delete: if false;
     }
   }
 }

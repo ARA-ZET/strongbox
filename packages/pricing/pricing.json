@@ -1,5 +1,5 @@
 {
-  "$comment": "Single source of truth for StrongBox prices (ZAR). Edit here, then run `node packages/pricing/build.mjs` to regenerate web/lib/pricing.g.ts and app/lib/core/constants/price_list.g.dart. Box and loose-item prices are per unit per month; vehicle prices are a once-off pickup fee. There are no term or prepay discounts — storage is billed monthly.",
+  "$comment": "Default StrongBox prices (ZAR) and the shape of the live price list. Admins edit prices in the app (Admin → Pricing), which writes Firestore priceLists/{tenantId}; the app and the website both read that document, and fall back to this file until an admin first saves. Editing here changes only the defaults: run `node packages/pricing/build.mjs` to regenerate web/lib/pricing.g.ts and app/lib/core/constants/price_list.g.dart. Box and loose-item prices are per unit per month; vehicle prices are a once-off pickup fee. No term or prepay discounts. An entry with \"active\": false is retired: hidden from the website and new units, but still names units already stored under it. itemIcons is the set of Material Symbols an admin may give a loose item — the website bundles only these glyphs.",
   "boxes": [
     {
       "id": "small",
@@ -162,6 +162,39 @@
       "icon": "weekend",
       "price": 220
     }
+  ],
+  "itemIcons": [
+    "table_restaurant",
+    "table_bar",
+    "desk",
+    "tv",
+    "chair",
+    "chair_alt",
+    "shelves",
+    "single_bed",
+    "bed",
+    "king_bed",
+    "crib",
+    "weekend",
+    "pedal_bike",
+    "electric_scooter",
+    "moped",
+    "surfing",
+    "kayaking",
+    "sports_golf",
+    "sports_tennis",
+    "fitness_center",
+    "kitchen",
+    "microwave",
+    "local_laundry_service",
+    "piano",
+    "stroller",
+    "luggage",
+    "checkroom",
+    "wall_art",
+    "light",
+    "yard",
+    "inventory_2"
   ],
   "vehicles": [
     {

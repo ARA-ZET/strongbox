@@ -22,6 +22,9 @@ abstract class JobRepository {
       {required String actorId, bool moveUnits = true});
   Future<void> updateStatus(Job job, JobStatus newStatus,
       {required String actorId});
+  Future<void> assignDriver(Job job, String driverId,
+      {required String actorId});
+  Future<void> cancel(Job job, {required String actorId, String? reason});
   Future<void> markUnitScanned(String jobId, String unitId,
       {required String actorId});
   Future<void> addDriverPhoto(String jobId, String photoUrl);
@@ -145,6 +148,83 @@ class FirestoreJobRepository
               entityType: 'job',
               entityId: job.id,
               metadata: {'toStatus': newStatus.name},
+            ),
+          );
+        });
+      });
+
+  /// Dispatches [job] to [driverId]. Also claims its units, which a draft
+  /// (saved without moving them) has not done yet.
+  @override
+  Future<void> assignDriver(Job job, String driverId,
+          {required String actorId}) =>
+      guardRepo(() async {
+        await db.runTransaction((txn) async {
+          txn.update(_jobs.doc(job.id), {
+            'driverId': driverId,
+            'status': JobStatus.assigned.name,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
+          final pending = job.type == JobType.pickup
+              ? StorageStatus.pendingPickup
+              : StorageStatus.pendingDelivery;
+          for (final unitId in job.storageUnitIds) {
+            txn.update(col(Collections.storageUnits).doc(unitId), {
+              'status': pending.name,
+              'jobId': job.id,
+              'updatedAt': FieldValue.serverTimestamp(),
+            });
+          }
+          txn.set(
+            auditDoc(),
+            auditEventData(
+              tenantId: job.tenantId,
+              actorId: actorId,
+              action: AuditAction.jobAssigned,
+              entityType: 'job',
+              entityId: job.id,
+              metadata: {'driverId': driverId},
+            ),
+          );
+        });
+      });
+
+  /// Cancels a job that hasn't started and releases its units: a delivery's
+  /// units go back to storage; a pickup's stay pending pickup. Units that
+  /// have since moved to another job are left alone.
+  @override
+  Future<void> cancel(Job job, {required String actorId, String? reason}) =>
+      guardRepo(() async {
+        await db.runTransaction((txn) async {
+          final unitRefs = job.storageUnitIds
+              .map((id) => col(Collections.storageUnits).doc(id))
+              .toList();
+          final snaps = [for (final ref in unitRefs) await txn.get(ref)];
+
+          txn.update(_jobs.doc(job.id), {
+            'status': JobStatus.cancelled.name,
+            'cancelledAt': FieldValue.serverTimestamp(),
+            if (reason != null) 'cancelReason': reason,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
+          for (final snap in snaps) {
+            if (!snap.exists || snap.data()?['jobId'] != job.id) continue;
+            txn.update(snap.reference, {
+              if (job.type == JobType.delivery)
+                'status': StorageStatus.inStorage.name,
+              'jobId': null,
+              'updatedAt': FieldValue.serverTimestamp(),
+            });
+          }
+          txn.set(
+            auditDoc(),
+            auditEventData(
+              tenantId: job.tenantId,
+              actorId: actorId,
+              action: AuditAction.jobCancelled,
+              entityType: 'job',
+              entityId: job.id,
+              metadata: {if (reason != null) 'reason': reason},
             ),
           );
         });

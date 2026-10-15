@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { BOX_FROM } from "@/lib/constants";
+import { getPrices } from "@/lib/prices";
 
 /*
  * The site-wide social card. `metadata.openGraph` pointed at `/og-image.jpg`,
@@ -37,6 +37,7 @@ async function inter() {
 }
 
 export default async function OpengraphImage() {
+  const { boxFrom: BOX_FROM } = await getPrices();
   return new ImageResponse(
     (
       <div

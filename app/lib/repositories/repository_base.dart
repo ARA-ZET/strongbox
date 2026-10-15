@@ -9,6 +9,8 @@ import '../core/errors/app_exception.dart';
 Future<T> guardRepo<T>(Future<T> Function() op) async {
   try {
     return await op();
+  } on AppException {
+    rethrow;
   } on FirebaseException catch (error) {
     throw AppException(
       code: error.code,

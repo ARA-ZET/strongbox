@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/models/audit_event.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/relative_time.dart';
+import '../../notifications/providers/notification_providers.dart';
+import '../../notifications/widgets/push_permission_banner.dart';
 import '../providers/notifications_providers.dart';
 import '../providers/reports_providers.dart';
 
@@ -238,6 +243,8 @@ class _Inbox extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 16),
+        const PushPermissionBanner(),
+        const _SystemAlerts(),
         if (visible.isEmpty)
           Padding(
             padding: const EdgeInsets.all(32),
@@ -253,6 +260,69 @@ class _Inbox extends ConsumerWidget {
     if (!scrollable) return content;
     return SingleChildScrollView(
         padding: const EdgeInsets.all(24), child: content);
+  }
+}
+
+/// Unread alerts addressed to every admin, newest first, each dismissable.
+class _SystemAlerts extends ConsumerWidget {
+  const _SystemAlerts();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final alerts = ref.watch(adminAlertsProvider).valueOrNull ?? const [];
+    if (alerts.isEmpty) return const SizedBox.shrink();
+    final textTheme = Theme.of(context).textTheme;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: AppRadius.md,
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.xs),
+            child: Text('System alerts', style: textTheme.titleMedium),
+          ),
+          for (final alert in alerts.take(5))
+            ListTile(
+              leading: const Icon(Icons.campaign_outlined,
+                  color: AppColors.accentDeep),
+              title: Text(alert.title,
+                  maxLines: 2, overflow: TextOverflow.ellipsis),
+              subtitle: Text(
+                [
+                  alert.body,
+                  if (alert.createdAt != null) relativeTime(alert.createdAt!),
+                ].where((part) => part.isNotEmpty).join(' · '),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: TextButton(
+                onPressed: () => ref
+                    .read(notificationActionsProvider.notifier)
+                    .markRead(alert)
+                    .catchError((_) {}),
+                child: const Text('Dismiss'),
+              ),
+              onTap: alert.route == null
+                  ? null
+                  : () => context.go(alert.route!),
+            ),
+          if (alerts.length > 5)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md, 0, AppSpacing.md, AppSpacing.sm),
+              child: Text('and ${alerts.length - 5} more',
+                  style: textTheme.bodySmall),
+            ),
+        ],
+      ),
+    );
   }
 }
 

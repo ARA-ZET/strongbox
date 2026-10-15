@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Illustration from "@/components/graphics/Illustration";
-import { BOX_FROM, LOOSE_ITEM_FROM } from "@/lib/constants";
+import { getPrices, type Prices } from "@/lib/prices";
 
 import JsonLd from "@/components/JsonLd";
 import { pageMeta, breadcrumbJsonLd } from "@/lib/seo";
@@ -12,7 +12,7 @@ export const metadata: Metadata = pageMeta({
   path: "/tools",
 });
 
-const TOOLS = [
+const tools = ({ boxFrom, looseItemFrom }: Prices) => [
   {
     href: "/tools/savings-calculator",
     icon: "savings",
@@ -25,19 +25,20 @@ const TOOLS = [
     href: "/pricing#calculator",
     icon: "calculate",
     title: "Quote Builder",
-    body: `Add boxes, loose items and a collection vehicle to build your exact monthly figure. From R${BOX_FROM} a box.`,
+    body: `Add boxes, loose items and a collection vehicle to build your exact monthly figure. From R${boxFrom} a box.`,
     cta: "Open tool",
   },
   {
     href: "/loose-items",
     icon: "chair",
     title: "Loose Item Pricer",
-    body: `Bikes, surfboards, beds, appliances — see what each one costs to store, priced by the space it occupies. From R${LOOSE_ITEM_FROM}.`,
+    body: `Bikes, surfboards, beds, appliances — see what each one costs to store, priced by the space it occupies. From R${looseItemFrom}.`,
     cta: "Open tool",
   },
 ];
 
-export default function ToolsPage() {
+export default async function ToolsPage() {
+  const TOOLS = tools(await getPrices());
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Free Tools", path: "/tools" }])} />

@@ -1,7 +1,22 @@
 # 23 — Billing Feature Spec
 
 ## Purpose
-Manage client subscriptions and payments via Stripe (through the Firebase Stripe Extension). Billing is Stripe-owned — the app never stores card data, calculates prices, or manually writes subscription state. All subscription data flows in via Stripe webhooks and is read from Firestore subcollections managed by the extension.
+Charge each client monthly for what we store, and let them see what they owe and how to pay. v1
+has **no card provider**: invoices are issued by a Cloud Function, clients pay by EFT, and an admin
+records the payment. The app never computes an invoice or changes an amount.
+
+---
+
+## Model (matches the website)
+
+- Storage is charged **per unit per month**. Each `StorageUnit` records `priceKey` and
+  `monthlyRateZar` when registered, so later price changes never re-price stored goods.
+- Billable statuses: `inTransit`, `inStorage`, `pendingDelivery` (`StorageStatusX.isBillable`).
+- Units with no recorded rate fall back to the current price list (`priceLists/{tenantId}`, or
+  the generated defaults); units with no size are not billed and are counted as *unpriced*.
+- Monthly, in advance, no contract, no minimum term, no discounts. Pickup is a once-off fee by
+  vehicle (quoted on the website). There are **no subscription plans**.
+- `StorageBill` (app) and `functions/src/billing.js` implement the same arithmetic.
 
 ---
 
@@ -9,251 +24,125 @@ Manage client subscriptions and payments via Stripe (through the Firebase Stripe
 
 | Screen | Route | Design File |
 |---|---|---|
-| Client Subscription & Billing | `/client/subscription` | `client_subscription_billing` |
-| Admin Settings (billing config) | `/admin/settings` | — |
+| Client Billing | `/client/subscription` | `client_subscription_billing` |
+| Admin client detail → Invoices | `/admin/clients/:clientId` | `admin_client_detail` |
+| Admin Settings → EFT payment details | `/admin/settings` | — |
 
 ---
 
-## Tech: Firebase Stripe Extension
+## Lifecycle
 
-The Firebase "Run Payments with Stripe" extension manages:
-- `customers/{uid}` — Stripe customer record
-- `customers/{uid}/subscriptions/{subId}` — active subscription
-- `customers/{uid}/payments/{paymentId}` — payment records
-- `customers/{uid}/checkout_sessions/{sessionId}` — checkout flow
-
-The Flutter app **reads** these collections. It **never writes** to them directly.
-
----
-
-## Subscription Plans
-
-| Plan | Price | Unit Limit | Drivers |
-|---|---|---|---|
-| Starter | R899/mo | 20 units | 1 |
-| Professional | R3,499/mo | 100 units | 5 |
-| Enterprise | Custom | Unlimited | Unlimited |
-
-Stripe Price IDs are stored in `lib/core/constants/stripe_constants.dart`:
-```dart
-class StripeConstants {
-  static const starterMonthlyPriceId      = 'price_xxx';
-  static const professionalMonthlyPriceId = 'price_yyy';
-}
+```
+1st of month, 06:00 SAST   monthlyInvoices issues invoices/{clientId}_{YYYY-MM}   status: open
+                           + notification invoiceReady to the client (push + email)
+client pays by EFT         quoting the reference, e.g. INV-202611-AB12CD
+admin                      Mark paid (optional note)  → status: paid
+                           or Void (reason required)  → status: voided
+onInvoiceUpdated           recomputes Client.subscriptionStatus; "payment received" to client
+07:00 SAST daily           dailyBillingSweep: open + past dueAt → client pastDue
 ```
 
+Nothing is issued for a tenant until **Admin → Settings → EFT payment details** is filled in —
+clients need somewhere to pay. Until then the run sends admins one "invoices not issued" alert a
+month. Invoice ids are deterministic, so a re-run never bills a client twice for a month. Settled
+invoices are final (rules reject any further change).
+
 ---
 
-## Subscription States (SubscriptionStatus enum)
+## Firestore: `invoices/{clientId}_{YYYY-MM}`
+
+```
+tenantId, clientId
+reference: String          // INV-{YYYYMM}-{first 6 of clientId}
+description: String        // "Storage — November 2026"
+amount: number             // Rand, VAT inclusive
+currency: 'zar'
+status: PaymentStatus      // open | paid | voided  (uncollectible reserved)
+lines: [{ unitId, qrCodeId, label, priceKey, rateZar }]
+unitCount, unpricedUnitCount
+periodStart, periodEnd, dueAt (periodStart + 7 days)
+paidAt?, paidBy?, paymentNote?, voidReason?
+isDeleted, createdAt, updatedAt
+```
+
+Model: `Invoice` / `InvoiceLine` (`lib/core/models/invoice.dart`).
+
+### Client billing status (`Client.subscriptionStatus`)
+
+Written only by the functions (rule 25), never by the app:
 
 | Status | Meaning |
 |---|---|
-| `trialing` | 14-day free trial, no payment collected |
-| `active` | Paid and current |
-| `pastDue` | Payment failed, grace period (3 days) |
-| `cancelled` | Subscription ended |
-| `incomplete` | Checkout started but not completed |
-| `paused` | Admin manually paused (Enterprise only) |
+| `incomplete` | No invoice yet (nothing stored) |
+| `active` | No overdue invoices |
+| `pastDue` | An open invoice is past its due date |
+| `cancelled` | Set by ops; the functions leave it alone |
 
 ---
 
-## Firestore Data (managed by Stripe Extension)
+## Rules
 
-```
-customers/{uid}
-  stripeId: String          // Stripe customer ID
-  email: String
-
-customers/{uid}/subscriptions/{subId}
-  status: SubscriptionStatus
-  priceId: String           // Stripe price ID
-  planName: String          // 'starter' | 'professional' | 'enterprise'
-  currentPeriodStart: Timestamp
-  currentPeriodEnd: Timestamp
-  cancelAtPeriodEnd: Boolean
-  unitLimit: int
-  driverLimit: int
-  trialEnd: Timestamp?
-
-customers/{uid}/payments/{paymentId}
-  amount: int               // in cents
-  currency: String
-  status: 'succeeded' | 'failed' | 'pending'
-  created: Timestamp
-  invoiceUrl: String?       // Stripe-hosted invoice PDF
-```
+- `invoices`: clients read their own; admins read all and may only move an **open** invoice to
+  `paid` or `voided`, touching only `status, paidAt, paidBy, paymentNote, voidReason, updatedAt`.
+  Nobody creates or deletes invoices from a client.
+- `tenants/{tenantId}.paymentInstructions` (≤ 500 chars) is public like the rest of that doc —
+  bank details only.
 
 ---
 
-## Client Portal: Subscription Screen
+## Client Billing screen (`/client/subscription`)
 
-### Reads
-- `clientSubscriptionProvider(uid)` → `StreamProvider<Subscription?>`
-  - reads `customers/{uid}/subscriptions` ordered by `created` desc, limit 1
-- `clientPaymentsProvider(uid)` → `StreamProvider<List<Payment>>`
-  - reads `customers/{uid}/payments` ordered by `created` desc, limit 12
+- **Monthly Storage** — `StorageBill` of the client's units, one line per unit.
+- **Billing card** — status chip and the **how-to-pay panel**: amount due across open invoices,
+  due date, the EFT reference (copyable) and the tenant's payment instructions; "all paid up"
+  when nothing is open.
+- **Price List** — live prices.
+- **Invoices** — `InvoiceTable`: period, reference, amount, due, status (overdue shows *Past
+  Due*), and *Download PDF* (`printInvoice`, `lib/core/utils/invoice_pdf.dart`).
 
-### UI
+## Admin
 
-**Current Plan Card**
-- Plan name (e.g. "Professional")
-- Price per month
-- Renewal date (formatted `currentPeriodEnd`)
-- StatusChip: active / trialing / pastDue / cancelled
-- Units used vs limit: progress bar (`currentUnitCount / unitLimit`)
-- Drivers: `X of Y`
-
-**Warnings**
-- `pastDue` → amber banner: "Payment failed. Update your payment method to avoid losing access."
-- `trialing` → navy banner: "Trial ends [date]. Add a payment method to continue."
-- `cancelAtPeriodEnd == true` → grey banner: "Your subscription ends [date]."
-
-**Action Buttons**
-- "Upgrade Plan" → `subscriptionRepository.createCheckoutSession(uid, newPriceId)` → redirect to Stripe Checkout
-- "Manage Billing" → `subscriptionRepository.createPortalLink(uid)` → redirect to Stripe Customer Portal
-  - Customer Portal handles: update card, cancel, view invoices
-- "Reactivate" (if cancelled) → same as Upgrade
-
-**Payment History Table**
-- Columns: Date | Description | Amount | Status | Invoice
-- Status chip: succeeded (green) / failed (red) / pending (amber)
-- Invoice column: "Download" link → opens `invoiceUrl` in new tab
+- Client detail: *Billing* card shows monthly storage and the outstanding amount; the
+  *Invoices* table adds *Mark paid…* and *Void…* on open invoices (`InvoiceActions`).
+- Settings → Business details: *EFT payment details* (`BusinessSettings.paymentInstructions`).
+- Reports: *Monthly Storage Revenue* = every billable unit at its rate.
 
 ---
 
-## Checkout Flow
-
-```
-1. User clicks "Upgrade Plan"
-2. App calls: subscriptionRepository.createCheckoutSession(uid, priceId)
-3. Cloud Function creates Stripe Checkout Session, writes to:
-   customers/{uid}/checkout_sessions/{sessionId}
-4. App reads sessionId and opens Stripe Checkout URL
-5. User completes payment on Stripe's hosted page
-6. Stripe webhook → Cloud Function → updates:
-   customers/{uid}/subscriptions/{subId} { status: active, priceId: newPriceId }
-7. App StreamProvider detects change → UI updates automatically
-```
-
----
-
-## Stripe Customer Portal Flow
-
-```
-1. User clicks "Manage Billing"
-2. subscriptionRepository.createPortalLink(uid) → Cloud Function
-3. Cloud Function creates Stripe Billing Portal session
-4. Returns URL → app opens in browser (or WebView)
-5. User manages card/cancellation on Stripe's portal
-6. Changes flow back via webhook → Firestore updates automatically
-```
-
----
-
-## Access Gates (Business Rules)
-
-The app reads `subscriptionStatus` before allowing certain actions:
-
-| Action | trialing | active | pastDue | cancelled |
-|---|---|---|---|---|
-| Request delivery | ✓ | ✓ | ✓ (grace 3 days) | ✗ |
-| Add storage units | ✓ | ✓ | ✓ (grace 3 days) | ✗ |
-| View storage | ✓ | ✓ | ✓ | ✓ (read-only) |
-| Download invoices | ✓ | ✓ | ✓ | ✓ |
-
-Gate implementation: `subscriptionGateProvider` → wraps feature providers and returns `AppException.subscriptionRequired` when blocked.
-
----
-
-## Admin View
-
-- Admin can see subscription status per client on `/admin/clients/:clientId`
-- No ability to edit Stripe subscriptions — must use Stripe Dashboard directly
-- Admin receives notification when any client has `paymentFailed` event
-
----
-
-## Cloud Functions
-
-```javascript
-// functions/index.js
-
-// Create Checkout Session
-exports.createCheckoutSession = functions.https.onCall(async (data, context) => {
-  const { priceId } = data;
-  const uid = context.auth.uid;
-  // Creates Stripe Checkout Session and writes to customers/{uid}/checkout_sessions
-  // Handled by Firebase Stripe Extension — use extension's callable function
-});
-
-// Create Portal Link
-exports.createPortalLink = functions.https.onCall(async (data, context) => {
-  const uid = context.auth.uid;
-  // Returns Stripe Billing Portal URL
-  // Handled by Firebase Stripe Extension
-});
-
-// Webhook: handle Stripe events
-exports.handleStripeWebhook = functions.https.onRequest(async (req, res) => {
-  // Handled by Firebase Stripe Extension
-  // Updates customers/{uid}/subscriptions on invoice.paid, payment_failed, etc.
-});
-```
-
----
-
-## Repositories
+## Repository & providers
 
 ```dart
 abstract class SubscriptionRepository {
-  /// Watch the active subscription for a user
-  Stream<Subscription?> watchSubscription(String uid);
-
-  /// Watch payment history
-  Stream<List<Payment>> watchPayments(String uid);
-
-  /// Creates a Stripe Checkout session; returns the URL to open
-  Future<String> createCheckoutSession(String uid, String priceId);
-
-  /// Creates a Stripe Customer Portal link; returns the URL to open
-  Future<String> createPortalLink(String uid);
+  Stream<List<Invoice>> watchInvoices(String tenantId, String clientId);
+  Future<void> markPaid(Invoice invoice, {required String actorId, String? note});
+  Future<void> voidInvoice(Invoice invoice, {required String actorId, required String reason});
 }
 ```
+Both writes run in a transaction that re-checks the invoice is still open and writes an
+`AuditEvent` (`invoicePaid` / `invoiceVoided`).
 
----
-
-## Providers
-
-```dart
-clientSubscriptionProvider(uid)     → StreamProvider<Subscription?>
-clientPaymentsProvider(uid)         → StreamProvider<List<Payment>>
-subscriptionGateProvider            → Provider<SubscriptionGate>
-  // SubscriptionGate { canRequestDelivery, canAddUnits, isReadOnly }
-upgradeCheckoutNotifier             → AsyncNotifier<String?> // returns URL
+```
+myInvoicesProvider                 client's invoices
+clientInvoicesProvider(clientId)   admin view
+invoiceActionsProvider             markPaid / voidInvoice
 ```
 
 ---
 
-## Error States
+## Adding a card provider later
 
-| Error | Handling |
-|---|---|
-| Checkout session creation fails | Toast: "Could not start checkout. Try again." |
-| Portal link fails | Toast: "Could not open billing portal. Contact support." |
-| Subscription not found | Empty state: "No subscription found — contact support" |
-| `pastDue` + delivery requested | Gate blocks; amber banner with "Update Payment" CTA |
-| `cancelled` + delivery attempted | Blocked with upgrade prompt modal |
+Keep the `invoices` docs as the source of truth: a provider's webhook (Paystack, Stripe, …)
+should set `status: paid` (+ `paidAt`, `paymentNote`) on the matching invoice, and the client
+page can add a "Pay now" link per open invoice. Nothing else in the app needs to change.
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] Subscription screen shows correct plan name, price, and renewal date from Stripe
-- [ ] Usage bar accurately reflects current unit count vs plan limit
-- [ ] `pastDue` and trial-ending banners appear with correct messaging
-- [ ] "Upgrade" opens Stripe Checkout; after payment, UI updates automatically without refresh
-- [ ] "Manage Billing" opens Stripe Customer Portal with valid session
-- [ ] Payment history table shows last 12 payments with correct status chips
-- [ ] Invoice download links open Stripe-hosted PDF in new tab
-- [ ] Cancelled clients see read-only storage but cannot request new deliveries
-- [ ] Admin sees subscription status on client detail screen
+- [x] One invoice per client per month, one line per billable unit at its recorded rate
+- [x] Re-running the invoice job never double-bills
+- [x] Client sees amount due, due date, EFT reference and bank details
+- [x] Invoice PDF downloads with lines, total and how to pay
+- [x] Admin marks paid / voids; settled invoices cannot change again
+- [x] Overdue invoices turn the account `pastDue`; settling returns it to `active`
+- [x] Client is notified when an invoice is issued and when payment is received

@@ -18,6 +18,7 @@ abstract class StorageUnitRepository {
   Stream<StorageUnit?> watchUnit(String id);
   Future<StorageUnit?> getUnit(String id);
   Future<List<StorageUnit>> getByIds(List<String> ids);
+  Future<StorageUnit?> getByQrCode(String tenantId, String qrCodeId);
   Future<String> create(StorageUnit unit, {required String actorId});
   Future<void> update(String id, Map<String, dynamic> fields,
       {required String actorId});
@@ -88,6 +89,20 @@ class FirestoreStorageUnitRepository
       });
 
   @override
+  Future<StorageUnit?> getByQrCode(String tenantId, String qrCodeId) =>
+      guardRepo(() async {
+        final snap = await _units
+            .where('tenantId', isEqualTo: tenantId)
+            .where('isDeleted', isEqualTo: false)
+            .where('qrCodeId', isEqualTo: qrCodeId)
+            .limit(1)
+            .get();
+        return snap.docs.isEmpty
+            ? null
+            : StorageUnit.fromFirestore(snap.docs.first);
+      });
+
+  @override
   Future<String> create(StorageUnit unit, {required String actorId}) =>
       guardRepo(() async {
         final doc = _units.doc();
@@ -98,6 +113,19 @@ class FirestoreStorageUnitRepository
 
         final batch = db.batch();
         batch.set(doc, data);
+        // Register the label so scanners can resolve it. Merge keeps a
+        // pre-printed code's batchId.
+        batch.set(
+          col(Collections.qrCodes).doc(unit.qrCodeId),
+          {
+            'tenantId': unit.tenantId,
+            'storageUnitId': doc.id,
+            'isLinked': true,
+            'linkedAt': FieldValue.serverTimestamp(),
+            'linkedBy': actorId,
+          },
+          SetOptions(merge: true),
+        );
         batch.set(
           auditDoc(),
           auditEventData(

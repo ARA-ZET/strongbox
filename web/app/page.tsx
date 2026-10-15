@@ -8,23 +8,21 @@ import SitePhoto from "@/components/SitePhoto";
 import SectionDivider from "@/components/graphics/SectionDivider";
 import { DeliveryVanArt } from "@/components/graphics/Illustrations";
 import { PALETTE } from "@/lib/palette";
-import { FEATURED_ROWS } from "@/lib/comparison";
+import { FEATURED_ROWS, withLivePrices } from "@/lib/comparison";
 import { STORAGE_MODES, USE_CASES } from "@/lib/service-details";
 import JsonLd from "@/components/JsonLd";
 import { pageMeta, faqJsonLd, serviceJsonLd } from "@/lib/seo";
-import {
-  TESTIMONIALS,
-  BOX_TYPES,
-  BOX_FROM,
-  APP_URL,
-  CUSTOMER_COUNT,
-} from "@/lib/constants";
+import { TESTIMONIALS, APP_URL, CUSTOMER_COUNT } from "@/lib/constants";
+import { getPrices } from "@/lib/prices";
 
-export const metadata: Metadata = pageMeta({
-  title: "Cape Town's First Valet Storage Service | StrongBox",
-  description: `StrongBox collects, stores, and returns your belongings on demand in Cape Town. No lock-in contracts. Monitored, climate-controlled facility. From R${BOX_FROM}/month.`,
-  path: "",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { boxFrom } = await getPrices();
+  return pageMeta({
+    title: "Cape Town's First Valet Storage Service | StrongBox",
+    description: `StrongBox collects, stores, and returns your belongings on demand in Cape Town. No lock-in contracts. Monitored, climate-controlled facility. From R${boxFrom}/month.`,
+    path: "",
+  });
+}
 
 /**
  * The four claims that answer a first-time visitor's immediate objections.
@@ -60,12 +58,14 @@ const STEPS = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const prices = await getPrices();
+  const { boxes: BOX_TYPES, boxFrom: BOX_FROM } = prices;
   return (
     <>
       {/* The homepage renders the FAQ block and the rate card, so it is the
           page entitled to carry their markup. */}
-      <JsonLd data={[faqJsonLd(), serviceJsonLd()]} />
+      <JsonLd data={[faqJsonLd(), serviceJsonLd(BOX_TYPES)]} />
       {/* ── Hero ── */}
       <section className="bg-navy-deep relative overflow-hidden flex items-center">
         <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid md:grid-cols-2 gap-gutter items-center py-14 md:py-20 relative z-10">
@@ -297,7 +297,7 @@ export default function HomePage() {
               need. Pay by the box instead — and let someone else do the driving.
             </p>
           </div>
-          <ComparisonTable rows={FEATURED_ROWS} />
+          <ComparisonTable rows={withLivePrices(FEATURED_ROWS, BOX_TYPES)} />
           <div className="text-center mt-10">
             <Link
               href="/compare"
@@ -379,7 +379,7 @@ export default function HomePage() {
       <SectionDivider from="navyDeep" to="mist" variant="wave" />
 
       {/* ── Calculator ── */}
-      <QuickCalculator />
+      <QuickCalculator prices={prices} />
 
       {/* ── Testimonials ── */}
       <section className="py-24 bg-navy">

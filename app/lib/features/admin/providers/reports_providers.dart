@@ -4,14 +4,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/client.dart';
 import '../../../core/models/job.dart';
+import '../../../core/models/storage_unit.dart';
+import '../../../core/constants/pricing.dart';
+import '../../../core/providers/price_catalog_provider.dart';
 import 'clients_providers.dart';
 import 'fleet_providers.dart';
+import 'inventory_providers.dart';
 import 'jobs_providers.dart';
 
 part 'reports_providers.g.dart';
-
-/// Flat demo tariff (Rand) used for estimated revenue until Stripe lands.
-const double estimatedFeePerJob = 550.0;
 
 /// One bar on the Monthly Job Volume chart.
 class MonthVolume {
@@ -54,13 +55,28 @@ List<MonthVolume> monthlyJobVolume(Ref ref) {
   }).toList();
 }
 
-/// Estimated revenue from completed jobs.
+/// Monthly storage billed per client: every billable unit at its recorded
+/// rate — what next month's invoice run will charge (StorageBill).
 @riverpod
-double estimatedRevenue(Ref ref) {
-  final jobs = ref.watch(allJobsProvider).valueOrNull ?? const <Job>[];
-  return jobs.where((j) => j.status == JobStatus.completed).length *
-      estimatedFeePerJob;
+Map<String, int> monthlyStorageByClient(Ref ref) {
+  final units = ref.watch(allUnitsProvider).valueOrNull ?? const [];
+  final prices = ref.watch(priceCatalogProvider);
+  final byClient = <String, List<StorageUnit>>{};
+  for (final unit in units) {
+    byClient.putIfAbsent(unit.clientId, () => []).add(unit);
+  }
+  return {
+    for (final entry in byClient.entries)
+      entry.key: StorageBill.fromUnits(entry.value, prices).monthlyZar,
+  };
 }
+
+/// Monthly recurring storage revenue across all clients.
+@riverpod
+int monthlyStorageRevenue(Ref ref) => ref
+    .watch(monthlyStorageByClientProvider)
+    .values
+    .fold(0, (sum, zar) => sum + zar);
 
 /// Fleet utilisation: drivers on a job / total drivers.
 @riverpod
@@ -76,11 +92,13 @@ class ClientVolumeRow {
   const ClientVolumeRow({
     required this.client,
     required this.jobsMtd,
-    required this.estRevenue,
+    required this.monthlyZar,
   });
   final Client client;
   final int jobsMtd;
-  final double estRevenue;
+
+  /// Their monthly storage bill.
+  final int monthlyZar;
 }
 
 /// Clients ranked by units stored, with month-to-date job counts.
@@ -88,6 +106,7 @@ class ClientVolumeRow {
 List<ClientVolumeRow> topClientsByVolume(Ref ref) {
   final clients = ref.watch(clientsProvider).valueOrNull ?? const [];
   final jobs = ref.watch(allJobsProvider).valueOrNull ?? const <Job>[];
+  final monthly = ref.watch(monthlyStorageByClientProvider);
   final now = DateTime.now();
 
   final sorted = [...clients]
@@ -100,12 +119,10 @@ List<ClientVolumeRow> topClientsByVolume(Ref ref) {
             j.scheduledDate!.year == now.year &&
             j.scheduledDate!.month == now.month)
         .length;
-    final completed =
-        clientJobs.where((j) => j.status == JobStatus.completed).length;
     return ClientVolumeRow(
       client: client,
       jobsMtd: mtd,
-      estRevenue: completed * estimatedFeePerJob,
+      monthlyZar: monthly[client.id] ?? 0,
     );
   }).toList();
 }

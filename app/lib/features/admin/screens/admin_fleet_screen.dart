@@ -500,7 +500,8 @@ class _AddDriverDialogState extends ConsumerState<_AddDriverDialog> {
                 Text('Add Driver', style: textTheme.headlineSmall),
                 const SizedBox(height: 4),
                 Text(
-                  'The driver signs in once account invites go live (Stage 7).',
+                  'To give them a login, have them sign up with this email, '
+                  'then make them a Driver in Settings → Team.',
                   style: textTheme.bodySmall,
                 ),
                 const SizedBox(height: 20),

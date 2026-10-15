@@ -40,7 +40,7 @@ final batchPreviewProvider =
 );
 
 typedef _$BatchPreview = AutoDisposeNotifier<List<String>>;
-String _$qrMutationsHash() => r'53416145efa0a726fe8e2be1761d6e2fa5d43538';
+String _$qrMutationsHash() => r'04ec7f7928900fba841fd8a27c1c9e14ab0e4e51';
 
 /// Firestore writes for the QR module.
 ///

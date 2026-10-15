@@ -1,5 +1,5 @@
 // ignore_for_file: use_null_aware_elements
-import '../../../core/constants/pricing.dart';
+import '../../../core/providers/price_catalog_provider.dart';
 import '../../../core/utils/currency.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -544,14 +544,15 @@ class _ItemsInside extends ConsumerWidget {
 
 // -------------------------------------------------------------- vault spec
 
-class _VaultSpecCard extends StatelessWidget {
+class _VaultSpecCard extends ConsumerWidget {
   const _VaultSpecCard({required this.unit});
 
   final StorageUnit unit;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final tt = Theme.of(context).textTheme;
+    final prices = ref.watch(priceCatalogProvider);
 
     Widget label(String text) => Text(text.toUpperCase(),
         style: tt.bodySmall?.copyWith(letterSpacing: 0.8));
@@ -627,7 +628,7 @@ class _VaultSpecCard extends StatelessWidget {
                   children: [
                     label('Size'),
                     const SizedBox(height: AppSpacing.xs),
-                    Text(Pricing.labelFor(unit.priceKey) ?? 'Being sized',
+                    Text(prices.labelFor(unit.priceKey) ?? 'Being sized',
                         style: tt.bodyMedium),
                   ],
                 ),
@@ -640,7 +641,7 @@ class _VaultSpecCard extends StatelessWidget {
                   Text(
                     switch (unit.monthlyRateZar > 0
                         ? unit.monthlyRateZar
-                        : Pricing.monthlyFor(unit.priceKey)) {
+                        : prices.monthlyFor(unit.priceKey)) {
                       final int rate when rate > 0 => '${formatZar(rate)}/mo',
                       _ => '—',
                     },
@@ -702,9 +703,11 @@ class _ActivityCard extends ConsumerWidget {
           events.when(
             loading: () =>
                 const Center(child: CircularProgressIndicator()),
-            error: (error, _) => Text('Could not load activity: $error',
+            // The audit trail is staff-only in firestore.rules; show the
+            // empty state rather than a permission error.
+            error: (_, _) => Text('Activity for this unit will appear here.',
                 style: tt.bodyMedium
-                    ?.copyWith(color: AppColors.statusError)),
+                    ?.copyWith(color: AppColors.textSecondary)),
             data: (list) => list.isEmpty
                 ? Text('Activity for this unit will appear here.',
                     style: tt.bodyMedium

@@ -85,7 +85,7 @@ final newJobDraftProvider =
 );
 
 typedef _$NewJobDraft = AutoDisposeNotifier<NewJobData>;
-String _$jobMutationsHash() => r'3c4687ae16a4a307e79992a1b3c65c82583f4718';
+String _$jobMutationsHash() => r'1586b5f2aacd68ced80d23264e928aab717377c0';
 
 /// Firestore writes for jobs.
 ///

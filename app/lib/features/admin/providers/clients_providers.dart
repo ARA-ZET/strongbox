@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/utils/async_value_ext.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../../core/models/app_user.dart';
@@ -145,5 +146,6 @@ class ClientMutations extends _$ClientMutations {
           if (phone != null) 'phone': phone,
           if (status != null) 'subscriptionStatus': status.name,
         }, actorId: actorId));
+    state.throwIfError();
   }
 }

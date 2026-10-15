@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/brand_logo.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../notifications/providers/notification_providers.dart';
 import '../providers/shift_providers.dart';
 
 /// Bottom-nav destination.
@@ -28,6 +29,7 @@ class DriverShell extends ConsumerWidget {
     final location = GoRouterState.of(context).matchedLocation;
     final hasShift = ref.watch(activeShiftProvider).valueOrNull != null;
     final user = ref.watch(currentUserProvider).valueOrNull;
+    final unread = ref.watch(unreadNotificationCountProvider);
 
     final tabs = <_Tab>[
       const _Tab('Jobs', Icons.receipt_long_outlined, '/driver/jobs'),
@@ -46,22 +48,17 @@ class DriverShell extends ConsumerWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 20,
-        title: Text(
-          'StrongBox',
-          style: GoogleFonts.inter(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: AppColors.navy,
-          ),
-        ),
+        title: const BrandLogo(fontSize: 20),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_outlined,
-                color: AppColors.textSecondary),
-            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text('Driver alerts arrive with FCM in Stage 7')),
+            tooltip: 'Notifications',
+            icon: Badge(
+              isLabelVisible: unread > 0,
+              label: Text('$unread'),
+              child: const Icon(Icons.notifications_outlined,
+                  color: AppColors.textSecondary),
             ),
+            onPressed: () => context.push('/driver/notifications'),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16, left: 4),
@@ -73,7 +70,13 @@ class DriverShell extends ConsumerWidget {
           ),
         ],
       ),
-      body: child,
+      // Mobile-first: on tablets keep the phone-sized column centred.
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 720),
+          child: child,
+        ),
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: selected,
         backgroundColor: AppColors.surface,

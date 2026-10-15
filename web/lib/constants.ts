@@ -1,10 +1,3 @@
-import {
-  BOX_TYPES,
-  LOOSE_ITEM_CATEGORIES,
-  LOOSE_ITEMS,
-  VEHICLES,
-} from "./pricing.g";
-
 // Overridable per-environment via apphosting.yaml; falls back to production
 export const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL ?? "https://app.strongbox.co.za";
@@ -93,16 +86,14 @@ export const OPENING_HOURS_LINES = OPENING_HOURS.map(
 );
 
 /*
- * The price list — boxes, loose items and pickup vehicles — is generated
- * from packages/pricing/pricing.json, which the Flutter app reads too, so
- * the site and the client portal can never quote different numbers. Edit
- * the JSON and run `node packages/pricing/build.mjs`; do not add prices
- * here.
+ * Prices — boxes, loose items and pickup vehicles — are not constants: admins
+ * set them in the app and the site reads them live. Use `getPrices()` from
+ * `lib/prices.ts` in a server component and pass them down as props; never
+ * add a price here.
  *
  * Storage is billed monthly per box or item, with no term or prepay
  * discounts. The pickup fee is a one-off per collection.
  */
-export { BOX_TYPES, LOOSE_ITEM_CATEGORIES, LOOSE_ITEMS, VEHICLES };
 
 /**
  * Headline trust figures, shown on the about page, the homepage and the
@@ -121,15 +112,6 @@ export const TRUST_STATS = [
 
 /** Customer-count claim used in section headings and CTA copy. */
 export const CUSTOMER_COUNT = "2,000+";
-
-/** Cheapest box, for the "from R…" line in page metadata and the social card. */
-export const BOX_FROM = Math.min(...BOX_TYPES.map((b) => b.price));
-
-/** Cheapest pickup on offer, quoted as a "from" figure outside the calculator. */
-export const PICKUP_FROM = Math.min(...VEHICLES.map((v) => v.price));
-
-/** Cheapest loose item, quoted the same way. */
-export const LOOSE_ITEM_FROM = Math.min(...LOOSE_ITEMS.map((i) => i.price));
 
 export const TESTIMONIALS = [
   {

@@ -12,6 +12,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/contact_us_card.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/status_chip.dart';
+import '../../../core/providers/business_settings_provider.dart';
 import '../providers/client_providers.dart';
 
 /// The client's pickups & deliveries with live status.
@@ -83,14 +84,15 @@ class ClientDeliveriesScreen extends ConsumerWidget {
   }
 }
 
-class _JobTile extends StatelessWidget {
+class _JobTile extends ConsumerWidget {
   const _JobTile({required this.job});
 
   final Job job;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final tt = Theme.of(context).textTheme;
+    final settings = ref.watch(businessSettingsProvider);
     final pickup = job.type == JobType.pickup;
 
     return Container(
@@ -133,7 +135,7 @@ class _JobTile extends StatelessWidget {
                       ? job.reference
                       : '${job.reference} · '
                           '${DateFormat('EEE d MMM').format(job.scheduledDate!)}'
-                          ' · ${job.timeWindow.label}',
+                          ' · ${settings.windowLabel(job.timeWindow)}',
                   style: tt.bodySmall,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

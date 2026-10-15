@@ -46,7 +46,13 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
     setState(() => _handling = true);
     await _controller.stop();
 
-    final box = await ref.read(unitByScanProvider(code).future);
+    final StorageUnit? box;
+    try {
+      box = await ref.read(unitByScanProvider(code).future);
+    } catch (error) {
+      if (mounted) await _showError('Could not look up “$code”: $error');
+      return;
+    }
     if (!mounted) return;
 
     if (box == null) {
@@ -98,6 +104,12 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
         ? null
         : await ref.read(driverJobProvider(jobId).future);
     if (!mounted) return;
+
+    // Only boxes on this job's manifest can be confirmed against it.
+    if (job != null && !job.storageUnitIds.contains(box.id)) {
+      await _showError('${box.qrCodeId} is not on this job\'s manifest.');
+      return;
+    }
 
     final clientName =
         ref.read(clientNamesProvider)[box.clientId] ?? 'Client';
@@ -172,9 +184,14 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
       },
     ).then((confirmed) async {
       if (confirmed == true && job != null) {
-        await ref
-            .read(driverJobActionsProvider.notifier)
-            .confirmUnit(job.id, box.id);
+        try {
+          await ref
+              .read(driverJobActionsProvider.notifier)
+              .confirmUnit(job.id, box.id);
+        } catch (error) {
+          if (mounted) await _showError('Could not confirm box: $error');
+          return;
+        }
         if (mounted) context.go('/driver/jobs/${job.id}');
         return;
       }

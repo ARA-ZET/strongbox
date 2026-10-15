@@ -7,6 +7,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/report_failure.dart';
 import '../../../core/models/app_user.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../../core/models/driver_shift.dart';
@@ -103,8 +104,8 @@ class _StartShiftCard extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () =>
-                  ref.read(shiftActionsProvider.notifier).startShift(),
+              onPressed: () => reportFailure(context, 'Could not start shift',
+                  () => ref.read(shiftActionsProvider.notifier).startShift()),
               child: const Text('Start Shift'),
             ),
           ),
@@ -182,9 +183,12 @@ class _ElapsedCardState extends ConsumerState<_ElapsedCard> {
                     backgroundColor: AppColors.statusError,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () => ref
-                      .read(shiftActionsProvider.notifier)
-                      .endShift(shift.id),
+                  onPressed: () => reportFailure(
+                      context,
+                      'Could not end shift',
+                      () => ref
+                          .read(shiftActionsProvider.notifier)
+                          .endShift(shift.id)),
                   icon: const Icon(Icons.stop_circle_outlined, size: 18),
                   label: const Text('End Shift'),
                 ),
@@ -196,9 +200,12 @@ class _ElapsedCardState extends ConsumerState<_ElapsedCard> {
                     foregroundColor: Colors.white,
                     side: const BorderSide(color: Colors.white54),
                   ),
-                  onPressed: () => ref
-                      .read(shiftActionsProvider.notifier)
-                      .setBreak(shift.id, onBreak: !shift.onBreak),
+                  onPressed: () => reportFailure(
+                      context,
+                      'Could not update break',
+                      () => ref
+                          .read(shiftActionsProvider.notifier)
+                          .setBreak(shift.id, onBreak: !shift.onBreak)),
                   icon: Icon(
                       shift.onBreak
                           ? Icons.play_arrow

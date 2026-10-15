@@ -6,7 +6,10 @@ import 'package:intl/intl.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_search_bar.dart';
+import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/initials_avatar.dart';
+import '../../../core/widgets/primary_button.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/job.dart';
@@ -529,9 +532,100 @@ class _JobRowState extends State<_JobRow> {
               Text('Notes: ${job.notes}', style: textTheme.bodyMedium),
             ],
             const SizedBox(height: 16),
+            if (job.status == JobStatus.scheduled ||
+                job.status == JobStatus.assigned)
+              _DispatchActions(job: job),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Assign / reassign a driver, or cancel — for jobs that haven't started.
+/// Client delivery requests and drafts arrive unassigned and wait here.
+class _DispatchActions extends ConsumerStatefulWidget {
+  const _DispatchActions({required this.job});
+
+  final Job job;
+
+  @override
+  ConsumerState<_DispatchActions> createState() => _DispatchActionsState();
+}
+
+class _DispatchActionsState extends ConsumerState<_DispatchActions> {
+  late String? _driverId = widget.job.driverId;
+  bool _busy = false;
+
+  Future<void> _run(String failure, Future<void> Function() action) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    setState(() => _busy = true);
+    try {
+      await action();
+      navigator.pop();
+    } catch (error) {
+      if (mounted) setState(() => _busy = false);
+      messenger.showSnackBar(SnackBar(content: Text('$failure: $error')));
+    }
+  }
+
+  Future<void> _cancel() async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: 'Cancel ${widget.job.reference}?',
+      message: widget.job.type == JobType.delivery
+          ? 'Its boxes go back to "In Storage".'
+          : 'Its boxes stay pending pickup.',
+      confirmLabel: 'Cancel Job',
+      cancelLabel: 'Keep',
+      isDestructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    await _run('Could not cancel job',
+        () => ref.read(jobMutationsProvider.notifier).cancelJob(widget.job));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final drivers = ref.watch(driverUsersProvider).valueOrNull ?? const [];
+    final driverId = drivers.any((d) => d.id == _driverId) ? _driverId : null;
+    final assigned = widget.job.driverId != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DropdownButtonFormField<String>(
+          initialValue: driverId,
+          decoration: const InputDecoration(labelText: 'Driver'),
+          items: [
+            for (final driver in drivers)
+              DropdownMenuItem(value: driver.id, child: Text(driver.name)),
+          ],
+          onChanged: _busy ? null : (value) => setState(() => _driverId = value),
+        ),
+        const SizedBox(height: 12),
+        PrimaryButton(
+          label: assigned ? 'Reassign Driver' : 'Assign Driver',
+          icon: null,
+          loading: _busy,
+          onPressed: driverId == null ||
+                  driverId == widget.job.driverId ||
+                  _busy
+              ? null
+              : () => _run(
+                  'Could not assign driver',
+                  () => ref
+                      .read(jobMutationsProvider.notifier)
+                      .assignDriver(widget.job, driverId)),
+        ),
+        const SizedBox(height: 8),
+        DestructiveButton(
+          label: 'Cancel Job',
+          fullWidth: true,
+          onPressed: _busy ? null : _cancel,
+        ),
+      ],
     );
   }
 }

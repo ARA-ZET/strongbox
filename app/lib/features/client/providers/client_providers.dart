@@ -3,9 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/utils/async_value_ext.dart';
 import '../../../core/constants/pricing.dart';
 import '../../../core/enums/app_enums.dart';
-import '../../../core/models/app_notification.dart';
 import '../../../core/models/audit_event.dart';
 import '../../../core/models/client.dart';
 import '../../../core/models/invoice.dart';
@@ -14,6 +14,7 @@ import '../../../core/models/job.dart';
 import '../../../core/models/photo.dart';
 import '../../../core/models/storage_unit.dart';
 import '../../../core/models/value_objects.dart';
+import '../../../core/providers/price_catalog_provider.dart';
 import '../../../core/providers/tenant_provider.dart';
 import '../../../repositories/repository_providers.dart';
 import '../../auth/providers/auth_provider.dart';
@@ -45,7 +46,7 @@ Stream<List<StorageUnit>> myUnits(Ref ref) {
 @riverpod
 StorageBill myStorageBill(Ref ref) {
   final units = ref.watch(myUnitsProvider).valueOrNull ?? const [];
-  return StorageBill.fromUnits(units);
+  return StorageBill.fromUnits(units, ref.watch(priceCatalogProvider));
 }
 
 /// The client's individually catalogued items (across all open units).
@@ -127,17 +128,26 @@ Stream<StorageUnit?> clientUnitDetail(Ref ref, String unitId) =>
 Stream<List<Photo>> clientUnitPhotos(Ref ref, String unitId) =>
     ref.watch(photoRepositoryProvider).watchForEntity(unitId);
 
-/// Items inside an open unit, live.
+/// Items inside an open unit, live. Queried by client (not unit) so the
+/// query stays within what the rules let a client read.
 @riverpod
-Stream<List<Item>> clientUnitItems(Ref ref, String unitId) =>
-    ref.watch(itemRepositoryProvider).watchForUnit(unitId);
+Stream<List<Item>> clientUnitItems(Ref ref, String unitId) {
+  final client = ref.watch(currentClientProvider).valueOrNull;
+  if (client == null) return Stream.value(const []);
+  final tenantId = ref.watch(currentTenantIdProvider);
+  return ref
+      .watch(itemRepositoryProvider)
+      .watchForClient(tenantId, client.id)
+      .map((items) =>
+          items.where((item) => item.storageUnitId == unitId).toList());
+}
 
 /// Last audit events for a unit — the Security & Activity rail.
 @riverpod
 Stream<List<AuditEvent>> clientUnitAudit(Ref ref, String unitId) =>
     ref.watch(auditRepositoryProvider).watchForEntity(unitId, limit: 10);
 
-/// The client's invoices (written by Stripe in Stage 7).
+/// The client's monthly invoices (issued by the monthlyInvoices function).
 @riverpod
 Stream<List<Invoice>> myInvoices(Ref ref) {
   final client = ref.watch(currentClientProvider).valueOrNull;
@@ -146,17 +156,6 @@ Stream<List<Invoice>> myInvoices(Ref ref) {
   return ref
       .watch(subscriptionRepositoryProvider)
       .watchInvoices(tenantId, client.id);
-}
-
-/// Targeted notifications for the signed-in user.
-@riverpod
-Stream<List<AppNotification>> myNotifications(Ref ref) {
-  final uid = ref.watch(authStateProvider).valueOrNull?.uid;
-  if (uid == null) return Stream.value(const []);
-  final tenantId = ref.watch(currentTenantIdProvider);
-  return ref
-      .watch(notificationRepositoryProvider)
-      .watchForUser(tenantId, uid);
 }
 
 // ------------------------------------------------------- delivery request
@@ -287,6 +286,7 @@ class AccountActions extends _$AccountActions {
         }, actorId: uid);
       }
     });
+    state.throwIfError();
   }
 
   Future<void> updateAddress(Address address) async {
@@ -297,6 +297,7 @@ class AccountActions extends _$AccountActions {
     state = await AsyncValue.guard(() => ref
         .read(clientRepositoryProvider)
         .update(client.id, {'address': address.toJson()}, actorId: uid));
+    state.throwIfError();
   }
 
   Future<void> savePrefs(NotificationPrefs prefs) async {
@@ -305,6 +306,7 @@ class AccountActions extends _$AccountActions {
     state = await AsyncValue.guard(() => ref
         .read(userRepositoryProvider)
         .updateUser(uid, {'notificationPrefs': prefs.toJson()}));
+    state.throwIfError();
   }
 
   /// Logs a deletion request for staff review (no immediate delete).
@@ -322,5 +324,6 @@ class AccountActions extends _$AccountActions {
               entityType: 'client',
               entityId: client?.id,
             ));
+    state.throwIfError();
   }
 }

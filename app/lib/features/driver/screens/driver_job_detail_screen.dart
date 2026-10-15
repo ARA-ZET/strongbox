@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/report_failure.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/storage_unit.dart';
 import '../../../core/models/job.dart';
@@ -63,8 +64,16 @@ class _JobDetailBody extends ConsumerWidget {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
-  Future<void> _startJob(BuildContext context, WidgetRef ref) async {
-    await ref.read(driverJobActionsProvider.notifier).startJob(job);
+  Future<void> _startJob(BuildContext context, WidgetRef ref) =>
+      reportFailure(context, 'Could not start job',
+          () => ref.read(driverJobActionsProvider.notifier).startJob(job));
+
+  /// Where to navigate: the job's delivery/pickup address when it has one.
+  String _mapsQuery(String clientName) {
+    final address = job.address;
+    final parts = [address.line1, address.line2, address.city, address.postCode]
+        .where((part) => part != null && part.trim().isNotEmpty);
+    return parts.isEmpty ? clientName : parts.join(', ');
   }
 
   @override
@@ -75,6 +84,7 @@ class _JobDetailBody extends ConsumerWidget {
         ref.watch(clientNamesProvider)[job.clientId] ?? 'Client';
     final started = job.status == JobStatus.inProgress;
     final completed = job.status == JobStatus.completed;
+    final cancelled = job.status == JobStatus.cancelled;
     final pickup = job.type == JobType.pickup;
 
     return Column(
@@ -120,7 +130,7 @@ class _JobDetailBody extends ConsumerWidget {
               ],
               const SizedBox(height: 8),
               InkWell(
-                onTap: () => _openMaps(clientName),
+                onTap: () => _openMaps(_mapsQuery(clientName)),
                 child: Row(
                   children: [
                     const Icon(Icons.map_outlined,
@@ -164,6 +174,7 @@ class _JobDetailBody extends ConsumerWidget {
           job: job,
           started: started,
           completed: completed,
+          cancelled: cancelled,
           onStart: () => _startJob(context, ref),
         ),
       ],
@@ -328,12 +339,14 @@ class _BottomBar extends ConsumerWidget {
     required this.job,
     required this.started,
     required this.completed,
+    required this.cancelled,
     required this.onStart,
   });
 
   final Job job;
   final bool started;
   final bool completed;
+  final bool cancelled;
   final VoidCallback onStart;
 
   @override
@@ -365,6 +378,18 @@ class _BottomBar extends ConsumerWidget {
                   Text('Job completed',
                       style: tt.titleMedium
                           ?.copyWith(color: AppColors.statusSuccess)),
+                ],
+              )
+            : cancelled
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.cancel_outlined,
+                      color: AppColors.statusError),
+                  const SizedBox(width: 8),
+                  Text('Job cancelled',
+                      style: tt.titleMedium
+                          ?.copyWith(color: AppColors.statusError)),
                 ],
               )
             : !started

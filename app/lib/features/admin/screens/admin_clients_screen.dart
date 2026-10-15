@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/report_failure.dart';
 import '../../../core/widgets/app_search_bar.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../../core/enums/app_enums.dart';
@@ -384,9 +385,9 @@ class _ClientRowState extends ConsumerState<_ClientRow> {
       case 'edit':
         await ClientFormDialog.show(context, existing: client);
       case 'deactivate':
-        await ref
+        await reportFailure(context, 'Could not deactivate client', () => ref
             .read(clientMutationsProvider.notifier)
-            .updateClient(client.id, status: SubscriptionStatus.cancelled);
+            .updateClient(client.id, status: SubscriptionStatus.cancelled));
     }
   }
 }

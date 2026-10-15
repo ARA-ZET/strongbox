@@ -221,5 +221,51 @@ final subscriptionRepositoryProvider =
 );
 
 typedef SubscriptionRepositoryRef = ProviderRef<SubscriptionRepository>;
+String _$priceListRepositoryHash() =>
+    r'30f14dcd832341231fe961eead7eb67dc4de8a10';
+
+/// See also [priceListRepository].
+@ProviderFor(priceListRepository)
+final priceListRepositoryProvider = Provider<PriceListRepository>.internal(
+  priceListRepository,
+  name: r'priceListRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$priceListRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef PriceListRepositoryRef = ProviderRef<PriceListRepository>;
+String _$tenantRepositoryHash() => r'de718ac9e864d3a2413cbefdb83c5736aea4bdb4';
+
+/// See also [tenantRepository].
+@ProviderFor(tenantRepository)
+final tenantRepositoryProvider = Provider<TenantRepository>.internal(
+  tenantRepository,
+  name: r'tenantRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$tenantRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef TenantRepositoryRef = ProviderRef<TenantRepository>;
+String _$pushRepositoryHash() => r'72c518849358991d084e0c950164f2cd7035fffc';
+
+/// See also [pushRepository].
+@ProviderFor(pushRepository)
+final pushRepositoryProvider = Provider<PushRepository>.internal(
+  pushRepository,
+  name: r'pushRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pushRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef PushRepositoryRef = ProviderRef<PushRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

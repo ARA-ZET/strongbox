@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' show DateTimeRange;
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/utils/async_value_ext.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/job.dart';
 import '../../../core/providers/tenant_provider.dart';
@@ -216,5 +217,23 @@ class JobMutations extends _$JobMutations {
     state = await AsyncValue.guard(() => ref
         .read(jobRepositoryProvider)
         .create(job, actorId: actorId, moveUnits: !asDraft));
+    state.throwIfError();
+  }
+
+  Future<void> assignDriver(Job job, String driverId) async {
+    final actorId = ref.read(currentActorIdProvider);
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => ref
+        .read(jobRepositoryProvider)
+        .assignDriver(job, driverId, actorId: actorId));
+    state.throwIfError();
+  }
+
+  Future<void> cancelJob(Job job) async {
+    final actorId = ref.read(currentActorIdProvider);
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() =>
+        ref.read(jobRepositoryProvider).cancel(job, actorId: actorId));
+    state.throwIfError();
   }
 }

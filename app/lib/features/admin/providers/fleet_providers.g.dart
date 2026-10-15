@@ -467,7 +467,7 @@ class _DriverCompletedCountProviderElement
   String get driverId => (origin as DriverCompletedCountProvider).driverId;
 }
 
-String _$driverMutationsHash() => r'c6e1ddc58dcf72c127e144f36e415932b9ee0958';
+String _$driverMutationsHash() => r'a59f7a9962dec36b991c7c728653307181c9c8db';
 
 /// Create/update actions on driver records.
 ///

@@ -3,8 +3,6 @@ import {
   CONTACT_EMAIL,
   CONTACT_PHONE_HREF,
   SOCIAL_LINKS,
-  BOX_FROM,
-  BOX_TYPES,
   FAQ_ITEMS,
   HQ_SUBURB,
   HQ_POSTCODE,
@@ -13,6 +11,7 @@ import {
   OPENING_HOURS,
 } from "@/lib/constants";
 import type { Article } from "@/lib/resources";
+import type { BoxType } from "@/lib/prices";
 
 /**
  * One source of truth for everything a crawler reads.
@@ -99,7 +98,7 @@ const ORG_ID = `${SITE_URL}/#organisation`;
  * type because the collection-and-return half of the service is what people
  * actually search for.
  */
-export function localBusinessJsonLd() {
+export function localBusinessJsonLd(boxFrom: number) {
   return {
     "@context": "https://schema.org",
     "@type": ["SelfStorage", "MovingCompany"],
@@ -113,7 +112,7 @@ export function localBusinessJsonLd() {
       "Valet storage in Cape Town. We collect your belongings from your door, store them in our monitored Kensington facility, and return them on request.",
     telephone: CONTACT_PHONE_HREF.replace("tel:", ""),
     email: CONTACT_EMAIL,
-    priceRange: `From R${BOX_FROM} per month`,
+    priceRange: `From R${boxFrom} per month`,
     currenciesAccepted: "ZAR",
     // One facility. `areaServed` below is what carries the rest of the metro —
     // inventing branch addresses to chase suburb searches is what gets a
@@ -230,7 +229,7 @@ export function articleJsonLd(article: Article) {
  * storage rate; the one-off collection fee is quoted separately and is
  * deliberately not folded in here.
  */
-export function serviceJsonLd() {
+export function serviceJsonLd(boxes: readonly BoxType[]) {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -240,7 +239,7 @@ export function serviceJsonLd() {
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "StrongBox storage plans",
-      itemListElement: BOX_TYPES.map((box) => ({
+      itemListElement: boxes.map((box) => ({
         "@type": "Offer",
         name: box.label,
         description: box.desc,

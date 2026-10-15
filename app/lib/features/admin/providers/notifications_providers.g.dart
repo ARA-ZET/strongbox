@@ -24,6 +24,24 @@ final notificationFeedProvider =
 );
 
 typedef NotificationFeedRef = AutoDisposeStreamProviderRef<List<AuditEvent>>;
+String _$adminAlertsHash() => r'c52b56c781d11ddc87d80f0a9967d3d01a773dff';
+
+/// Unread alerts for all admins — delivery requests awaiting a driver,
+/// invoice runs, unused QR labels (written by Cloud Functions).
+///
+/// Copied from [adminAlerts].
+@ProviderFor(adminAlerts)
+final adminAlertsProvider =
+    AutoDisposeStreamProvider<List<AppNotification>>.internal(
+  adminAlerts,
+  name: r'adminAlertsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$adminAlertsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AdminAlertsRef = AutoDisposeStreamProviderRef<List<AppNotification>>;
 String _$notificationCategoryFilterHash() =>
     r'b2b4b2893f18c3d570e23eb5f53ffa17f42cdd11';
 

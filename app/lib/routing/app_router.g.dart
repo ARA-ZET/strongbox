@@ -6,7 +6,7 @@ part of 'app_router.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appRouterHash() => r'08bc98be4bfd929e33e5af5e229d09ac7b086cfb';
+String _$appRouterHash() => r'306b32a716850b27177b6554dcd6a0658e05d738';
 
 /// App router. The app is for account holders — marketing, pricing and
 /// quotes live on the website (web/). Redirect rules:

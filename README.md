@@ -7,8 +7,11 @@ in VS Code to get all folders as one workspace.
 strongbox/
 ├─ app/         Flutter web+mobile app (admin / driver / client portals)
 ├─ web/         Next.js marketing site (strongboxstorage.co.za)
+├─ functions/   Cloud Functions — invoices, notifications, push, email (see functions/README.md)
 ├─ packages/
 │  ├─ tokens/   design tokens — one JSON → app + web  (see packages/tokens/README.md)
+│  ├─ pricing/  default price list — one JSON → app + web + functions
+│  ├─ brand/    logo + app icon generator
 │  └─ schema/   shared domain-model contract (not built yet)
 ├─ docs/        product specification (25 docs) — shared by both apps
 ├─ firestore.rules
@@ -25,6 +28,7 @@ Both apps run on the **one** Firebase project `strongbox-app`
 |---|---|---|---|
 | `app/` | classic **Firebase Hosting** (`firebase.json` → `app/build/web`) | GitHub Action `.github/workflows/deploy-app.yml` on push to `main` touching `app/**` or `packages/**` | `app.strongbox.co.za` |
 | `web/` | **Firebase App Hosting** backend `strongbox-web`, root dir `/web` | App Hosting's native GitHub connection, any push to `main` | `www.strongboxstorage.co.za` |
+| `functions/` | **Cloud Functions** (Node 22, `us-central1`) | Manual: `firebase deploy --only functions` (tested in CI) | — |
 
 ### One-time setup
 
@@ -63,4 +67,6 @@ node packages/tokens/build.mjs
 
 ## Firestore rules
 
-Deployed from the repo root: `firebase deploy --only firestore:rules`.
+Deployed from the repo root: `firebase deploy --only firestore:rules` (CI does
+this on every push to `main`). They are tested with the functions on the
+emulators — `cd functions && npm run test:emulator` (needs Java 21+).

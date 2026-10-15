@@ -617,7 +617,7 @@ class _UnitJobsProviderElement
   String get unitId => (origin as UnitJobsProvider).unitId;
 }
 
-String _$unitByQrCodeHash() => r'56309a46a93039a891d26f762836bcdcd3c8ab6b';
+String _$unitByQrCodeHash() => r'1621353579b3e2856906265e156d8f5ff615cec1';
 
 /// Look up a unit by scanned QR code value.
 ///
@@ -813,7 +813,7 @@ final inventoryTypeFilterProvider =
 );
 
 typedef _$InventoryTypeFilter = AutoDisposeNotifier<String>;
-String _$unitMutationsHash() => r'389ff3ba18ff0f67901e7eeff9193acbdf8270bd';
+String _$unitMutationsHash() => r'cef2207c74a8a7fcd8198cbeeff401425206e474';
 
 /// Create/update actions on units and their items.
 ///

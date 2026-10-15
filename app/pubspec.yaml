@@ -27,6 +27,7 @@ dependencies:
   cloud_firestore: ^5.1.0
   firebase_storage: ^12.1.0
   cloud_functions: ^5.0.4
+  firebase_messaging: ^15.2.0
 
   # Navigation
   go_router: ^14.2.0
@@ -48,6 +49,7 @@ dependencies:
   equatable: ^2.0.5
   url_launcher: ^6.3.0
   shared_preferences: ^2.5.5
+  material_symbols_icons: ^4.2960.0
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +62,7 @@ dev_dependencies:
   riverpod_lint: ^2.3.10
   freezed: ^2.5.2
   json_serializable: ^6.8.0
+  fake_cloud_firestore: ^3.0.2
 
 flutter:
   uses-material-design: true

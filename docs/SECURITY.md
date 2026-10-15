@@ -40,6 +40,11 @@ gh secret set FIREBASE_OPTIONS_DART < app/lib/core/firebase_options.dart
 
 Existing secret `FIREBASE_SERVICE_ACCOUNT` (Hosting deploy) is unchanged.
 
+Web push uses the GitHub **variable** (not a secret) `FCM_VAPID_KEY` — the
+*public* half of the Web Push key pair, which ships in the web bundle anyway.
+The build passes it as `--dart-define=FCM_VAPID_KEY=…`; without it push is
+simply off on web. Never commit or share the private half.
+
 ## Console hardening checklist (do this in Google Cloud / Firebase)
 
 - [ ] **Restrict every API key** — Google Cloud Console → APIs & Services → Credentials:

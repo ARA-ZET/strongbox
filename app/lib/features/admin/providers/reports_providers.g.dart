@@ -24,23 +24,44 @@ final monthlyJobVolumeProvider =
 );
 
 typedef MonthlyJobVolumeRef = AutoDisposeProviderRef<List<MonthVolume>>;
-String _$estimatedRevenueHash() => r'6259c47a3e34e94e608fa0a4869e1c6f10c55c67';
+String _$monthlyStorageByClientHash() =>
+    r'599c67b524f8f8877dfb0d44c30367652292c345';
 
-/// Estimated revenue from completed jobs.
+/// Monthly storage billed per client: every billable unit at its recorded
+/// rate — what next month's invoice run will charge (StorageBill).
 ///
-/// Copied from [estimatedRevenue].
-@ProviderFor(estimatedRevenue)
-final estimatedRevenueProvider = AutoDisposeProvider<double>.internal(
-  estimatedRevenue,
-  name: r'estimatedRevenueProvider',
+/// Copied from [monthlyStorageByClient].
+@ProviderFor(monthlyStorageByClient)
+final monthlyStorageByClientProvider =
+    AutoDisposeProvider<Map<String, int>>.internal(
+  monthlyStorageByClient,
+  name: r'monthlyStorageByClientProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$estimatedRevenueHash,
+      : _$monthlyStorageByClientHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef EstimatedRevenueRef = AutoDisposeProviderRef<double>;
+typedef MonthlyStorageByClientRef = AutoDisposeProviderRef<Map<String, int>>;
+String _$monthlyStorageRevenueHash() =>
+    r'd70023ac15d5fd1dba2c6085835df182f02bf919';
+
+/// Monthly recurring storage revenue across all clients.
+///
+/// Copied from [monthlyStorageRevenue].
+@ProviderFor(monthlyStorageRevenue)
+final monthlyStorageRevenueProvider = AutoDisposeProvider<int>.internal(
+  monthlyStorageRevenue,
+  name: r'monthlyStorageRevenueProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$monthlyStorageRevenueHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef MonthlyStorageRevenueRef = AutoDisposeProviderRef<int>;
 String _$fleetUtilisationHash() => r'b55916646cd0089d918216770fb0e02be324c032';
 
 /// Fleet utilisation: drivers on a job / total drivers.
@@ -60,7 +81,7 @@ final fleetUtilisationProvider =
 
 typedef FleetUtilisationRef = AutoDisposeProviderRef<({int total, int onJob})>;
 String _$topClientsByVolumeHash() =>
-    r'd230a4b102b5a577b17f5c2e34884b600feff575';
+    r'53623a13553fb73cd75a98ec24ba10a6ec238113';
 
 /// Clients ranked by units stored, with month-to-date job counts.
 ///

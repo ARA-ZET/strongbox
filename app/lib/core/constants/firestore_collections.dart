@@ -16,7 +16,11 @@ class Collections {
   static const issueReports = 'issueReports';
   static const driverShifts = 'driverShifts';
 
-  /// Managed by the Stripe Firebase Extension.
+  /// One doc per tenant, id = tenantId. Public read — the website shows it.
+  static const priceLists = 'priceLists';
+
+  /// Billing. `invoices` is written by the monthlyInvoices Cloud Function;
+  /// `customers` / `subscriptions` are reserved for a future card provider.
   static const customers = 'customers';
   static const subscriptions = 'subscriptions';
   static const invoices = 'invoices';

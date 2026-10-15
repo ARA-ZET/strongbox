@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../constants/contact_info.dart';
+import '../providers/business_settings_provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
@@ -12,7 +13,7 @@ import '../theme/app_spacing.dart';
 /// person is reachable at any stage, not just a self-serve flow. Used on
 /// login/register and across the client
 /// portal (doc: not in the original spec docs — added on direct request).
-class ContactUsCard extends StatelessWidget {
+class ContactUsCard extends ConsumerWidget {
   const ContactUsCard({
     super.key,
     this.title = 'Need help? Talk to a real person.',
@@ -32,8 +33,9 @@ class ContactUsCard extends StatelessWidget {
       launchUrl(Uri.parse(uri), mode: LaunchMode.externalApplication);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final tt = Theme.of(context).textTheme;
+    final contact = ref.watch(businessSettingsProvider);
 
     return Container(
       width: double.infinity,
@@ -66,16 +68,16 @@ class ContactUsCard extends StatelessWidget {
               OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
                     minimumSize: const Size(0, 44)),
-                onPressed: () => _launch(ContactInfo.phoneUri),
+                onPressed: () => _launch(contact.phoneUri),
                 icon: const Icon(Icons.call, size: 18),
-                label: const Text(ContactInfo.phoneDisplay),
+                label: Text(contact.contactPhone),
               ),
               OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
                     minimumSize: const Size(0, 44)),
-                onPressed: () => _launch(ContactInfo.emailUri),
+                onPressed: () => _launch(contact.emailUri),
                 icon: const Icon(Icons.email_outlined, size: 18),
-                label: const Text(ContactInfo.email),
+                label: Text(contact.contactEmail),
               ),
             ],
           ),

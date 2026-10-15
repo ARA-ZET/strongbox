@@ -1644,6 +1644,17 @@ Manual checks:
 
 Stage 6 (Client portal) is complete. This final stage wires up payments, notifications, and prepares for production.
 
+> **Status: built (2026-10-15).** Differences from the prompt below:
+> - **7.1** — no Stripe. Billing is per unit per month with no plans, so the Stripe Extension
+>   (fixed-price subscriptions) does not fit. v1 is **invoices + EFT**: `monthlyInvoices`
+>   issues invoices, admins mark them paid/void. See `docs/23_BILLING.md`.
+> - **7.2** — functions live in `functions/` at the repo root; see `functions/README.md`.
+>   Unit statuses are settled by the app's job transactions, so functions only notify.
+> - **7.3** — `NotificationToast` never existed; foreground pushes show as a snackbar
+>   (`PushListener`). Shared inbox: `NotificationInbox`.
+> - **7.7** — flows run through the real repositories on an in-memory Firestore
+>   (`app/test/flows/`); triggers + rules run on the emulators (`functions/test-emulator/`).
+
 ### 7.1 — Stripe Subscription (Firebase Extension)
 
 Install the **"Run Payments with Stripe"** Firebase Extension in the Firebase Console. Configure with your Stripe secret key.

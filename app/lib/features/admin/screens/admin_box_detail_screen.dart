@@ -1,4 +1,4 @@
-import '../../../core/constants/pricing.dart';
+import '../../../core/providers/price_catalog_provider.dart';
 import '../../../core/utils/currency.dart';
 import '../widgets/unit_size_field.dart';
 import 'dart:typed_data';
@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/relative_time.dart';
+import '../../../core/utils/report_failure.dart';
 import '../../../core/widgets/photo_upload_zone.dart';
 import '../../../core/widgets/qr_display_card.dart';
 import '../../../core/widgets/status_chip.dart';
@@ -86,8 +87,9 @@ class _BoxDetailBody extends ConsumerWidget {
         ],
       ),
     );
-    if (label != null) {
-      await ref.read(unitMutationsProvider.notifier).updateLabel(box.id, label);
+    if (label != null && context.mounted) {
+      await reportFailure(context, 'Could not update label', () =>
+          ref.read(unitMutationsProvider.notifier).updateLabel(box.id, label));
     }
   }
 
@@ -118,9 +120,17 @@ class _BoxDetailBody extends ConsumerWidget {
         ],
       ),
     );
-    if (confirmed != true) return;
-    await ref.read(unitMutationsProvider.notifier).archiveUnit(box);
-    if (context.mounted) context.go('/admin/inventory');
+    if (confirmed != true || !context.mounted) return;
+    try {
+      await ref.read(unitMutationsProvider.notifier).archiveUnit(box);
+      if (context.mounted) context.go('/admin/inventory');
+    } catch (error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not archive box: $error')),
+        );
+      }
+    }
   }
 
   @override
@@ -254,12 +264,17 @@ class _PhotosCard extends ConsumerWidget {
 
   final StorageUnit box;
 
-  Future<void> _addPhotos(WidgetRef ref) async {
+  Future<void> _addPhotos(BuildContext context, WidgetRef ref) async {
     final picked = await ImagePicker().pickMultiImage(imageQuality: 85);
     if (picked.isEmpty) return;
     final bytes = await Future.wait(picked.map((file) => file.readAsBytes()));
-    await ref.read(unitMutationsProvider.notifier).addPhotos(box.id, bytes);
+    if (context.mounted) await _uploadPhotos(context, ref, bytes);
   }
+
+  Future<void> _uploadPhotos(
+          BuildContext context, WidgetRef ref, List<Uint8List> bytes) =>
+      reportFailure(context, 'Could not upload photos', () =>
+          ref.read(unitMutationsProvider.notifier).addPhotos(box.id, bytes));
 
   void _openLightbox(BuildContext context, String url) {
     showDialog<void>(
@@ -297,7 +312,7 @@ class _PhotosCard extends ConsumerWidget {
               TextButton.icon(
                 style: TextButton.styleFrom(
                     foregroundColor: AppColors.accentDeep),
-                onPressed: () => _addPhotos(ref),
+                onPressed: () => _addPhotos(context, ref),
                 icon: const Icon(Icons.add_a_photo_outlined, size: 18),
                 label: const Text('Add New'),
               ),
@@ -306,9 +321,8 @@ class _PhotosCard extends ConsumerWidget {
           const SizedBox(height: 12),
           if (photos.isEmpty)
             PhotoUploadZone(
-              onPhotosSelected: (bytes) => ref
-                  .read(unitMutationsProvider.notifier)
-                  .addPhotos(box.id, bytes),
+              onPhotosSelected: (bytes) =>
+                  _uploadPhotos(context, ref, bytes),
             )
           else
             SizedBox(
@@ -655,20 +669,21 @@ class _DetailsCard extends ConsumerWidget {
         ],
       ),
     );
-    if (priceKey != null && priceKey != box.priceKey) {
-      await ref
+    if (priceKey != null && priceKey != box.priceKey && context.mounted) {
+      await reportFailure(context, 'Could not update size', () => ref
           .read(unitMutationsProvider.notifier)
-          .updatePriceKey(box.id, priceKey);
+          .updatePriceKey(box.id, priceKey));
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
-    final sizeLabel = Pricing.labelFor(box.priceKey);
+    final prices = ref.watch(priceCatalogProvider);
+    final sizeLabel = prices.labelFor(box.priceKey);
     final rate = box.monthlyRateZar > 0
         ? box.monthlyRateZar
-        : Pricing.monthlyFor(box.priceKey);
+        : prices.monthlyFor(box.priceKey);
 
     Widget row(String label, Widget value) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),

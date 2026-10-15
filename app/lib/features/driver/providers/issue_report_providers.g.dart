@@ -7,7 +7,7 @@ part of 'issue_report_providers.dart';
 // **************************************************************************
 
 String _$issueReportActionsHash() =>
-    r'c2e366ca1d1adfcb278f9f1a2f6302819c652eb9';
+    r'7add3d5bd3e9e7ff919ebd9987d1408d639528ca';
 
 /// Submits maintenance/support reports from the driver.
 ///

@@ -3,6 +3,22 @@
 ## Purpose
 Deliver timely, role-appropriate notifications to admin, drivers, and clients via in-app (real-time bell), push (FCM), and email (Cloud Functions). Users control their own preferences. Notifications are never deleted — they accumulate as a log.
 
+> **As built (Stage 7)** — where this spec and the code differ, the code wins:
+> - Docs use `userId` (not `recipientId`); `userId: null` is an alert to **all admins**.
+>   Functions also write `route` (where a tap goes) and `isDeleted`.
+> - Types: `NotificationType` in `app_enums.dart` (mirrored in `functions/src/constants.js`).
+>   Unknown types parse as `systemAlert`.
+> - Tokens live in `users/{uid}.fcmTokens` (a list — one per device), added on sign-in and
+>   removed on sign-out (`PushNotifications` provider). Web needs `FCM_VAPID_KEY`.
+> - One function, `onNotificationCreated`, does push **and** email. Email preferences are the
+>   existing `NotificationPrefs` booleans (`pickupStartedEmail`, `deliveryCompletedEmail`,
+>   `invoiceReadyEmail`, `storageThresholdEmail`); SMS toggles are stored but not sent yet.
+> - Email is queued in `mail/{id}` for the Trigger Email extension.
+> - Only admins may address a notification to a person; anyone signed in may raise a
+>   `systemAlert` to admins. Recipients may only change `isRead` / `readAt`.
+> - Inboxes: drivers `/driver/notifications`, clients `/client/notifications` (inbox above
+>   preferences), admins *System alerts* atop `/admin/notifications`.
+
 ---
 
 ## Designs

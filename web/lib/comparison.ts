@@ -9,6 +9,11 @@
  * can check.
  */
 
+import type { BoxType } from "@/lib/prices";
+
+/** Replaced with the live box price range by withLivePrices(). */
+const BOX_RANGE = "{boxRange}";
+
 export type OptionId = "strongbox" | "self-storage" | "diy" | "removals";
 
 export const OPTIONS: { id: OptionId; label: string; blurb: string; isUs?: boolean }[] = [
@@ -68,7 +73,7 @@ export const COMPARISON_ROWS: ComparisonRow[] = [
     detail:
       "Cape Town market ranges as at 2026. Ours is our live rate card; the rest are estimates. Per box we are cheaper up to roughly three or four boxes — above that a unit wins on rand.",
     values: {
-      strongbox: "R195–R595 per box",
+      strongbox: `${BOX_RANGE} per box`,
       "self-storage": "R700–R1,800 for the smallest units",
       diy: "R0 after the move — if the space is free",
       removals: "R900–R2,500 per container",
@@ -167,6 +172,21 @@ export const COMPARISON_ROWS: ComparisonRow[] = [
 
 /** Rows condensed onto the homepage strip. */
 export const FEATURED_ROWS = COMPARISON_ROWS.filter((r) => r.featured);
+
+/**
+ * Fills our live box price range into [rows]. The range is an admin-set
+ * price (lib/prices.ts), so it is left as a placeholder in the data above.
+ */
+export function withLivePrices(rows: ComparisonRow[], boxes: readonly BoxType[]): ComparisonRow[] {
+  const ps = boxes.map((b) => b.price);
+  const range = ps.length ? `R${Math.min(...ps)}–R${Math.max(...ps)}` : "Priced";
+  return rows.map((r) => ({
+    ...r,
+    values: Object.fromEntries(
+      Object.entries(r.values).map(([k, v]) => [k, v.replace(BOX_RANGE, range)])
+    ) as ComparisonRow["values"],
+  }));
+}
 
 /**
  * The honest caveat, shown under the table. Naming who we lose to is what

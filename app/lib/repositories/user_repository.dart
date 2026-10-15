@@ -13,6 +13,21 @@ abstract class UserRepository {
   Future<void> createUser(AppUser user);
   Future<String> createInvited(AppUser user);
   Future<void> updateUser(String uid, Map<String, dynamic> fields);
+
+  /// Registers a device for push notifications.
+  Future<void> addFcmToken(String uid, String token);
+
+  /// Forgets a device, e.g. on sign-out.
+  Future<void> removeFcmToken(String uid, String token);
+
+  /// The signed-up account for [email] (matched as typed or lower-cased),
+  /// or null when nobody has registered with it.
+  Future<AppUser?> findByEmail(String tenantId, String email);
+
+  /// Sets [user]'s role and logs it in one transaction. Their client record,
+  /// if any, is left alone, so moving someone back to client restores it.
+  Future<void> changeRole(AppUser user, UserRole role,
+      {required String actorId});
 }
 
 class FirestoreUserRepository
@@ -64,4 +79,47 @@ class FirestoreUserRepository
   @override
   Future<void> updateUser(String uid, Map<String, dynamic> fields) =>
       guardRepo(() => _users.doc(uid).update(fields));
+
+  @override
+  Future<void> addFcmToken(String uid, String token) =>
+      guardRepo(() => _users.doc(uid).update({
+            'fcmTokens': FieldValue.arrayUnion([token]),
+          }));
+
+  @override
+  Future<void> removeFcmToken(String uid, String token) =>
+      guardRepo(() => _users.doc(uid).update({
+            'fcmTokens': FieldValue.arrayRemove([token]),
+          }));
+
+  @override
+  Future<AppUser?> findByEmail(String tenantId, String email) =>
+      guardRepo(() async {
+        final typed = email.trim();
+        final snap = await _users
+            .where('tenantId', isEqualTo: tenantId)
+            .where('isDeleted', isEqualTo: false)
+            .where('email', whereIn: {typed, typed.toLowerCase()}.toList())
+            .limit(1)
+            .get();
+        return snap.docs.isEmpty ? null : AppUser.fromFirestore(snap.docs.first);
+      });
+
+  @override
+  Future<void> changeRole(AppUser user, UserRole role,
+          {required String actorId}) =>
+      guardRepo(() => db.runTransaction((tx) async {
+            tx.update(_users.doc(user.id), {'role': role.name});
+            tx.set(
+              auditDoc(),
+              auditEventData(
+                tenantId: user.tenantId,
+                actorId: actorId,
+                action: AuditAction.userRoleChanged,
+                entityType: 'user',
+                entityId: user.id,
+                metadata: {'from': user.role.name, 'to': role.name},
+              ),
+            );
+          }));
 }

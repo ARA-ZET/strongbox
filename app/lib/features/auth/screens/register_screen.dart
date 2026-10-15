@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/constants/pricing.dart';
 import '../../../core/errors/app_exception.dart';
+import '../../../core/providers/price_catalog_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/currency.dart';
+import '../../../core/widgets/brand_logo.dart';
 import '../../../core/widgets/contact_us_card.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../providers/auth_provider.dart';
@@ -13,8 +14,8 @@ import '../providers/auth_provider.dart';
 /// Client sign-up — split layout: navy panel (35%, desktop only) + a single
 /// profile form. The website's "Get Started" buttons land here; pricing and
 /// packages are chosen on the site, so there is no billing or review step —
-/// the new client goes straight to their portal. Storage is billed monthly.
-/// Card capture arrives with Stripe Checkout in Stage 7.
+/// the new client goes straight to their portal. Storage is invoiced monthly
+/// and paid by EFT (see the client Billing page).
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
@@ -191,12 +192,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 // Left marketing panel (desktop only)
 // ---------------------------------------------------------------------------
 
-class _MarketingPanel extends StatelessWidget {
+class _MarketingPanel extends ConsumerWidget {
   const _MarketingPanel();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
+    final prices = ref.watch(priceCatalogProvider);
 
     return Container(
       color: AppColors.navyDeep,
@@ -205,25 +207,7 @@ class _MarketingPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: AppColors.accent,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(Icons.inventory_2_outlined,
-                      color: AppColors.onAccent, size: 20),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'StrongBox',
-                  style: textTheme.headlineSmall?.copyWith(color: Colors.white),
-                ),
-              ],
-            ),
+            const BrandLogo(onDark: true),
             const SizedBox(height: 48),
             Text(
               'Storage that comes to you',
@@ -241,13 +225,13 @@ class _MarketingPanel extends StatelessWidget {
               icon: Icons.local_shipping_outlined,
               title: 'We collect',
               description: 'From your door, anywhere in Cape Town. Pickup '
-                  'from ${formatZar(Pricing.pickupFrom)} once-off.',
+                  'from ${formatZar(prices.pickupFrom)} once-off.',
             ),
             const SizedBox(height: 24),
             _FeatureBullet(
               icon: Icons.inventory_2_outlined,
               title: 'Pay per box',
-              description: 'From ${formatZar(Pricing.boxFrom)}/month per box. '
+              description: 'From ${formatZar(prices.boxFrom)}/month per box. '
                   'No minimum term — cancel any time.',
             ),
             const SizedBox(height: 24),

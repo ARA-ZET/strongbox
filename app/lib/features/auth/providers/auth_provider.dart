@@ -8,6 +8,7 @@ import '../../../core/errors/app_exception.dart';
 import '../../../core/models/app_user.dart';
 import '../../../core/models/client.dart';
 import '../../../repositories/repository_providers.dart';
+import '../../notifications/providers/notification_providers.dart';
 
 part 'auth_provider.g.dart';
 
@@ -292,6 +293,8 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<void> signOut() async {
     state = const AsyncLoading();
+    // While still signed in — the rules only let a user edit their own doc.
+    await ref.read(pushNotificationsProvider.notifier).unregister();
     state = await AsyncValue.guard(_auth.signOut);
   }
 

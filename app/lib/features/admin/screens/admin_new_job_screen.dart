@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/constants/pricing.dart';
+import '../../../core/providers/business_settings_provider.dart';
+import '../../../core/providers/price_catalog_provider.dart';
+import '../../../core/utils/currency.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/initials_avatar.dart';
@@ -13,16 +17,6 @@ import '../../../core/models/storage_unit.dart';
 import '../providers/clients_providers.dart';
 import '../providers/inventory_providers.dart';
 import '../providers/jobs_providers.dart';
-
-/// Estimated service fee: base rate + per-box handling + fuel surcharge.
-/// Real tariffs arrive with Stripe in Stage 7.
-({double base, double perBox, double fuel, double total}) estimateFee(
-    int boxCount) {
-  const base = 350.0;
-  final perBox = boxCount * 75.0;
-  final fuel = (base + perBox) * 0.08;
-  return (base: base, perBox: perBox, fuel: fuel, total: base + perBox + fuel);
-}
 
 /// 4-step Create New Job wizard: Type → Items → Schedule → Confirm.
 /// Designs: admin_create_new_job_step_1…4.
@@ -670,6 +664,7 @@ class _ScheduleStep extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final drivers = ref.watch(driverUsersProvider).valueOrNull ?? [];
+    final settings = ref.watch(businessSettingsProvider);
     final textTheme = Theme.of(context).textTheme;
     final notifier = ref.read(newJobDraftProvider.notifier);
 
@@ -724,22 +719,18 @@ class _ScheduleStep extends ConsumerWidget {
                 ),
               ),
               textTheme,
-              hint: 'Current lead time for most routes is 48 hours.',
+              hint: 'Current lead time for most routes is 48 hours. '
+                  'Service area: ${settings.serviceArea}.',
             );
             final windowField = _labelled(
               'Time Window',
               DropdownButtonFormField<TimeWindow>(
                 initialValue: draft.timeWindow,
-                items: const [
-                  DropdownMenuItem(
-                      value: TimeWindow.morning,
-                      child: Text('08:00 AM - 12:00 PM (Morning)')),
-                  DropdownMenuItem(
-                      value: TimeWindow.afternoon,
-                      child: Text('12:00 PM - 04:00 PM (Afternoon)')),
-                  DropdownMenuItem(
-                      value: TimeWindow.evening,
-                      child: Text('04:00 PM - 08:00 PM (Evening)')),
+                items: [
+                  for (final window in TimeWindow.values)
+                    DropdownMenuItem(
+                        value: window,
+                        child: Text(settings.windowLabel(window))),
                 ],
                 onChanged: (value) =>
                     notifier.setSchedule(timeWindow: value),
@@ -883,13 +874,19 @@ class _ConfirmStep extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
+    final settings = ref.watch(businessSettingsProvider);
     final boxes = ref.watch(allUnitsProvider).valueOrNull ?? <StorageUnit>[];
     final clientNames = ref.watch(clientNamesProvider);
     final driverNames = ref.watch(driverNamesProvider);
     final selected =
         boxes.where((box) => draft.unitIds.contains(box.id)).toList();
-    final fee = estimateFee(selected.length);
+    final prices = ref.watch(priceCatalogProvider);
+    final storage = StorageBill.fromUnits(
+        selected.map((unit) => unit.copyWith(status: StorageStatus.inStorage)),
+        prices);
     final pickup = draft.type == JobType.pickup;
+    final vehicleFees = prices.activeVehicles.map((v) => v.onceOffZar).toList()
+      ..sort();
 
     final overview = Column(
       children: [
@@ -1022,11 +1019,7 @@ class _ConfirmStep extends ConsumerWidget {
                     textTheme.headlineSmall?.copyWith(color: Colors.white),
               ),
               Text(
-                switch (draft.timeWindow) {
-                  TimeWindow.afternoon => '12:00 PM - 04:00 PM window',
-                  TimeWindow.evening => '04:00 PM - 08:00 PM window',
-                  _ => '08:00 AM - 12:00 PM window',
-                },
+                '${settings.windowRange(draft.timeWindow)} window',
                 style: textTheme.bodySmall?.copyWith(color: Colors.white54),
               ),
               const SizedBox(height: 16),
@@ -1072,18 +1065,31 @@ class _ConfirmStep extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('ESTIMATED SERVICE FEE',
+              Text('MONTHLY STORAGE',
                   style: textTheme.bodySmall?.copyWith(letterSpacing: 1)),
               const SizedBox(height: 8),
-              Text('R${fee.total.toStringAsFixed(2)}',
+              Text('${formatZar(storage.monthlyZar)}/mo',
                   style: textTheme.displaySmall),
               const SizedBox(height: 12),
-              _feeRow('Base Route Fee', fee.base, textTheme),
-              _feeRow('Handling (${selected.length} boxes)', fee.perBox,
-                  textTheme),
-              _feeRow('Fuel Surcharge', fee.fuel, textTheme),
+              _feeRow('${selected.length} '
+                  '${selected.length == 1 ? 'unit' : 'units'} at their rates',
+                  storage.monthlyZar, textTheme),
+              if (pickup && vehicleFees.isNotEmpty)
+                _feeRow(
+                    'Pickup (once-off, by vehicle)',
+                    vehicleFees.first,
+                    textTheme,
+                    upTo: vehicleFees.last),
+              if (storage.unpricedUnits > 0) ...[
+                const SizedBox(height: 6),
+                Text(
+                    '${storage.unpricedUnits} unsized '
+                    '${storage.unpricedUnits == 1 ? 'unit is' : 'units are'} '
+                    'not included — set a size on the unit page.',
+                    style: textTheme.bodySmall),
+              ],
               const SizedBox(height: 6),
-              Text('Estimate only — final tariff applied at billing.',
+              Text('From the price list. Storage is invoiced on the 1st.',
                   style: textTheme.bodySmall),
             ],
           ),
@@ -1128,7 +1134,7 @@ class _ConfirmStep extends ConsumerWidget {
     return Column(children: [overview, const SizedBox(height: 24), sidebar]);
   }
 
-  Widget _feeRow(String label, double amount, TextTheme textTheme) {
+  Widget _feeRow(String label, num amount, TextTheme textTheme, {num? upTo}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
@@ -1137,7 +1143,10 @@ class _ConfirmStep extends ConsumerWidget {
           Text(label,
               style: textTheme.bodyMedium
                   ?.copyWith(color: AppColors.textSecondary)),
-          Text('R${amount.toStringAsFixed(2)}',
+          Text(
+              upTo == null || upTo == amount
+                  ? formatZar(amount)
+                  : '${formatZar(amount)}–${formatZar(upTo)}',
               style: textTheme.bodyMedium),
         ],
       ),

@@ -1,11 +1,11 @@
 {
-    "name": "strong_box",
-    "short_name": "strong_box",
+    "name": "StrongBox",
+    "short_name": "StrongBox",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0A1A33",
+    "theme_color": "#0A1A33",
+    "description": "StrongBox — manage your stored items, pickups and deliveries.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

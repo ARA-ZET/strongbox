@@ -7,8 +7,10 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadow.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/widgets/brand_logo.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../notifications/providers/notification_providers.dart';
 
 class _Tab {
   const _Tab(this.label, this.icon, this.route);
@@ -39,30 +41,21 @@ class ClientShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).matchedLocation;
     final user = ref.watch(currentUserProvider).valueOrNull;
+    final unread = ref.watch(unreadNotificationCountProvider);
 
     return LayoutBuilder(builder: (context, constraints) {
       final desktop = constraints.maxWidth > 900;
 
-      final logo = Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.inventory_2, color: AppColors.accentDeep, size: 28),
-          const SizedBox(width: AppSpacing.sm),
-          Text(
-            'StrongBox',
-            style: GoogleFonts.inter(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: AppColors.navyDeep,
-            ),
-          ),
-        ],
-      );
+      const logo = BrandLogo();
 
       final bell = IconButton(
-        tooltip: 'Notification preferences',
-        icon: const Icon(Icons.notifications_outlined,
-            color: AppColors.textSecondary),
+        tooltip: 'Notifications',
+        icon: Badge(
+          isLabelVisible: unread > 0,
+          label: Text('$unread'),
+          child: const Icon(Icons.notifications_outlined,
+              color: AppColors.textSecondary),
+        ),
         onPressed: () => context.go('/client/notifications'),
       );
       final avatar = InkWell(

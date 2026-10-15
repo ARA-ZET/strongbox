@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/enums/app_enums.dart';
+import '../../../core/models/app_notification.dart';
 import '../../../core/models/audit_event.dart';
 import '../../../core/providers/tenant_provider.dart';
 import '../../../repositories/repository_providers.dart';
@@ -17,7 +18,13 @@ String categoryOf(AuditEvent event) => switch (event.action) {
       AuditAction.subscriptionUpdated ||
       AuditAction.subscriptionCancelled ||
       AuditAction.adminImpersonated ||
-      AuditAction.qrGenerated =>
+      AuditAction.priceListUpdated ||
+      AuditAction.userRoleChanged ||
+      AuditAction.settingsUpdated ||
+      AuditAction.qrGenerated ||
+      AuditAction.invoiceIssued ||
+      AuditAction.invoicePaid ||
+      AuditAction.invoiceVoided =>
         'system',
       _ => 'operational',
     };
@@ -39,6 +46,13 @@ String auditTitle(AuditEvent event) => switch (event.action) {
       AuditAction.issueReported => 'Issue reported',
       AuditAction.shiftStarted => 'Driver shift started',
       AuditAction.shiftEnded => 'Driver shift ended',
+      AuditAction.priceListUpdated => 'Price list updated',
+      AuditAction.userRoleChanged => 'Team role changed',
+      AuditAction.settingsUpdated => 'Business settings updated',
+      AuditAction.invoiceIssued => 'Invoice issued',
+      AuditAction.invoicePaid => 'Invoice marked paid',
+      AuditAction.invoiceVoided => 'Invoice voided',
+      AuditAction.subscriptionUpdated => 'Billing status changed',
       _ => 'System event',
     };
 
@@ -47,6 +61,14 @@ String auditTitle(AuditEvent event) => switch (event.action) {
 Stream<List<AuditEvent>> notificationFeed(Ref ref) {
   final tenantId = ref.watch(currentTenantIdProvider);
   return ref.watch(notificationRepositoryProvider).watchFeed(tenantId);
+}
+
+/// Unread alerts for all admins — delivery requests awaiting a driver,
+/// invoice runs, unused QR labels (written by Cloud Functions).
+@riverpod
+Stream<List<AppNotification>> adminAlerts(Ref ref) {
+  final tenantId = ref.watch(currentTenantIdProvider);
+  return ref.watch(notificationRepositoryProvider).watchAdminAlerts(tenantId);
 }
 
 /// Selected category: all | critical | operational | system.

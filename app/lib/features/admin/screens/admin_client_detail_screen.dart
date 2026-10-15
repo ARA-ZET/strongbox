@@ -8,11 +8,15 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../core/constants/pricing.dart';
+import '../../../core/providers/price_catalog_provider.dart';
 import '../../../core/utils/currency.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/storage_unit.dart';
 import '../../../core/models/client.dart';
+import '../../../core/models/invoice.dart';
 import '../../../core/models/job.dart';
+import '../../billing/providers/billing_providers.dart';
+import '../../billing/widgets/invoice_table.dart';
 import '../providers/clients_providers.dart';
 import '../widgets/client_form_dialog.dart';
 
@@ -93,6 +97,15 @@ class _ClientDetailBody extends ConsumerWidget {
               const SizedBox(height: 24),
               _StoredInventoryCard(clientId: client.id),
             ],
+            const SizedBox(height: 24),
+            Text('Invoices', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 12),
+            InvoiceTable(
+              invoices: ref.watch(clientInvoicesProvider(client.id)),
+              client: client,
+              canSettle: true,
+              onRetry: () => ref.invalidate(clientInvoicesProvider(client.id)),
+            ),
             const SizedBox(height: 24),
             _JobHistoryCard(clientId: client.id),
           ],
@@ -258,7 +271,12 @@ class _SubscriptionCard extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final units = ref.watch(clientUnitsProvider(client.id)).valueOrNull ??
         const <StorageUnit>[];
-    final bill = StorageBill.fromUnits(units);
+    final bill = StorageBill.fromUnits(units, ref.watch(priceCatalogProvider));
+    final outstanding = (ref.watch(clientInvoicesProvider(client.id))
+                .valueOrNull ??
+            const <Invoice>[])
+        .where((invoice) => invoice.isOpen)
+        .fold<double>(0, (sum, invoice) => sum + invoice.amount);
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -339,25 +357,18 @@ class _SubscriptionCard extends ConsumerWidget {
               ),
             ),
           ],
-          const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.navy,
-                foregroundColor: Colors.white,
-              ),
-              // Stripe portal link is wired in Stage 7.
-              onPressed: client.stripeCustomerId == null
-                  ? () => ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text(
-                                'Billing portal is wired up in Stage 7')),
-                      )
-                  : () {},
-              child: const Text('Manage Billing'),
-            ),
-          ),
+          if (outstanding > 0) ...[
+            const SizedBox(height: 20),
+            Text('OUTSTANDING',
+                style: textTheme.bodySmall?.copyWith(letterSpacing: 0.8)),
+            const SizedBox(height: 4),
+            Text(formatZarExact(outstanding),
+                style: textTheme.titleMedium?.copyWith(
+                    color: client.subscriptionStatus ==
+                            SubscriptionStatus.pastDue
+                        ? AppColors.statusError
+                        : null)),
+          ],
         ],
       ),
     );

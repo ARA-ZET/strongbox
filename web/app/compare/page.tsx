@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ComparisonTable from "@/components/ComparisonTable";
-import { COMPARISON_ROWS, VERDICT } from "@/lib/comparison";
-import { APP_URL, BOX_FROM } from "@/lib/constants";
+import { COMPARISON_ROWS, VERDICT, withLivePrices } from "@/lib/comparison";
+import { APP_URL } from "@/lib/constants";
+import { getPrices } from "@/lib/prices";
 import Illustration from "@/components/graphics/Illustration";
 import SitePhoto from "@/components/SitePhoto";
 
 import JsonLd from "@/components/JsonLd";
 import { pageMeta, breadcrumbJsonLd } from "@/lib/seo";
-export const metadata: Metadata = pageMeta({
-  title: "StrongBox vs Self-Storage in Cape Town",
-  description: `An honest comparison of valet storage, self-storage units, DIY storage and removal-company warehousing in Cape Town — including the cases where we are the wrong choice. StrongBox from R${BOX_FROM}/month.`,
-  path: "/compare",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { boxFrom } = await getPrices();
+  return pageMeta({
+    title: "StrongBox vs Self-Storage in Cape Town",
+    description: `An honest comparison of valet storage, self-storage units, DIY storage and removal-company warehousing in Cape Town — including the cases where we are the wrong choice. StrongBox from R${boxFrom}/month.`,
+    path: "/compare",
+  });
+}
 
-export default function ComparePage() {
+export default async function ComparePage() {
+  const { boxFrom: BOX_FROM, boxes } = await getPrices();
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Compare", path: "/compare" }])} />
@@ -46,7 +51,7 @@ export default function ComparePage() {
       {/* The table */}
       <section className="py-16 bg-surface-white">
         <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <ComparisonTable rows={COMPARISON_ROWS} />
+          <ComparisonTable rows={withLivePrices(COMPARISON_ROWS, boxes)} />
         </div>
       </section>
 

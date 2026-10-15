@@ -5,8 +5,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/contact_info.dart';
 import '../../../core/errors/app_exception.dart';
+import '../../../core/providers/business_settings_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/brand_logo.dart';
 import '../../../core/widgets/contact_us_card.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../providers/auth_provider.dart';
@@ -277,16 +279,7 @@ class _BrandPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                const Icon(Icons.inventory_2, color: AppColors.sky, size: 28),
-                const SizedBox(width: 10),
-                Text(
-                  'StrongBox',
-                  style: textTheme.headlineSmall?.copyWith(color: Colors.white),
-                ),
-              ],
-            ),
+            const BrandLogo(onDark: true),
             const Spacer(),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
@@ -334,7 +327,7 @@ class _BrandPanel extends StatelessWidget {
 
 /// One-line "talk to a human" — phone and email, in the space a full
 /// [ContactUsCard] would take three lines for.
-class _ContactLine extends StatelessWidget {
+class _ContactLine extends ConsumerWidget {
   const _ContactLine({required this.onNavy, this.showLead = true});
 
   final bool onNavy;
@@ -343,7 +336,8 @@ class _ContactLine extends StatelessWidget {
   final bool showLead;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final contact = ref.watch(businessSettingsProvider);
     final textTheme = Theme.of(context).textTheme;
     final muted = onNavy ? AppColors.onNavyVariant : AppColors.textSecondary;
     final link = onNavy ? AppColors.sky : AppColors.accentDeep;
@@ -382,8 +376,8 @@ class _ContactLine extends StatelessWidget {
             'Need help? Talk to a real person.',
             style: textTheme.bodyMedium?.copyWith(color: muted),
           ),
-        action(Icons.call, ContactInfo.phoneDisplay, ContactInfo.phoneUri),
-        action(Icons.email_outlined, ContactInfo.email, ContactInfo.emailUri),
+        action(Icons.call, contact.contactPhone, contact.phoneUri),
+        action(Icons.email_outlined, contact.contactEmail, contact.emailUri),
       ],
     );
   }
@@ -571,12 +565,7 @@ class _MobileLayout extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 40),
-            const Center(
-              child: _BoxLogo(
-                color: AppColors.accent,
-                iconColor: AppColors.onAccent,
-              ),
-            ),
+            const Center(child: BrandMark(size: 64, onDark: true)),
             const SizedBox(height: 20),
             Text(
               'StrongBox Logistics',
@@ -731,26 +720,6 @@ class _MobileLayout extends StatelessWidget {
 // ---------------------------------------------------------------------------
 // Shared pieces
 // ---------------------------------------------------------------------------
-
-class _BoxLogo extends StatelessWidget {
-  const _BoxLogo({required this.color, this.iconColor = Colors.white});
-
-  final Color color;
-  final Color iconColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 64,
-      height: 64,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Icon(Icons.inventory_2_outlined, color: iconColor, size: 32),
-    );
-  }
-}
 
 class _EmailField extends StatelessWidget {
   const _EmailField({required this.controller});

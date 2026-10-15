@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/utils/async_value_ext.dart';
 import '../../../core/constants/storage_paths.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/providers/tenant_provider.dart';
@@ -56,5 +57,6 @@ class IssueReportActions extends _$IssueReportActions {
         isUrgent: isUrgent,
       );
     });
+    state.throwIfError();
   }
 }

@@ -27,10 +27,10 @@ class AdminReportsScreen extends ConsumerWidget {
     buffer
       ..writeln()
       ..writeln('Top Clients by Volume')
-      ..writeln('Client,Boxes Stored,Jobs MTD,Est Revenue');
+      ..writeln('Client,Boxes Stored,Jobs MTD,Monthly Storage');
     for (final row in rows) {
       buffer.writeln(
-          '${row.client.displayName},${row.client.storageUnitCount},${row.jobsMtd},${row.estRevenue.toStringAsFixed(2)}');
+          '${row.client.displayName},${row.client.storageUnitCount},${row.jobsMtd},${row.monthlyZar}');
     }
 
     await Clipboard.setData(ClipboardData(text: buffer.toString()));
@@ -250,7 +250,7 @@ class _RevenueCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final revenue = ref.watch(estimatedRevenueProvider);
+    final revenue = ref.watch(monthlyStorageRevenueProvider);
     final volume = ref.watch(monthlyJobVolumeProvider);
     final textTheme = Theme.of(context).textTheme;
     final currency = NumberFormat.currency(symbol: 'R', decimalDigits: 0);
@@ -264,7 +264,7 @@ class _RevenueCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Revenue (Estimated)',
+          Text('Monthly Storage Revenue',
               style: textTheme.titleMedium?.copyWith(color: Colors.white)),
           const SizedBox(height: 16),
           Text(
@@ -272,7 +272,7 @@ class _RevenueCard extends ConsumerWidget {
             style: textTheme.displaySmall
                 ?.copyWith(color: Colors.white, fontSize: 36),
           ),
-          Text('From completed jobs at the standard tariff',
+          Text('Every stored unit at its billed rate',
               style: textTheme.bodySmall?.copyWith(color: Colors.white54)),
           const SizedBox(height: 24),
           SizedBox(height: 90, child: _miniBars(volume)),
@@ -469,7 +469,7 @@ class _TopClientsCard extends ConsumerWidget {
                                 headerCell('CLIENT NAME', flex: 4),
                                 headerCell('BOXES STORED', flex: 2),
                                 headerCell('JOBS (MTD)', flex: 2),
-                                headerCell('EST. REVENUE', flex: 2),
+                                headerCell('MONTHLY', flex: 2),
                               ],
                             ),
                           ),
@@ -513,7 +513,7 @@ class _TopClientsCard extends ConsumerWidget {
                                   Expanded(
                                     flex: 2,
                                     child: Text(
-                                        currency.format(row.estRevenue),
+                                        currency.format(row.monthlyZar),
                                         style: textTheme.bodyMedium
                                             ?.copyWith(
                                                 fontWeight:

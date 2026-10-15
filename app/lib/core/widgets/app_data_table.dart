@@ -46,43 +46,56 @@ class AppDataTable extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minWidth: minWidth),
-              child: Column(
-                children: [
-                  Container(
-                    color: AppColors.surfaceContainer,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.lg, vertical: AppSpacing.sm + 4),
-                    child: Row(
-                      children: [
-                        for (final column in columns)
-                          Expanded(
-                            flex: column.flex,
-                            child: Text(
-                              column.label.toUpperCase(),
-                              style: textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.5,
+          // Fill the card, but never squeeze below [minWidth] — narrower
+          // screens scroll sideways instead. A fixed width (not just a
+          // minimum) keeps the Expanded cells bounded inside the scroll view.
+          LayoutBuilder(
+            builder: (context, constraints) => SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: SizedBox(
+                width:
+                    constraints.maxWidth.isFinite &&
+                        constraints.maxWidth > minWidth
+                    ? constraints.maxWidth
+                    : minWidth,
+                child: Column(
+                  children: [
+                    Container(
+                      color: AppColors.surfaceContainer,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                        vertical: AppSpacing.sm + 4,
+                      ),
+                      child: Row(
+                        children: [
+                          for (final column in columns)
+                            Expanded(
+                              flex: column.flex,
+                              child: Text(
+                                column.label.toUpperCase(),
+                                style: textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.5,
+                                ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  if (isLoading)
-                    for (var i = 0; i < 5; i++)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
-                        child: LoadingSkeleton.listTile(),
-                      )
-                  else
-                    for (final row in rows)
-                      _DataRow(columns: columns, cells: row),
-                ],
+                    if (isLoading)
+                      for (var i = 0; i < 5; i++)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.lg,
+                            vertical: AppSpacing.sm,
+                          ),
+                          child: LoadingSkeleton.listTile(),
+                        )
+                    else
+                      for (final row in rows)
+                        _DataRow(columns: columns, cells: row),
+                  ],
+                ),
               ),
             ),
           ),
@@ -115,7 +128,9 @@ class _DataRowState extends State<_DataRow> {
         constraints: const BoxConstraints(minHeight: 56),
         color: _hovered ? AppColors.surfaceContainer : Colors.transparent,
         padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.sm,
+        ),
         child: Row(
           children: [
             for (var i = 0; i < widget.columns.length; i++)

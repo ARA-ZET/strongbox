@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import FullCalculator from "@/components/FullCalculator";
-import { APP_URL, BOX_TYPES, BOX_FROM, LOOSE_ITEM_FROM, CUSTOMER_COUNT } from "@/lib/constants";
+import { APP_URL, CUSTOMER_COUNT } from "@/lib/constants";
+import { getPrices } from "@/lib/prices";
 import SitePhoto from "@/components/SitePhoto";
 
 import JsonLd from "@/components/JsonLd";
 import { pageMeta, breadcrumbJsonLd, serviceJsonLd } from "@/lib/seo";
-export const metadata: Metadata = pageMeta({
-  title: "Pricing — Flexible Volume-Based Storage",
-  description: `StrongBox pricing starts from R${BOX_FROM}/month. No hidden fees, no lock-in contracts. Pay only for the space you actually use in Cape Town.`,
-  path: "/pricing",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { boxFrom } = await getPrices();
+  return pageMeta({
+    title: "Pricing — Flexible Volume-Based Storage",
+    description: `StrongBox pricing starts from R${boxFrom}/month. No hidden fees, no lock-in contracts. Pay only for the space you actually use in Cape Town.`,
+    path: "/pricing",
+  });
+}
 
 const benefits = [
   "Climate Controlled Storage",
@@ -19,13 +23,15 @@ const benefits = [
   "Next-Day Delivery Notice",
 ];
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const prices = await getPrices();
+  const { boxes: BOX_TYPES, looseItemFrom: LOOSE_ITEM_FROM } = prices;
   return (
     <>
       <JsonLd
         data={[
           breadcrumbJsonLd([{ name: "Pricing", path: "/pricing" }]),
-          serviceJsonLd(),
+          serviceJsonLd(BOX_TYPES),
         ]}
       />
       {/* Hero */}
@@ -128,7 +134,7 @@ export default function PricingPage() {
               Use our interactive tool to build your storage plan. See exactly what you&apos;ll pay before you book.
             </p>
           </div>
-          <FullCalculator />
+          <FullCalculator prices={prices} />
         </div>
       </section>
 

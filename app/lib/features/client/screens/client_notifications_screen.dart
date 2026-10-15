@@ -8,9 +8,12 @@ import '../../../core/theme/app_shadow.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/contact_us_card.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../notifications/widgets/notification_inbox.dart';
+import '../../notifications/widgets/push_permission_banner.dart';
 import '../providers/client_providers.dart';
 
-/// Notification preferences grouped by category with Email/SMS toggles.
+/// The client's notification inbox, then preferences grouped by category
+/// with Email/SMS toggles.
 /// Design: client_designs/notification_preferences/screen.png.
 class ClientNotificationsScreen extends ConsumerStatefulWidget {
   const ClientNotificationsScreen({super.key});
@@ -70,10 +73,15 @@ class _ClientNotificationsScreenState
               children: [
                 Text('Notifications', style: tt.displaySmall),
                 const SizedBox(height: AppSpacing.xs),
-                Text('Manage your alert preferences',
+                Text('Updates on your pickups, deliveries and billing',
                     style: tt.bodyMedium
                         ?.copyWith(color: AppColors.textSecondary)),
                 const SizedBox(height: AppSpacing.lg),
+                const PushPermissionBanner(),
+                const NotificationInbox(),
+                const SizedBox(height: AppSpacing.xl),
+                Text('Email & SMS preferences', style: tt.headlineSmall),
+                const SizedBox(height: AppSpacing.sm + 4),
                 Container(
                   clipBehavior: Clip.antiAlias,
                   decoration: const BoxDecoration(

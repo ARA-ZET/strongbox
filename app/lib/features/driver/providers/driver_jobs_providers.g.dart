@@ -356,7 +356,7 @@ class _JobManifestProviderElement
   String get jobId => (origin as JobManifestProvider).jobId;
 }
 
-String _$unitByScanHash() => r'93964517487bbc970035e42b9f904de417c64e21';
+String _$unitByScanHash() => r'b0a50981d081691f01046e4d5528761dc3be5af9';
 
 /// Look up a unit by scanned QR value.
 ///
@@ -532,7 +532,7 @@ final driverJobsCompletedTodayProvider = AutoDisposeProvider<int>.internal(
 );
 
 typedef DriverJobsCompletedTodayRef = AutoDisposeProviderRef<int>;
-String _$driverJobActionsHash() => r'59a5d7352f1481d42fd372b07401946dcec43130';
+String _$driverJobActionsHash() => r'2d06372a75dc18157e33093ff2e2f18c469c113f';
 
 /// Driver-side writes: start job, confirm unit, capture photo, sign off.
 ///

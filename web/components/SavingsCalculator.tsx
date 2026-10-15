@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BOX_TYPES, VEHICLES } from "@/lib/constants";
+import type { Prices } from "@/lib/prices";
 
 /**
  * Self-storage unit vs pay-per-box, over twelve months.
@@ -31,8 +31,6 @@ const UNITS = [
 /** Cost of one round trip to a unit: fuel plus wear, on a ~25 km return run. */
 const TRIP_COST = 95;
 
-const SMALL_VAN = VEHICLES.find((v) => v.id === "small-van")!;
-
 /** What the price gap actually buys, listed whichever way the gap falls. */
 const INCLUDED = [
   "Collection from your door",
@@ -44,15 +42,22 @@ const INCLUDED = [
 
 const rand = (n: number) => `R${Math.round(n).toLocaleString("en-ZA")}`;
 
-export default function SavingsCalculator() {
+export default function SavingsCalculator({ prices }: { prices: Prices }) {
+  const { boxes: BOX_TYPES } = prices;
+  // Our cheapest collection — the small van on the default rate card.
+  const SMALL_VAN =
+    prices.vehicles.find((v) => v.id === "small-van") ??
+    prices.vehicles.find((v) => v.price === prices.pickupFrom)!;
   const [boxes, setBoxes] = useState(6);
-  const [boxTypeId, setBoxTypeId] = useState("medium");
+  const [boxTypeId, setBoxTypeId] = useState(
+    (BOX_TYPES.find((b) => b.id === "medium") ?? BOX_TYPES[0]).id
+  );
   const [unitId, setUnitId] = useState("small");
   const [rent, setRent] = useState(UNITS[0].rent);
   const [tripsPerMonth, setTripsPerMonth] = useState(2);
 
   const unit = UNITS.find((u) => u.id === unitId)!;
-  const boxType = BOX_TYPES.find((b) => b.id === boxTypeId)!;
+  const boxType = BOX_TYPES.find((b) => b.id === boxTypeId) ?? BOX_TYPES[0];
 
   /** Changing the unit resets the rent to that size's default. */
   const pickUnit = (id: string) => {

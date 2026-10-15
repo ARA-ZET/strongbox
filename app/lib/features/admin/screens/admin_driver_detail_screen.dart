@@ -108,6 +108,79 @@ class _DriverDetailBody extends ConsumerWidget {
   }
 }
 
+/// Writes a message to the driver's inbox; they also get it as a push.
+class _SendMessageDialog extends ConsumerStatefulWidget {
+  const _SendMessageDialog({required this.driver});
+
+  final AppUser driver;
+
+  @override
+  ConsumerState<_SendMessageDialog> createState() =>
+      _SendMessageDialogState();
+}
+
+class _SendMessageDialogState extends ConsumerState<_SendMessageDialog> {
+  final _message = TextEditingController();
+  bool _sending = false;
+
+  @override
+  void dispose() {
+    _message.dispose();
+    super.dispose();
+  }
+
+  Future<void> _send() async {
+    if (_message.text.trim().isEmpty) return;
+    setState(() => _sending = true);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await ref
+          .read(driverMutationsProvider.notifier)
+          .sendMessage(widget.driver, _message.text);
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      messenger.showSnackBar(
+          SnackBar(content: Text('Message sent to ${widget.driver.name}')));
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _sending = false);
+      messenger.showSnackBar(
+          SnackBar(content: Text('Could not send message: $error')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppColors.surface,
+      title: Text('Message ${widget.driver.name}'),
+      content: SizedBox(
+        width: 420,
+        child: TextField(
+          controller: _message,
+          autofocus: true,
+          minLines: 3,
+          maxLines: 6,
+          maxLength: 500,
+          decoration: const InputDecoration(
+            hintText: 'e.g. Gate code for 12 Long St is 4410',
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _sending ? null : () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: _sending ? null : _send,
+          child: Text(_sending ? 'Sending…' : 'Send'),
+        ),
+      ],
+    );
+  }
+}
+
 class _HeaderCard extends StatelessWidget {
   const _HeaderCard({
     required this.driver,
@@ -177,9 +250,9 @@ class _HeaderCard extends StatelessWidget {
             minimumSize: const Size(0, 44),
             padding: const EdgeInsets.symmetric(horizontal: 16),
           ),
-          onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('Messaging arrives with FCM in Stage 7')),
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (_) => _SendMessageDialog(driver: driver),
           ),
           icon: const Icon(Icons.chat_bubble_outline, size: 18),
           label: const Text('Send Message'),
@@ -396,8 +469,7 @@ class _ActiveAssignmentCard extends ConsumerWidget {
   }
 }
 
-/// Static compliance checklist — certification records get real data when
-/// driver onboarding lands (Stage 7).
+/// Static compliance checklist — not yet backed by certification records.
 class _ComplianceCard extends StatelessWidget {
   const _ComplianceCard();
 

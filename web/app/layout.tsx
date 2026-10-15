@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import { ICON_NAMES } from "@/lib/icons";
+import { getPrices } from "@/lib/prices";
 import {
   SITE_NAME,
   SITE_URL,
@@ -106,7 +107,8 @@ const ICON_FONT_HREF =
   `&icon_names=${ICON_NAMES.join(",")}` +
   "&display=block";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { boxFrom } = await getPrices();
   return (
     <html lang="en-ZA" className={inter.variable}>
       <head>
@@ -123,7 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           result is built from. Page-specific graphs (FAQ, breadcrumbs,
           articles, offers) are emitted by the pages that display them.
         */}
-        <JsonLd data={[organizationJsonLd(), localBusinessJsonLd(), websiteJsonLd()]} />
+        <JsonLd data={[organizationJsonLd(), localBusinessJsonLd(boxFrom), websiteJsonLd()]} />
       </head>
       <body className="bg-surface font-sans text-on-surface antialiased">
         <Navbar />

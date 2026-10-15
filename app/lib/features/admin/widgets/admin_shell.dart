@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/brand_logo.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../auth/providers/auth_provider.dart';
 import 'quick_scan_drawer.dart';
@@ -24,6 +25,7 @@ const _mainNav = [
   _NavItem('Fleet', Icons.directions_car_outlined, '/admin/fleet'),
   _NavItem('Clients', Icons.group_outlined, '/admin/clients'),
   _NavItem('Reports', Icons.bar_chart_outlined, '/admin/reports'),
+  _NavItem('Pricing', Icons.sell_outlined, '/admin/pricing'),
 ];
 
 const _secondaryNav = [
@@ -98,16 +100,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
             padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
             child: Row(
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.accent,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(Icons.inventory_2,
-                      color: AppColors.onAccent, size: 24),
-                ),
+                const BrandMark(onDark: true),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -118,7 +111,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
                         style: GoogleFonts.inter(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.sky,
+                          color: Colors.white,
                         ),
                       ),
                       Text(
@@ -251,7 +244,7 @@ class _MoreDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final overflow = [_mainNav[4], _mainNav[5], ..._secondaryNav];
+    final overflow = [..._mainNav.skip(4), ..._secondaryNav];
 
     return Drawer(
       backgroundColor: AppColors.navy,

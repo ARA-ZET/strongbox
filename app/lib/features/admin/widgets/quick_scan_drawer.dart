@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../core/models/storage_unit.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../providers/inventory_providers.dart';
 
-/// Right-side Quick Scan panel opened from the sidebar button.
+/// Right-side Quick Scan panel opened from the sidebar button: scan a label
+/// with the camera, or type the code, to pull up the unit.
 ///
-/// Stage 2 ships manual code entry with a live Firestore lookup; the camera
-/// viewfinder wires into this panel when the scanner is built in Stage 3.
+/// The camera only starts when the viewfinder is tapped, so opening the
+/// panel never triggers a permission prompt.
 class QuickScanDrawer extends ConsumerStatefulWidget {
   const QuickScanDrawer({super.key});
 
@@ -20,6 +24,7 @@ class QuickScanDrawer extends ConsumerStatefulWidget {
 
 class _QuickScanDrawerState extends ConsumerState<QuickScanDrawer> {
   final _controller = TextEditingController();
+  MobileScannerController? _camera;
   StorageUnit? _result;
   bool _searched = false;
   bool _loading = false;
@@ -27,7 +32,33 @@ class _QuickScanDrawerState extends ConsumerState<QuickScanDrawer> {
   @override
   void dispose() {
     _controller.dispose();
+    _camera?.dispose();
     super.dispose();
+  }
+
+  void _startCamera() => setState(() {
+        _camera = MobileScannerController(
+          detectionSpeed: DetectionSpeed.noDuplicates,
+          formats: const [BarcodeFormat.qrCode],
+        );
+      });
+
+  Future<void> _stopCamera() async {
+    final camera = _camera;
+    if (camera == null) return;
+    setState(() => _camera = null);
+    await camera.dispose();
+  }
+
+  void _onDetect(BarcodeCapture capture) {
+    final code = capture.barcodes
+        .map((barcode) => barcode.rawValue?.trim())
+        .firstWhere((value) => value != null && value.isNotEmpty,
+            orElse: () => null);
+    if (code == null || _loading) return;
+    _controller.text = code;
+    _stopCamera();
+    _lookup();
   }
 
   Future<void> _lookup() async {
@@ -39,7 +70,12 @@ class _QuickScanDrawerState extends ConsumerState<QuickScanDrawer> {
       _searched = false;
     });
 
-    final unit = await ref.read(unitByQrCodeProvider(code).future);
+    StorageUnit? unit;
+    try {
+      unit = await ref.read(unitByQrCodeProvider(code).future);
+    } catch (_) {
+      unit = null; // shown as "not linked"; the code can be re-entered
+    }
 
     if (!mounted) return;
     setState(() {
@@ -79,28 +115,43 @@ class _QuickScanDrawerState extends ConsumerState<QuickScanDrawer> {
                     ?.copyWith(color: AppColors.textSecondary),
               ),
               const SizedBox(height: 24),
-              // Viewfinder placeholder — camera scanning lands in Stage 3.
               AspectRatio(
                 aspectRatio: 4 / 3,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.navy,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.qr_code_scanner,
-                          color: AppColors.sky, size: 56),
-                      const SizedBox(height: 12),
-                      Text(
-                        'Camera scanner arrives with the\nQR module (Stage 3)',
-                        textAlign: TextAlign.center,
-                        style: textTheme.bodySmall
-                            ?.copyWith(color: Colors.white70),
-                      ),
-                    ],
-                  ),
+                child: ClipRRect(
+                  borderRadius: AppRadius.md,
+                  child: _camera == null
+                      ? _CameraPrompt(onStart: _startCamera)
+                      : Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            MobileScanner(
+                              controller: _camera,
+                              onDetect: _onDetect,
+                              errorBuilder: (context, error) =>
+                                  _CameraPrompt(
+                                onStart: _startCamera,
+                                message: error.errorCode ==
+                                        MobileScannerErrorCode.permissionDenied
+                                    ? 'Camera access was blocked. Allow it '
+                                        'in your browser, then try again.'
+                                    : 'No camera available — enter the '
+                                        'code below.',
+                              ),
+                            ),
+                            Positioned(
+                              top: AppSpacing.sm,
+                              right: AppSpacing.sm,
+                              child: IconButton.filled(
+                                tooltip: 'Stop camera',
+                                style: IconButton.styleFrom(
+                                    backgroundColor: AppColors.navyDeep),
+                                icon: const Icon(Icons.close,
+                                    color: AppColors.onNavy),
+                                onPressed: _stopCamera,
+                              ),
+                            ),
+                          ],
+                        ),
                 ),
               ),
               const SizedBox(height: 24),
@@ -180,6 +231,41 @@ class _QuickScanDrawerState extends ConsumerState<QuickScanDrawer> {
             child: const Text('Open Unit Detail'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Viewfinder idle state: tap to start the camera.
+class _CameraPrompt extends StatelessWidget {
+  const _CameraPrompt({required this.onStart, this.message});
+
+  final VoidCallback onStart;
+  final String? message;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Material(
+      color: AppColors.navy,
+      child: InkWell(
+        onTap: onStart,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.qr_code_scanner, color: AppColors.sky, size: 56),
+            const SizedBox(height: AppSpacing.sm + 4),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              child: Text(
+                message ?? 'Tap to scan a label with your camera',
+                textAlign: TextAlign.center,
+                style:
+                    textTheme.bodySmall?.copyWith(color: AppColors.onNavy),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

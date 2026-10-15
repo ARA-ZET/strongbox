@@ -71,7 +71,7 @@ final currentActorIdProvider = AutoDisposeProvider<String>.internal(
 );
 
 typedef CurrentActorIdRef = AutoDisposeProviderRef<String>;
-String _$authNotifierHash() => r'419561e4dbb2cb85eb40c93a63cd08dd7cfb48ab';
+String _$authNotifierHash() => r'7dc7743185c60c4c058f642700a3dd47c942e1f4';
 
 /// Auth actions. keepAlive: registration routes away mid-write, and
 /// auto-dispose would tear the notifier down before the user doc lands.

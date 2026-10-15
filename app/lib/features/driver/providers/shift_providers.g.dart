@@ -22,7 +22,7 @@ final activeShiftProvider = AutoDisposeStreamProvider<DriverShift?>.internal(
 );
 
 typedef ActiveShiftRef = AutoDisposeStreamProviderRef<DriverShift?>;
-String _$shiftActionsHash() => r'd64dcd5a2dd679dd2369d67ead61fb98551ea755';
+String _$shiftActionsHash() => r'e4e65eb4e45a636e4df5813fbb9a9e207bb6135a';
 
 /// Start / break / resume / end actions on the driver's shift.
 ///

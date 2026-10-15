@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/utils/async_value_ext.dart';
 import '../../../core/models/qr_code.dart';
 import '../../../core/providers/tenant_provider.dart';
 import '../../../core/utils/qr_generator.dart';
@@ -70,5 +71,6 @@ class QrMutations extends _$QrMutations {
     state = await AsyncValue.guard(() => ref
         .read(qrRepositoryProvider)
         .linkToUnit(code, unitId, tenantId: tenantId, actorId: actorId));
+    state.throwIfError();
   }
 }

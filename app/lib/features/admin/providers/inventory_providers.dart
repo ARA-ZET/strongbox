@@ -3,13 +3,14 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/utils/async_value_ext.dart';
 import '../../../core/constants/storage_paths.dart';
-import '../../../core/constants/pricing.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/job.dart';
 import '../../../core/models/item.dart';
 import '../../../core/models/photo.dart';
 import '../../../core/models/storage_unit.dart';
+import '../../../core/providers/price_catalog_provider.dart';
 import '../../../core/providers/tenant_provider.dart';
 import '../../../core/utils/qr_generator.dart';
 import '../../../repositories/repository_providers.dart';
@@ -93,8 +94,10 @@ Stream<List<Job>> unitJobs(Ref ref, String unitId) {
 Future<StorageUnit?> unitByQrCode(Ref ref, String code) async {
   final qr = await ref.read(qrRepositoryProvider).resolveCode(code);
   final unitId = qr?.storageUnitId;
-  if (unitId == null) return null;
-  return ref.read(storageUnitRepositoryProvider).getUnit(unitId);
+  final units = ref.read(storageUnitRepositoryProvider);
+  if (unitId != null) return units.getUnit(unitId);
+  // Units registered before their code was written to qrCodes.
+  return units.getByQrCode(ref.read(currentTenantIdProvider), code);
 }
 
 /// Create/update actions on units and their items.
@@ -146,7 +149,8 @@ class UnitMutations extends _$UnitMutations {
         type: type,
         label: label,
         priceKey: priceKey,
-        monthlyRateZar: Pricing.monthlyFor(priceKey) ?? 0,
+        monthlyRateZar:
+            ref.read(priceCatalogProvider).monthlyFor(priceKey) ?? 0,
       );
       final id = await repo.create(unit, actorId: _actorId);
       if (photos.isNotEmpty) {
@@ -167,8 +171,10 @@ class UnitMutations extends _$UnitMutations {
         .read(storageUnitRepositoryProvider)
         .update(unitId, {
           'priceKey': priceKey,
-          'monthlyRateZar': Pricing.monthlyFor(priceKey) ?? 0,
+          'monthlyRateZar':
+              ref.read(priceCatalogProvider).monthlyFor(priceKey) ?? 0,
         }, actorId: _actorId));
+    state.throwIfError();
   }
 
   Future<void> updateLabel(String unitId, String label) async {
@@ -176,6 +182,7 @@ class UnitMutations extends _$UnitMutations {
     state = await AsyncValue.guard(() => ref
         .read(storageUnitRepositoryProvider)
         .update(unitId, {'label': label}, actorId: _actorId));
+    state.throwIfError();
   }
 
   Future<void> addPhotos(String unitId, List<Uint8List> photos) async {
@@ -187,6 +194,7 @@ class UnitMutations extends _$UnitMutations {
         await repo.addPhotoId(unitId, id);
       }
     });
+    state.throwIfError();
   }
 
   Future<void> archiveUnit(StorageUnit unit) async {
@@ -194,6 +202,7 @@ class UnitMutations extends _$UnitMutations {
     state = await AsyncValue.guard(() => ref
         .read(storageUnitRepositoryProvider)
         .softDelete(unit, actorId: _actorId));
+    state.throwIfError();
   }
 
   Future<void> addItem({
@@ -204,14 +213,32 @@ class UnitMutations extends _$UnitMutations {
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(itemRepositoryProvider).create(
-            tenantId: _tenantId,
-            storageUnitId: unit.id,
-            clientId: unit.clientId,
-            qrCodeId: generateItemQrCode(),
-            label: description,
-            status: status,
-          );
+      final items = ref.read(itemRepositoryProvider);
+      final itemId = await items.create(
+        tenantId: _tenantId,
+        storageUnitId: unit.id,
+        clientId: unit.clientId,
+        qrCodeId: generateItemQrCode(),
+        label: description,
+        status: status,
+      );
+      if (photos.isEmpty) return;
+      final photoRepo = ref.read(photoRepositoryProvider);
+      final photoIds = <String>[];
+      for (final bytes in photos) {
+        final name = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+        photoIds.add(await photoRepo.upload(
+          tenantId: _tenantId,
+          bytes: bytes,
+          type: PhotoType.interior,
+          entityType: 'item',
+          entityId: itemId,
+          storagePath: StoragePaths.itemPhoto(_tenantId, itemId, name),
+          uploadedBy: _actorId,
+        ));
+      }
+      await items.addPhotoIds(itemId, photoIds);
     });
+    state.throwIfError();
   }
 }

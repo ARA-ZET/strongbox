@@ -10,10 +10,13 @@ import 'issue_repository.dart';
 import 'job_repository.dart';
 import 'notification_repository.dart';
 import 'photo_repository.dart';
+import 'price_list_repository.dart';
+import 'push_repository.dart';
 import 'qr_repository.dart';
 import 'shift_repository.dart';
 import 'storage_unit_repository.dart';
 import 'subscription_repository.dart';
+import 'tenant_repository.dart';
 import 'user_repository.dart';
 
 part 'repository_providers.g.dart';
@@ -74,3 +77,14 @@ ItemRepository itemRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 SubscriptionRepository subscriptionRepository(Ref ref) =>
     FirestoreSubscriptionRepository(ref.watch(firestoreProvider));
+
+@Riverpod(keepAlive: true)
+PriceListRepository priceListRepository(Ref ref) =>
+    FirestorePriceListRepository(ref.watch(firestoreProvider));
+
+@Riverpod(keepAlive: true)
+TenantRepository tenantRepository(Ref ref) =>
+    FirestoreTenantRepository(ref.watch(firestoreProvider));
+
+@Riverpod(keepAlive: true)
+PushRepository pushRepository(Ref ref) => FirebasePushRepository();

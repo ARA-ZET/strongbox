@@ -21,7 +21,9 @@ AppNotification _$AppNotificationFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AppNotification {
   String get id => throw _privateConstructorUsedError;
-  String get tenantId => throw _privateConstructorUsedError;
+  String get tenantId =>
+      throw _privateConstructorUsedError; // Types added after this build still parse rather than break the feed.
+  @JsonKey(unknownEnumValue: NotificationType.systemAlert)
   NotificationType get type => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
@@ -30,7 +32,12 @@ mixin _$AppNotification {
 
   /// Target user; null = broadcast to all admins.
   String? get userId => throw _privateConstructorUsedError;
+
+  /// Where tapping it goes — set by Cloud Functions for the recipient's
+  /// role; null for alerts with nowhere to open.
+  String? get route => throw _privateConstructorUsedError;
   bool get isRead => throw _privateConstructorUsedError;
+  bool get isDeleted => throw _privateConstructorUsedError;
   @NullableTimestampConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
@@ -49,13 +56,16 @@ abstract class $AppNotificationCopyWith<$Res> {
   $Res call(
       {String id,
       String tenantId,
+      @JsonKey(unknownEnumValue: NotificationType.systemAlert)
       NotificationType type,
       String title,
       String body,
       String? entityType,
       String? entityId,
       String? userId,
+      String? route,
       bool isRead,
+      bool isDeleted,
       @NullableTimestampConverter() DateTime? createdAt});
 }
 
@@ -80,7 +90,9 @@ class _$AppNotificationCopyWithImpl<$Res, $Val extends AppNotification>
     Object? entityType = freezed,
     Object? entityId = freezed,
     Object? userId = freezed,
+    Object? route = freezed,
     Object? isRead = null,
+    Object? isDeleted = null,
     Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
@@ -116,9 +128,17 @@ class _$AppNotificationCopyWithImpl<$Res, $Val extends AppNotification>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String?,
+      route: freezed == route
+          ? _value.route
+          : route // ignore: cast_nullable_to_non_nullable
+              as String?,
       isRead: null == isRead
           ? _value.isRead
           : isRead // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isDeleted: null == isDeleted
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
               as bool,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -139,13 +159,16 @@ abstract class _$$AppNotificationImplCopyWith<$Res>
   $Res call(
       {String id,
       String tenantId,
+      @JsonKey(unknownEnumValue: NotificationType.systemAlert)
       NotificationType type,
       String title,
       String body,
       String? entityType,
       String? entityId,
       String? userId,
+      String? route,
       bool isRead,
+      bool isDeleted,
       @NullableTimestampConverter() DateTime? createdAt});
 }
 
@@ -168,7 +191,9 @@ class __$$AppNotificationImplCopyWithImpl<$Res>
     Object? entityType = freezed,
     Object? entityId = freezed,
     Object? userId = freezed,
+    Object? route = freezed,
     Object? isRead = null,
+    Object? isDeleted = null,
     Object? createdAt = freezed,
   }) {
     return _then(_$AppNotificationImpl(
@@ -204,9 +229,17 @@ class __$$AppNotificationImplCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String?,
+      route: freezed == route
+          ? _value.route
+          : route // ignore: cast_nullable_to_non_nullable
+              as String?,
       isRead: null == isRead
           ? _value.isRead
           : isRead // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isDeleted: null == isDeleted
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
               as bool,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -222,13 +255,16 @@ class _$AppNotificationImpl implements _AppNotification {
   const _$AppNotificationImpl(
       {required this.id,
       required this.tenantId,
+      @JsonKey(unknownEnumValue: NotificationType.systemAlert)
       this.type = NotificationType.systemAlert,
       this.title = '',
       this.body = '',
       this.entityType,
       this.entityId,
       this.userId,
+      this.route,
       this.isRead = false,
+      this.isDeleted = false,
       @NullableTimestampConverter() this.createdAt});
 
   factory _$AppNotificationImpl.fromJson(Map<String, dynamic> json) =>
@@ -238,8 +274,9 @@ class _$AppNotificationImpl implements _AppNotification {
   final String id;
   @override
   final String tenantId;
+// Types added after this build still parse rather than break the feed.
   @override
-  @JsonKey()
+  @JsonKey(unknownEnumValue: NotificationType.systemAlert)
   final NotificationType type;
   @override
   @JsonKey()
@@ -255,16 +292,24 @@ class _$AppNotificationImpl implements _AppNotification {
   /// Target user; null = broadcast to all admins.
   @override
   final String? userId;
+
+  /// Where tapping it goes — set by Cloud Functions for the recipient's
+  /// role; null for alerts with nowhere to open.
+  @override
+  final String? route;
   @override
   @JsonKey()
   final bool isRead;
+  @override
+  @JsonKey()
+  final bool isDeleted;
   @override
   @NullableTimestampConverter()
   final DateTime? createdAt;
 
   @override
   String toString() {
-    return 'AppNotification(id: $id, tenantId: $tenantId, type: $type, title: $title, body: $body, entityType: $entityType, entityId: $entityId, userId: $userId, isRead: $isRead, createdAt: $createdAt)';
+    return 'AppNotification(id: $id, tenantId: $tenantId, type: $type, title: $title, body: $body, entityType: $entityType, entityId: $entityId, userId: $userId, route: $route, isRead: $isRead, isDeleted: $isDeleted, createdAt: $createdAt)';
   }
 
   @override
@@ -283,7 +328,10 @@ class _$AppNotificationImpl implements _AppNotification {
             (identical(other.entityId, entityId) ||
                 other.entityId == entityId) &&
             (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.route, route) || other.route == route) &&
             (identical(other.isRead, isRead) || other.isRead == isRead) &&
+            (identical(other.isDeleted, isDeleted) ||
+                other.isDeleted == isDeleted) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
@@ -291,7 +339,7 @@ class _$AppNotificationImpl implements _AppNotification {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, tenantId, type, title, body,
-      entityType, entityId, userId, isRead, createdAt);
+      entityType, entityId, userId, route, isRead, isDeleted, createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -312,13 +360,16 @@ abstract class _AppNotification implements AppNotification {
   const factory _AppNotification(
           {required final String id,
           required final String tenantId,
+          @JsonKey(unknownEnumValue: NotificationType.systemAlert)
           final NotificationType type,
           final String title,
           final String body,
           final String? entityType,
           final String? entityId,
           final String? userId,
+          final String? route,
           final bool isRead,
+          final bool isDeleted,
           @NullableTimestampConverter() final DateTime? createdAt}) =
       _$AppNotificationImpl;
 
@@ -329,7 +380,8 @@ abstract class _AppNotification implements AppNotification {
   String get id;
   @override
   String get tenantId;
-  @override
+  @override // Types added after this build still parse rather than break the feed.
+  @JsonKey(unknownEnumValue: NotificationType.systemAlert)
   NotificationType get type;
   @override
   String get title;
@@ -344,7 +396,14 @@ abstract class _AppNotification implements AppNotification {
   /// Target user; null = broadcast to all admins.
   String? get userId;
   @override
+
+  /// Where tapping it goes — set by Cloud Functions for the recipient's
+  /// role; null for alerts with nowhere to open.
+  String? get route;
+  @override
   bool get isRead;
+  @override
+  bool get isDeleted;
   @override
   @NullableTimestampConverter()
   DateTime? get createdAt;

@@ -4,6 +4,7 @@ import SavingsCalculator from "@/components/SavingsCalculator";
 
 import JsonLd from "@/components/JsonLd";
 import { pageMeta, breadcrumbJsonLd } from "@/lib/seo";
+import { getPrices } from "@/lib/prices";
 export const metadata: Metadata = pageMeta({
   title: "Storage Cost Comparison — Cape Town",
   description:
@@ -11,7 +12,8 @@ export const metadata: Metadata = pageMeta({
   path: "/tools/savings-calculator",
 });
 
-export default function SavingsCalculatorPage() {
+export default async function SavingsCalculatorPage() {
+  const prices = await getPrices();
   return (
     <>
       <JsonLd
@@ -47,7 +49,7 @@ export default function SavingsCalculatorPage() {
       {/* Calculator */}
       <section className="py-12 md:py-16 bg-surface-white">
         <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <SavingsCalculator />
+          <SavingsCalculator prices={prices} />
         </div>
       </section>
 

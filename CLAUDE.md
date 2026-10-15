@@ -13,9 +13,11 @@ This repo (`ARA-ZET/strongbox`) holds **two apps and shared packages**. Open
 strongbox/
 ├─ app/         Flutter app — everything below in this file refers to app/ unless stated
 ├─ web/         Next.js marketing site (strongboxstorage.co.za) — separate stack, separate deploy
+├─ functions/   Cloud Functions (Node 22): monthly invoices, notifications → push + email
 ├─ packages/
 │  ├─ tokens/   design tokens: packages/tokens/tokens.json → app/lib/core/theme/tokens.g.dart + web/lib/tokens.g.ts
-│  ├─ pricing/  price list: packages/pricing/pricing.json → app/lib/core/constants/price_list.g.dart + web/lib/pricing.g.ts
+│  ├─ pricing/  price list: packages/pricing/pricing.json → app/lib/core/constants/price_list.g.dart + web/lib/pricing.g.ts + functions/src/default-rates.g.json
+│  ├─ brand/    logo notes + build.mjs: web/app/icon.svg (site favicon) → Flutter app icons
 │  └─ schema/   shared domain-model contract (not built yet)
 ├─ docs/        the 25 spec docs — shared
 ├─ firestore.rules · firebase.json · .firebaserc   at repo root
@@ -26,10 +28,15 @@ strongbox/
 - **Never hardcode a colour, spacing or radius.** Edit `packages/tokens/tokens.json`, run
   `node packages/tokens/build.mjs`, then use `AppColors` / `AppSpacing` / `AppRadius`
   (they delegate to the generated `DesignTokens`). `app/test/core/design_tokens_test.dart` guards drift.
-- **Never hardcode a price.** Prices (boxes, loose items, pickup vehicles) live in
-  `packages/pricing/pricing.json`; run `node packages/pricing/build.mjs`. The app reads them via
-  `Pricing` / `PriceList` (`lib/core/constants/pricing.dart`), the site via `web/lib/constants.ts`.
-  `app/test/core/pricing_test.dart` guards drift.
+- **One logo everywhere — the website's.** The logo is the site navbar's: filled Material Symbols
+  `package_2` + bold "StrongBox". In Flutter use `BrandLogo` / `BrandMark`
+  (`lib/core/widgets/brand_logo.dart`) — never another icon. App launcher icons are rasterised from
+  the site favicon (`web/app/icon.svg`) by `node packages/brand/build.mjs`. See `packages/brand/README.md`.
+- **Never hardcode a price.** Admins set prices (boxes, loose items, pickup vehicles) in the app at
+  `/admin/pricing`, which writes Firestore `priceLists/{tenantId}`. The app reads it via
+  `priceCatalogProvider` (live); the site via `getPrices()` in `web/lib/prices.ts` (≤5 min cache).
+  `packages/pricing/pricing.json` holds only the defaults used before the first publish —
+  run `node packages/pricing/build.mjs` after editing it. `app/test/core/pricing_test.dart` guards drift.
 - **The app is for account holders.** Marketing, pricing, calculators and quotes live on the
   website. The app opens on `/login` (or the user's portal when signed in); `/register` stays
   because the site's "Get Started" buttons link to it. Old `/quote` links redirect to `/register`.
@@ -53,10 +60,20 @@ registered. Units in `inTransit` / `inStorage` / `pendingDelivery` are billable.
 with no contract, no minimum term and **no term/prepay discounts**. Pickup is a once-off fee by
 vehicle. There are no subscription plans. `StorageBill` does the arithmetic.
 
+**Payments (v1): invoices + EFT, no card provider.** The `monthlyInvoices` Cloud Function issues
+one `invoices/{clientId}_{YYYY-MM}` doc per client on the 1st (same maths as `StorageBill`).
+Clients pay by EFT quoting the invoice reference; an admin marks it paid or voids it on the client
+page (`SubscriptionRepository.markPaid` / `voidInvoice`). `Client.subscriptionStatus`
+(`active` / `pastDue`) is written only by the functions. See `functions/README.md`.
+
+**Notifications:** the app never sends push or email itself. It (or a function) writes a
+`notifications` doc; `onNotificationCreated` pushes it via FCM to `users/{uid}.fcmTokens` and
+emails opted-in clients through the `mail` collection (Trigger Email extension).
+
 Three user roles share one Firebase backend:
 - **Admin/Staff** — operations dashboard, inventory, QR management, job dispatch
 - **Driver** — daily job list, QR scanning, photo capture, client sign-off
-- **Client** — view stored items, request deliveries, manage subscription
+- **Client** — view stored items, request deliveries, see invoices and how to pay
 
 ---
 
@@ -88,7 +105,7 @@ All 25 specification documents live at `docs/` in this project folder.
 | `20_PICKUPS.md` | Pickup job lifecycle end-to-end |
 | `21_DELIVERIES.md` | Delivery job lifecycle end-to-end |
 | `22_NOTIFICATIONS.md` | FCM push, email, in-app bell |
-| `23_BILLING.md` | Stripe extension, checkout, portal |
+| `23_BILLING.md` | Monthly invoices, EFT, mark paid / void |
 | `24_ANALYTICS.md` | Reports, charts, KPI cards |
 | `25_AI_DEVELOPMENT_RULES.md` | **READ THIS FIRST** — 37 mandatory rules |
 
@@ -105,8 +122,8 @@ All 25 specification documents live at `docs/` in this project folder.
 | Firebase Auth | Authentication (email + Google SSO) |
 | Cloud Firestore | All app data (real-time) |
 | Firebase Storage | Photos (units, items, driver captures, signatures) |
-| Cloud Functions (Node.js) | Stripe webhooks, email triggers, status automation |
-| Stripe via Firebase Extension | Monthly subscription billing + customer portal |
+| Cloud Functions (Node.js, `functions/`) | Monthly invoices, job/billing notifications, push + email fan-out |
+| firebase_messaging | FCM push (web needs `--dart-define=FCM_VAPID_KEY`) |
 | qr_flutter | QR code rendering |
 | mobile_scanner | Camera-based QR scanning |
 | pdf + printing | Printable QR label sheets |
@@ -159,8 +176,7 @@ app/
   routing/
     app_router.dart          ← All routes defined here with role-based redirects
   main.dart
-  functions/
-    index.js                 ← Firebase Cloud Functions
+functions/                   ← Cloud Functions: index.js (triggers) + src/ (pure, tested logic)
 web/                         ← Next.js marketing site (own stack: React, Tailwind, App Hosting)
 packages/
   tokens/                    ← tokens.json + build.mjs (shared design tokens)
@@ -279,6 +295,7 @@ Always use these — do not rebuild them inline. See `docs/11_COMPONENT_LIBRARY.
 
 | Widget | Key Props | Notes |
 |---|---|---|
+| `BrandLogo` / `BrandMark` | `fontSize?` / `size?`, `onDark?` | The StrongBox logo — same as the website navbar |
 | `StatusChip` | `status: String` | Auto-selects colour from status string |
 | `SummaryCard` | `icon, value, label, trend?` | Dashboard stat cards |
 | `AppSearchBar` | `hint, onChanged, onFilter?` | Debounced search bar |
@@ -306,7 +323,7 @@ Always use these — do not rebuild them inline. See `docs/11_COMPONENT_LIBRARY.
 ```dart
 uid, name, email, phone, tenantId
 role: UserRole (admin | driver | client)
-clientId?, fcmToken?, stripeCustomerId?, subscriptionStatus?
+clientId?, fcmTokens: List<String>, notificationPrefs
 isDeleted, deletedAt?
 ```
 
@@ -361,7 +378,8 @@ qrBatches/{batchId}
 auditEvents/{eventId}      ← append-only
 notifications/{notifId}
 issueReports/{reportId}
-customers/{uid}            ← managed by Stripe Firebase Extension
+invoices/{clientId}_{YYYY-MM} ← issued by monthlyInvoices; admins mark paid / void
+mail/{id}                  ← outbound email queue (Trigger Email extension)
 ```
 
 ---
@@ -394,12 +412,13 @@ customers/{uid}            ← managed by Stripe Firebase Extension
 /driver/shift
 /driver/account
 /driver/report-issue
+/driver/notifications
 
 /client/dashboard        ← redirect here if role == client
 /client/storage
 /client/storage/:unitId   ← was :boxId
 /client/requests/new
-/client/subscription
+/client/subscription      ← billing: invoices + how to pay
 /client/account
 /client/notifications
 ```
@@ -497,7 +516,7 @@ LayoutBuilder(builder: (context, constraints) {
 
 ## Build Stages
 
-See `strongbox_claude_code_prompts.md` for the full prompt for each stage. **Current stage: Stage 7** (Stripe wiring, Cloud Functions, FCM, deployment).
+See `strongbox_claude_code_prompts.md` for the full prompt for each stage. **All seven stages are built.**
 
 | Stage | Content | Status |
 |---|---|---|
@@ -507,7 +526,7 @@ See `strongbox_claude_code_prompts.md` for the full prompt for each stage. **Cur
 | 4 | Jobs list, 4-step job creation, fleet, notifications, reports | Done |
 | 5 | Driver portal — all screens | Done |
 | 6 | Architecture audit + client portal — all screens | Done |
-| 7 | **Stripe wiring, Cloud Functions, FCM, deployment** | **Current** |
+| 7 | Billing (invoices + EFT), Cloud Functions, FCM, deployment | Done |
 
 ---
 

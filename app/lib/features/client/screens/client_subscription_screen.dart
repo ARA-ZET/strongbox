@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/contact_info.dart';
 import '../../../core/constants/pricing.dart';
+import '../../../core/providers/business_settings_provider.dart';
+import '../../../core/providers/price_catalog_provider.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
@@ -13,6 +16,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/currency.dart';
 import '../../../core/widgets/contact_us_card.dart';
 import '../../../core/widgets/status_chip.dart';
+import '../../billing/widgets/invoice_table.dart';
 import '../providers/client_providers.dart';
 
 /// Billing (ZAR). Storage is charged per box or loose item per month at the
@@ -58,13 +62,7 @@ class ClientSubscriptionScreen extends ConsumerWidget {
                     (client?.subscriptionStatus ?? SubscriptionStatus.active)
                         .name),
             const SizedBox(height: AppSpacing.md),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => _stripeComingSoon(context),
-                child: const Text('Manage Billing'),
-              ),
-            ),
+            const _PaymentPanel(),
           ],
         ),
       );
@@ -103,9 +101,14 @@ class ClientSubscriptionScreen extends ConsumerWidget {
             const SizedBox(height: AppSpacing.sm + 4),
             const _PriceListCard(),
             const SizedBox(height: AppSpacing.lg),
-            Text('Payment History', style: tt.headlineSmall),
+            Text('Invoices', style: tt.headlineSmall),
             const SizedBox(height: AppSpacing.sm + 4),
-            const _InvoiceTable(),
+            if (client != null)
+              InvoiceTable(
+                invoices: ref.watch(myInvoicesProvider),
+                client: client,
+                onRetry: () => ref.invalidate(myInvoicesProvider),
+              ),
             const SizedBox(height: AppSpacing.lg),
             const ContactUsCard(dense: true),
           ],
@@ -113,19 +116,100 @@ class ClientSubscriptionScreen extends ConsumerWidget {
       );
     });
   }
+}
 
-  static void _stripeComingSoon(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content:
-              Text('Online billing goes live with Stripe in Stage 7.')),
+// ------------------------------------------------------------ how to pay
+
+/// What is owed and how to pay it: EFT quoting the invoice reference, to
+/// the bank details set in Admin → Settings.
+class _PaymentPanel extends ConsumerWidget {
+  const _PaymentPanel();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tt = Theme.of(context).textTheme;
+    final invoices = ref.watch(myInvoicesProvider).valueOrNull ?? const [];
+    final open = invoices.where((invoice) => invoice.isOpen).toList();
+    final instructions =
+        ref.watch(businessSettingsProvider).paymentInstructions;
+    final light = tt.bodyMedium?.copyWith(color: AppColors.onNavyVariant);
+
+    if (open.isEmpty) {
+      return Row(
+        children: [
+          const Icon(Icons.check_circle_outline, color: AppColors.sky),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              invoices.isEmpty
+                  ? 'Invoices are issued on the 1st of each month.'
+                  : 'You\'re all paid up — thank you.',
+              style: light,
+            ),
+          ),
+        ],
+      );
+    }
+
+    final due = open.fold<double>(0, (sum, invoice) => sum + invoice.amount);
+    final oldest = open.last;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: const BoxDecoration(
+        color: AppColors.navy,
+        borderRadius: AppRadius.sm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('AMOUNT DUE',
+              style: tt.bodySmall
+                  ?.copyWith(color: AppColors.sky, letterSpacing: 1)),
+          const SizedBox(height: AppSpacing.xs),
+          Text(formatZarExact(due),
+              style: tt.headlineSmall?.copyWith(color: Colors.white)),
+          if (oldest.dueAt != null)
+            Text('Due ${DateFormat('d MMM y').format(oldest.dueAt!)}',
+                style: light),
+          const SizedBox(height: AppSpacing.sm),
+          Text('Pay by EFT using reference', style: light),
+          Row(
+            children: [
+              Flexible(
+                child: SelectableText(
+                  open.length == 1
+                      ? oldest.reference
+                      : open.map((invoice) => invoice.reference).join(', '),
+                  style: tt.titleMedium?.copyWith(color: Colors.white),
+                ),
+              ),
+              IconButton(
+                tooltip: 'Copy reference',
+                icon: const Icon(Icons.copy, size: 18, color: AppColors.sky),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: oldest.reference));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Reference copied')),
+                  );
+                },
+              ),
+            ],
+          ),
+          if (instructions.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.xs),
+            SelectableText(instructions, style: light),
+          ] else
+            Text('Contact us below for our banking details.', style: light),
+        ],
+      ),
     );
   }
 }
 
 // --------------------------------------------------------- monthly summary
 
-class _MonthlySummary extends StatelessWidget {
+class _MonthlySummary extends ConsumerWidget {
   const _MonthlySummary({required this.bill});
 
   final StorageBill bill;
@@ -133,8 +217,9 @@ class _MonthlySummary extends StatelessWidget {
   static const _shown = 6;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final tt = Theme.of(context).textTheme;
+    final prices = ref.watch(priceCatalogProvider);
     final units = bill.billableUnits;
 
     return Container(
@@ -184,7 +269,7 @@ class _MonthlySummary extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Text(Pricing.labelFor(unit.priceKey) ?? 'Being sized',
+                    Text(prices.labelFor(unit.priceKey) ?? 'Being sized',
                         style: tt.bodySmall),
                     const SizedBox(width: AppSpacing.md),
                     SizedBox(
@@ -192,7 +277,7 @@ class _MonthlySummary extends StatelessWidget {
                       child: Text(
                         _rateLabel(unit.monthlyRateZar > 0
                             ? unit.monthlyRateZar
-                            : Pricing.monthlyFor(unit.priceKey)),
+                            : prices.monthlyFor(unit.priceKey)),
                         textAlign: TextAlign.right,
                         style: tt.bodyMedium
                             ?.copyWith(fontWeight: FontWeight.w600),
@@ -228,12 +313,13 @@ class _MonthlySummary extends StatelessWidget {
 
 // -------------------------------------------------------------- price list
 
-class _PriceListCard extends StatelessWidget {
+class _PriceListCard extends ConsumerWidget {
   const _PriceListCard();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final tt = Theme.of(context).textTheme;
+    final prices = ref.watch(priceCatalogProvider);
 
     Widget row(String label, String detail, String price) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 6),
@@ -268,11 +354,11 @@ class _PriceListCard extends StatelessWidget {
         );
 
     final boxes = section('STORAGE BOXES · PER MONTH', [
-      for (final box in PriceList.boxes)
+      for (final box in prices.activeBoxes)
         row(box.label, box.description, '${formatZar(box.monthlyZar)}/mo'),
     ]);
     final pickups = section('PICKUP · ONCE-OFF PER COLLECTION', [
-      for (final vehicle in PriceList.vehicles)
+      for (final vehicle in prices.activeVehicles)
         row(vehicle.label, vehicle.description,
             formatZar(vehicle.onceOffZar)),
     ]);
@@ -310,7 +396,7 @@ class _PriceListCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Loose items (furniture, bikes, appliances) from '
-                  '${formatZar(Pricing.looseItemFrom)}/mo. Prices include '
+                  '${formatZar(prices.looseItemFrom)}/mo. Prices include '
                   '15% VAT.',
                   style: tt.bodySmall,
                 ),
@@ -326,126 +412,4 @@ class _PriceListCard extends StatelessWidget {
       ),
     );
   }
-}
-
-// ------------------------------------------------------------ invoice table
-
-class _InvoiceTable extends ConsumerWidget {
-  const _InvoiceTable();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final invoices = ref.watch(myInvoicesProvider);
-    final tt = Theme.of(context).textTheme;
-
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: AppRadius.md,
-        boxShadow: AppShadow.card,
-      ),
-      child: invoices.when(
-        loading: () => const Padding(
-          padding: EdgeInsets.all(AppSpacing.xl),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        error: (error, _) => Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Text('Could not load invoices: $error',
-              style: tt.bodyMedium?.copyWith(color: AppColors.statusError)),
-        ),
-        data: (list) => list.isEmpty
-            ? Padding(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: Text(
-                  'No invoices yet — statements appear here once online '
-                  'billing goes live.',
-                  style: tt.bodyMedium
-                      ?.copyWith(color: AppColors.textSecondary),
-                ),
-              )
-            : SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minWidth: 640),
-                  child: Column(
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: AppColors.surfaceContainer,
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(12)),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.md,
-                            vertical: AppSpacing.sm + 4),
-                        child: Row(
-                          children: [
-                            _headerCell(tt, 'DATE', 2),
-                            _headerCell(tt, 'DESCRIPTION', 4),
-                            _headerCell(tt, 'AMOUNT', 2),
-                            _headerCell(tt, 'STATUS', 2),
-                          ],
-                        ),
-                      ),
-                      for (final invoice in list)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.md,
-                              vertical: AppSpacing.sm + 4),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  invoice.createdAt == null
-                                      ? '—'
-                                      : DateFormat('MMM d, y')
-                                          .format(invoice.createdAt!),
-                                  style: tt.bodyMedium,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 4,
-                                child: Text(
-                                  invoice.description ?? 'Subscription',
-                                  style: tt.bodyMedium,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  'R${invoice.amount.toStringAsFixed(2)}',
-                                  style: tt.bodyMedium?.copyWith(
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: StatusChip(
-                                      status: invoice.status.name),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      const SizedBox(height: AppSpacing.sm),
-                    ],
-                  ),
-                ),
-              ),
-      ),
-    );
-  }
-
-  Widget _headerCell(TextTheme tt, String label, int flex) => Expanded(
-        flex: flex,
-        child: Text(label,
-            style: tt.bodySmall?.copyWith(
-                fontWeight: FontWeight.w600, letterSpacing: 0.5)),
-      );
 }

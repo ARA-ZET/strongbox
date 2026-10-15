@@ -63,4 +63,10 @@ const _$AuditActionEnumMap = {
   AuditAction.shiftStarted: 'shiftStarted',
   AuditAction.shiftEnded: 'shiftEnded',
   AuditAction.quoteAccepted: 'quoteAccepted',
+  AuditAction.priceListUpdated: 'priceListUpdated',
+  AuditAction.userRoleChanged: 'userRoleChanged',
+  AuditAction.settingsUpdated: 'settingsUpdated',
+  AuditAction.invoiceIssued: 'invoiceIssued',
+  AuditAction.invoicePaid: 'invoicePaid',
+  AuditAction.invoiceVoided: 'invoiceVoided',
 };

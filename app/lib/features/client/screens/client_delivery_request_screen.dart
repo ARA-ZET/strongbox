@@ -12,6 +12,7 @@ import '../../../core/theme/app_shadow.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/step_indicator.dart';
+import '../../../core/providers/business_settings_provider.dart';
 import '../providers/client_providers.dart';
 
 /// 4-step delivery request: Items → Date → Address → Confirm.
@@ -350,6 +351,7 @@ class _DateStep extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final draft = ref.watch(deliveryRequestProvider);
     final notifier = ref.read(deliveryRequestProvider.notifier);
+    final settings = ref.watch(businessSettingsProvider);
     final tt = Theme.of(context).textTheme;
 
     return Container(
@@ -401,7 +403,7 @@ class _DateStep extends ConsumerWidget {
             children: [
               for (final window in TimeWindow.values)
                 ChoiceChip(
-                  label: Text(window.label),
+                  label: Text(settings.windowLabel(window)),
                   selected: draft.timeWindow == window,
                   showCheckmark: false,
                   selectedColor: AppColors.skyTint,
@@ -506,6 +508,7 @@ class _AddressStepState extends ConsumerState<_AddressStep> {
   Widget build(BuildContext context) {
     final draft = ref.watch(deliveryRequestProvider);
     final client = ref.watch(currentClientProvider).valueOrNull;
+    final serviceArea = ref.watch(businessSettingsProvider).serviceArea;
     final tt = Theme.of(context).textTheme;
     final saved = client?.address ?? const Address();
     final savedLabel = [
@@ -529,6 +532,9 @@ class _AddressStepState extends ConsumerState<_AddressStep> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Confirm delivery address', style: tt.headlineSmall),
+          const SizedBox(height: AppSpacing.xs),
+          Text('We deliver within $serviceArea.',
+              style: tt.bodyMedium?.copyWith(color: AppColors.textSecondary)),
           const SizedBox(height: AppSpacing.md),
           RadioGroup<bool>(
             groupValue: draft.useSavedAddress,
@@ -639,6 +645,7 @@ class _ConfirmStep extends ConsumerWidget {
     final units = ref.watch(myUnitsProvider).valueOrNull ??
         const <StorageUnit>[];
     final client = ref.watch(currentClientProvider).valueOrNull;
+    final settings = ref.watch(businessSettingsProvider);
     final tt = Theme.of(context).textTheme;
 
     final selected = units
@@ -693,7 +700,7 @@ class _ConfirmStep extends ConsumerWidget {
                 ? '—'
                 : DateFormat('EEEE, d MMMM y').format(draft.date!),
           ),
-          row('Time window', draft.timeWindow.label),
+          row('Time window', settings.windowLabel(draft.timeWindow)),
           row('Address', addressLabel.isEmpty ? '—' : addressLabel),
           if (draft.instructions.isNotEmpty)
             row('Instructions', draft.instructions),
