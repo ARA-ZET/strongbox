@@ -9,6 +9,7 @@
  *   monthlyInvoices              1st of the month: one invoice per client
  *   dailyBillingSweep            overdue invoices → client pastDue
  *   weeklyUnlinkedQrSweep        flags QR labels never attached to a unit
+ *   inviteDriver / resendInvite  admin callables: driver login + setup link
  *
  * Billing is invoices-only: clients pay by EFT and an admin marks invoices
  * paid in the app. Emails go through the "Trigger Email from Firestore"
@@ -17,12 +18,14 @@
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore, FieldValue } = require("firebase-admin/firestore");
 const { getMessaging } = require("firebase-admin/messaging");
+const { getAuth } = require("firebase-admin/auth");
 const { setGlobalOptions } = require("firebase-functions/v2");
 const {
   onDocumentCreated,
   onDocumentUpdated,
 } = require("firebase-functions/v2/firestore");
 const { onSchedule } = require("firebase-functions/v2/scheduler");
+const { onCall } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 
 const {
@@ -35,6 +38,7 @@ const {
 const billing = require("./src/billing");
 const messages = require("./src/messages");
 const { createStore, NOT_FOUND } = require("./src/store");
+const { createInvites } = require("./src/invites");
 
 initializeApp();
 // Firestore is in nam5, so triggers run in us-central1.
@@ -42,6 +46,7 @@ setGlobalOptions({ region: "us-central1", maxInstances: 10 });
 
 const db = getFirestore();
 const store = createStore(db);
+const invites = createInvites(db, getAuth());
 const { notificationData, createOnce, deliver, recomputeBillingStatus } = store;
 
 
@@ -274,3 +279,8 @@ exports.weeklyUnlinkedQrSweep = onSchedule({
         }, null));
   }
 });
+
+// -------------------------------------------------------------- invites
+
+exports.inviteDriver = onCall((request) => invites.inviteDriver(request));
+exports.resendInvite = onCall((request) => invites.resendInvite(request));

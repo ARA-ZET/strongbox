@@ -27,8 +27,19 @@ Both apps run on the **one** Firebase project `strongbox-app`
 | App | Engine | Trigger | URL |
 |---|---|---|---|
 | `app/` | classic **Firebase Hosting** (`firebase.json` → `app/build/web`) | GitHub Action `.github/workflows/deploy-app.yml` on push to `main` touching `app/**` or `packages/**` | `app.strongbox.co.za` |
-| `web/` | **Firebase App Hosting** backend `strongbox-web`, root dir `/web` | App Hosting's native GitHub connection, any push to `main` | `www.strongboxstorage.co.za` |
+| `web/` | **Firebase App Hosting** backend `strongbox` (`us-east4`), root dir `/web` | App Hosting's native GitHub connection, any push to `main` | `www.strongboxstorage.co.za` |
 | `functions/` | **Cloud Functions** (Node 22, `us-central1`) | Manual: `firebase deploy --only functions` (tested in CI) | — |
+
+### Deploying without CI
+
+If the GitHub Action can't run (e.g. the account is billing-locked), deploy
+from the repo root after running the checks it would have run:
+
+```sh
+cd app && flutter analyze && flutter test && flutter build web --release && cd ..
+(cd functions && npm test && npm run test:emulator)   # emulators need Java 21+
+firebase deploy --only firestore:rules,firestore:indexes,hosting,functions --project strongbox-app
+```
 
 ### One-time setup
 
@@ -49,7 +60,7 @@ gh secret set FIREBASE_SERVICE_ACCOUNT --repo ARA-ZET/strongbox < path/to/key.js
 To force a web rollout without a commit:
 
 ```sh
-firebase apphosting:rollouts:create strongbox-web --git-branch main
+firebase apphosting:rollouts:create strongbox --git-branch main
 ```
 
 ## Local development

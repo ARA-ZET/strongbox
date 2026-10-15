@@ -125,6 +125,12 @@ class AuthNotifier extends _$AuthNotifier {
       await userRepo.createUser(appUser);
     }
 
+    // First sign-in after an admin invite (they set a password or used
+    // Google with the invited email) — the invite is now used.
+    if (appUser.invited) {
+      await userRepo.updateUser(user.uid, {'invited': false});
+    }
+
     // Only clients get a client record; admins/drivers are provisioned by ops.
     if (appUser.role != UserRole.client) return;
 

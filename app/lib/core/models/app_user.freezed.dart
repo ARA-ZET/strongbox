@@ -30,6 +30,9 @@ mixin _$AppUser {
   String? get clientId => throw _privateConstructorUsedError;
   List<String> get fcmTokens => throw _privateConstructorUsedError;
   NotificationPrefs get notificationPrefs => throw _privateConstructorUsedError;
+
+  /// Created by an admin invite and not signed in yet (drivers).
+  bool get invited => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
   bool get isDeleted => throw _privateConstructorUsedError;
   @NullableTimestampConverter()
@@ -60,6 +63,7 @@ abstract class $AppUserCopyWith<$Res> {
       String? clientId,
       List<String> fcmTokens,
       NotificationPrefs notificationPrefs,
+      bool invited,
       bool isActive,
       bool isDeleted,
       @NullableTimestampConverter() DateTime? deletedAt,
@@ -92,6 +96,7 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
     Object? clientId = freezed,
     Object? fcmTokens = null,
     Object? notificationPrefs = null,
+    Object? invited = null,
     Object? isActive = null,
     Object? isDeleted = null,
     Object? deletedAt = freezed,
@@ -139,6 +144,10 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
           ? _value.notificationPrefs
           : notificationPrefs // ignore: cast_nullable_to_non_nullable
               as NotificationPrefs,
+      invited: null == invited
+          ? _value.invited
+          : invited // ignore: cast_nullable_to_non_nullable
+              as bool,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
@@ -189,6 +198,7 @@ abstract class _$$AppUserImplCopyWith<$Res> implements $AppUserCopyWith<$Res> {
       String? clientId,
       List<String> fcmTokens,
       NotificationPrefs notificationPrefs,
+      bool invited,
       bool isActive,
       bool isDeleted,
       @NullableTimestampConverter() DateTime? deletedAt,
@@ -220,6 +230,7 @@ class __$$AppUserImplCopyWithImpl<$Res>
     Object? clientId = freezed,
     Object? fcmTokens = null,
     Object? notificationPrefs = null,
+    Object? invited = null,
     Object? isActive = null,
     Object? isDeleted = null,
     Object? deletedAt = freezed,
@@ -267,6 +278,10 @@ class __$$AppUserImplCopyWithImpl<$Res>
           ? _value.notificationPrefs
           : notificationPrefs // ignore: cast_nullable_to_non_nullable
               as NotificationPrefs,
+      invited: null == invited
+          ? _value.invited
+          : invited // ignore: cast_nullable_to_non_nullable
+              as bool,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
@@ -305,6 +320,7 @@ class _$AppUserImpl extends _AppUser {
       this.clientId,
       final List<String> fcmTokens = const [],
       this.notificationPrefs = const NotificationPrefs(),
+      this.invited = false,
       this.isActive = true,
       this.isDeleted = false,
       @NullableTimestampConverter() this.deletedAt,
@@ -347,6 +363,11 @@ class _$AppUserImpl extends _AppUser {
   @override
   @JsonKey()
   final NotificationPrefs notificationPrefs;
+
+  /// Created by an admin invite and not signed in yet (drivers).
+  @override
+  @JsonKey()
+  final bool invited;
   @override
   @JsonKey()
   final bool isActive;
@@ -365,7 +386,7 @@ class _$AppUserImpl extends _AppUser {
 
   @override
   String toString() {
-    return 'AppUser(id: $id, tenantId: $tenantId, name: $name, email: $email, phone: $phone, role: $role, avatarUrl: $avatarUrl, clientId: $clientId, fcmTokens: $fcmTokens, notificationPrefs: $notificationPrefs, isActive: $isActive, isDeleted: $isDeleted, deletedAt: $deletedAt, createdAt: $createdAt, lastLoginAt: $lastLoginAt)';
+    return 'AppUser(id: $id, tenantId: $tenantId, name: $name, email: $email, phone: $phone, role: $role, avatarUrl: $avatarUrl, clientId: $clientId, fcmTokens: $fcmTokens, notificationPrefs: $notificationPrefs, invited: $invited, isActive: $isActive, isDeleted: $isDeleted, deletedAt: $deletedAt, createdAt: $createdAt, lastLoginAt: $lastLoginAt)';
   }
 
   @override
@@ -388,6 +409,7 @@ class _$AppUserImpl extends _AppUser {
                 .equals(other._fcmTokens, _fcmTokens) &&
             (identical(other.notificationPrefs, notificationPrefs) ||
                 other.notificationPrefs == notificationPrefs) &&
+            (identical(other.invited, invited) || other.invited == invited) &&
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
             (identical(other.isDeleted, isDeleted) ||
@@ -414,6 +436,7 @@ class _$AppUserImpl extends _AppUser {
       clientId,
       const DeepCollectionEquality().hash(_fcmTokens),
       notificationPrefs,
+      invited,
       isActive,
       isDeleted,
       deletedAt,
@@ -446,6 +469,7 @@ abstract class _AppUser extends AppUser {
           final String? clientId,
           final List<String> fcmTokens,
           final NotificationPrefs notificationPrefs,
+          final bool invited,
           final bool isActive,
           final bool isDeleted,
           @NullableTimestampConverter() final DateTime? deletedAt,
@@ -476,6 +500,10 @@ abstract class _AppUser extends AppUser {
   List<String> get fcmTokens;
   @override
   NotificationPrefs get notificationPrefs;
+  @override
+
+  /// Created by an admin invite and not signed in yet (drivers).
+  bool get invited;
   @override
   bool get isActive;
   @override

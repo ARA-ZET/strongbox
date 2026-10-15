@@ -66,6 +66,11 @@ Clients pay by EFT quoting the invoice reference; an admin marks it paid or void
 page (`SubscriptionRepository.markPaid` / `voidInvoice`). `Client.subscriptionStatus`
 (`active` / `pastDue`) is written only by the functions. See `functions/README.md`.
 
+**Driver invites:** Fleet → Invite Driver calls the `inviteDriver` function, which creates the
+driver's Auth login and `users/{uid}` (`role: driver`, `invited: true`) and emails a
+password-setup link. Never create user docs for other people from the client. Existing
+accounts are promoted in Settings → Team instead.
+
 **Notifications:** the app never sends push or email itself. It (or a function) writes a
 `notifications` doc; `onNotificationCreated` pushes it via FCM to `users/{uid}.fcmTokens` and
 emails opted-in clients through the `mail` collection (Trigger Email extension).

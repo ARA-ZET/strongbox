@@ -532,7 +532,7 @@ final driverJobsCompletedTodayProvider = AutoDisposeProvider<int>.internal(
 );
 
 typedef DriverJobsCompletedTodayRef = AutoDisposeProviderRef<int>;
-String _$driverJobActionsHash() => r'2d06372a75dc18157e33093ff2e2f18c469c113f';
+String _$driverJobActionsHash() => r'd7fff7c870d63d4d066225230080e8b13d327f92';
 
 /// Driver-side writes: start job, confirm unit, capture photo, sign off.
 ///

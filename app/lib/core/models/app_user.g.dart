@@ -25,6 +25,7 @@ _$AppUserImpl _$$AppUserImplFromJson(Map<String, dynamic> json) =>
           ? const NotificationPrefs()
           : NotificationPrefs.fromJson(
               json['notificationPrefs'] as Map<String, dynamic>),
+      invited: json['invited'] as bool? ?? false,
       isActive: json['isActive'] as bool? ?? true,
       isDeleted: json['isDeleted'] as bool? ?? false,
       deletedAt: const NullableTimestampConverter().fromJson(json['deletedAt']),
@@ -45,6 +46,7 @@ Map<String, dynamic> _$$AppUserImplToJson(_$AppUserImpl instance) =>
       'clientId': instance.clientId,
       'fcmTokens': instance.fcmTokens,
       'notificationPrefs': instance.notificationPrefs.toJson(),
+      'invited': instance.invited,
       'isActive': instance.isActive,
       'isDeleted': instance.isDeleted,
       'deletedAt':

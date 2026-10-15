@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/errors/app_exception.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_search_bar.dart';
@@ -11,6 +12,7 @@ import '../../../core/models/app_user.dart';
 import '../../../core/models/job.dart';
 import '../providers/clients_providers.dart';
 import '../providers/fleet_providers.dart';
+import '../widgets/invite_link_dialog.dart';
 
 const _pageSize = 10;
 
@@ -27,8 +29,12 @@ class _AdminFleetScreenState extends ConsumerState<AdminFleetScreen> {
   String _query = '';
 
   Future<void> _addDriver() async {
-    final id = await _AddDriverDialog.show(context);
-    if (id != null && mounted) context.go('/admin/fleet/$id');
+    final invite = await _AddDriverDialog.show(context);
+    if (invite == null || !mounted) return;
+    // Link first, while this screen (and its context) is still mounted.
+    await InviteLinkDialog.show(context,
+        email: invite.email, link: invite.link);
+    if (mounted) context.go('/admin/fleet/${invite.uid}');
   }
 
   @override
@@ -375,7 +381,11 @@ class _DriverRowState extends State<_DriverRow> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: StatusChip(
-                      status: job == null ? 'available' : 'on_job'),
+                      status: driver.invited
+                          ? 'invite_pending'
+                          : job == null
+                              ? 'available'
+                              : 'on_job'),
                 ),
               ),
               Expanded(
@@ -436,8 +446,9 @@ class _DriverRowState extends State<_DriverRow> {
 class _AddDriverDialog extends ConsumerStatefulWidget {
   const _AddDriverDialog();
 
-  static Future<String?> show(BuildContext context) {
-    return showDialog<String>(
+  static Future<({String uid, String email, String link})?> show(
+      BuildContext context) {
+    return showDialog<({String uid, String email, String link})>(
         context: context, builder: (_) => const _AddDriverDialog());
   }
 
@@ -464,17 +475,25 @@ class _AddDriverDialogState extends ConsumerState<_AddDriverDialog> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
     try {
-      final id = await ref.read(driverMutationsProvider.notifier).addDriver(
-            name: _name.text.trim(),
-            email: _email.text.trim(),
-            phone: _phone.text.trim(),
-          );
-      if (mounted) Navigator.of(context).pop(id);
+      final email = _email.text.trim();
+      final invite =
+          await ref.read(driverMutationsProvider.notifier).addDriver(
+                name: _name.text.trim(),
+                email: email,
+                phone: _phone.text.trim(),
+              );
+      if (mounted) {
+        Navigator.of(context)
+            .pop((uid: invite.uid, email: email, link: invite.link));
+      }
     } catch (error) {
       if (mounted) {
         setState(() => _saving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not add driver: $error')),
+          SnackBar(
+              content: Text(error is AppException
+                  ? error.message
+                  : 'Could not add driver: $error')),
         );
       }
     }
@@ -497,11 +516,11 @@ class _AddDriverDialogState extends ConsumerState<_AddDriverDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Add Driver', style: textTheme.headlineSmall),
+                Text('Invite Driver', style: textTheme.headlineSmall),
                 const SizedBox(height: 4),
                 Text(
-                  'To give them a login, have them sign up with this email, '
-                  'then make them a Driver in Settings → Team.',
+                  'We\'ll email them a link to set a password and open the '
+                  'driver app.',
                   style: textTheme.bodySmall,
                 ),
                 const SizedBox(height: 20),
@@ -537,7 +556,7 @@ class _AddDriverDialogState extends ConsumerState<_AddDriverDialog> {
                                   strokeWidth: 2,
                                   color: AppColors.accentDeep),
                             )
-                          : const Text('Add Driver'),
+                          : const Text('Send Invite'),
                     ),
                   ],
                 ),

@@ -11,7 +11,6 @@ abstract class UserRepository {
   Stream<AppUser?> watchUser(String uid);
   Stream<List<AppUser>> watchByRole(String tenantId, UserRole role);
   Future<void> createUser(AppUser user);
-  Future<String> createInvited(AppUser user);
   Future<void> updateUser(String uid, Map<String, dynamic> fields);
 
   /// Registers a device for push notifications.
@@ -65,16 +64,6 @@ class FirestoreUserRepository
   Future<void> createUser(AppUser user) => guardRepo(() => _users
       .doc(user.id)
       .set(user.toJson()..['createdAt'] = FieldValue.serverTimestamp()));
-
-  @override
-  Future<String> createInvited(AppUser user) => guardRepo(() async {
-        final doc = _users.doc();
-        await doc.set(user.toJson()
-          ..remove('id')
-          ..['invited'] = true
-          ..['createdAt'] = FieldValue.serverTimestamp());
-        return doc.id;
-      });
 
   @override
   Future<void> updateUser(String uid, Map<String, dynamic> fields) =>

@@ -13,6 +13,7 @@ Node 22, Firebase Functions v2, region `us-central1` (Firestore is in `nam5`).
 | `monthlyInvoices` | 06:00 SAST on the 1st | One invoice per client: every billable unit at its recorded rate (same maths as `StorageBill`). Idempotent — id `{clientId}_{YYYY-MM}`. **Held** (admins alerted) until Settings has EFT payment details |
 | `dailyBillingSweep` | 07:00 SAST daily | Open invoices past due → client `pastDue`; settled → `active` |
 | `weeklyUnlinkedQrSweep` | 07:00 SAST Mondays | Alerts admins to QR labels unused for 30+ days |
+| `inviteDriver` / `resendInvite` | Callable (admins only) | Creates the driver's Auth login + `users/{uid}` (role driver, `invited: true`) and emails a password-setup link, also returned for the admin to copy. Refuses emails that already have an account |
 
 The app never sends a push or email itself: it writes a `notifications` doc (or
 the functions do), and `onNotificationCreated` delivers it. Unit statuses are

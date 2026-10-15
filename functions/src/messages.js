@@ -317,5 +317,6 @@ module.exports = {
   wantsEmail,
   notificationEmail,
   welcomeEmail,
+  renderEmail,
   escapeHtml,
 };

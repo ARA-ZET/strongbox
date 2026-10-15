@@ -46,6 +46,7 @@ const NOTIFY = {
 const AUDIT = {
   invoiceIssued: "invoiceIssued",
   subscriptionUpdated: "subscriptionUpdated",
+  userRoleChanged: "userRoleChanged",
 };
 
 /** actorId on audit events written by these functions. */

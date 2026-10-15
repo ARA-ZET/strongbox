@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'audit_repository.dart';
 import 'client_repository.dart';
+import 'driver_invite_repository.dart';
 import 'item_repository.dart';
 import 'issue_repository.dart';
 import 'job_repository.dart';
@@ -27,6 +29,10 @@ FirebaseFirestore firestore(Ref ref) => FirebaseFirestore.instance;
 
 @Riverpod(keepAlive: true)
 FirebaseStorage firebaseStorage(Ref ref) => FirebaseStorage.instance;
+
+/// Callables deploy to the default region, us-central1.
+@Riverpod(keepAlive: true)
+FirebaseFunctions firebaseFunctions(Ref ref) => FirebaseFunctions.instance;
 
 @Riverpod(keepAlive: true)
 StorageUnitRepository storageUnitRepository(Ref ref) =>
@@ -88,3 +94,7 @@ TenantRepository tenantRepository(Ref ref) =>
 
 @Riverpod(keepAlive: true)
 PushRepository pushRepository(Ref ref) => FirebasePushRepository();
+
+@Riverpod(keepAlive: true)
+DriverInviteRepository driverInviteRepository(Ref ref) =>
+    FunctionsDriverInviteRepository(ref.watch(firebaseFunctionsProvider));

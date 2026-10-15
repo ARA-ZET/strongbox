@@ -76,7 +76,7 @@ jobs:
           npm ci
           npm test
           npx --yes firebase-tools@latest emulators:exec --project demo-strongbox \
-            --only firestore,functions "node --test --test-concurrency=1 test-emulator/"
+            --only auth,firestore,functions "node --test --test-concurrency=1 test-emulator/"
 
       # action-hosting-deploy only ships Hosting — rules need their own deploy.
       - name: Authenticate to Google Cloud

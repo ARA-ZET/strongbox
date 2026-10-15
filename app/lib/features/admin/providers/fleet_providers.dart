@@ -55,23 +55,26 @@ class DriverMutations extends _$DriverMutations {
   @override
   FutureOr<void> build() {}
 
-  Future<String> addDriver({
+  /// Invites a driver: creates their login and profile and emails a
+  /// password-setup link, which is also returned to share directly.
+  Future<({String uid, String link})> addDriver({
     required String name,
     required String email,
     required String phone,
   }) async {
-    final tenantId = ref.read(currentTenantIdProvider);
-    final driver = AppUser(
-      id: '',
-      tenantId: tenantId,
-      name: name,
-      email: email,
-      phone: phone,
-      role: UserRole.driver,
-    );
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(() => ref
+        .read(driverInviteRepositoryProvider)
+        .invite(name: name, email: email, phone: phone));
+    state = result;
+    return result.requireValue;
+  }
+
+  /// A fresh setup link for a driver who has not signed in yet.
+  Future<String> resendInvite(String driverId) async {
     state = const AsyncLoading();
     final result = await AsyncValue.guard(
-        () => ref.read(userRepositoryProvider).createInvited(driver));
+        () => ref.read(driverInviteRepositoryProvider).resend(driverId));
     state = result;
     return result.requireValue;
   }

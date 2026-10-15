@@ -11,7 +11,7 @@
     "serve": "firebase emulators:start --only functions,firestore",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "test:emulator": "firebase emulators:exec --project demo-strongbox --only firestore,functions \"node --test --test-concurrency=1 test-emulator/\""
+    "test:emulator": "firebase emulators:exec --project demo-strongbox --only auth,firestore,functions \"node --test --test-concurrency=1 test-emulator/\""
   },
   "dependencies": {
     "firebase-admin": "^13.6.0",

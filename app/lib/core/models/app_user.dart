@@ -24,6 +24,8 @@ class AppUser with _$AppUser {
     String? clientId,
     @Default([]) List<String> fcmTokens,
     @Default(NotificationPrefs()) NotificationPrefs notificationPrefs,
+    /// Created by an admin invite and not signed in yet (drivers).
+    @Default(false) bool invited,
     @Default(true) bool isActive,
     @Default(false) bool isDeleted,
     @NullableTimestampConverter() DateTime? deletedAt,

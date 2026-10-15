@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/errors/app_exception.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/initials_avatar.dart';
@@ -12,6 +13,7 @@ import '../../../core/models/app_user.dart';
 import '../../../core/models/job.dart';
 import '../providers/clients_providers.dart';
 import '../providers/fleet_providers.dart';
+import '../widgets/invite_link_dialog.dart';
 
 /// Single driver view: profile header, stats, active assignment,
 /// compliance and recent history. Design: admin_driver_detail_view/screen.png.
@@ -105,6 +107,57 @@ class _DriverDetailBody extends ConsumerWidget {
         ),
       );
     });
+  }
+}
+
+/// For a driver who hasn't signed in yet: emails a fresh setup link and
+/// shows it to copy (links expire after an hour).
+class _ResendInviteButton extends ConsumerStatefulWidget {
+  const _ResendInviteButton({required this.driver});
+
+  final AppUser driver;
+
+  @override
+  ConsumerState<_ResendInviteButton> createState() =>
+      _ResendInviteButtonState();
+}
+
+class _ResendInviteButtonState extends ConsumerState<_ResendInviteButton> {
+  bool _sending = false;
+
+  Future<void> _resend() async {
+    setState(() => _sending = true);
+    try {
+      final link = await ref
+          .read(driverMutationsProvider.notifier)
+          .resendInvite(widget.driver.id);
+      if (mounted) {
+        await InviteLinkDialog.show(context,
+            email: widget.driver.email, link: link);
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(error is AppException
+                ? error.message
+                : 'Could not resend the invite: $error')));
+      }
+    } finally {
+      if (mounted) setState(() => _sending = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton.icon(
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(0, 44),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+      ),
+      onPressed: _sending ? null : _resend,
+      icon: const Icon(Icons.forward_to_inbox_outlined, size: 18),
+      label: Text(_sending ? 'Sending…' : 'Resend Invite'),
+    );
   }
 }
 
@@ -211,7 +264,12 @@ class _HeaderCard extends StatelessWidget {
                           style: textTheme.headlineSmall,
                           overflow: TextOverflow.ellipsis)),
                   const SizedBox(width: 12),
-                  StatusChip(status: onJob ? 'on_job' : 'available'),
+                  StatusChip(
+                      status: driver.invited
+                          ? 'invite_pending'
+                          : onJob
+                              ? 'on_job'
+                              : 'available'),
                 ],
               ),
               const SizedBox(height: 4),
@@ -245,6 +303,7 @@ class _HeaderCard extends StatelessWidget {
           icon: const Icon(Icons.assignment_outlined, size: 18),
           label: const Text('Assign to Job'),
         ),
+        if (driver.invited) _ResendInviteButton(driver: driver),
         OutlinedButton.icon(
           style: OutlinedButton.styleFrom(
             minimumSize: const Size(0, 44),

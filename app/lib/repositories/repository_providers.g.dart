@@ -37,6 +37,23 @@ final firebaseStorageProvider = Provider<FirebaseStorage>.internal(
 );
 
 typedef FirebaseStorageRef = ProviderRef<FirebaseStorage>;
+String _$firebaseFunctionsHash() => r'd93861c0944a5de507eaed64d4c4ecf0b90ae818';
+
+/// Callables deploy to the default region, us-central1.
+///
+/// Copied from [firebaseFunctions].
+@ProviderFor(firebaseFunctions)
+final firebaseFunctionsProvider = Provider<FirebaseFunctions>.internal(
+  firebaseFunctions,
+  name: r'firebaseFunctionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$firebaseFunctionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FirebaseFunctionsRef = ProviderRef<FirebaseFunctions>;
 String _$storageUnitRepositoryHash() =>
     r'dc5beed378f1f6c61ce71d94eb8f9073f13fbce4';
 
@@ -267,5 +284,22 @@ final pushRepositoryProvider = Provider<PushRepository>.internal(
 );
 
 typedef PushRepositoryRef = ProviderRef<PushRepository>;
+String _$driverInviteRepositoryHash() =>
+    r'06877d48662afdc6d1ba68b5d3bfcb93f8f77a1f';
+
+/// See also [driverInviteRepository].
+@ProviderFor(driverInviteRepository)
+final driverInviteRepositoryProvider =
+    Provider<DriverInviteRepository>.internal(
+  driverInviteRepository,
+  name: r'driverInviteRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$driverInviteRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DriverInviteRepositoryRef = ProviderRef<DriverInviteRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

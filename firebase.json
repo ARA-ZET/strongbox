@@ -32,7 +32,7 @@
     ]
   },
   "apphosting": {
-    "backendId": "strongbox-web",
+    "backendId": "strongbox",
     "rootDirectory": "/web",
     "ignore": [
       "node_modules",
