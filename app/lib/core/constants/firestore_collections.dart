@@ -16,6 +16,9 @@ class Collections {
   static const issueReports = 'issueReports';
   static const driverShifts = 'driverShifts';
 
+  /// Fleet assets: cars, bakkies, vans, trucks and trailers.
+  static const vehicles = 'vehicles';
+
   /// One doc per tenant, id = tenantId. Public read — the website shows it.
   static const priceLists = 'priceLists';
 

@@ -20,6 +20,7 @@ import '../../../core/widgets/contact_us_card.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../admin/providers/notifications_providers.dart';
 import '../providers/client_providers.dart';
+import '../../../core/widgets/table_scroll.dart';
 
 /// Client's read-only unit view with journey stepper and activity rail.
 /// Design: client_designs/unit_details_sbx_9942_a1/screen.png.
@@ -396,11 +397,9 @@ class _JourneyCard extends StatelessWidget {
         children: [
           Text('Current Journey Status', style: tt.titleMedium),
           const SizedBox(height: AppSpacing.md),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 560),
-              child: Row(
+          TableScroll(
+  minWidth: 560,
+  child: Row(
                 children: [
                   for (final (index, step) in _steps.indexed) ...[
                     if (index > 0)
@@ -453,8 +452,7 @@ class _JourneyCard extends StatelessWidget {
                   ],
                 ],
               ),
-            ),
-          ),
+),
         ],
       ),
     );

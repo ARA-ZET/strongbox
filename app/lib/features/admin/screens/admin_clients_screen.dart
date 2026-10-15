@@ -12,6 +12,7 @@ import '../../../core/models/client.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../providers/clients_providers.dart';
 import '../widgets/client_form_dialog.dart';
+import '../../../core/widgets/table_scroll.dart';
 
 const _pageSize = 10;
 
@@ -184,11 +185,9 @@ class _AdminClientsScreenState extends ConsumerState<AdminClientsScreen> {
       ),
       child: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 760),
-              child: Column(
+          TableScroll(
+  minWidth: 760,
+  child: Column(
                 children: [
                   Container(
                     decoration: const BoxDecoration(
@@ -211,8 +210,7 @@ class _AdminClientsScreenState extends ConsumerState<AdminClientsScreen> {
                   for (final client in visible) _ClientRow(client: client),
                 ],
               ),
-            ),
-          ),
+),
           _buildPagination(list.length, page, pageCount, start, textTheme),
         ],
       ),

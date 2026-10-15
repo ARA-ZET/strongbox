@@ -53,6 +53,9 @@ String auditTitle(AuditEvent event) => switch (event.action) {
       AuditAction.invoicePaid => 'Invoice marked paid',
       AuditAction.invoiceVoided => 'Invoice voided',
       AuditAction.subscriptionUpdated => 'Billing status changed',
+      AuditAction.vehicleAdded => 'Vehicle added to fleet',
+      AuditAction.vehicleUpdated => 'Vehicle updated',
+      AuditAction.vehicleRetired => 'Vehicle retired',
       _ => 'System event',
     };
 

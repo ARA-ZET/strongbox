@@ -319,6 +319,7 @@ Always use these — do not rebuild them inline. See `docs/11_COMPONENT_LIBRARY.
 | `AppDataTable` | `columns, rows, onSort` | Sortable data table |
 | `PaginationRow` | `currentPage, totalPages, onPageChange` | Table pagination |
 | `ConfirmDialog` | `title, message, isDestructive, onConfirm` | Confirmation modal |
+| `TableScroll` | `minWidth, child` | Horizontal scroll for tables with `Expanded` cells — never hand-build `SingleChildScrollView` + `ConstrainedBox(minWidth)` (renders nothing) |
 | `DialogActions` | `saveLabel, onSave, saving?` | Cancel + save row for custom dialogs — never hand-build a Row of themed buttons (they're full-width and vanish in a Row) |
 | `ConnectivityBanner` | — | Offline warning auto-shown |
 
@@ -383,6 +384,7 @@ jobs/{jobId}
 qrCodes/{codeId}
 qrBatches/{batchId}
 auditEvents/{eventId}      ← append-only
+vehicles/{vehicleId}       ← fleet cars/bakkies/vans/trucks/trailers (admin write, driver read)
 notifications/{notifId}
 issueReports/{reportId}
 invoices/{clientId}_{YYYY-MM} ← issued by monthlyInvoices; admins mark paid / void

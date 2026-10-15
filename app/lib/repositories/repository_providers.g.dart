@@ -301,5 +301,20 @@ final driverInviteRepositoryProvider =
 );
 
 typedef DriverInviteRepositoryRef = ProviderRef<DriverInviteRepository>;
+String _$vehicleRepositoryHash() => r'86e6f9db68e89c9e10774ac9b996fcd04d8d2c5e';
+
+/// See also [vehicleRepository].
+@ProviderFor(vehicleRepository)
+final vehicleRepositoryProvider = Provider<VehicleRepository>.internal(
+  vehicleRepository,
+  name: r'vehicleRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$vehicleRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef VehicleRepositoryRef = ProviderRef<VehicleRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

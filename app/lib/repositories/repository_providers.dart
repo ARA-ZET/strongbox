@@ -20,6 +20,7 @@ import 'storage_unit_repository.dart';
 import 'subscription_repository.dart';
 import 'tenant_repository.dart';
 import 'user_repository.dart';
+import 'vehicle_repository.dart';
 
 part 'repository_providers.g.dart';
 
@@ -101,3 +102,7 @@ DriverInviteRepository driverInviteRepository(Ref ref) =>
       ref.watch(firebaseFunctionsProvider),
       ref.watch(firestoreProvider),
     );
+
+@Riverpod(keepAlive: true)
+VehicleRepository vehicleRepository(Ref ref) =>
+    FirestoreVehicleRepository(ref.watch(firestoreProvider));

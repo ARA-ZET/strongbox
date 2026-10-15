@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../providers/reports_providers.dart';
+import '../../../core/widgets/table_scroll.dart';
 
 /// Reports & analytics dashboard: job volume bars, revenue, fleet
 /// efficiency, top clients. Design: admin_reports_analytics_dashboard.
@@ -454,11 +455,9 @@ class _TopClientsCard extends ConsumerWidget {
                         style: textTheme.bodyMedium
                             ?.copyWith(color: AppColors.textSecondary)),
                   )
-                : SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(minWidth: 560),
-                      child: Column(
+                : TableScroll(
+  minWidth: 560,
+  child: Column(
                         children: [
                           Container(
                             color: AppColors.surfaceContainer,
@@ -525,8 +524,7 @@ class _TopClientsCard extends ConsumerWidget {
                           const SizedBox(height: 8),
                         ],
                       ),
-                    ),
-                  ),
+),
           ),
         ],
       ),

@@ -48,26 +48,34 @@ class SummaryCard extends StatelessWidget {
                 ),
                 child: Icon(icon, size: 22, color: AppColors.navy),
               ),
-              if (trend != null)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: trendPositive
-                        ? AppColors.statusSuccessBg
-                        : AppColors.statusErrorBg,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(
-                    trend!,
-                    style: textTheme.bodySmall?.copyWith(
+              if (trend != null) ...[
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
                       color: trendPositive
-                          ? AppColors.statusSuccess
-                          : AppColors.statusError,
-                      fontWeight: FontWeight.w600,
+                          ? AppColors.statusSuccessBg
+                          : AppColors.statusErrorBg,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      trend!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: trendPositive
+                            ? AppColors.statusSuccess
+                            : AppColors.statusError,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
+              ],
             ],
           ),
           const SizedBox(height: 16),
@@ -80,8 +88,9 @@ class SummaryCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             label,
-            style:
-                textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+            style: textTheme.bodyMedium?.copyWith(
+              color: AppColors.textSecondary,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

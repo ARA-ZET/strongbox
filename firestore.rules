@@ -162,6 +162,21 @@ service cloud.firestore {
       allow create: if isAdmin() || isDriver();
       allow update: if isAdmin();
     }
+    // Fleet vehicles and trailers — admins manage them; drivers can see
+    // them (e.g. to pick one for a shift). Retire = soft delete.
+    match /vehicles/{vehicleId} {
+      allow read: if isAdmin() || isDriver();
+      allow create, update: if isAdmin() &&
+        request.resource.data.tenantId is string &&
+        request.resource.data.registration is string &&
+        request.resource.data.registration.size() > 0 &&
+        request.resource.data.registration.size() <= 20 &&
+        request.resource.data.type in
+          ['car', 'bakkie', 'van', 'truck', 'trailer'] &&
+        request.resource.data.status in
+          ['available', 'maintenance', 'outOfService'];
+      allow delete: if false;
+    }
     match /driverShifts/{shiftId} {
       allow read: if isAdmin() ||
         (isDriver() && resource.data.driverId == request.auth.uid);

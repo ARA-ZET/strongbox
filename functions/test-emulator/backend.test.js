@@ -282,3 +282,25 @@ test("rules: only admins read email status; nobody writes it", async () => {
   await assertFails(setDoc(doc(admin, "mail", "m2"),
       { to: "a@b.co", message: { subject: "spoof" } }));
 });
+
+test("rules: admins manage vehicles, drivers can see them", async () => {
+  const vehicle = {
+    tenantId: TENANT, type: "bakkie", name: "Bakkie 1",
+    registration: "CA 123-456", status: "available", isDeleted: false,
+  };
+  const admin = env.authenticatedContext("admin").firestore();
+  const driver = env.authenticatedContext("driver").firestore();
+  const client = env.authenticatedContext("client").firestore();
+
+  await assertSucceeds(setDoc(doc(admin, "vehicles", "v1"), vehicle));
+  await assertSucceeds(getDoc(doc(driver, "vehicles", "v1")));
+  await assertFails(getDoc(doc(client, "vehicles", "v1")));
+  await assertFails(updateDoc(doc(driver, "vehicles", "v1"),
+      { status: "maintenance" }));
+  await assertFails(setDoc(doc(admin, "vehicles", "v2"),
+      { ...vehicle, type: "spaceship" }));
+  await assertFails(setDoc(doc(admin, "vehicles", "v3"),
+      { ...vehicle, registration: "" }));
+  await assertSucceeds(updateDoc(doc(admin, "vehicles", "v1"),
+      { isDeleted: true }));
+});

@@ -18,11 +18,14 @@ class StatusChip extends StatelessWidget {
     'completed', 'active', 'delivered', 'instorage', 'available', 'paid'
   };
   static const _warning = {
-    'inprogress', 'intransit', 'pendingdelivery', 'onjob', 'trialing'
+    'inprogress', 'intransit', 'pendingdelivery', 'onjob', 'trialing',
+    'maintenance'
   };
   // Everything else (scheduled, pending, pendingPickup, assigned, …) uses
   // the neutral pending style via the default branch.
-  static const _error = {'cancelled', 'critical', 'archived', 'unpaid'};
+  static const _error = {
+    'cancelled', 'critical', 'archived', 'unpaid', 'outofservice'
+  };
   static const _pastDue = {'pastdue'};
 
   @override

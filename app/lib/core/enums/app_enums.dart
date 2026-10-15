@@ -70,6 +70,9 @@ enum AuditAction {
   invoiceIssued,
   invoicePaid,
   invoiceVoided,
+  vehicleAdded,
+  vehicleUpdated,
+  vehicleRetired,
 }
 
 enum PaymentStatus { paid, open, voided, uncollectible }
@@ -112,6 +115,13 @@ enum ScanType { pickup, delivery, audit, lookup }
 
 /// Outcome of a `mail` doc (written by the onMailCreated function).
 enum EmailDeliveryState { sending, sent, failed }
+
+/// What a fleet asset is. Trailers carry load but are towed, so they have
+/// no driver of their own.
+enum VehicleType { car, bakkie, van, truck, trailer }
+
+/// Whether a vehicle or trailer can be dispatched.
+enum VehicleStatus { available, maintenance, outOfService }
 
 
 // ---------------------------------------------------------------- helpers
@@ -223,6 +233,24 @@ extension SubscriptionStatusX on SubscriptionStatus {
 
 /// The hours behind each window are an admin setting — show them with
 /// `BusinessSettings.windowLabel` (via `businessSettingsProvider`).
+extension VehicleTypeX on VehicleType {
+  String get label => switch (this) {
+        VehicleType.car => 'Car',
+        VehicleType.bakkie => 'Bakkie',
+        VehicleType.van => 'Van',
+        VehicleType.truck => 'Truck',
+        VehicleType.trailer => 'Trailer',
+      };
+}
+
+extension VehicleStatusX on VehicleStatus {
+  String get label => switch (this) {
+        VehicleStatus.available => 'Available',
+        VehicleStatus.maintenance => 'In maintenance',
+        VehicleStatus.outOfService => 'Out of service',
+      };
+}
+
 extension TimeWindowX on TimeWindow {
   String get title => _title(name);
 }

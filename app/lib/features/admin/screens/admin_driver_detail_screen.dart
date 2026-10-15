@@ -14,6 +14,7 @@ import '../../../core/models/job.dart';
 import '../providers/clients_providers.dart';
 import '../providers/fleet_providers.dart';
 import '../widgets/invite_link_dialog.dart';
+import '../../../core/widgets/table_scroll.dart';
 
 /// Single driver view: profile header, stats, active assignment,
 /// compliance and recent history. Design: admin_driver_detail_view/screen.png.
@@ -633,11 +634,9 @@ class _RecentHistoryCard extends ConsumerWidget {
                         style: textTheme.bodyMedium
                             ?.copyWith(color: AppColors.textSecondary)),
                   )
-                : SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(minWidth: 640),
-                      child: Column(
+                : TableScroll(
+  minWidth: 640,
+  child: Column(
                         children: [
                           Container(
                             color: AppColors.surfaceContainer,
@@ -703,8 +702,7 @@ class _RecentHistoryCard extends ConsumerWidget {
                           const SizedBox(height: 8),
                         ],
                       ),
-                    ),
-                  ),
+),
         ],
       ),
     );

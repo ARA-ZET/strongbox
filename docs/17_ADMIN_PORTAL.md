@@ -17,7 +17,7 @@ Give operations staff full visibility and control over clients, storage units, j
 | Create Job Step 2 | /admin/jobs/new | admin_create_new_job_step_2 |
 | Create Job Step 3 | /admin/jobs/new | admin_create_new_job_step_3_schedule |
 | Create Job Step 4 | /admin/jobs/new | admin_create_new_job_step_4_confirm |
-| Fleet | /admin/fleet | admin_drivers_fleet |
+| Fleet | /admin/fleet | admin_drivers_fleet — **Drivers** (invite, edit) / **Vehicles & trailers** (registry: add, edit, retire; licence-disc alerts) |
 | Driver Detail | /admin/fleet/:id | admin_driver_detail_view |
 | Notifications | /admin/notifications | admin_notifications_alerts_center |
 | Reports | /admin/reports | admin_reports_analytics_dashboard |

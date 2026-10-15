@@ -16,6 +16,7 @@ import '../providers/clients_providers.dart';
 import '../providers/dashboard_providers.dart';
 import '../providers/jobs_providers.dart';
 import '../providers/notifications_providers.dart';
+import '../../../core/widgets/table_scroll.dart';
 
 /// Admin landing page: alert banner, summary counts, today's jobs table and
 /// the recent activity feed. Design: admin_portal_dashboard/screen.png.
@@ -255,11 +256,9 @@ class _TodaysJobsCardState extends ConsumerState<_TodaysJobsCard> {
 
     return Column(
       children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minWidth: 640),
-            child: Column(
+        TableScroll(
+  minWidth: 640,
+  child: Column(
               children: [
                 Container(
                   color: AppColors.surfaceContainer,
@@ -284,8 +283,7 @@ class _TodaysJobsCardState extends ConsumerState<_TodaysJobsCard> {
                   ),
               ],
             ),
-          ),
-        ),
+),
         if (jobs.length > _visibleRows)
           Padding(
             padding: const EdgeInsets.all(12),

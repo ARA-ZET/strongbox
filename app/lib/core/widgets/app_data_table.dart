@@ -5,6 +5,7 @@ import '../theme/app_radius.dart';
 import '../theme/app_shadow.dart';
 import '../theme/app_spacing.dart';
 import 'loading_skeleton.dart';
+import 'table_scroll.dart';
 
 /// A column header for [AppDataTable].
 class TableColumnSpec {
@@ -46,57 +47,45 @@ class AppDataTable extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          // Fill the card, but never squeeze below [minWidth] — narrower
-          // screens scroll sideways instead. A fixed width (not just a
-          // minimum) keeps the Expanded cells bounded inside the scroll view.
-          LayoutBuilder(
-            builder: (context, constraints) => SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: SizedBox(
-                width:
-                    constraints.maxWidth.isFinite &&
-                        constraints.maxWidth > minWidth
-                    ? constraints.maxWidth
-                    : minWidth,
-                child: Column(
-                  children: [
-                    Container(
-                      color: AppColors.surfaceContainer,
+          TableScroll(
+            minWidth: minWidth,
+            child: Column(
+              children: [
+                Container(
+                  color: AppColors.surfaceContainer,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                    vertical: AppSpacing.sm + 4,
+                  ),
+                  child: Row(
+                    children: [
+                      for (final column in columns)
+                        Expanded(
+                          flex: column.flex,
+                          child: Text(
+                            column.label.toUpperCase(),
+                            style: textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                if (isLoading)
+                  for (var i = 0; i < 5; i++)
+                    Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.lg,
-                        vertical: AppSpacing.sm + 4,
+                        vertical: AppSpacing.sm,
                       ),
-                      child: Row(
-                        children: [
-                          for (final column in columns)
-                            Expanded(
-                              flex: column.flex,
-                              child: Text(
-                                column.label.toUpperCase(),
-                                style: textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    if (isLoading)
-                      for (var i = 0; i < 5; i++)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.lg,
-                            vertical: AppSpacing.sm,
-                          ),
-                          child: LoadingSkeleton.listTile(),
-                        )
-                    else
-                      for (final row in rows)
-                        _DataRow(columns: columns, cells: row),
-                  ],
-                ),
-              ),
+                      child: LoadingSkeleton.listTile(),
+                    )
+                else
+                  for (final row in rows)
+                    _DataRow(columns: columns, cells: row),
+              ],
             ),
           ),
           footer ?? const SizedBox.shrink(),

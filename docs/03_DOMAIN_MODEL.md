@@ -315,6 +315,31 @@ Every entity in the system is defined here. This is the single source of truth f
 
 ---
 
+## Vehicle
+**Purpose:** A fleet asset — car, bakkie, van, truck or trailer (`vehicles/{id}`).
+Managed in Admin → Fleet → Vehicles & trailers. Model: `lib/core/models/vehicle.dart`.
+
+| Property | Type | Notes |
+|---|---|---|
+| id | String | |
+| tenantId | String | |
+| type | VehicleType | car \| bakkie \| van \| truck \| trailer |
+| name | String | e.g. "Bakkie 2" (optional) |
+| registration | String | number plate, upper-case; unique among active vehicles |
+| make, model | String? | |
+| year | int? | |
+| capacityM3 | double? | load space |
+| payloadKg | int? | |
+| status | VehicleStatus | available \| maintenance \| outOfService |
+| assignedDriverId | String? | usual driver; always null for trailers |
+| licenceExpiresAt | Timestamp? | licence disc; flagged when expired or < 30 days |
+| notes | String? | |
+| isDeleted / deletedAt | | retire = soft delete |
+
+`DriverShift.vehicleId` refers to this.
+
+---
+
 ## DriverShift
 **Purpose:** Tracks a driver's active work session.
 

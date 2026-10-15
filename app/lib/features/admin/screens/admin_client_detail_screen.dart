@@ -19,6 +19,7 @@ import '../../billing/providers/billing_providers.dart';
 import '../../billing/widgets/invoice_table.dart';
 import '../providers/clients_providers.dart';
 import '../widgets/client_form_dialog.dart';
+import '../../../core/widgets/table_scroll.dart';
 
 /// Single client view: profile header, subscription + insight, stored
 /// inventory grid, job history. Design: admin_client_detail/screen.png.
@@ -708,11 +709,9 @@ class _JobHistoryCard extends ConsumerWidget {
                   fontWeight: FontWeight.w600, letterSpacing: 0.5)),
         );
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 640),
-        child: Column(
+    return TableScroll(
+  minWidth: 640,
+  child: Column(
           children: [
             Container(
               color: AppColors.surfaceContainer,
@@ -788,7 +787,6 @@ class _JobHistoryCard extends ConsumerWidget {
             const SizedBox(height: 8),
           ],
         ),
-      ),
-    );
+);
   }
 }

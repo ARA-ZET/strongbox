@@ -15,6 +15,8 @@ import '../providers/clients_providers.dart';
 import '../../../repositories/driver_invite_repository.dart';
 import '../providers/fleet_providers.dart';
 import '../widgets/invite_link_dialog.dart';
+import '../widgets/vehicle_registry.dart';
+import '../../../core/widgets/table_scroll.dart';
 
 const _pageSize = 10;
 
@@ -26,9 +28,13 @@ class AdminFleetScreen extends ConsumerStatefulWidget {
   ConsumerState<AdminFleetScreen> createState() => _AdminFleetScreenState();
 }
 
+/// Fleet shows people or the vehicles and trailers they drive.
+enum _FleetView { drivers, vehicles }
+
 class _AdminFleetScreenState extends ConsumerState<AdminFleetScreen> {
   int _page = 0;
   String _query = '';
+  _FleetView _view = _FleetView.drivers;
 
   Future<void> _addDriver() async {
     final result = await _AddDriverDialog.show(context);
@@ -49,12 +55,21 @@ class _AdminFleetScreenState extends ConsumerState<AdminFleetScreen> {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.accent,
-        foregroundColor: AppColors.onAccent,
-        onPressed: _addDriver,
-        child: const Icon(Icons.person_add),
-      ),
+      floatingActionButton: _view == _FleetView.drivers
+          ? FloatingActionButton(
+              tooltip: 'Invite driver',
+              backgroundColor: AppColors.accent,
+              foregroundColor: AppColors.onAccent,
+              onPressed: _addDriver,
+              child: const Icon(Icons.person_add),
+            )
+          : FloatingActionButton.extended(
+              backgroundColor: AppColors.accent,
+              foregroundColor: AppColors.onAccent,
+              onPressed: () => VehicleFormDialog.show(context),
+              icon: const Icon(Icons.add),
+              label: const Text('Add vehicle or trailer'),
+            ),
       body: LayoutBuilder(builder: (context, constraints) {
         final desktop = constraints.maxWidth > 900;
 
@@ -65,10 +80,32 @@ class _AdminFleetScreenState extends ConsumerState<AdminFleetScreen> {
             children: [
               Text('Fleet', style: textTheme.displaySmall),
               const SizedBox(height: 4),
-              Text('Driver readiness and dispatch across the fleet.',
+              Text('Drivers, vehicles and trailers across the fleet.',
                   style: textTheme.bodyMedium
                       ?.copyWith(color: AppColors.textSecondary)),
+              const SizedBox(height: 16),
+              SegmentedButton<_FleetView>(
+                segments: const [
+                  ButtonSegment(
+                    value: _FleetView.drivers,
+                    icon: Icon(Icons.badge_outlined),
+                    label: Text('Drivers'),
+                  ),
+                  ButtonSegment(
+                    value: _FleetView.vehicles,
+                    icon: Icon(Icons.local_shipping_outlined),
+                    label: Text('Vehicles & trailers'),
+                  ),
+                ],
+                selected: {_view},
+                showSelectedIcon: false,
+                onSelectionChanged: (selection) =>
+                    setState(() => _view = selection.first),
+              ),
               const SizedBox(height: 20),
+              if (_view == _FleetView.vehicles)
+                VehicleRegistry(desktop: desktop)
+              else
               drivers.when(
                 loading: () => const Padding(
                   padding: EdgeInsets.all(48),
@@ -171,11 +208,9 @@ class _AdminFleetScreenState extends ConsumerState<AdminFleetScreen> {
               ],
             ),
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 820),
-              child: Column(
+          TableScroll(
+  minWidth: 820,
+  child: Column(
                 children: [
                   Container(
                     color: AppColors.surfaceContainer,
@@ -187,7 +222,7 @@ class _AdminFleetScreenState extends ConsumerState<AdminFleetScreen> {
                         headerCell('PHONE', flex: 3),
                         headerCell('STATUS', flex: 2),
                         headerCell('ACTIVE JOB', flex: 2),
-                        const SizedBox(width: 150),
+                        const SizedBox(width: 176),
                       ],
                     ),
                   ),
@@ -197,8 +232,7 @@ class _AdminFleetScreenState extends ConsumerState<AdminFleetScreen> {
                         activeJob: activeJobs[driver.id]),
                 ],
               ),
-            ),
-          ),
+),
           Container(
             padding:
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -407,7 +441,7 @@ class _DriverRowState extends State<_DriverRow> {
                 ),
               ),
               SizedBox(
-                width: 150,
+                width: 176,
                 child: Row(
                   children: [
                     OutlinedButton(

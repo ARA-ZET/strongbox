@@ -15,6 +15,7 @@ import '../../../core/enums/app_enums.dart';
 import '../../../core/models/job.dart';
 import '../providers/clients_providers.dart';
 import '../providers/jobs_providers.dart';
+import '../../../core/widgets/table_scroll.dart';
 
 const _pageSize = 10;
 
@@ -163,11 +164,9 @@ class _AdminJobsScreenState extends ConsumerState<AdminJobsScreen> {
       ),
       child: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 860),
-              child: Column(
+          TableScroll(
+  minWidth: 860,
+  child: Column(
                 children: [
                   Container(
                     decoration: const BoxDecoration(
@@ -199,8 +198,7 @@ class _AdminJobsScreenState extends ConsumerState<AdminJobsScreen> {
                     ),
                 ],
               ),
-            ),
-          ),
+),
           Container(
             padding:
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
