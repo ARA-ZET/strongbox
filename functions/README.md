@@ -13,6 +13,7 @@ Node 22, Firebase Functions v2, region `us-central1` (Firestore is in `nam5`).
 | `monthlyInvoices` | 06:00 SAST on the 1st | One invoice per client: every billable unit at its recorded rate (same maths as `StorageBill`). Idempotent — id `{clientId}_{YYYY-MM}`. **Held** (admins alerted) until Settings has EFT payment details |
 | `dailyBillingSweep` | 07:00 SAST daily | Open invoices past due → client `pastDue`; settled → `active` |
 | `weeklyUnlinkedQrSweep` | 07:00 SAST Mondays | Alerts admins to QR labels unused for 30+ days |
+| `onMailCreated` | `mail/{id}` create | Sends the email over SMTP (`SMTP_URL` secret); records `delivery` on the doc |
 | `inviteDriver` / `resendInvite` | Callable (admins only) | Creates the driver's Auth login + `users/{uid}` (role driver, `invited: true`) and emails a password-setup link, also returned for the admin to copy. Refuses emails that already have an account |
 
 The app never sends a push or email itself: it writes a `notifications` doc (or
@@ -30,9 +31,22 @@ docs from its webhook.
 ## One-time setup
 
 1. **Blaze plan** (already on) — scheduled functions need Cloud Scheduler.
-2. **Email** — install the *Trigger Email from Firestore* extension
-   (`firebase/firestore-send-email`) with collection **`mail`** and your SMTP
-   settings. Until then, email docs simply queue in `mail`; nothing breaks.
+2. **Email** — `onMailCreated` sends every `mail` doc over SMTP and writes
+   `delivery.state` (`SUCCESS` / `ERROR` + reason) back on it; the invite
+   dialog shows that live. Set it up once:
+   - Pick an SMTP provider (Brevo, Resend, SendGrid, Google Workspace, or
+     the domain host's mail) and **verify `strongbox.co.za`** with it — add
+     the SPF/DKIM DNS records it gives you, or mail lands in spam.
+   - Store the connection as one secret (you type it; it never goes in git):
+     ```sh
+     firebase functions:secrets:set SMTP_URL --project strongbox-app
+     # smtps://USER:PASSWORD@smtp.example.com:465   (URL-encode @ etc. in the password)
+     ```
+   - Optional: `MAIL_FROM` (default `StrongBox <info@strongbox.co.za>`) and
+     `MAIL_REPLY_TO` in `functions/.env`. The From address must be one the
+     provider has verified.
+   - Redeploy functions. The emulator uses `functions/.secret.local`
+     (`SMTP_URL=json://`), which builds messages without sending.
 3. **Web push** — Firebase Console → Project settings → Cloud Messaging →
    *Web Push certificates* → generate a key pair. Save the public key as the
    GitHub **variable** `FCM_VAPID_KEY` (Settings → Secrets and variables →

@@ -10,10 +10,11 @@
  *   dailyBillingSweep            overdue invoices → client pastDue
  *   weeklyUnlinkedQrSweep        flags QR labels never attached to a unit
  *   inviteDriver / resendInvite  admin callables: driver login + setup link
+ *   onMailCreated                sends each `mail` doc over SMTP
  *
  * Billing is invoices-only: clients pay by EFT and an admin marks invoices
- * paid in the app. Emails go through the "Trigger Email from Firestore"
- * extension, which sends every doc written to `mail` — see functions/README.md.
+ * paid in the app. Anything that emails writes a doc to `mail`, which
+ * onMailCreated sends over SMTP (secret SMTP_URL) — see functions/README.md.
  */
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore, FieldValue } = require("firebase-admin/firestore");
@@ -26,6 +27,7 @@ const {
 } = require("firebase-functions/v2/firestore");
 const { onSchedule } = require("firebase-functions/v2/scheduler");
 const { onCall } = require("firebase-functions/v2/https");
+const { defineSecret, defineString } = require("firebase-functions/params");
 const logger = require("firebase-functions/logger");
 
 const {
@@ -39,6 +41,7 @@ const billing = require("./src/billing");
 const messages = require("./src/messages");
 const { createStore, NOT_FOUND } = require("./src/store");
 const { createInvites } = require("./src/invites");
+const mailer = require("./src/mailer");
 
 initializeApp();
 // Firestore is in nam5, so triggers run in us-central1.
@@ -284,3 +287,54 @@ exports.weeklyUnlinkedQrSweep = onSchedule({
 
 exports.inviteDriver = onCall((request) => invites.inviteDriver(request));
 exports.resendInvite = onCall((request) => invites.resendInvite(request));
+
+// ---------------------------------------------------------------- email
+
+/** SMTP connection, e.g. smtps://user:password@smtp-relay.brevo.com:465. */
+const SMTP_URL = defineSecret("SMTP_URL");
+const MAIL_FROM = defineString("MAIL_FROM", {
+  default: "StrongBox <info@strongbox.co.za>",
+  description: "From address — must be a sender your SMTP provider allows",
+});
+const MAIL_REPLY_TO = defineString("MAIL_REPLY_TO", {
+  default: "info@strongbox.co.za",
+});
+
+let transport;
+let transportUrl;
+
+exports.onMailCreated = onDocumentCreated({
+  document: `${COL.mail}/{mailId}`,
+  secrets: [SMTP_URL],
+}, async (event) => {
+  const mail = event.data.data();
+  if (mail.delivery) return; // already handled (event redelivered)
+
+  const url = SMTP_URL.value();
+  if (url !== transportUrl) {
+    transport = mailer.transportFor(url);
+    transportUrl = url;
+  }
+  const startTime = FieldValue.serverTimestamp();
+  const result = await mailer.sendMail(mail, {
+    transport,
+    from: MAIL_FROM.value(),
+    replyTo: MAIL_REPLY_TO.value(),
+  });
+  if (result.state === "ERROR") {
+    logger.error("Email not sent", { mailId: event.params.mailId,
+      error: result.error });
+  }
+  try {
+    await event.data.ref.update({
+      delivery: {
+        ...result,
+        attempts: 1,
+        startTime,
+        endTime: FieldValue.serverTimestamp(),
+      },
+    });
+  } catch (error) {
+    if (error.code !== NOT_FOUND) throw error; // doc removed meanwhile
+  }
+});

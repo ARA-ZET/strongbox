@@ -110,6 +110,9 @@ enum ShiftStatus { active, onBreak, ended }
 
 enum ScanType { pickup, delivery, audit, lookup }
 
+/// Outcome of a `mail` doc (written by the onMailCreated function).
+enum EmailDeliveryState { sending, sent, failed }
+
 
 // ---------------------------------------------------------------- helpers
 

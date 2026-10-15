@@ -17,7 +17,7 @@ const COL = {
   priceLists: "priceLists",
   tenants: "tenants",
   issueReports: "issueReports",
-  // Read by the "Trigger Email from Firestore" extension (firestore-send-email).
+  // Outbound email queue — sent by onMailCreated (src/mailer.js).
   mail: "mail",
 };
 

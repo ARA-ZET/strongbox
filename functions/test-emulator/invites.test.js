@@ -50,7 +50,7 @@ test("only admins can invite", async () => {
 
 test("an invite creates the login, the driver profile and the email",
     async () => {
-      const { uid, link } = await invites.inviteDriver(asUser("admin-1",
+      const { uid, link, mailId } = await invites.inviteDriver(asUser("admin-1",
           { name: "Dee Driver", email: " Dee@X.co ", phone: "071 000 0000" }));
 
       const user = await auth.getUser(uid);
@@ -70,6 +70,7 @@ test("an invite creates the login, the driver profile and the email",
       assert.equal(mail[0].to, "dee@x.co");
       assert.match(mail[0].message.subject, /Dee, you're invited/);
       assert.ok(mail[0].message.html.includes("mode=resetPassword"));
+      assert.match(mailId, new RegExp(`^invite-${uid}-`));
 
       const audit = (await db.collection("auditEvents").get()).docs[0].data();
       assert.equal(audit.action, "userRoleChanged");

@@ -75,6 +75,7 @@ jobs:
         run: |
           npm ci
           npm test
+          printf 'SMTP_URL=json://\n' > .secret.local   # emulator: build, don't send
           npx --yes firebase-tools@latest emulators:exec --project demo-strongbox \
             --only auth,firestore,functions "node --test --test-concurrency=1 test-emulator/"
 

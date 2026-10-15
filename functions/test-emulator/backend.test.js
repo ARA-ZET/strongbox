@@ -133,6 +133,12 @@ test("a delivery request flows through to the right people", async () => {
   const mail = await eventually(() => mailDoc(`notification-${started.id}`));
   assert.equal(mail.to, "cee@x.co");
   assert.equal(mail.message.subject, "Your delivery is on its way");
+  // onMailCreated sends it (test transport) and records the outcome.
+  const sent = await eventually(async () => {
+    const doc = await mailDoc(`notification-${started.id}`);
+    return doc && doc.delivery && doc.delivery;
+  });
+  assert.equal(sent.state, "SUCCESS");
 });
 
 test("settling an invoice updates the account and thanks the client",
@@ -263,3 +269,16 @@ async function clientDoc(id) {
     return (await getDoc(doc(db, "clients", id))).data();
   });
 }
+
+test("rules: only admins read email status; nobody writes it", async () => {
+  await seed((db) => setDoc(doc(db, "mail", "invite-x-1"), {
+    to: "dee@x.co", message: { subject: "Invite" },
+    delivery: { state: "SUCCESS" },
+  }));
+  const admin = env.authenticatedContext("admin").firestore();
+  const driver = env.authenticatedContext("driver").firestore();
+  await assertSucceeds(getDoc(doc(admin, "mail", "invite-x-1")));
+  await assertFails(getDoc(doc(driver, "mail", "invite-x-1")));
+  await assertFails(setDoc(doc(admin, "mail", "m2"),
+      { to: "a@b.co", message: { subject: "spoof" } }));
+});

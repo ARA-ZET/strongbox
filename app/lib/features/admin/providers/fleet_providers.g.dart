@@ -467,7 +467,148 @@ class _DriverCompletedCountProviderElement
   String get driverId => (origin as DriverCompletedCountProvider).driverId;
 }
 
-String _$driverMutationsHash() => r'8f7201b3fc97887a1340342f7aea16cac24763f4';
+String _$inviteEmailStatusHash() => r'd31c534fb0159ec9136ce79776de129261301eaf';
+
+/// Delivery status of an invite email (`mail/{mailId}`).
+///
+/// Copied from [inviteEmailStatus].
+@ProviderFor(inviteEmailStatus)
+const inviteEmailStatusProvider = InviteEmailStatusFamily();
+
+/// Delivery status of an invite email (`mail/{mailId}`).
+///
+/// Copied from [inviteEmailStatus].
+class InviteEmailStatusFamily extends Family<AsyncValue<EmailStatus>> {
+  /// Delivery status of an invite email (`mail/{mailId}`).
+  ///
+  /// Copied from [inviteEmailStatus].
+  const InviteEmailStatusFamily();
+
+  /// Delivery status of an invite email (`mail/{mailId}`).
+  ///
+  /// Copied from [inviteEmailStatus].
+  InviteEmailStatusProvider call(
+    String mailId,
+  ) {
+    return InviteEmailStatusProvider(
+      mailId,
+    );
+  }
+
+  @override
+  InviteEmailStatusProvider getProviderOverride(
+    covariant InviteEmailStatusProvider provider,
+  ) {
+    return call(
+      provider.mailId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'inviteEmailStatusProvider';
+}
+
+/// Delivery status of an invite email (`mail/{mailId}`).
+///
+/// Copied from [inviteEmailStatus].
+class InviteEmailStatusProvider extends AutoDisposeStreamProvider<EmailStatus> {
+  /// Delivery status of an invite email (`mail/{mailId}`).
+  ///
+  /// Copied from [inviteEmailStatus].
+  InviteEmailStatusProvider(
+    String mailId,
+  ) : this._internal(
+          (ref) => inviteEmailStatus(
+            ref as InviteEmailStatusRef,
+            mailId,
+          ),
+          from: inviteEmailStatusProvider,
+          name: r'inviteEmailStatusProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$inviteEmailStatusHash,
+          dependencies: InviteEmailStatusFamily._dependencies,
+          allTransitiveDependencies:
+              InviteEmailStatusFamily._allTransitiveDependencies,
+          mailId: mailId,
+        );
+
+  InviteEmailStatusProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.mailId,
+  }) : super.internal();
+
+  final String mailId;
+
+  @override
+  Override overrideWith(
+    Stream<EmailStatus> Function(InviteEmailStatusRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: InviteEmailStatusProvider._internal(
+        (ref) => create(ref as InviteEmailStatusRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        mailId: mailId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<EmailStatus> createElement() {
+    return _InviteEmailStatusProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is InviteEmailStatusProvider && other.mailId == mailId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, mailId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin InviteEmailStatusRef on AutoDisposeStreamProviderRef<EmailStatus> {
+  /// The parameter `mailId` of this provider.
+  String get mailId;
+}
+
+class _InviteEmailStatusProviderElement
+    extends AutoDisposeStreamProviderElement<EmailStatus>
+    with InviteEmailStatusRef {
+  _InviteEmailStatusProviderElement(super.provider);
+
+  @override
+  String get mailId => (origin as InviteEmailStatusProvider).mailId;
+}
+
+String _$driverMutationsHash() => r'8a7f4b5f56da8d970d3d70d8cf6fc4b03ffec945';
 
 /// Create/update actions on driver records.
 ///

@@ -285,7 +285,7 @@ final pushRepositoryProvider = Provider<PushRepository>.internal(
 
 typedef PushRepositoryRef = ProviderRef<PushRepository>;
 String _$driverInviteRepositoryHash() =>
-    r'06877d48662afdc6d1ba68b5d3bfcb93f8f77a1f';
+    r'791f6d6bc891f3597460c8612669b933c37f7eb9';
 
 /// See also [driverInviteRepository].
 @ProviderFor(driverInviteRepository)

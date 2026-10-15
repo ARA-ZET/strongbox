@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:strong_box/core/enums/app_enums.dart';
 import 'package:strong_box/core/errors/app_exception.dart';
 import 'package:strong_box/core/models/app_user.dart';
 import 'package:strong_box/core/models/job.dart';
@@ -18,18 +21,29 @@ class _FakeInvites implements DriverInviteRepository {
   AppException? failWith;
 
   @override
-  Future<({String uid, String link})> invite({
+  Future<DriverInvite> invite({
     required String name,
     required String email,
     String? phone,
   }) async {
     if (failWith != null) throw failWith!;
     invited.add((name, email, phone));
-    return (uid: 'drv-9', link: 'https://auth.test/reset?oobCode=abc');
+    return (
+      uid: 'drv-9',
+      link: 'https://auth.test/reset?oobCode=abc',
+      mailId: 'invite-drv-9-1',
+    );
   }
 
   @override
-  Future<String> resend(String uid) async => 'https://auth.test/again';
+  Future<DriverInvite> resend(String uid) async =>
+      (uid: uid, link: 'https://auth.test/again', mailId: 'invite-$uid-2');
+
+  /// Emits whatever the test pushes, like the live `mail` doc.
+  final email = StreamController<EmailStatus>.broadcast();
+
+  @override
+  Stream<EmailStatus> watchEmail(String mailId) => email.stream;
 }
 
 void main() {
@@ -70,7 +84,10 @@ void main() {
     await tester.enterText(fields.at(1), 'dee@x.co');
     await tester.enterText(fields.at(2), '0710000000');
     await tester.tap(find.text('Send Invite'));
-    await tester.pumpAndSettle();
+    // The "sending" spinner never settles, so pump through the dialogs.
+    for (var i = 0; i < 5; i++) {
+      await tester.pump(const Duration(milliseconds: 200));
+    }
   }
 
   testWidgets('inviting opens the driver and shows the setup link',
@@ -80,8 +97,14 @@ void main() {
     await fillInvite(tester);
 
     expect(invites.invited, [('Dee Driver', 'dee@x.co', '0710000000')]);
-    expect(find.text('Invite sent'), findsOneWidget);
+    expect(find.text('Driver invited'), findsOneWidget);
     expect(find.text('https://auth.test/reset?oobCode=abc'), findsOneWidget);
+    expect(find.text('Sending the invite email to dee@x.co…'), findsOneWidget);
+
+    invites.email.add((state: EmailDeliveryState.sent, error: null));
+    await tester.pump();
+    expect(find.text('Invite emailed to dee@x.co.'), findsOneWidget);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
     expect(find.text('driver drv-9'), findsOneWidget);
@@ -98,7 +121,34 @@ void main() {
     await fillInvite(tester);
 
     expect(find.textContaining('Settings → Team'), findsOneWidget);
-    expect(find.text('Invite sent'), findsNothing);
+    expect(find.text('Driver invited'), findsNothing);
     expect(find.text('Invite Driver'), findsOneWidget); // dialog stays open
+  });
+
+  testWidgets('a failed email says why and points to the link',
+      (tester) async {
+    invites = _FakeInvites();
+    await pump(tester);
+    await fillInvite(tester);
+    invites.email.add((
+      state: EmailDeliveryState.failed,
+      error: 'Invalid login: 535 Authentication failed',
+    ));
+    await tester.pump();
+    expect(
+        find.text("Couldn't email dee@x.co — Invalid login: 535 "
+            'Authentication failed. Send them the link below instead.'),
+        findsOneWidget);
+  });
+
+  testWidgets('stops waiting when the email service never answers',
+      (tester) async {
+    invites = _FakeInvites();
+    await pump(tester);
+    await fillInvite(tester);
+    await tester.pump(const Duration(seconds: 31));
+    expect(find.textContaining('No word from the email service yet'),
+        findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 }

@@ -13,7 +13,8 @@ Deliver timely, role-appropriate notifications to admin, drivers, and clients vi
 > - One function, `onNotificationCreated`, does push **and** email. Email preferences are the
 >   existing `NotificationPrefs` booleans (`pickupStartedEmail`, `deliveryCompletedEmail`,
 >   `invoiceReadyEmail`, `storageThresholdEmail`); SMS toggles are stored but not sent yet.
-> - Email is queued in `mail/{id}` for the Trigger Email extension.
+> - Email is queued in `mail/{id}`; the `onMailCreated` function sends it over SMTP (secret
+>   `SMTP_URL`) and records `delivery.state` on the doc.
 > - Only admins may address a notification to a person; anyone signed in may raise a
 >   `systemAlert` to admins. Recipients may only change `isRead` / `readAt`.
 > - Inboxes: drivers `/driver/notifications`, clients `/client/notifications` (inbox above

@@ -42,9 +42,11 @@ function createInvites(db, auth) {
     }
   }
 
+  /** Queues the invite email; returns the `mail` doc id to watch. */
   async function sendInvite(uid, name, email, link) {
     const first = (name || "").split(" ")[0];
-    await db.collection(COL.mail).doc(`invite-${uid}-${Date.now()}`).set({
+    const ref = db.collection(COL.mail).doc(`invite-${uid}-${Date.now()}`);
+    await ref.set({
       to: email,
       message: renderEmail({
         heading: first ? `${first}, you're invited to drive for StrongBox` :
@@ -61,11 +63,12 @@ function createInvites(db, auth) {
       }),
       createdAt: FieldValue.serverTimestamp(),
     });
+    return ref.id;
   }
 
   /**
    * Creates a driver's login and profile and sends the invite.
-   * data: { name, email, phone? } → { uid, link }
+   * data: { name, email, phone? } → { uid, link, mailId }
    */
   async function inviteDriver(request) {
     const admin = await requireAdmin(request);
@@ -126,14 +129,14 @@ function createInvites(db, auth) {
     }
 
     const link = await setupLink(email);
-    await sendInvite(user.uid, name, email, link);
+    const mailId = await sendInvite(user.uid, name, email, link);
     logger.info("Driver invited", { uid: user.uid, by: admin.uid });
-    return { uid: user.uid, link };
+    return { uid: user.uid, link, mailId };
   }
 
   /**
    * A fresh setup link for a driver who has not signed in yet.
-   * data: { uid } → { link }
+   * data: { uid } → { link, mailId }
    */
   async function resendInvite(request) {
     await requireAdmin(request);
@@ -148,8 +151,8 @@ function createInvites(db, auth) {
     }
     const email = profile.get("email");
     const link = await setupLink(email);
-    await sendInvite(uid, profile.get("name"), email, link);
-    return { link };
+    const mailId = await sendInvite(uid, profile.get("name"), email, link);
+    return { link, mailId };
   }
 
   return { inviteDriver, resendInvite };

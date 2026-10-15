@@ -7,6 +7,7 @@ import '../../../core/enums/app_enums.dart';
 import '../../../core/models/app_user.dart';
 import '../../../core/models/job.dart';
 import '../../../core/providers/tenant_provider.dart';
+import '../../../repositories/driver_invite_repository.dart';
 import '../../../repositories/repository_providers.dart';
 import 'jobs_providers.dart';
 
@@ -57,7 +58,7 @@ class DriverMutations extends _$DriverMutations {
 
   /// Invites a driver: creates their login and profile and emails a
   /// password-setup link, which is also returned to share directly.
-  Future<({String uid, String link})> addDriver({
+  Future<DriverInvite> addDriver({
     required String name,
     required String email,
     required String phone,
@@ -70,8 +71,8 @@ class DriverMutations extends _$DriverMutations {
     return result.requireValue;
   }
 
-  /// A fresh setup link for a driver who has not signed in yet.
-  Future<String> resendInvite(String driverId) async {
+  /// A fresh setup link (and email) for a driver who has not signed in.
+  Future<DriverInvite> resendInvite(String driverId) async {
     state = const AsyncLoading();
     final result = await AsyncValue.guard(
         () => ref.read(driverInviteRepositoryProvider).resend(driverId));
@@ -105,3 +106,8 @@ class DriverMutations extends _$DriverMutations {
     state.throwIfError();
   }
 }
+
+/// Delivery status of an invite email (`mail/{mailId}`).
+@riverpod
+Stream<EmailStatus> inviteEmailStatus(Ref ref, String mailId) =>
+    ref.watch(driverInviteRepositoryProvider).watchEmail(mailId);

@@ -1,6 +1,6 @@
 {
   "name": "strongbox-functions",
-  "description": "StrongBox Cloud Functions \u2014 invoicing, notifications, push and email.",
+  "description": "StrongBox Cloud Functions — invoicing, notifications, push and email.",
   "private": true,
   "main": "index.js",
   "engines": {
@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "firebase-admin": "^13.6.0",
-    "firebase-functions": "^7.4.0"
+    "firebase-functions": "^7.4.0",
+    "nodemailer": "^10.1.1"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.2",

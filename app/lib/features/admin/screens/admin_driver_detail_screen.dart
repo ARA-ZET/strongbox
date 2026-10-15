@@ -128,12 +128,14 @@ class _ResendInviteButtonState extends ConsumerState<_ResendInviteButton> {
   Future<void> _resend() async {
     setState(() => _sending = true);
     try {
-      final link = await ref
+      final invite = await ref
           .read(driverMutationsProvider.notifier)
           .resendInvite(widget.driver.id);
       if (mounted) {
         await InviteLinkDialog.show(context,
-            email: widget.driver.email, link: link);
+            email: widget.driver.email,
+            link: invite.link,
+            mailId: invite.mailId);
       }
     } catch (error) {
       if (mounted) {

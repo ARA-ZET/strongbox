@@ -97,4 +97,7 @@ PushRepository pushRepository(Ref ref) => FirebasePushRepository();
 
 @Riverpod(keepAlive: true)
 DriverInviteRepository driverInviteRepository(Ref ref) =>
-    FunctionsDriverInviteRepository(ref.watch(firebaseFunctionsProvider));
+    FunctionsDriverInviteRepository(
+      ref.watch(firebaseFunctionsProvider),
+      ref.watch(firestoreProvider),
+    );

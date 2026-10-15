@@ -12,6 +12,7 @@ import '../../../core/widgets/status_chip.dart';
 import '../../../core/models/app_user.dart';
 import '../../../core/models/job.dart';
 import '../providers/clients_providers.dart';
+import '../../../repositories/driver_invite_repository.dart';
 import '../providers/fleet_providers.dart';
 import '../widgets/invite_link_dialog.dart';
 
@@ -30,11 +31,12 @@ class _AdminFleetScreenState extends ConsumerState<AdminFleetScreen> {
   String _query = '';
 
   Future<void> _addDriver() async {
-    final invite = await _AddDriverDialog.show(context);
-    if (invite == null || !mounted) return;
+    final result = await _AddDriverDialog.show(context);
+    if (result == null || !mounted) return;
+    final invite = result.invite;
     // Link first, while this screen (and its context) is still mounted.
     await InviteLinkDialog.show(context,
-        email: invite.email, link: invite.link);
+        email: result.email, link: invite.link, mailId: invite.mailId);
     if (mounted) context.go('/admin/fleet/${invite.uid}');
   }
 
@@ -447,9 +449,9 @@ class _DriverRowState extends State<_DriverRow> {
 class _AddDriverDialog extends ConsumerStatefulWidget {
   const _AddDriverDialog();
 
-  static Future<({String uid, String email, String link})?> show(
+  static Future<({DriverInvite invite, String email})?> show(
       BuildContext context) {
-    return showDialog<({String uid, String email, String link})>(
+    return showDialog<({DriverInvite invite, String email})>(
         context: context, builder: (_) => const _AddDriverDialog());
   }
 
@@ -484,8 +486,7 @@ class _AddDriverDialogState extends ConsumerState<_AddDriverDialog> {
                 phone: _phone.text.trim(),
               );
       if (mounted) {
-        Navigator.of(context)
-            .pop((uid: invite.uid, email: email, link: invite.link));
+        Navigator.of(context).pop((invite: invite, email: email));
       }
     } catch (error) {
       if (mounted) {

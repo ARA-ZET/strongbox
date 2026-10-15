@@ -73,7 +73,8 @@ accounts are promoted in Settings → Team instead.
 
 **Notifications:** the app never sends push or email itself. It (or a function) writes a
 `notifications` doc; `onNotificationCreated` pushes it via FCM to `users/{uid}.fcmTokens` and
-emails opted-in clients through the `mail` collection (Trigger Email extension).
+emails opted-in clients through the `mail` collection, which `onMailCreated` sends over SMTP
+(secret `SMTP_URL`; see `functions/README.md`).
 
 Three user roles share one Firebase backend:
 - **Admin/Staff** — operations dashboard, inventory, QR management, job dispatch
@@ -385,7 +386,7 @@ auditEvents/{eventId}      ← append-only
 notifications/{notifId}
 issueReports/{reportId}
 invoices/{clientId}_{YYYY-MM} ← issued by monthlyInvoices; admins mark paid / void
-mail/{id}                  ← outbound email queue (Trigger Email extension)
+mail/{id}                  ← outbound email queue; onMailCreated sends + records `delivery` (admin read)
 ```
 
 ---

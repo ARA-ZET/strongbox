@@ -171,6 +171,14 @@ service cloud.firestore {
         (isDriver() && resource.data.driverId == request.auth.uid);
     }
 
+    // ---- Outbound email -------------------------------------------------
+    // Written by Cloud Functions only; onMailCreated sends each doc and
+    // records `delivery`. Admins read it to see whether an invite went out.
+    match /mail/{mailId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
     // ---- Billing --------------------------------------------------------
     // Invoices are issued by the monthlyInvoices function. Admins only
     // settle an open one — paid (EFT received) or voided — never amounts.

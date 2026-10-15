@@ -25,6 +25,9 @@ class Collections {
   static const subscriptions = 'subscriptions';
   static const invoices = 'invoices';
 
+  /// Outbound email queue — sent by the onMailCreated function.
+  static const mail = 'mail';
+
   /// Job timeline events subcollection: jobs/{jobId}/events.
   static const jobEvents = 'events';
 }
