@@ -6,7 +6,7 @@ in VS Code to get all folders as one workspace.
 ```
 strongbox/
 ├─ app/         Flutter web+mobile app (admin / driver / client portals)
-├─ web/         Next.js marketing site (strongboxstorage.co.za)
+├─ web/         Next.js marketing site (strongbox.co.za)
 ├─ functions/   Cloud Functions — invoices, notifications, push, email (see functions/README.md)
 ├─ packages/
 │  ├─ tokens/   design tokens — one JSON → app + web  (see packages/tokens/README.md)
@@ -27,7 +27,7 @@ Both apps run on the **one** Firebase project `strongbox-app`
 | App | Engine | Trigger | URL |
 |---|---|---|---|
 | `app/` | classic **Firebase Hosting** (`firebase.json` → `app/build/web`) | GitHub Action `.github/workflows/deploy-app.yml` on push to `main` touching `app/**` or `packages/**` | `app.strongbox.co.za` |
-| `web/` | **Firebase App Hosting** backend `strongbox` (`us-east4`), root dir `/web` | App Hosting's native GitHub connection, any push to `main` | `www.strongboxstorage.co.za` |
+| `web/` | **Firebase App Hosting** backend `strongbox` (`us-east4`), root dir `/web` | App Hosting's native GitHub connection, any push to `main` | `strongbox.co.za` |
 | `functions/` | **Cloud Functions** (Node 22, `us-central1`) | Manual: `firebase deploy --only functions` (tested in CI) | — |
 
 ### Deploying without CI

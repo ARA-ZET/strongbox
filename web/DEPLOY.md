@@ -49,22 +49,24 @@ Push to `main`. App Hosting builds and rolls out on its own.
 To force a rollout without a new commit:
 
 ```sh
-firebase apphosting:rollouts:create strongbox-web --git-branch main
+firebase apphosting:rollouts:create strongbox --git-branch main
 ```
 
 ## Useful checks
 
 ```sh
 firebase apphosting:backends:list                  # backend + live URL
-firebase apphosting:backends:get strongbox-web     # detail
+firebase apphosting:backends:get strongbox         # detail
 npx next build                                     # reproduce the build locally
 ```
 
 ## Custom domain
 
 The backend gets a `*.web.app` URL on creation. Attach
-`www.strongboxstorage.co.za` under **App Hosting → your backend → Custom
-domains** in the Firebase Console.
+`strongbox.co.za` (the site's canonical address, `SITE_URL` in
+`lib/seo.ts`) under **App Hosting → your backend → Custom domains** in the
+Firebase Console. To also serve `www.strongbox.co.za`, attach it there as a
+redirect to the apex.
 
 Note `app.strongbox.co.za` is intended for the **Flutter app**, which
 deploys separately to classic Firebase Hosting from the repo root

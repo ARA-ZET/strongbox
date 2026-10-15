@@ -23,7 +23,7 @@ import type { BoxType } from "@/lib/prices";
  * Building metadata through `pageMeta` makes the canonical impossible to
  * forget, because the path is a required argument.
  */
-export const SITE_URL = "https://www.strongboxstorage.co.za";
+export const SITE_URL = "https://strongbox.co.za";
 export const SITE_NAME = "StrongBox Valet Storage";
 export const LEGAL_NAME = "StrongBox Valet Storage";
 

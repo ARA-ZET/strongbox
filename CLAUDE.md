@@ -12,7 +12,7 @@ This repo (`ARA-ZET/strongbox`) holds **two apps and shared packages**. Open
 ```
 strongbox/
 ├─ app/         Flutter app — everything below in this file refers to app/ unless stated
-├─ web/         Next.js marketing site (strongboxstorage.co.za) — separate stack, separate deploy
+├─ web/         Next.js marketing site (strongbox.co.za) — separate stack, separate deploy
 ├─ functions/   Cloud Functions (Node 22): monthly invoices, notifications → push + email
 ├─ packages/
 │  ├─ tokens/   design tokens: packages/tokens/tokens.json → app/lib/core/theme/tokens.g.dart + web/lib/tokens.g.ts

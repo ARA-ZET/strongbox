@@ -20,7 +20,7 @@ import '../../billing/widgets/invoice_table.dart';
 import '../providers/client_providers.dart';
 
 /// Billing (ZAR). Storage is charged per box or loose item per month at the
-/// shared price list — the same numbers as strongboxstorage.co.za — with no
+/// shared price list — the same numbers as strongbox.co.za — with no
 /// contract or term discounts. Pickups are a once-off fee per collection.
 class ClientSubscriptionScreen extends ConsumerWidget {
   const ClientSubscriptionScreen({super.key});

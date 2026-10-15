@@ -48,7 +48,7 @@ simply off on web. Never commit or share the private half.
 ## Console hardening checklist (do this in Google Cloud / Firebase)
 
 - [ ] **Restrict every API key** — Google Cloud Console → APIs & Services → Credentials:
-  - Web key → *HTTP referrers*: `strongboxstorage.co.za/*`, `*.web.app/*`, `*.firebaseapp.com/*`, `localhost:*`
+  - Web key → *HTTP referrers*: `strongbox.co.za/*`, `*.strongbox.co.za/*`, `*.web.app/*`, `*.firebaseapp.com/*`, `localhost:*`
   - Android key → *Android apps*: package name + release SHA-1
   - iOS key → *iOS apps*: bundle id
   - Each key → *API restrictions*: only the APIs actually used (Identity Toolkit, Cloud Firestore, Firebase Installations, FCM, Token Service).
