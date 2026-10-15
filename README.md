@@ -28,7 +28,7 @@ Both apps run on the **one** Firebase project `strongbox-app`
 |---|---|---|---|
 | `app/` | classic **Firebase Hosting** (`firebase.json` → `app/build/web`) | GitHub Action `.github/workflows/deploy-app.yml` on push to `main` touching `app/**` or `packages/**` | `app.strongbox.co.za` |
 | `web/` | **Firebase App Hosting** backend `strongbox` (`us-east4`), root dir `/web` | App Hosting's native GitHub connection, any push to `main` | `strongbox.co.za` |
-| `functions/` | **Cloud Functions** (Node 22, `us-central1`) | Manual: `firebase deploy --only functions` (tested in CI) | — |
+| `functions/` | **Cloud Functions** (Node 22, `us-central1`) | Manual: `firebase deploy --only functions` (tested in CI). Needs the `SMTP_URL` secret first — see [docs/EMAIL_SETUP.md](docs/EMAIL_SETUP.md) | — |
 
 ### Deploying without CI
 

@@ -31,7 +31,8 @@ docs from its webhook.
 ## One-time setup
 
 1. **Blaze plan** (already on) — scheduled functions need Cloud Scheduler.
-2. **Email** — `onMailCreated` sends every `mail` doc over SMTP and writes
+2. **Email** — step-by-step checklist (DNS fixes, SMTP details, deploy, test):
+   **[docs/EMAIL_SETUP.md](../docs/EMAIL_SETUP.md)**. In short: `onMailCreated` sends every `mail` doc over SMTP and writes
    `delivery.state` (`SUCCESS` / `ERROR` + reason) back on it; the invite
    dialog shows that live. Set it up once:
    - Pick an SMTP provider (Brevo, Resend, SendGrid, Google Workspace, or
