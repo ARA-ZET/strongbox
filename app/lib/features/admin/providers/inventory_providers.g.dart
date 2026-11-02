@@ -39,6 +39,26 @@ final filteredUnitsProvider = AutoDisposeProvider<List<StorageUnit>>.internal(
 );
 
 typedef FilteredUnitsRef = AutoDisposeProviderRef<List<StorageUnit>>;
+String _$inventoryByClientHash() => r'd51d0e78a33b29c1d39641367d07dd6f571118e3';
+
+/// [filteredUnits] without archived units, grouped by client: A–Z by
+/// name, newest unit first within each. Clients whose record is gone
+/// (empty name) sort last.
+///
+/// Copied from [inventoryByClient].
+@ProviderFor(inventoryByClient)
+final inventoryByClientProvider =
+    AutoDisposeProvider<List<ClientInventory>>.internal(
+  inventoryByClient,
+  name: r'inventoryByClientProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$inventoryByClientHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef InventoryByClientRef = AutoDisposeProviderRef<List<ClientInventory>>;
 String _$unitByIdHash() => r'b43b9bfb43dac58e3af8a2c819f787cb63a61cd5';
 
 /// Copied from Dart SDK
@@ -813,14 +833,14 @@ final inventoryTypeFilterProvider =
 );
 
 typedef _$InventoryTypeFilter = AutoDisposeNotifier<String>;
-String _$unitMutationsHash() => r'cef2207c74a8a7fcd8198cbeeff401425206e474';
+String _$unitMutationsHash() => r'cd809e8504d1a6357cfb114efb2be73c576f2243';
 
 /// Create/update actions on units and their items.
 ///
 /// Copied from [UnitMutations].
 @ProviderFor(UnitMutations)
 final unitMutationsProvider =
-    AutoDisposeAsyncNotifierProvider<UnitMutations, void>.internal(
+    AsyncNotifierProvider<UnitMutations, void>.internal(
   UnitMutations.new,
   name: r'unitMutationsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -830,6 +850,6 @@ final unitMutationsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$UnitMutations = AutoDisposeAsyncNotifier<void>;
+typedef _$UnitMutations = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

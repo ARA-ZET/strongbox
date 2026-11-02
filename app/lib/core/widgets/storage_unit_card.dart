@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -9,6 +8,7 @@ import '../theme/app_radius.dart';
 import '../theme/app_shadow.dart';
 import '../theme/app_spacing.dart';
 import 'status_chip.dart';
+import 'storage_image.dart';
 
 /// Inventory grid card for a [StorageUnit] (doc 11) — replaces the old
 /// BoxCard. Photo URL is resolved by the parent (units store photoIds).
@@ -51,12 +51,9 @@ class StorageUnitCard extends StatelessWidget {
                   width: double.infinity,
                   child: photoUrl == null || photoUrl!.isEmpty
                       ? const _PhotoPlaceholder()
-                      : CachedNetworkImage(
-                          imageUrl: photoUrl!,
-                          fit: BoxFit.cover,
-                          placeholder: (_, _) => const ColoredBox(
-                              color: AppColors.surfaceContainer),
-                          errorWidget: (_, _, _) => const _PhotoPlaceholder(),
+                      : StorageImage(
+                          photoUrl!,
+                          error: const _PhotoPlaceholder(),
                         ),
                 ),
                 Positioned(
@@ -73,24 +70,29 @@ class StorageUnitCard extends StatelessWidget {
                 children: [
                   Text(
                     unit.label.isNotEmpty ? unit.label : unit.qrCodeId,
-                    style: textTheme.labelLarge
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    style: textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   if (clientName != null) ...[
                     const SizedBox(height: 2),
-                    Text(clientName!,
-                        style: textTheme.bodySmall,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis),
+                    Text(
+                      clientName!,
+                      style: textTheme.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                   const SizedBox(height: AppSpacing.sm),
                   Row(
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3),
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
                         decoration: BoxDecoration(
                           color: isClosed
                               ? AppColors.statusPendingBg
@@ -110,8 +112,10 @@ class StorageUnitCard extends StatelessWidget {
                       ),
                       const Spacer(),
                       if (unit.updatedAt != null)
-                        Text(DateFormat.yMMMd().format(unit.updatedAt!),
-                            style: textTheme.bodySmall),
+                        Text(
+                          DateFormat.yMMMd().format(unit.updatedAt!),
+                          style: textTheme.bodySmall,
+                        ),
                     ],
                   ),
                 ],
@@ -132,8 +136,11 @@ class _PhotoPlaceholder extends StatelessWidget {
     return const ColoredBox(
       color: AppColors.surfaceContainer,
       child: Center(
-        child: Icon(Icons.inventory_2_outlined,
-            size: 40, color: AppColors.border),
+        child: Icon(
+          Icons.inventory_2_outlined,
+          size: 40,
+          color: AppColors.border,
+        ),
       ),
     );
   }

@@ -17,6 +17,7 @@ import '../providers/dashboard_providers.dart';
 import '../providers/jobs_providers.dart';
 import '../providers/notifications_providers.dart';
 import '../../../core/widgets/table_scroll.dart';
+import '../../../core/utils/public_ref.dart';
 
 /// Admin landing page: alert banner, summary counts, today's jobs table and
 /// the recent activity feed. Design: admin_portal_dashboard/screen.png.
@@ -35,6 +36,7 @@ class AdminDashboardScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const _UnlinkedQrBanner(),
+            const _ActionQueue(),
             const SizedBox(height: 24),
             _SummaryRow(desktop: desktop),
             const SizedBox(height: 24),
@@ -101,6 +103,94 @@ class _UnlinkedQrBanner extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ------------------------------------------------------------ action queue
+
+/// What ops must act on now: client bookings and delivery requests waiting
+/// for confirmation, and pickups heading to the facility to be received.
+class _ActionQueue extends ConsumerWidget {
+  const _ActionQueue();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final toConfirm = ref.watch(jobsToConfirmProvider);
+    final toReceive = ref.watch(jobsToReceiveProvider);
+    if (toConfirm.isEmpty && toReceive.isEmpty) return const SizedBox.shrink();
+    final clientNames = ref.watch(clientNamesProvider);
+    final tt = Theme.of(context).textTheme;
+    final day = DateFormat('EEE d MMM');
+
+    void open(JobStatus status) {
+      final filter = ref.read(jobsFilterStateProvider);
+      ref
+          .read(jobsFilterStateProvider.notifier)
+          .update(filter.copyWith(status: status.name));
+      context.go('/admin/jobs');
+    }
+
+    Widget card(String title, IconData icon, List<Job> jobs, JobStatus status,
+            String cta) =>
+        Container(
+          margin: const EdgeInsets.only(top: 16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: const [AppTheme.cardShadow],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, color: AppColors.accentDeep),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text('$title (${jobs.length})',
+                        style: tt.titleMedium),
+                  ),
+                  TextButton(onPressed: () => open(status), child: Text(cta)),
+                ],
+              ),
+              for (final job in jobs.take(5))
+                Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${jobRef(job)} · ${job.type.label} · '
+                          '${clientNames[job.clientId] ?? 'Client'}',
+                          style: tt.bodyMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        job.scheduledDate == null
+                            ? ''
+                            : day.format(job.scheduledDate!),
+                        style: tt.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        );
+
+    return Column(
+      children: [
+        if (toConfirm.isNotEmpty)
+          card('Bookings to confirm', Icons.fact_check_outlined, toConfirm,
+              JobStatus.pendingConfirmation, 'Review'),
+        if (toReceive.isNotEmpty)
+          card('Collected — arriving at the facility', Icons.warehouse_outlined,
+              toReceive, JobStatus.collected, 'View'),
+      ],
     );
   }
 }
@@ -358,7 +448,7 @@ class _JobRowState extends State<_JobRow> {
                             ?.copyWith(fontWeight: FontWeight.w600),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
-                    Text('#JO-${job.id.substring(0, job.id.length.clamp(0, 5)).toUpperCase()}',
+                    Text(jobRef(job),
                         style: textTheme.bodySmall),
                   ],
                 ),

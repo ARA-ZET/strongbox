@@ -17,7 +17,7 @@ Stream<List<Vehicle>> fleetVehicles(Ref ref) {
 }
 
 /// Add / edit / retire vehicles and trailers.
-@riverpod
+@Riverpod(keepAlive: true)
 class VehicleMutations extends _$VehicleMutations {
   @override
   FutureOr<void> build() {}

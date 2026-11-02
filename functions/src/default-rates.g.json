@@ -23,5 +23,189 @@
     "luggage": 75,
     "kayak": 145,
     "sofa": 220
+  },
+  "catalog": {
+    "boxes": [
+      {
+        "id": "small",
+        "label": "Small Box (45L)",
+        "monthlyZar": 195,
+        "active": true
+      },
+      {
+        "id": "medium",
+        "label": "Medium Box (80L)",
+        "monthlyZar": 295,
+        "active": true
+      },
+      {
+        "id": "large",
+        "label": "Large Box (120L)",
+        "monthlyZar": 395,
+        "active": true
+      },
+      {
+        "id": "xl",
+        "label": "XL Heavy-Duty Box",
+        "monthlyZar": 595,
+        "active": true
+      }
+    ],
+    "looseItems": [
+      {
+        "id": "dining-table",
+        "name": "Dining Table",
+        "monthlyZar": 145,
+        "active": true
+      },
+      {
+        "id": "coffee-table",
+        "name": "Coffee Table",
+        "monthlyZar": 85,
+        "active": true
+      },
+      {
+        "id": "desk",
+        "name": "Desk",
+        "monthlyZar": 110,
+        "active": true
+      },
+      {
+        "id": "tv-stand",
+        "name": "TV Stand",
+        "monthlyZar": 95,
+        "active": true
+      },
+      {
+        "id": "office-chair",
+        "name": "Office Chair",
+        "monthlyZar": 85,
+        "active": true
+      },
+      {
+        "id": "bookshelf",
+        "name": "Bookshelf",
+        "monthlyZar": 100,
+        "active": true
+      },
+      {
+        "id": "single-bed",
+        "name": "Single Bed",
+        "monthlyZar": 120,
+        "active": true
+      },
+      {
+        "id": "double-bed",
+        "name": "Double Bed",
+        "monthlyZar": 175,
+        "active": true
+      },
+      {
+        "id": "queen-bed",
+        "name": "Queen Bed",
+        "monthlyZar": 195,
+        "active": true
+      },
+      {
+        "id": "bicycle",
+        "name": "Bicycle",
+        "monthlyZar": 110,
+        "active": true
+      },
+      {
+        "id": "surfboard",
+        "name": "Surfboard",
+        "monthlyZar": 95,
+        "active": true
+      },
+      {
+        "id": "fridge",
+        "name": "Fridge",
+        "monthlyZar": 195,
+        "active": true
+      },
+      {
+        "id": "washing-machine",
+        "name": "Washing Machine",
+        "monthlyZar": 175,
+        "active": true
+      },
+      {
+        "id": "mirror",
+        "name": "Mirror",
+        "monthlyZar": 75,
+        "active": true
+      },
+      {
+        "id": "golf-bag",
+        "name": "Golf Bag",
+        "monthlyZar": 85,
+        "active": true
+      },
+      {
+        "id": "luggage",
+        "name": "Large Suitcase",
+        "monthlyZar": 75,
+        "active": true
+      },
+      {
+        "id": "kayak",
+        "name": "Kayak",
+        "monthlyZar": 145,
+        "active": true
+      },
+      {
+        "id": "sofa",
+        "name": "2-Seater Sofa",
+        "monthlyZar": 220,
+        "active": true
+      }
+    ],
+    "vehicles": [
+      {
+        "id": "small-van",
+        "label": "Small Van",
+        "onceOffZar": 250,
+        "active": true
+      },
+      {
+        "id": "medium-truck",
+        "label": "Medium Truck",
+        "onceOffZar": 450,
+        "active": true
+      },
+      {
+        "id": "large-fleet",
+        "label": "Large Fleet",
+        "onceOffZar": 850,
+        "active": true
+      }
+    ],
+    "supplies": [
+      {
+        "id": "bubble-wrap",
+        "label": "Bubble wrap roll",
+        "onceOffZar": 50,
+        "active": true
+      },
+      {
+        "id": "packing-paper",
+        "label": "Packing paper",
+        "onceOffZar": 45,
+        "active": true
+      },
+      {
+        "id": "tape",
+        "label": "Packing tape",
+        "onceOffZar": 25,
+        "active": true
+      }
+    ],
+    "packingHelper": {
+      "label": "Packing helper",
+      "hourlyZar": 250,
+      "minHours": 2,
+      "active": true
+    }
   }
 }

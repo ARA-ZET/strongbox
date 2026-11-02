@@ -41,7 +41,12 @@ export const STORAGE_MODES = [
   },
 ] as const;
 
-/** Self-identification: the six situations that actually bring people to us. */
+/**
+ * Self-identification: the situations that actually bring people to us.
+ * Nine, so the grid fills three rows of three; the last three are the ones
+ * particular to Cape Town — the university year, semigration from Gauteng,
+ * and the family home that holds more than one household.
+ */
 export const USE_CASES = [
   {
     icon: "swap_horiz",
@@ -72,6 +77,21 @@ export const USE_CASES = [
     icon: "storefront",
     title: "Small business stock",
     body: "Stock, records, event kit and equipment that should not be living in your lounge. Catalogued so you can pull one carton without unpacking the lot.",
+  },
+  {
+    icon: "school",
+    title: "Students over the long break",
+    body: "Res closes, the digs lease ends, and you are going home for December. We collect at the end of the year and deliver to the new place in February.",
+  },
+  {
+    icon: "flight_land",
+    title: "Moving to Cape Town",
+    body: "Coming down from Gauteng and renting before you buy? Bring the whole house down and keep what does not fit with us until you find the right home.",
+  },
+  {
+    icon: "family_restroom",
+    title: "Making room for family",
+    body: "A relative moving in, a back room being built, or the house cleared for a family occasion. Store the furniture and have it put back when you are ready.",
   },
 ] as const;
 

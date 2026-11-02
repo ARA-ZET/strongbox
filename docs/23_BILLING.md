@@ -1,5 +1,10 @@
 # 23 — Billing Feature Spec
 
+> **As built (journey v5)** — invoices also carry **once-off charges**: each pickup records
+> `onceOffZar` (vehicle + supplies + packing helper) when booked; the first invoice after the job
+> is `collected`/`completed` adds it as a charge line and stamps the job's `invoicedIn`, so it is
+> never billed twice. An invoice can now consist of charges only. No pro-rating in v1.
+
 ## Purpose
 Charge each client monthly for what we store, and let them see what they owe and how to pay. v1
 has **no card provider**: invoices are issued by a Cloud Function, clients pay by EFT, and an admin

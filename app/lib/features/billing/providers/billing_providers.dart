@@ -20,7 +20,7 @@ Stream<List<Invoice>> clientInvoices(Ref ref, String clientId) {
 
 /// Settles invoices: clients pay by EFT, an admin records it here. The
 /// client's billing status follows via the onInvoiceUpdated function.
-@riverpod
+@Riverpod(keepAlive: true)
 class InvoiceActions extends _$InvoiceActions {
   @override
   FutureOr<void> build() {}

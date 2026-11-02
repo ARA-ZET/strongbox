@@ -21,6 +21,10 @@ _$InvoiceImpl _$$InvoiceImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => InvoiceLine.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      charges: (json['charges'] as List<dynamic>?)
+              ?.map((e) => InvoiceCharge.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       unitCount: (json['unitCount'] as num?)?.toInt() ?? 0,
       unpricedUnitCount: (json['unpricedUnitCount'] as num?)?.toInt() ?? 0,
       pdfUrl: json['pdfUrl'] as String?,
@@ -48,6 +52,7 @@ Map<String, dynamic> _$$InvoiceImplToJson(_$InvoiceImpl instance) =>
       'status': _$PaymentStatusEnumMap[instance.status]!,
       'description': instance.description,
       'lines': instance.lines.map((e) => e.toJson()).toList(),
+      'charges': instance.charges.map((e) => e.toJson()).toList(),
       'unitCount': instance.unitCount,
       'unpricedUnitCount': instance.unpricedUnitCount,
       'pdfUrl': instance.pdfUrl,
@@ -90,4 +95,18 @@ Map<String, dynamic> _$$InvoiceLineImplToJson(_$InvoiceLineImpl instance) =>
       'label': instance.label,
       'priceKey': instance.priceKey,
       'rateZar': instance.rateZar,
+    };
+
+_$InvoiceChargeImpl _$$InvoiceChargeImplFromJson(Map<String, dynamic> json) =>
+    _$InvoiceChargeImpl(
+      jobId: json['jobId'] as String,
+      label: json['label'] as String? ?? '',
+      amountZar: (json['amountZar'] as num?)?.toInt() ?? 0,
+    );
+
+Map<String, dynamic> _$$InvoiceChargeImplToJson(_$InvoiceChargeImpl instance) =>
+    <String, dynamic>{
+      'jobId': instance.jobId,
+      'label': instance.label,
+      'amountZar': instance.amountZar,
     };

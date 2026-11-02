@@ -34,6 +34,103 @@ export type Article = {
 
 export const ARTICLES: Article[] = [
   {
+    slug: "student-storage-summer-break",
+    title: "Student storage in Cape Town over the summer break",
+    excerpt:
+      "Res closes, the digs lease ends in November and the new one starts in February. Here is how to bridge the gap without dragging a room's worth of stuff home.",
+    category: "Students",
+    readMinutes: 5,
+    updated: "2026-10-22",
+    illustration: "moving",
+    intro:
+      "Every year, students across Rondebosch, Observatory, Mowbray, Bellville and the city centre have the same problem. The academic year ends, residence or the lease ends with it, and the next place only opens in February. That leaves two or three months of furniture, books and a bar fridge with nowhere to go. Here is how to sort it out without your parents driving down to fetch everything.",
+    sections: [
+      {
+        heading: "Work out your two dates first",
+        paragraphs: [
+          "The date you have to be out, and the date you can move into next year's place. Res move-out dates are fixed and published early. Private digs usually follow the lease, and many student leases end on 30 November. Write both dates down before you book anything.",
+          "If you are flying home straight after your last exam, book collection for the day before you leave, not the morning of your flight.",
+        ],
+      },
+      {
+        heading: "What is worth storing and what is not",
+        paragraphs: [
+          "Store what is expensive or annoying to replace: a desk chair, a bar fridge, a microwave, a bike, textbooks you will need again, and winter bedding. Cheap things that are bulky, like a broken laundry basket or a R150 lamp, are usually better given to a first-year.",
+        ],
+        list: [
+          "Defrost and dry the bar fridge at least a day before collection, and leave the door propped open with a cloth inside.",
+          "Empty and dry anything that has held water: kettles, flasks, the dehumidifier.",
+          "Never pack food, not even sealed two-minute noodles.",
+        ],
+      },
+      {
+        heading: "Sharing with housemates",
+        paragraphs: [
+          "Housemates in a digs can share a collection slot and keep separate accounts, so each person's boxes are billed and returned to them alone. That matters in February, when people move to different houses.",
+        ],
+      },
+      {
+        heading: "Getting it back in February",
+        paragraphs: [
+          "Book delivery to the new address once you have the keys. Requests placed before noon come back the next business day, so you can wait until you are actually in the new room before asking.",
+          "Storage is billed monthly with no minimum term, so you pay for the months you use and nothing more.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/areas/southern-suburbs", label: "Storage around UCT and the Southern Suburbs" },
+      { href: "/pricing", label: "Box sizes and what each one costs" },
+    ],
+  },
+  {
+    slug: "semigrating-to-cape-town",
+    title: "Semigrating to Cape Town: where to keep your things while you settle",
+    excerpt:
+      "Moving down from Gauteng usually means renting before you buy. What to bring, what to store, and how to stop paying for a house-sized truck twice.",
+    category: "Moving",
+    readMinutes: 6,
+    updated: "2026-10-22",
+    illustration: "map-location",
+    intro:
+      "Many families moving from Gauteng to the Western Cape rent first, and for good reason. The suburbs feel different on the ground than they do on a property portal, and a few months of living here tells you whether you belong in Durbanville, Table View or Somerset West. The catch is that a rental is usually smaller than the house you sold, so something has to happen to the furniture that does not fit.",
+    sections: [
+      {
+        heading: "Rent first, choose the suburb second",
+        paragraphs: [
+          "Rentals are competitive, so you may take the place you can get rather than the one you want. Do not size your life to that flat. Bring what you need to live comfortably for six months and store the rest close to where you are likely to end up.",
+          "Commute times affect where you live more than anything else. The N1, N2 and M5 at peak hour are a different city from the one you visited on holiday, so try the drive before you commit.",
+        ],
+      },
+      {
+        heading: "Store at this end, not at that end",
+        paragraphs: [
+          "Leaving furniture in a Johannesburg unit means paying for a second long-distance move later. Bring it all down in one load and unpack what fits in the rental. We collect the rest from your door once you are in, and you pay monthly for the boxes and items we store, with no minimum term.",
+        ],
+        list: [
+          "Things that usually fit in a rental: beds, the couch, the kitchen, the children's rooms.",
+          "Things that usually do not: the second lounge suite, the dining table for twelve, the garage shelving, the bar.",
+          "Things to sell before you leave: anything you have been meaning to replace anyway. Transporting it 1,400 km is rarely worth it.",
+        ],
+      },
+      {
+        heading: "Plan for a wetter winter",
+        paragraphs: [
+          "The Highveld has dry winters and wet summers. The Cape is the other way round, and older rentals here can be damp from May to August. Keep wooden furniture, books and anything leather away from outside walls, and do not leave boxes on a garage floor through winter. Store them somewhere climate-controlled.",
+        ],
+      },
+      {
+        heading: "When you find the house",
+        paragraphs: [
+          "Book delivery for the week after transfer and occupation, not the day of, because transfer dates move. If the stored things are in open boxes, you can bring back the furniture first and the rest of the boxes once the rooms are ready.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/areas", label: "Every area we collect from" },
+      { href: "/resources/moving-out-checklist", label: "The Cape Town moving-out checklist" },
+    ],
+  },
+  {
     slug: "moving-out-checklist",
     title: "The Cape Town moving-out checklist",
     excerpt:

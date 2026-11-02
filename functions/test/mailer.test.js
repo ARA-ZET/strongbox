@@ -39,6 +39,7 @@ test("failures are reported, never thrown", async () => {
 
 test("explains when sending is not set up", async () => {
   assert.equal(transportFor(""), null);
+  assert.equal(transportFor("none"), null); // deploy-time placeholder
   const result = await sendMail(mail, options(null));
   assert.equal(result.state, "ERROR");
   assert.match(result.error, /not set up/);

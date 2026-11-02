@@ -4,6 +4,7 @@ const {
   billingPeriod,
   ratesFrom,
   buildInvoice,
+  onceOffCharges,
   billingStatusFor,
   invoiceId,
   formatZar,
@@ -29,9 +30,10 @@ test("billing period is the SAST calendar month", () => {
 
 test("rates come from the published list, else the generated defaults", () => {
   assert.deepEqual(ratesFrom(undefined), defaults);
+  // The shape the app writes to priceLists/{tenantId} (PriceCatalog JSON).
   const rates = ratesFrom({
-    boxes: [{ id: "small", monthlyZar: 210 }],
-    looseItems: [{ id: "desk", monthlyZar: 120 }],
+    boxes: [{ id: "small", label: "Small", desc: "", price: 210 }],
+    looseItems: [{ id: "desk", name: "Desk", category: "Office", price: 120 }],
   });
   assert.deepEqual(rates, { small: 210, desk: 120 });
 });
@@ -50,7 +52,8 @@ test("bills billable units at their recorded rate", () => {
   assert.equal(invoice.unitCount, 3);
   assert.deepEqual(invoice.lines.map((l) => l.unitId), ["1", "2", "3"]);
   assert.equal(invoice.status, "open");
-  assert.equal(invoice.reference, "INV-202611-ABC123");
+  // The client's account number (SB-C11PBY), never their id.
+  assert.equal(invoice.reference, "INV-202611-C11PBY");
   assert.equal(invoice.description, "Storage — November 2026");
   assert.equal(invoice.dueAt.toISOString(), "2026-11-07T22:00:00.000Z");
 });
@@ -103,4 +106,24 @@ test("billing status follows overdue invoices", () => {
 test("amounts format like the app's formatZarExact", () => {
   assert.equal(formatZar(1234), "R1,234.00");
   assert.equal(formatZar(195.5), "R195.50");
+});
+
+test("once-off job charges are billed once, after collection", () => {
+  const jobs = [
+    { id: "pickup1", type: "pickup", status: "collected", onceOffZar: 750 },
+    { id: "pickup2", type: "pickup", status: "pendingConfirmation",
+      onceOffZar: 450 },
+    { id: "pickup3", type: "pickup", status: "completed", onceOffZar: 250,
+      invoicedIn: "abc123xyz_2026-10" },
+    { id: "drop1", type: "supplyDrop", status: "completed", onceOffZar: 0 },
+  ];
+  assert.deepEqual(onceOffCharges(jobs).map((c) => [c.jobId, c.amountZar]),
+      [["pickup1", 750]]);
+  const invoice = buildInvoice(client,
+      [unit("1", { monthlyRateZar: 195 })], {}, period, jobs);
+  assert.equal(invoice.storageZar, 195);
+  assert.equal(invoice.amount, 195 + 750);
+  assert.match(invoice.charges[0].label, /^Pickup PU-[0-9A-Z]{6} — once-off$/);
+  // Charges alone still raise an invoice (nothing stored yet).
+  assert.equal(buildInvoice(client, [], {}, period, jobs).amount, 750);
 });

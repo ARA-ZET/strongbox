@@ -70,7 +70,7 @@ final driverNamesProvider = AutoDisposeProvider<Map<String, String>>.internal(
 );
 
 typedef DriverNamesRef = AutoDisposeProviderRef<Map<String, String>>;
-String _$filteredClientsHash() => r'6df4e3715c91d8eb22896e81cb7d0eade839c64c';
+String _$filteredClientsHash() => r'fcc05d37f3b3d068dbdb94df1fe8a5cb4eb3f7da';
 
 /// Directory rows after search + status filter.
 ///
@@ -566,14 +566,14 @@ final clientStatusFilterProvider =
 );
 
 typedef _$ClientStatusFilter = AutoDisposeNotifier<String>;
-String _$clientMutationsHash() => r'4b427780da43dbca1e5e3f5a0b416403d731cb7d';
+String _$clientMutationsHash() => r'879bb81392a801be8c2aa138d1dd18fa73909fc5';
 
 /// Create/update actions on client documents.
 ///
 /// Copied from [ClientMutations].
 @ProviderFor(ClientMutations)
 final clientMutationsProvider =
-    AutoDisposeAsyncNotifierProvider<ClientMutations, void>.internal(
+    AsyncNotifierProvider<ClientMutations, void>.internal(
   ClientMutations.new,
   name: r'clientMutationsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -583,6 +583,6 @@ final clientMutationsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ClientMutations = AutoDisposeAsyncNotifier<void>;
+typedef _$ClientMutations = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

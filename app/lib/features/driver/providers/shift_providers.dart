@@ -9,23 +9,23 @@ import '../../auth/providers/auth_provider.dart';
 
 part 'shift_providers.g.dart';
 
-/// The signed-in driver's currently open shift, if any.
+/// The current driver's open shift, if any.
 @riverpod
 Stream<DriverShift?> activeShift(Ref ref) {
-  final uid = ref.watch(authStateProvider).valueOrNull?.uid;
+  final uid = ref.watch(currentUserIdProvider);
   if (uid == null) return Stream.value(null);
   final tenantId = ref.watch(currentTenantIdProvider);
   return ref.watch(shiftRepositoryProvider).watchActiveShift(tenantId, uid);
 }
 
 /// Start / break / resume / end actions on the driver's shift.
-@riverpod
+@Riverpod(keepAlive: true)
 class ShiftActions extends _$ShiftActions {
   @override
   FutureOr<void> build() {}
 
   Future<void> startShift() async {
-    final uid = ref.read(authStateProvider).valueOrNull?.uid;
+    final uid = ref.read(currentUserIdProvider);
     if (uid == null) return;
     final tenantId = ref.read(currentTenantIdProvider);
     state = const AsyncLoading();

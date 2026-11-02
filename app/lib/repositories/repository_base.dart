@@ -23,11 +23,13 @@ Future<T> guardRepo<T>(Future<T> Function() op) async {
 }
 
 String _friendlyMessage(String code) => switch (code) {
-      'permission-denied' => 'You do not have access to this data.',
-      'not-found' => 'The requested record was not found.',
-      'unavailable' => 'Service is temporarily unavailable. Try again.',
-      _ => 'Something went wrong. Please try again.',
-    };
+  // Firestore says permission-denied; Storage says unauthorized.
+  'permission-denied' ||
+  'unauthorized' => 'You do not have access to this data.',
+  'not-found' => 'The requested record was not found.',
+  'unavailable' => 'Service is temporarily unavailable. Try again.',
+  _ => 'Something went wrong. Please try again.',
+};
 
 /// Builds an `auditEvents` document payload. Used inside repository
 /// transactions so a status change and its audit log commit atomically

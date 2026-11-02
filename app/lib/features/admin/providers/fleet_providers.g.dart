@@ -168,7 +168,7 @@ class _DriverByIdProviderElement
 }
 
 String _$activeJobsByDriverHash() =>
-    r'db7b77d0f3883044b6c03126117d05ddb28414b3';
+    r'0758d47c4ea3e329ca29b1c51ab7e2c6df252b6a';
 
 /// driverId → their current in-flight job (assigned or inProgress).
 ///
@@ -608,14 +608,14 @@ class _InviteEmailStatusProviderElement
   String get mailId => (origin as InviteEmailStatusProvider).mailId;
 }
 
-String _$driverMutationsHash() => r'8a7f4b5f56da8d970d3d70d8cf6fc4b03ffec945';
+String _$driverMutationsHash() => r'92e12a07fa7b1e7c0ec3a6167f966c58394cd383';
 
 /// Create/update actions on driver records.
 ///
 /// Copied from [DriverMutations].
 @ProviderFor(DriverMutations)
 final driverMutationsProvider =
-    AutoDisposeAsyncNotifierProvider<DriverMutations, void>.internal(
+    AsyncNotifierProvider<DriverMutations, void>.internal(
   DriverMutations.new,
   name: r'driverMutationsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -625,6 +625,6 @@ final driverMutationsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DriverMutations = AutoDisposeAsyncNotifier<void>;
+typedef _$DriverMutations = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

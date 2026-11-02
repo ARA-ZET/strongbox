@@ -12,7 +12,10 @@ import '../providers/issue_report_providers.dart';
 /// Maintenance & support report form. Design:
 /// driver_report_issue_maintenance/screen.png.
 class DriverReportIssueScreen extends ConsumerStatefulWidget {
-  const DriverReportIssueScreen({super.key});
+  const DriverReportIssueScreen({super.key, this.jobId});
+
+  /// The job the problem is about, when reported from a job.
+  final String? jobId;
 
   @override
   ConsumerState<DriverReportIssueScreen> createState() =>
@@ -32,6 +35,8 @@ class _DriverReportIssueScreenState
     (IssueType.cargoDamage, 'Cargo Damage'),
     (IssueType.deliveryFailed, 'Delivery Failed'),
     (IssueType.safetyConcern, 'Safety Concern'),
+    (IssueType.wrongAddress, 'Wrong Address'),
+    (IssueType.clientUnavailable, 'Client Unavailable'),
     (IssueType.other, 'Other'),
   ];
 
@@ -54,13 +59,16 @@ class _DriverReportIssueScreenState
             issueType: _category!,
             description: _description.text.trim(),
             isUrgent: _urgent,
+            jobId: widget.jobId,
             photos: _photos,
           );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Report submitted')),
         );
-        context.go('/driver/account');
+        context.go(widget.jobId == null
+            ? '/driver/account'
+            : '/driver/jobs/${widget.jobId}');
       }
     } catch (error) {
       if (mounted) {

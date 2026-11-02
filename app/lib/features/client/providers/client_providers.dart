@@ -1,8 +1,11 @@
 // ignore_for_file: use_null_aware_elements
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/constants/storage_paths.dart';
 import '../../../core/utils/async_value_ext.dart';
 import '../../../core/constants/pricing.dart';
 import '../../../core/enums/app_enums.dart';
@@ -18,13 +21,14 @@ import '../../../core/providers/price_catalog_provider.dart';
 import '../../../core/providers/tenant_provider.dart';
 import '../../../repositories/repository_providers.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../utils/client_orders.dart';
 
 part 'client_providers.g.dart';
 
-/// The signed-in user's client record, resolved by primaryUserId.
+/// The current user's client record, resolved by primaryUserId.
 @riverpod
 Stream<Client?> currentClient(Ref ref) {
-  final uid = ref.watch(authStateProvider).valueOrNull?.uid;
+  final uid = ref.watch(currentUserIdProvider);
   if (uid == null) return Stream.value(null);
   final tenantId = ref.watch(currentTenantIdProvider);
   return ref.watch(clientRepositoryProvider).watchByUserId(tenantId, uid);
@@ -71,19 +75,25 @@ Stream<List<Job>> myJobs(Ref ref) {
       .watchAll(tenantId: tenantId, clientId: client.id);
 }
 
-/// The delivery currently on the road (if any) — dashboard banner.
+/// One of the client's orders (jobs), live; null until loaded or if it
+/// isn't theirs.
 @riverpod
-Job? activeDelivery(Ref ref) {
+Job? myOrder(Ref ref, String jobId) {
   final jobs = ref.watch(myJobsProvider).valueOrNull ?? const [];
   for (final job in jobs) {
-    if (job.type == JobType.delivery &&
-        (job.status == JobStatus.inProgress ||
-            job.status == JobStatus.assigned)) {
-      return job;
-    }
+    if (job.id == jobId) return job;
   }
   return null;
 }
+
+/// Dashboard "To do": driver at the door, invoices to pay, boxes to pack.
+@riverpod
+List<ClientTodo> myTodos(Ref ref) => clientTodos(
+      jobs: ref.watch(myJobsProvider).valueOrNull ?? const [],
+      units: ref.watch(myUnitsProvider).valueOrNull ?? const [],
+      invoices: ref.watch(myInvoicesProvider).valueOrNull ?? const [],
+      now: DateTime.now(),
+    );
 
 /// Storage search text.
 @riverpod
@@ -93,19 +103,12 @@ class StorageSearchQuery extends _$StorageSearchQuery {
   void set(String value) => state = value;
 }
 
-/// Storage filter chip: all | inStorage | inTransit | pendingPickup | delivered.
+/// Units after search + status filter. [status] is a [StorageStatus] name
+/// or 'all' — it comes from the URL (/client/storage?status=inStorage) so
+/// the dashboard can link straight to a filtered view.
 @riverpod
-class StorageStatusFilter extends _$StorageStatusFilter {
-  @override
-  String build() => 'all';
-  void set(String value) => state = value;
-}
-
-/// Units after search + status filter.
-@riverpod
-List<StorageUnit> filteredMyUnits(Ref ref) {
+List<StorageUnit> filteredMyUnits(Ref ref, String status) {
   final query = ref.watch(storageSearchQueryProvider).trim().toLowerCase();
-  final status = ref.watch(storageStatusFilterProvider);
   final units = ref.watch(myUnitsProvider).valueOrNull ?? const [];
 
   return units.where((unit) {
@@ -156,6 +159,68 @@ Stream<List<Invoice>> myInvoices(Ref ref) {
   return ref
       .watch(subscriptionRepositoryProvider)
       .watchInvoices(tenantId, client.id);
+}
+
+// ------------------------------------------------------- packing photos
+
+/// Most photos a client can add to one unit while packing.
+const maxPackingPhotos = 8;
+
+/// Whether the client can still add packing photos and notes to [unit]:
+/// only while it's with them, awaiting pickup.
+bool canPack(StorageUnit unit) => unit.status == StorageStatus.pendingPickup;
+
+/// Photos the signed-in client took of [unitId] while packing.
+@riverpod
+List<Photo> myPackingPhotos(Ref ref, String unitId) {
+  final uid = ref.watch(currentUserIdProvider);
+  final photos = ref.watch(clientUnitPhotosProvider(unitId)).valueOrNull ??
+      const <Photo>[];
+  return photos.where((p) => p.uploadedBy == uid).toList()
+    ..sort((a, b) =>
+        (a.createdAt ?? DateTime(0)).compareTo(b.createdAt ?? DateTime(0)));
+}
+
+/// The client photographing and describing boxes while packing — the
+/// contents before sealing, the sealed box with its label. Drivers and ops
+/// see the same photos on the unit.
+@Riverpod(keepAlive: true)
+class PackingActions extends _$PackingActions {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> _run(Future<void> Function() op) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(op);
+    state.throwIfError();
+  }
+
+  Future<void> addPhoto(StorageUnit unit, Uint8List bytes,
+      {PhotoType type = PhotoType.interior}) {
+    if (!canPack(unit)) {
+      throw StateError('Photos can be added until the box is collected.');
+    }
+    final uid = ref.read(currentUserIdProvider) ?? '';
+    final name = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+    return _run(() async {
+      await ref.read(photoRepositoryProvider).addUnitPhoto(
+            tenantId: unit.tenantId,
+            unitId: unit.id,
+            bytes: bytes,
+            type: type,
+            storagePath:
+                StoragePaths.clientPackingPhoto(unit.tenantId, unit.id, name),
+            uploadedBy: uid,
+          );
+    });
+  }
+
+  Future<void> removePhoto(StorageUnit unit, Photo photo) => _run(() =>
+      ref.read(photoRepositoryProvider).removeUnitPhoto(photo, unit.id));
+
+  Future<void> saveNotes(StorageUnit unit, String notes) => _run(() => ref
+      .read(storageUnitRepositoryProvider)
+      .setPackingNotes(unit, notes, actorId: ref.read(currentActorIdProvider)));
 }
 
 // ------------------------------------------------------- delivery request
@@ -235,43 +300,40 @@ class DeliveryRequest extends _$DeliveryRequest {
 
   void reset() => state = const DeliveryRequestData();
 
-  /// Creates the delivery job; units move to pendingDelivery in the same
-  /// batch (state machine: inStorage → pendingDelivery).
-  Future<void> submit() async {
+  /// Requests the delivery via the `requestDelivery` function, which
+  /// checks the units and moves them to pendingDelivery with the new job
+  /// (awaiting an admin's confirmation). Returns the job id.
+  Future<String> submit() async {
     final client = ref.read(currentClientProvider).valueOrNull;
     if (client == null) throw Exception('No client record');
-    final actorId = ref.read(currentActorIdProvider);
     final data = state;
+    final date = data.date;
+    if (date == null) throw Exception('Choose a delivery date');
 
-    final job = Job(
-      id: '',
-      tenantId: client.tenantId,
-      type: JobType.delivery,
-      clientId: client.id,
-      status: JobStatus.scheduled,
-      scheduledDate: data.date ?? DateTime.now(),
-      timeWindow: data.timeWindow,
-      address: data.useSavedAddress ? client.address : data.address,
-      storageUnitIds: data.selectedUnitIds.toList(),
-      notes: data.instructions,
-    );
-    await ref
-        .read(jobRepositoryProvider)
-        .create(job, actorId: actorId, moveUnits: true);
+    final jobId = await ref.read(bookingRepositoryProvider).requestDelivery(
+          unitIds: data.selectedUnitIds.toList(),
+          date: date,
+          timeWindow: data.timeWindow,
+          address: data.useSavedAddress ? client.address : data.address,
+          notes: data.instructions,
+        );
     reset();
+    return jobId;
   }
 }
 
 // ------------------------------------------------------- account actions
 
 /// Profile, address, prefs and account-deletion writes for the client.
-@riverpod
+@Riverpod(keepAlive: true)
 class AccountActions extends _$AccountActions {
   @override
   FutureOr<void> build() {}
 
   Future<void> updateProfile({String? name, String? phone}) async {
-    final uid = ref.read(currentActorIdProvider);
+    final uid = ref.read(currentUserIdProvider);
+    if (uid == null) return;
+    final actorId = ref.read(currentActorIdProvider);
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       await ref.read(userRepositoryProvider).updateUser(uid, {
@@ -283,25 +345,26 @@ class AccountActions extends _$AccountActions {
         await ref.read(clientRepositoryProvider).update(client.id, {
           if (name != null) 'displayName': name,
           if (phone != null) 'phone': phone,
-        }, actorId: uid);
+        }, actorId: actorId);
       }
     });
     state.throwIfError();
   }
 
   Future<void> updateAddress(Address address) async {
-    final uid = ref.read(currentActorIdProvider);
+    final actorId = ref.read(currentActorIdProvider);
     final client = ref.read(currentClientProvider).valueOrNull;
     if (client == null) return;
     state = const AsyncLoading();
     state = await AsyncValue.guard(() => ref
         .read(clientRepositoryProvider)
-        .update(client.id, {'address': address.toJson()}, actorId: uid));
+        .update(client.id, {'address': address.toJson()}, actorId: actorId));
     state.throwIfError();
   }
 
   Future<void> savePrefs(NotificationPrefs prefs) async {
-    final uid = ref.read(currentActorIdProvider);
+    final uid = ref.read(currentUserIdProvider);
+    if (uid == null) return;
     state = const AsyncLoading();
     state = await AsyncValue.guard(() => ref
         .read(userRepositoryProvider)

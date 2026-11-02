@@ -81,6 +81,13 @@ function buildDart() {
     L.push(`      VehiclePrice(id: ${str(v.id)}, label: ${str(v.label)}, description: ${str(v.desc)}, capacityM3: ${dbl(v.capacityM3)}, onceOffZar: ${num(v.price)}, recommended: ${v.recommended}, icon: ${str(v.icon)}${active(v)}),`);
   }
   L.push("    ],");
+  L.push("    supplies: [");
+  for (const s of pricing.supplies) {
+    L.push(`      SupplyPrice(id: ${str(s.id)}, label: ${str(s.label)}, description: ${str(s.desc)}, onceOffZar: ${num(s.price)}${active(s)}),`);
+  }
+  L.push("    ],");
+  const h = pricing.packingHelper;
+  L.push(`    packingHelper: PackingHelperPrice(label: ${str(h.label)}, description: ${str(h.desc)}, hourlyZar: ${num(h.price)}, minHours: ${num(h.minHours)}${active(h)}),`);
   L.push("  );");
   L.push("}");
   L.push("");
@@ -89,13 +96,22 @@ function buildDart() {
 
 /* ---- Cloud Functions -------------------------------------------------- */
 
-// The monthly invoice run only needs each box / loose item's default rate,
-// for units registered before their rate was recorded.
+// The functions use the defaults before an admin first publishes prices:
+// the invoice run needs each item's rate (`monthlyZar`), and pickup booking
+// the full catalog incl. supplies and the packing helper (`catalog`) — the same shape as priceLists/{tenantId}.
 function buildFunctionsJson() {
   const rates = {};
   for (const b of pricing.boxes) rates[b.id] = b.price;
   for (const i of pricing.looseItems) rates[i.id] = i.price;
-  return JSON.stringify({ $comment: BANNER, monthlyZar: rates }, null, 2) + "\n";
+  const active = (e) => e.active !== false;
+  const catalog = {
+    boxes: pricing.boxes.map((b) => ({ id: b.id, label: b.label, monthlyZar: b.price, active: active(b) })),
+    looseItems: pricing.looseItems.map((i) => ({ id: i.id, name: i.name, monthlyZar: i.price, active: active(i) })),
+    vehicles: pricing.vehicles.map((v) => ({ id: v.id, label: v.label, onceOffZar: v.price, active: active(v) })),
+    supplies: pricing.supplies.map((s) => ({ id: s.id, label: s.label, onceOffZar: s.price, active: active(s) })),
+    packingHelper: { label: pricing.packingHelper.label, hourlyZar: pricing.packingHelper.price, minHours: pricing.packingHelper.minHours, active: active(pricing.packingHelper) },
+  };
+  return JSON.stringify({ $comment: BANNER, monthlyZar: rates, catalog }, null, 2) + "\n";
 }
 
 /* ---- write ----------------------------------------------------------- */

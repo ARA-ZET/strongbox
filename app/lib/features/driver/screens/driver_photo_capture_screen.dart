@@ -5,12 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../core/enums/app_enums.dart';
 import '../../../core/theme/app_colors.dart';
 import '../providers/driver_jobs_providers.dart';
 
 /// Cargo-verification capture flow. Uses the platform camera via
 /// image_picker (native camera UI on mobile, file picker on web), collects
-/// up to four photos, then uploads them to the job.
+/// up to four photos and the box's condition (Good / Damaged — the
+/// baseline for any later claim), then uploads them to the job and the box.
 /// Design: driver_photo_capture/screen.png.
 class DriverPhotoCaptureScreen extends ConsumerStatefulWidget {
   const DriverPhotoCaptureScreen({
@@ -32,6 +34,7 @@ class _DriverPhotoCaptureScreenState
   static const _maxPhotos = 4;
   final _picker = ImagePicker();
   final List<Uint8List> _photos = [];
+  UnitCondition _condition = UnitCondition.good;
   bool _uploading = false;
 
   @override
@@ -130,7 +133,8 @@ class _DriverPhotoCaptureScreenState
     try {
       final actions = ref.read(driverJobActionsProvider.notifier);
       for (final bytes in _photos) {
-        await actions.uploadCapturePhoto(widget.jobId, widget.boxId, bytes);
+        await actions.uploadCapturePhoto(widget.jobId, widget.boxId, bytes,
+            condition: _condition);
       }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -194,6 +198,30 @@ class _DriverPhotoCaptureScreenState
                 ),
               ),
             ),
+            SegmentedButton<UnitCondition>(
+              style: SegmentedButton.styleFrom(
+                foregroundColor: Colors.white,
+                selectedForegroundColor: AppColors.onAccent,
+                selectedBackgroundColor: _condition == UnitCondition.damaged
+                    ? AppColors.statusError
+                    : AppColors.accent,
+                side: const BorderSide(color: Colors.white54),
+              ),
+              segments: [
+                for (final c in UnitCondition.values)
+                  ButtonSegment(value: c, label: Text(c.label)),
+              ],
+              selected: {_condition},
+              onSelectionChanged: (picked) =>
+                  setState(() => _condition = picked.first),
+            ),
+            if (_condition == UnitCondition.damaged)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text('Photograph the damage clearly.',
+                    style: tt.bodySmall?.copyWith(color: Colors.white70)),
+              ),
+            const SizedBox(height: 16),
             // Photo strip.
             SizedBox(
               height: 64,

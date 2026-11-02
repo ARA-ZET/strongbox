@@ -34,6 +34,13 @@ void main() {
       defaults.vehicles.map((v) => (v.id, v.onceOffZar)),
       list('vehicles').map((v) => (v['id'], v['price'])),
     );
+    expect(
+      defaults.supplies.map((s) => (s.id, s.onceOffZar)),
+      list('supplies').map((s) => (s['id'], s['price'])),
+    );
+    final helper = json['packingHelper'] as Map<String, dynamic>;
+    expect(defaults.packingHelper.hourlyZar, helper['price']);
+    expect(defaults.packingHelper.minHours, helper['minHours']);
   });
 
   test('there are no term or prepay discounts in the price list', () {

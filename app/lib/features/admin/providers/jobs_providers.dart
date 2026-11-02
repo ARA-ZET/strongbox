@@ -6,9 +6,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/utils/async_value_ext.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/job.dart';
+import '../../../core/models/value_objects.dart';
 import '../../../core/providers/tenant_provider.dart';
 import '../../../repositories/repository_providers.dart';
 import '../../auth/providers/auth_provider.dart';
+import 'clients_providers.dart';
+import '../../../core/utils/public_ref.dart';
 
 part 'jobs_providers.g.dart';
 
@@ -32,6 +35,28 @@ List<Job> todaysJobs(Ref ref) {
   }).toList()
     ..sort((a, b) => (a.scheduledDate ?? DateTime(0))
         .compareTo(b.scheduledDate ?? DateTime(0)));
+}
+
+/// Client bookings and delivery requests waiting for an admin, oldest
+/// first. A Path A supply drop-off is confirmed with its pickup, so only
+/// the pickup is listed.
+@riverpod
+List<Job> jobsToConfirm(Ref ref) {
+  final jobs = ref.watch(allJobsProvider).valueOrNull ?? const [];
+  return jobs
+      .where((j) =>
+          j.status == JobStatus.pendingConfirmation &&
+          !(j.type == JobType.supplyDrop && j.linkedJobId != null))
+      .toList()
+    ..sort((a, b) => (a.createdAt ?? DateTime(0))
+        .compareTo(b.createdAt ?? DateTime(0)));
+}
+
+/// Pickups collected and on their way to (or at) the facility.
+@riverpod
+List<Job> jobsToReceive(Ref ref) {
+  final jobs = ref.watch(allJobsProvider).valueOrNull ?? const [];
+  return jobs.where((j) => j.status == JobStatus.collected).toList();
 }
 
 /// Jobs-list filter state.
@@ -101,7 +126,7 @@ List<Job> filteredJobs(Ref ref) {
       final day = DateTime(scheduled.year, scheduled.month, scheduled.day);
       if (day.isBefore(range.start) || day.isAfter(range.end)) return false;
     }
-    if (query.isNotEmpty && !job.id.toLowerCase().contains(query)) {
+    if (query.isNotEmpty && !jobRef(job).toLowerCase().contains(query)) {
       return false;
     }
     return true;
@@ -118,6 +143,7 @@ class NewJobData extends Equatable {
     this.timeWindow = TimeWindow.morning,
     this.driverId,
     this.notes = '',
+    this.accessNotes = '',
   });
 
   final JobType? type;
@@ -127,6 +153,7 @@ class NewJobData extends Equatable {
   final TimeWindow timeWindow;
   final String? driverId;
   final String notes;
+  final String accessNotes;
 
   static const _unset = Object();
 
@@ -138,6 +165,7 @@ class NewJobData extends Equatable {
     TimeWindow? timeWindow,
     Object? driverId = _unset,
     String? notes,
+    String? accessNotes,
   }) =>
       NewJobData(
         type: type ?? this.type,
@@ -151,11 +179,20 @@ class NewJobData extends Equatable {
         driverId:
             identical(driverId, _unset) ? this.driverId : driverId as String?,
         notes: notes ?? this.notes,
+        accessNotes: accessNotes ?? this.accessNotes,
       );
 
   @override
-  List<Object?> get props =>
-      [type, clientId, unitIds, scheduledDate, timeWindow, driverId, notes];
+  List<Object?> get props => [
+        type,
+        clientId,
+        unitIds,
+        scheduledDate,
+        timeWindow,
+        driverId,
+        notes,
+        accessNotes,
+      ];
 }
 
 @riverpod
@@ -189,51 +226,99 @@ class NewJobDraft extends _$NewJobDraft {
 
   void setNotes(String notes) => state = state.copyWith(notes: notes);
 
+  void setAccessNotes(String value) =>
+      state = state.copyWith(accessNotes: value);
+
   void reset() => state = const NewJobData();
 }
 
 /// Firestore writes for jobs.
-@riverpod
+@Riverpod(keepAlive: true)
 class JobMutations extends _$JobMutations {
   @override
   FutureOr<void> build() {}
 
-  Future<void> submit(NewJobData data, {bool asDraft = false}) async {
+  /// Creates an ops job — confirmed already, so it skips
+  /// pendingConfirmation — at the client's saved address.
+  Future<void> submit(NewJobData data) async {
     final tenantId = ref.read(currentTenantIdProvider);
     final actorId = ref.read(currentActorIdProvider);
+    final client = (ref.read(clientsProvider).valueOrNull ?? const [])
+        .where((c) => c.id == data.clientId)
+        .firstOrNull;
     final job = Job(
       id: '',
       tenantId: tenantId,
       type: data.type ?? JobType.pickup,
       clientId: data.clientId ?? '',
       driverId: data.driverId,
+      driverName: _driverName(data.driverId),
       status: data.driverId != null ? JobStatus.assigned : JobStatus.scheduled,
       scheduledDate: data.scheduledDate ?? DateTime.now(),
       timeWindow: data.timeWindow,
+      address: client?.address ?? const Address(),
       storageUnitIds: data.unitIds.toList(),
       notes: data.notes,
+      accessNotes: data.accessNotes.trim().isEmpty ? null : data.accessNotes,
     );
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => ref
-        .read(jobRepositoryProvider)
-        .create(job, actorId: actorId, moveUnits: !asDraft));
-    state.throwIfError();
-  }
-
-  Future<void> assignDriver(Job job, String driverId) async {
-    final actorId = ref.read(currentActorIdProvider);
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() => ref
-        .read(jobRepositoryProvider)
-        .assignDriver(job, driverId, actorId: actorId));
-    state.throwIfError();
-  }
-
-  Future<void> cancelJob(Job job) async {
-    final actorId = ref.read(currentActorIdProvider);
-    state = const AsyncLoading();
     state = await AsyncValue.guard(() =>
-        ref.read(jobRepositoryProvider).cancel(job, actorId: actorId));
+        ref.read(jobRepositoryProvider).create(job, actorId: actorId));
     state.throwIfError();
   }
+
+  Future<void> _run(Future<void> Function() op) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(op);
+    state.throwIfError();
+  }
+
+  String get _actorId => ref.read(currentActorIdProvider);
+
+  Future<void> assignDriver(Job job, String driverId,
+          {String? fleetVehicleId}) =>
+      _run(() => ref.read(jobRepositoryProvider).assignDriver(job, driverId,
+          actorId: _actorId,
+          driverName: _driverName(driverId),
+          fleetVehicleId: fleetVehicleId));
+
+  String? _driverName(String? driverId) =>
+      driverId == null ? null : ref.read(driverNamesProvider)[driverId];
+
+  /// Accepts a client booking / request (and its paired supply drop-off),
+  /// optionally moving it and dispatching a driver and vehicle.
+  Future<void> confirm(
+    Job job, {
+    DateTime? scheduledDate,
+    TimeWindow? timeWindow,
+    String? driverId,
+    String? fleetVehicleId,
+  }) =>
+      _run(() => ref.read(jobRepositoryProvider).confirm(job,
+          actorId: _actorId,
+          scheduledDate: scheduledDate,
+          timeWindow: timeWindow,
+          driverId: driverId,
+          driverName: _driverName(driverId),
+          fleetVehicleId: fleetVehicleId));
+
+  Future<void> decline(Job job, String reason) => _run(() => ref
+      .read(jobRepositoryProvider)
+      .decline(job, actorId: _actorId, reason: reason));
+
+  Future<void> cancelJob(Job job, {String? reason}) => _run(() => ref
+      .read(jobRepositoryProvider)
+      .cancel(job, actorId: _actorId, reason: reason));
+
+  /// Fallback receiving: ops scans or ticks units into storage at [bay]
+  /// when the driver couldn't.
+  Future<void> receiveUnits(Job job, List<String> unitIds, {String? bay}) =>
+      _run(() async {
+        final repo = ref.read(jobRepositoryProvider);
+        for (final id in unitIds) {
+          final current = await repo.getJob(job.id) ?? job;
+          await repo.receiveUnit(current, id,
+              actorId: _actorId, bay: bay, role: UserRole.admin);
+        }
+      });
 }

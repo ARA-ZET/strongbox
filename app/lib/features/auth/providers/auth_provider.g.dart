@@ -38,9 +38,28 @@ final authStateProvider = StreamProvider<User?>.internal(
 );
 
 typedef AuthStateRef = StreamProviderRef<User?>;
-String _$currentUserHash() => r'64f4bdd453f2a67e91f9e41f2348702b29cb1ace';
+String _$signedInUserHash() => r'393127bb7d8ef962651581bd3c843d9ca5e3bc28';
 
-/// The signed-in user's `users/{uid}` document as an [AppUser], or null.
+/// The signed-in account's own `users/{uid}` document, or null. Unlike
+/// [currentUser], never switches to the account an admin is viewing as.
+///
+/// Copied from [signedInUser].
+@ProviderFor(signedInUser)
+final signedInUserProvider = StreamProvider<AppUser?>.internal(
+  signedInUser,
+  name: r'signedInUserProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$signedInUserHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SignedInUserRef = StreamProviderRef<AppUser?>;
+String _$currentUserHash() => r'2b7ce70160f1f61459edf564a600b5265287ed53';
+
+/// The user whose portal is on screen: the signed-in account, or — while
+/// an admin uses [ViewAs] — the account being viewed. Role routing and the
+/// client/driver portals read this, so they behave as for that user.
 ///
 /// Copied from [currentUser].
 @ProviderFor(currentUser)
@@ -54,9 +73,44 @@ final currentUserProvider = StreamProvider<AppUser?>.internal(
 );
 
 typedef CurrentUserRef = StreamProviderRef<AppUser?>;
+String _$isViewingAsHash() => r'9304e20df3ae08c8789e22a5dfa96db421c72f30';
+
+/// True while an admin is viewing the app as someone else.
+///
+/// Copied from [isViewingAs].
+@ProviderFor(isViewingAs)
+final isViewingAsProvider = AutoDisposeProvider<bool>.internal(
+  isViewingAs,
+  name: r'isViewingAsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$isViewingAsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef IsViewingAsRef = AutoDisposeProviderRef<bool>;
+String _$currentUserIdHash() => r'58dc3ea18c37cddc17f12d5f04dd099817fc94dc';
+
+/// The uid of [currentUser] — whose jobs, storage and notifications the
+/// portals load. Use [currentActorId] for who performed a write.
+///
+/// Copied from [currentUserId].
+@ProviderFor(currentUserId)
+final currentUserIdProvider = AutoDisposeProvider<String?>.internal(
+  currentUserId,
+  name: r'currentUserIdProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentUserIdHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef CurrentUserIdRef = AutoDisposeProviderRef<String?>;
 String _$currentActorIdHash() => r'a4e9ca6f3c414648b7359c3640cb505463249205';
 
 /// The signed-in user's uid, used as the `actorId` on repository writes.
+/// Stays the admin's own uid during [ViewAs], so the audit trail is honest.
 ///
 /// Copied from [currentActorId].
 @ProviderFor(currentActorId)
@@ -71,6 +125,23 @@ final currentActorIdProvider = AutoDisposeProvider<String>.internal(
 );
 
 typedef CurrentActorIdRef = AutoDisposeProviderRef<String>;
+String _$viewAsHash() => r'5e9d63e1984971bc2fe84c14fcbfca2994ab7323';
+
+/// "View as": the uid of the account an admin is previewing the app as, or
+/// null. In memory only — a reload, sign-out or account switch ends it.
+///
+/// Copied from [ViewAs].
+@ProviderFor(ViewAs)
+final viewAsProvider = NotifierProvider<ViewAs, String?>.internal(
+  ViewAs.new,
+  name: r'viewAsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$viewAsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ViewAs = Notifier<String?>;
 String _$authNotifierHash() => r'b57b8caf8ba55ccee23d4291fe9e5141c276c383';
 
 /// Auth actions. keepAlive: registration routes away mid-write, and

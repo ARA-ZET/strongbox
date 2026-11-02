@@ -89,6 +89,10 @@ To replace it later, run the same command again and then redeploy.
 
 ## 4. Deploy the functions
 
+Email is **commented out** in `functions/index.js` until this is ready (so other functions
+can deploy without the secret). First uncomment the email section at the bottom and the
+`firebase-functions/params` and `./src/mailer` requires at the top.
+
 The functions deploy is **blocked until the secret exists**. The CLI checks secrets for the
 whole functions codebase, so even an `--only` filter fails. Everything else (app, rules) is
 already live.

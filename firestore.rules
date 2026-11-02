@@ -11,6 +11,12 @@ service cloud.firestore {
     function isClient() { return signedIn() && me().role == 'client'; }
     function myClientId() { return me().clientId; }
     function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    // A unit of the signed-in client's that is still with them, awaiting
+    // pickup — the only time they add packing photos.
+    function clientPackingUnit(unitId) {
+      let unit = get(/databases/$(database)/documents/storageUnits/$(unitId)).data;
+      return unit.clientId == myClientId() && unit.status == 'pendingPickup';
+    }
     function ownsClientDoc(data) {
       return isClient() &&
         (data.primaryUserId == request.auth.uid || data.id == myClientId());
@@ -57,15 +63,21 @@ service cloud.firestore {
     match /storageUnits/{unitId} {
       allow read: if isAdmin() || isDriver() ||
         (isClient() && resource.data.clientId == myClientId());
+      // Booking (bookPickup) and delivery requests (requestDelivery) go
+      // through Cloud Functions, which check ownership and status.
       allow write: if isAdmin() || isDriver();
-      // A client's delivery request moves their stored units to
-      // pendingDelivery in the same batch that creates the job.
+      // While packing (unit still with them, awaiting pickup) a client may
+      // add / remove their photos and note what's inside — nothing else.
       allow update: if isClient() &&
         resource.data.clientId == myClientId() &&
-        resource.data.status == 'inStorage' &&
-        request.resource.data.status == 'pendingDelivery' &&
+        resource.data.status == 'pendingPickup' &&
         request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['status', 'jobId', 'updatedAt']);
+          .hasOnly(['photoIds', 'description', 'updatedAt']) &&
+        request.resource.data.photoIds.size() <= 20 &&
+        // .get: booked units have no description until the client adds one.
+        (request.resource.data.get('description', null) == null ||
+          (request.resource.data.description is string &&
+            request.resource.data.description.size() <= 500));
     }
     match /items/{itemId} {
       allow read: if isAdmin() || isDriver() ||
@@ -77,9 +89,22 @@ service cloud.firestore {
     match /qrCodes/{codeId} {
       allow read: if isAdmin() || isDriver();
       allow write: if isAdmin();
+      // At a booked pickup the driver links a printed, unused label to an
+      // item. Once linked a code never changes (rule 20).
+      allow update: if isDriver() &&
+        resource.data.isLinked == false &&
+        request.resource.data.isLinked == true &&
+        request.resource.data.storageUnitId is string &&
+        request.resource.data.linkedBy == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(
+          ['storageUnitId', 'isLinked', 'linkedAt', 'linkedBy', 'tenantId']);
     }
     match /qrBatches/{batchId} {
       allow read, write: if isAdmin();
+      // …and bumps its batch's linked count.
+      allow update: if isDriver() &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['linkedCount']);
     }
 
     // ---- Jobs ----------------------------------------------------------
@@ -87,18 +112,24 @@ service cloud.firestore {
       allow read: if isAdmin() ||
         (isDriver() && resource.data.driverId == request.auth.uid) ||
         (isClient() && resource.data.clientId == myClientId());
-      // Clients may create delivery requests for their own account, and the
-      // pickup that an accepted quote opens. Both start unassigned and
-      // scheduled; dispatch stays an admin action.
-      allow create: if isAdmin() ||
-        (isClient() &&
-          request.resource.data.clientId == myClientId() &&
-          (request.resource.data.type == 'delivery' ||
-            (request.resource.data.type == 'pickup' &&
-              request.resource.data.status == 'scheduled' &&
-              request.resource.data.driverId == null)));
+      // Client bookings and delivery requests are created by the
+      // bookPickup / requestDelivery functions (pendingConfirmation), never
+      // from the client. Admins create ops jobs and confirm bookings.
+      allow create: if isAdmin();
+      // Drivers work their own dispatched jobs: check-ins, scans, photos,
+      // sign-off and receiving. They can't reassign, re-price, reschedule
+      // or confirm a job, or touch one ops hasn't confirmed.
       allow update: if isAdmin() ||
-        (isDriver() && resource.data.driverId == request.auth.uid);
+        (isDriver() && resource.data.driverId == request.auth.uid &&
+          resource.data.status != 'pendingConfirmation' &&
+          request.resource.data.driverId == resource.data.driverId &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'status', 'departedAt', 'arrivedAt', 'collectedAt', 'completedAt',
+            'scannedUnitIds', 'receivedUnitIds', 'handedOverUnitIds',
+            'photoIds', 'clientSignatureUrl', 'clientConfirmMethod',
+            'recipientName', 'driverNotes', 'updatedAt']) &&
+          request.resource.data.status in
+            ['inProgress', 'collected', 'completed']);
       match /events/{eventId} {
         allow read: if signedIn();
         allow create: if isAdmin() || isDriver();
@@ -126,8 +157,22 @@ service cloud.firestore {
     // ---- Photos --------------------------------------------------------
     match /photos/{photoId} {
       allow read: if signedIn();
-      allow create: if isAdmin() || isDriver();
-      allow update: if isAdmin();
+      allow create: if isAdmin() || isDriver() ||
+        // A client's packing photo of their own box awaiting pickup.
+        (isClient() &&
+          request.resource.data.uploadedBy == request.auth.uid &&
+          request.resource.data.entityType == 'storageUnit' &&
+          request.resource.data.type in ['interior', 'exterior'] &&
+          request.resource.data.isDeleted == false &&
+          clientPackingUnit(request.resource.data.entityId));
+      allow update: if isAdmin() ||
+        // …which they may remove (soft delete) while still packing.
+        (isClient() &&
+          resource.data.uploadedBy == request.auth.uid &&
+          clientPackingUnit(resource.data.entityId) &&
+          request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['isDeleted', 'deletedAt']) &&
+          request.resource.data.isDeleted == true);
     }
 
     // ---- Audit trail (append-only) ------------------------------------
@@ -226,8 +271,8 @@ service cloud.firestore {
       allow read: if true;
       allow create, update: if isAdmin() &&
         request.resource.data.keys().hasOnly(['tenantId', 'boxes',
-          'looseItemCategories', 'looseItems', 'vehicles', 'updatedAt',
-          'updatedBy']) &&
+          'looseItemCategories', 'looseItems', 'vehicles', 'supplies',
+          'packingHelper', 'updatedAt', 'updatedBy']) &&
         request.resource.data.tenantId == tenantId &&
         request.resource.data.updatedBy == request.auth.uid &&
         request.resource.data.updatedAt == request.time &&
@@ -238,7 +283,12 @@ service cloud.firestore {
         request.resource.data.vehicles is list &&
         request.resource.data.vehicles.size() <= 20 &&
         request.resource.data.looseItemCategories is list &&
-        request.resource.data.looseItemCategories.size() <= 30;
+        request.resource.data.looseItemCategories.size() <= 30 &&
+        (!('supplies' in request.resource.data) ||
+          (request.resource.data.supplies is list &&
+            request.resource.data.supplies.size() <= 30)) &&
+        (!('packingHelper' in request.resource.data) ||
+          request.resource.data.packingHelper is map);
       allow delete: if false;
     }
 

@@ -50,6 +50,8 @@ dependencies:
   url_launcher: ^6.3.0
   shared_preferences: ^2.5.5
   material_symbols_icons: ^4.2960.0
+  crypto: ^3.0.7
+  camera: ^0.12.2
 
 dev_dependencies:
   flutter_test:

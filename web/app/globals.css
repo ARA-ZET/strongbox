@@ -7,6 +7,12 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* In-page links (#faq, #calculator…) land below the fixed navbar… */
+    scroll-padding-top: 72px;
+  }
+  /* …and below the launch bar too, while it is on the page. */
+  html:has([data-launch-bar]) {
+    scroll-padding-top: 128px;
   }
 }
 

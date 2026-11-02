@@ -16,4 +16,5 @@ abstract final class ContactInfo {
   /// The marketing site — pricing, calculators and sign-up CTAs live there.
   static const websiteUrl = 'https://strongbox.co.za';
   static const pricingUrl = '$websiteUrl/pricing';
+  static const aboutUrl = '$websiteUrl/about';
 }

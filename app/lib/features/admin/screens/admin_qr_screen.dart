@@ -9,8 +9,9 @@ import '../../../core/models/storage_unit.dart';
 import '../providers/clients_providers.dart';
 import '../providers/inventory_providers.dart';
 import '../providers/qr_providers.dart';
-import '../utils/qr_pdf_generator.dart';
+import '../../../core/utils/qr_label_pdf.dart';
 import '../widgets/unit_size_field.dart';
+import '../../../core/utils/qr_link.dart';
 
 /// QR Codes Management: batch label generation and linking pre-printed
 /// codes to boxes. Design: admin_qr_management/screen.png.
@@ -354,7 +355,7 @@ class _PreviewPanel extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: QrImageView(
-                        data: codes[index],
+                        data: qrPayload(codes[index]),
                         dataModuleStyle: const QrDataModuleStyle(
                           dataModuleShape: QrDataModuleShape.square,
                           color: AppColors.navy,

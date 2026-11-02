@@ -14,11 +14,11 @@ import '../../auth/providers/auth_provider.dart';
 
 part 'driver_jobs_providers.g.dart';
 
-/// The signed-in driver's jobs. Day-split is done client-side so the query
+/// The current driver's jobs. Day-split is done client-side so the query
 /// stays on a single-field index (no composite index needed).
 @riverpod
 Stream<List<Job>> driverAllJobs(Ref ref) {
-  final uid = ref.watch(authStateProvider).valueOrNull?.uid;
+  final uid = ref.watch(currentUserIdProvider);
   if (uid == null) return Stream.value(const []);
   final tenantId = ref.watch(currentTenantIdProvider);
   return ref
@@ -49,6 +49,20 @@ List<Job> driverUpcomingJobs(Ref ref) {
   return jobs.where((j) {
     final d = j.scheduledDate;
     return d != null && !d.isBefore(end);
+  }).toList()
+    ..sort((a, b) => (a.scheduledDate ?? DateTime(0))
+        .compareTo(b.scheduledDate ?? DateTime(0)));
+}
+
+/// Open jobs scheduled before today — still to finish.
+@riverpod
+List<Job> driverOverdueJobs(Ref ref) {
+  final now = DateTime.now();
+  final start = DateTime(now.year, now.month, now.day);
+  final jobs = ref.watch(driverAllJobsProvider).valueOrNull ?? const [];
+  return jobs.where((j) {
+    final d = j.scheduledDate;
+    return d != null && d.isBefore(start) && j.status.isOpen;
   }).toList()
     ..sort((a, b) => (a.scheduledDate ?? DateTime(0))
         .compareTo(b.scheduledDate ?? DateTime(0)));
@@ -91,8 +105,50 @@ int driverJobsCompletedToday(Ref ref) => ref
     .where((j) => j.status == JobStatus.completed)
     .length;
 
-/// Driver-side writes: start job, confirm unit, capture photo, sign off.
-@riverpod
+/// What a scan does at the job's current step (doc 20/21).
+enum ScanStep {
+  /// Pickup at the client: unit onto the truck.
+  collect,
+
+  /// Pickup at the facility: unit into storage at a bay.
+  receive,
+
+  /// Delivery at the facility: unit out of storage onto the truck.
+  load,
+
+  /// Delivery at the door: unit handed to the client.
+  handOver;
+
+  String get title => switch (this) {
+        ScanStep.collect => 'Scan to collect',
+        ScanStep.receive => 'Scan into storage',
+        ScanStep.load => 'Scan out of storage',
+        ScanStep.handOver => 'Scan at handover',
+      };
+
+  /// Units already done for this step.
+  List<String> doneOn(Job job) => switch (this) {
+        ScanStep.collect || ScanStep.load => job.scannedUnitIds,
+        ScanStep.receive => job.receivedUnitIds,
+        ScanStep.handOver => job.handedOverUnitIds,
+      };
+}
+
+/// The scan step [job] is at, or null when nothing is to be scanned now.
+ScanStep? scanStepFor(Job job) => switch ((job.type, job.status)) {
+      (JobType.pickup, JobStatus.inProgress) =>
+        job.arrivedAt != null && !job.allUnitsScanned ? ScanStep.collect : null,
+      (JobType.pickup, JobStatus.collected) => ScanStep.receive,
+      (JobType.delivery, JobStatus.inProgress) => job.departedAt == null
+          ? (job.allUnitsScanned ? null : ScanStep.load)
+          : (job.arrivedAt != null && !job.allUnitsHandedOver
+              ? ScanStep.handOver
+              : null),
+      _ => null,
+    };
+
+/// Driver-side writes: start, check-ins, scans, photos, sign off.
+@Riverpod(keepAlive: true)
 class DriverJobActions extends _$DriverJobActions {
   @override
   FutureOr<void> build() {}
@@ -100,47 +156,69 @@ class DriverJobActions extends _$DriverJobActions {
   String get _tenantId => ref.read(currentTenantIdProvider);
   String get _actorId => ref.read(currentActorIdProvider);
 
-  Future<void> startJob(Job job) async {
+  Future<void> _run(Future<void> Function() op) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => ref
-        .read(jobRepositoryProvider)
-        .updateStatus(job, JobStatus.inProgress, actorId: _actorId));
+    state = await AsyncValue.guard(op);
     state.throwIfError();
   }
 
-  Future<void> confirmUnit(String jobId, String unitId) async {
-    await ref
-        .read(jobRepositoryProvider)
-        .markUnitScanned(jobId, unitId, actorId: _actorId);
+  Future<void> startJob(Job job) => _run(() =>
+      ref.read(jobRepositoryProvider).startJob(job, actorId: _actorId));
+
+  Future<void> markDeparted(Job job) => _run(() =>
+      ref.read(jobRepositoryProvider).markDeparted(job, actorId: _actorId));
+
+  Future<void> markArrived(Job job) => _run(() =>
+      ref.read(jobRepositoryProvider).markArrived(job, actorId: _actorId));
+
+  /// Records a scanned [unitId] for [step] on [job] (re-read so the
+  /// manifest and step are current).
+  Future<void> confirmUnit(String jobId, String unitId,
+      {required ScanStep step, String? bay}) async {
+    final repo = ref.read(jobRepositoryProvider);
+    final job = await repo.getJob(jobId);
+    if (job == null) throw StateError('Job not found');
+    await switch (step) {
+      ScanStep.collect => repo.collectUnit(job, unitId, actorId: _actorId),
+      ScanStep.receive =>
+        repo.receiveUnit(job, unitId, actorId: _actorId, bay: bay),
+      ScanStep.load => repo.loadUnit(job, unitId, actorId: _actorId),
+      ScanStep.handOver => repo.handOverUnit(job, unitId, actorId: _actorId),
+    };
   }
 
-  Future<void> uploadCapturePhoto(
-      String jobId, String unitId, Uint8List bytes) async {
+  /// Uploads a capture photo for [jobId] — on the unit's record too when
+  /// [unitId] is given, with the condition the driver noted.
+  Future<void> uploadCapturePhoto(String jobId, String? unitId, Uint8List bytes,
+      {UnitCondition? condition}) async {
     final name = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final onUnit = unitId != null && unitId.isNotEmpty;
     final photoId = await ref.read(photoRepositoryProvider).upload(
           tenantId: _tenantId,
           bytes: bytes,
           type: PhotoType.driverCapture,
-          entityType: 'job',
-          entityId: jobId,
+          entityType: onUnit ? 'storageUnit' : 'job',
+          entityId: onUnit ? unitId : jobId,
           jobId: jobId,
           storagePath: StoragePaths.jobPhoto(_tenantId, jobId, name),
           uploadedBy: _actorId,
         );
-    await ref.read(jobRepositoryProvider).addDriverPhoto(jobId, photoId);
+    final jobs = ref.read(jobRepositoryProvider);
+    await jobs.addDriverPhoto(jobId, photoId);
+    if (onUnit) {
+      await ref.read(storageUnitRepositoryProvider).addPhotoId(unitId, photoId);
+      if (condition != null) await jobs.setUnitCondition(unitId, condition);
+    }
   }
 
-  Future<void> completeJob(Job job, Uint8List signaturePng) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final url = await ref.read(photoRepositoryProvider).uploadSignature(
-            png: signaturePng,
-            storagePath: StoragePaths.jobSignature(_tenantId, job.id),
-          );
-      await ref
-          .read(jobRepositoryProvider)
-          .completeSignOff(job, url, actorId: _actorId);
-    });
-    state.throwIfError();
-  }
+  Future<void> completeJob(Job job, Uint8List signaturePng,
+          {String? recipientName}) =>
+      _run(() async {
+        final url = await ref.read(photoRepositoryProvider).uploadSignature(
+              png: signaturePng,
+              storagePath: StoragePaths.jobSignature(_tenantId, job.id),
+            );
+        await ref.read(jobRepositoryProvider).signOff(job, url,
+            actorId: _actorId, recipientName: recipientName);
+      });
 }

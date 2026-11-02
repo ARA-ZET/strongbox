@@ -5,12 +5,17 @@ import 'package:signature/signature.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/enums/app_enums.dart';
 import '../../../core/models/job.dart';
+import '../../../core/models/storage_unit.dart';
 import '../../admin/providers/clients_providers.dart';
 import '../providers/driver_jobs_providers.dart';
+import '../../../core/utils/public_ref.dart';
 
-/// Client sign-off at job completion. Captures a signature, uploads it, and
-/// completes the job. Design: driver_client_sign_off/screen.png.
+/// Client sign-off on the driver's device: the client reviews the item
+/// list, gives their name and signs. A pickup becomes collected (the driver
+/// then scans the units into storage); a delivery or supply drop-off is
+/// completed. Design: driver_client_sign_off/screen.png.
 class DriverSignOffScreen extends ConsumerStatefulWidget {
   const DriverSignOffScreen({super.key, required this.jobId});
 
@@ -27,6 +32,7 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
     penColor: AppColors.navy,
     exportBackgroundColor: Colors.white,
   );
+  final _recipient = TextEditingController();
   bool _submitting = false;
 
   @override
@@ -44,6 +50,7 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
   void dispose() {
     _controller.removeListener(_onSignatureChanged);
     _controller.dispose();
+    _recipient.dispose();
     super.dispose();
   }
 
@@ -60,8 +67,8 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
       if (png == null) throw Exception('Could not render signature');
       await ref
           .read(driverJobActionsProvider.notifier)
-          .completeJob(job, png);
-      if (mounted) await _showSuccess();
+          .completeJob(job, png, recipientName: _recipient.text);
+      if (mounted) await _showSuccess(job);
     } catch (error) {
       if (mounted) {
         setState(() => _submitting = false);
@@ -72,7 +79,8 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
     }
   }
 
-  Future<void> _showSuccess() async {
+  Future<void> _showSuccess(Job job) async {
+    final pickup = job.type == JobType.pickup;
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -88,10 +96,14 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
               const Icon(Icons.check_circle,
                   color: AppColors.statusSuccess, size: 64),
               const SizedBox(height: 16),
-              Text('Job Completed',
+              Text(pickup ? 'Collected' : 'Job Completed',
                   style: Theme.of(dialogContext).textTheme.headlineSmall),
               const SizedBox(height: 8),
-              Text('Signature captured and cargo settled.',
+              Text(
+                  pickup
+                      ? 'Signature captured. Scan every unit into storage '
+                          'when you reach the facility.'
+                      : 'Signature captured.',
                   textAlign: TextAlign.center,
                   style: Theme.of(dialogContext)
                       .textTheme
@@ -140,30 +152,75 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
     final tt = Theme.of(context).textTheme;
     final clientName =
         ref.watch(clientNamesProvider)[job.clientId] ?? 'Client';
+    final units = ref.watch(jobManifestProvider(job.id)).valueOrNull ?? [];
+    final supplyRun = job.type == JobType.supplyDrop;
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Text('Job complete — get client confirmation',
+        Text(
+            switch (job.type) {
+              JobType.pickup => 'Client confirms the collection',
+              JobType.delivery => 'Client confirms the delivery',
+              JobType.supplyDrop => 'Client signs for the supplies',
+            },
             style: tt.headlineSmall?.copyWith(fontSize: 24)),
-        const SizedBox(height: 20),
-        Text('Confirmation Method', style: tt.labelLarge),
         const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: _methodCard(
-                  Icons.draw_outlined, 'Digital Signature',
-                  'Sign on screen', true),
+        Text(
+            supplyRun
+                ? 'Hand the device to the client to check the quantities '
+                    'and sign.'
+                : 'Hand the device to the client to check every item below '
+                    'and sign.',
+            style: tt.bodyMedium?.copyWith(color: AppColors.textSecondary)),
+        if (!supplyRun) ...[
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: const [AppTheme.cardShadow],
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _methodCard(Icons.sms_outlined, 'Send OTP',
-                  'Verify via mobile', false),
+            child: Column(
+              children: [
+                for (final unit in units)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.check_circle_outline,
+                            size: 18, color: AppColors.statusSuccess),
+                        const SizedBox(width: 8),
+                        Expanded(
+                            child: Text(
+                                unit.label.isEmpty ? 'Box' : unit.label,
+                                style: tt.bodyMedium)),
+                        Text(
+                            [
+                              unit.displayCode,
+                              if (unit.condition != null)
+                                unit.condition!.label,
+                            ].join(' · '),
+                            style: tt.bodySmall?.copyWith(
+                                color: unit.condition ==
+                                        UnitCondition.damaged
+                                    ? AppColors.statusError
+                                    : null)),
+                      ],
+                    ),
+                  ),
+              ],
             ),
-          ],
+          ),
+        ],
+        const SizedBox(height: 16),
+        TextField(
+          controller: _recipient,
+          textCapitalization: TextCapitalization.words,
+          decoration: const InputDecoration(labelText: 'Name of person signing'),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
             color: AppColors.surface,
@@ -240,10 +297,13 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Job #JB-${job.id.substring(0, job.id.length.clamp(0, 4)).toUpperCase()}',
+                    'Job ${jobRef(job)}',
                     style: tt.bodySmall,
                   ),
-                  Text('$clientName · ${job.storageUnitIds.length} boxes',
+                  Text(
+                      supplyRun
+                          ? '$clientName · ${job.supplyItemCount} supplies'
+                          : '$clientName · ${job.storageUnitIds.length} items',
                       style: tt.titleMedium),
                 ],
               ),
@@ -267,36 +327,6 @@ class _DriverSignOffScreenState extends ConsumerState<DriverSignOffScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _methodCard(
-      IconData icon, String title, String subtitle, bool selected) {
-    final tt = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: selected ? AppColors.accentDeep : AppColors.border,
-          width: selected ? 2 : 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon,
-              color: selected ? AppColors.accentDeep : AppColors.textSecondary),
-          const SizedBox(height: 8),
-          Text(title,
-              style: tt.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: selected ? AppColors.textPrimary : AppColors.textSecondary,
-              )),
-          Text(subtitle, style: tt.bodySmall),
-        ],
-      ),
     );
   }
 }

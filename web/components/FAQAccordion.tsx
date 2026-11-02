@@ -21,7 +21,7 @@ export default function FAQAccordion() {
           </p>
         </div>
         <div className="grid lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] gap-12 items-start max-w-4xl lg:max-w-none mx-auto">
-          <div className="hidden lg:block lg:sticky lg:top-28">
+          <div className="hidden lg:block lg:sticky lg:top-36">
             <Illustration name="questions" className="max-w-[340px]" />
           </div>
           <div className="space-y-3">

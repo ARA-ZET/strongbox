@@ -44,12 +44,19 @@ Map<String, dynamic> _$$AppNotificationImplToJson(
     };
 
 const _$NotificationTypeEnumMap = {
+  NotificationType.bookingReceived: 'bookingReceived',
+  NotificationType.bookingConfirmed: 'bookingConfirmed',
+  NotificationType.bookingDeclined: 'bookingDeclined',
   NotificationType.jobScheduled: 'jobScheduled',
   NotificationType.jobAssigned: 'jobAssigned',
   NotificationType.jobStarted: 'jobStarted',
+  NotificationType.driverEnRoute: 'driverEnRoute',
+  NotificationType.driverArrived: 'driverArrived',
   NotificationType.jobCompleted: 'jobCompleted',
   NotificationType.jobCancelled: 'jobCancelled',
   NotificationType.pickupConfirmed: 'pickupConfirmed',
+  NotificationType.unitsReceived: 'unitsReceived',
+  NotificationType.suppliesDelivered: 'suppliesDelivered',
   NotificationType.deliveryCompleted: 'deliveryCompleted',
   NotificationType.deliveryRequested: 'deliveryRequested',
   NotificationType.invoiceReady: 'invoiceReady',

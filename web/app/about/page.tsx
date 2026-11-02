@@ -8,9 +8,9 @@ import { TRUST_STATS } from "@/lib/constants";
 import JsonLd from "@/components/JsonLd";
 import { pageMeta, breadcrumbJsonLd } from "@/lib/seo";
 export const metadata: Metadata = pageMeta({
-  title: "About StrongBox — Cape Town's Most Trusted Storage Partner",
+  title: "About StrongBox — Valet Storage Built in Cape Town",
   description:
-    "StrongBox was born in Cape Town to modernise valet storage. Security-first, fully transparent, and domestically focused — we do the driving so you keep your space.",
+    "StrongBox started in Cape Town to make storage simple for every household in the city. We do the lifting and the driving, and you can see every box in your account.",
   path: "/about",
 });
 
@@ -40,10 +40,12 @@ export default function AboutPage() {
       <section className="py-28 bg-navy-deep text-center">
         <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
           <h1 className="text-display-bold font-bold text-surface-white mb-6">
-            Cape Town&apos;s Most Trusted Storage Partner
+            Storage built for how Cape Town lives
           </h1>
           <p className="text-on-navy-variant text-body-main max-w-2xl mx-auto">
-            Reclaiming your living space with Cape Town&apos;s premier concierge valet storage solution. Sophisticated, secure, and seamlessly handled.
+            Flats on the Seaboard, digs near campus, family homes on the Flats and new
+            estates up the West Coast. Every home runs out of space eventually, so we
+            collect what you are not using and bring it back when you need it.
           </p>
         </div>
       </section>

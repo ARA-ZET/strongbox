@@ -811,6 +811,470 @@ abstract class _VehiclePrice implements VehiclePrice {
       throw _privateConstructorUsedError;
 }
 
+SupplyPrice _$SupplyPriceFromJson(Map<String, dynamic> json) {
+  return _SupplyPrice.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SupplyPrice {
+  String get id => throw _privateConstructorUsedError;
+  String get label => throw _privateConstructorUsedError;
+  @JsonKey(name: 'desc')
+  String get description => throw _privateConstructorUsedError;
+  @JsonKey(name: 'price')
+  int get onceOffZar => throw _privateConstructorUsedError;
+  bool get active => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SupplyPriceCopyWith<SupplyPrice> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SupplyPriceCopyWith<$Res> {
+  factory $SupplyPriceCopyWith(
+          SupplyPrice value, $Res Function(SupplyPrice) then) =
+      _$SupplyPriceCopyWithImpl<$Res, SupplyPrice>;
+  @useResult
+  $Res call(
+      {String id,
+      String label,
+      @JsonKey(name: 'desc') String description,
+      @JsonKey(name: 'price') int onceOffZar,
+      bool active});
+}
+
+/// @nodoc
+class _$SupplyPriceCopyWithImpl<$Res, $Val extends SupplyPrice>
+    implements $SupplyPriceCopyWith<$Res> {
+  _$SupplyPriceCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? label = null,
+    Object? description = null,
+    Object? onceOffZar = null,
+    Object? active = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      onceOffZar: null == onceOffZar
+          ? _value.onceOffZar
+          : onceOffZar // ignore: cast_nullable_to_non_nullable
+              as int,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SupplyPriceImplCopyWith<$Res>
+    implements $SupplyPriceCopyWith<$Res> {
+  factory _$$SupplyPriceImplCopyWith(
+          _$SupplyPriceImpl value, $Res Function(_$SupplyPriceImpl) then) =
+      __$$SupplyPriceImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String id,
+      String label,
+      @JsonKey(name: 'desc') String description,
+      @JsonKey(name: 'price') int onceOffZar,
+      bool active});
+}
+
+/// @nodoc
+class __$$SupplyPriceImplCopyWithImpl<$Res>
+    extends _$SupplyPriceCopyWithImpl<$Res, _$SupplyPriceImpl>
+    implements _$$SupplyPriceImplCopyWith<$Res> {
+  __$$SupplyPriceImplCopyWithImpl(
+      _$SupplyPriceImpl _value, $Res Function(_$SupplyPriceImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? label = null,
+    Object? description = null,
+    Object? onceOffZar = null,
+    Object? active = null,
+  }) {
+    return _then(_$SupplyPriceImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      onceOffZar: null == onceOffZar
+          ? _value.onceOffZar
+          : onceOffZar // ignore: cast_nullable_to_non_nullable
+              as int,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SupplyPriceImpl implements _SupplyPrice {
+  const _$SupplyPriceImpl(
+      {required this.id,
+      required this.label,
+      @JsonKey(name: 'desc') this.description = '',
+      @JsonKey(name: 'price') required this.onceOffZar,
+      this.active = true});
+
+  factory _$SupplyPriceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SupplyPriceImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String label;
+  @override
+  @JsonKey(name: 'desc')
+  final String description;
+  @override
+  @JsonKey(name: 'price')
+  final int onceOffZar;
+  @override
+  @JsonKey()
+  final bool active;
+
+  @override
+  String toString() {
+    return 'SupplyPrice(id: $id, label: $label, description: $description, onceOffZar: $onceOffZar, active: $active)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SupplyPriceImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.label, label) || other.label == label) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.onceOffZar, onceOffZar) ||
+                other.onceOffZar == onceOffZar) &&
+            (identical(other.active, active) || other.active == active));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, id, label, description, onceOffZar, active);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SupplyPriceImplCopyWith<_$SupplyPriceImpl> get copyWith =>
+      __$$SupplyPriceImplCopyWithImpl<_$SupplyPriceImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SupplyPriceImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SupplyPrice implements SupplyPrice {
+  const factory _SupplyPrice(
+      {required final String id,
+      required final String label,
+      @JsonKey(name: 'desc') final String description,
+      @JsonKey(name: 'price') required final int onceOffZar,
+      final bool active}) = _$SupplyPriceImpl;
+
+  factory _SupplyPrice.fromJson(Map<String, dynamic> json) =
+      _$SupplyPriceImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get label;
+  @override
+  @JsonKey(name: 'desc')
+  String get description;
+  @override
+  @JsonKey(name: 'price')
+  int get onceOffZar;
+  @override
+  bool get active;
+  @override
+  @JsonKey(ignore: true)
+  _$$SupplyPriceImplCopyWith<_$SupplyPriceImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PackingHelperPrice _$PackingHelperPriceFromJson(Map<String, dynamic> json) {
+  return _PackingHelperPrice.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PackingHelperPrice {
+  String get label => throw _privateConstructorUsedError;
+  @JsonKey(name: 'desc')
+  String get description => throw _privateConstructorUsedError;
+  @JsonKey(name: 'price')
+  int get hourlyZar => throw _privateConstructorUsedError;
+  int get minHours => throw _privateConstructorUsedError;
+  bool get active => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PackingHelperPriceCopyWith<PackingHelperPrice> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PackingHelperPriceCopyWith<$Res> {
+  factory $PackingHelperPriceCopyWith(
+          PackingHelperPrice value, $Res Function(PackingHelperPrice) then) =
+      _$PackingHelperPriceCopyWithImpl<$Res, PackingHelperPrice>;
+  @useResult
+  $Res call(
+      {String label,
+      @JsonKey(name: 'desc') String description,
+      @JsonKey(name: 'price') int hourlyZar,
+      int minHours,
+      bool active});
+}
+
+/// @nodoc
+class _$PackingHelperPriceCopyWithImpl<$Res, $Val extends PackingHelperPrice>
+    implements $PackingHelperPriceCopyWith<$Res> {
+  _$PackingHelperPriceCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? label = null,
+    Object? description = null,
+    Object? hourlyZar = null,
+    Object? minHours = null,
+    Object? active = null,
+  }) {
+    return _then(_value.copyWith(
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      hourlyZar: null == hourlyZar
+          ? _value.hourlyZar
+          : hourlyZar // ignore: cast_nullable_to_non_nullable
+              as int,
+      minHours: null == minHours
+          ? _value.minHours
+          : minHours // ignore: cast_nullable_to_non_nullable
+              as int,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PackingHelperPriceImplCopyWith<$Res>
+    implements $PackingHelperPriceCopyWith<$Res> {
+  factory _$$PackingHelperPriceImplCopyWith(_$PackingHelperPriceImpl value,
+          $Res Function(_$PackingHelperPriceImpl) then) =
+      __$$PackingHelperPriceImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String label,
+      @JsonKey(name: 'desc') String description,
+      @JsonKey(name: 'price') int hourlyZar,
+      int minHours,
+      bool active});
+}
+
+/// @nodoc
+class __$$PackingHelperPriceImplCopyWithImpl<$Res>
+    extends _$PackingHelperPriceCopyWithImpl<$Res, _$PackingHelperPriceImpl>
+    implements _$$PackingHelperPriceImplCopyWith<$Res> {
+  __$$PackingHelperPriceImplCopyWithImpl(_$PackingHelperPriceImpl _value,
+      $Res Function(_$PackingHelperPriceImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? label = null,
+    Object? description = null,
+    Object? hourlyZar = null,
+    Object? minHours = null,
+    Object? active = null,
+  }) {
+    return _then(_$PackingHelperPriceImpl(
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      hourlyZar: null == hourlyZar
+          ? _value.hourlyZar
+          : hourlyZar // ignore: cast_nullable_to_non_nullable
+              as int,
+      minHours: null == minHours
+          ? _value.minHours
+          : minHours // ignore: cast_nullable_to_non_nullable
+              as int,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PackingHelperPriceImpl implements _PackingHelperPrice {
+  const _$PackingHelperPriceImpl(
+      {this.label = 'Packing helper',
+      @JsonKey(name: 'desc') this.description = '',
+      @JsonKey(name: 'price') this.hourlyZar = 0,
+      this.minHours = 2,
+      this.active = true});
+
+  factory _$PackingHelperPriceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PackingHelperPriceImplFromJson(json);
+
+  @override
+  @JsonKey()
+  final String label;
+  @override
+  @JsonKey(name: 'desc')
+  final String description;
+  @override
+  @JsonKey(name: 'price')
+  final int hourlyZar;
+  @override
+  @JsonKey()
+  final int minHours;
+  @override
+  @JsonKey()
+  final bool active;
+
+  @override
+  String toString() {
+    return 'PackingHelperPrice(label: $label, description: $description, hourlyZar: $hourlyZar, minHours: $minHours, active: $active)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PackingHelperPriceImpl &&
+            (identical(other.label, label) || other.label == label) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.hourlyZar, hourlyZar) ||
+                other.hourlyZar == hourlyZar) &&
+            (identical(other.minHours, minHours) ||
+                other.minHours == minHours) &&
+            (identical(other.active, active) || other.active == active));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, label, description, hourlyZar, minHours, active);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PackingHelperPriceImplCopyWith<_$PackingHelperPriceImpl> get copyWith =>
+      __$$PackingHelperPriceImplCopyWithImpl<_$PackingHelperPriceImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PackingHelperPriceImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PackingHelperPrice implements PackingHelperPrice {
+  const factory _PackingHelperPrice(
+      {final String label,
+      @JsonKey(name: 'desc') final String description,
+      @JsonKey(name: 'price') final int hourlyZar,
+      final int minHours,
+      final bool active}) = _$PackingHelperPriceImpl;
+
+  factory _PackingHelperPrice.fromJson(Map<String, dynamic> json) =
+      _$PackingHelperPriceImpl.fromJson;
+
+  @override
+  String get label;
+  @override
+  @JsonKey(name: 'desc')
+  String get description;
+  @override
+  @JsonKey(name: 'price')
+  int get hourlyZar;
+  @override
+  int get minHours;
+  @override
+  bool get active;
+  @override
+  @JsonKey(ignore: true)
+  _$$PackingHelperPriceImplCopyWith<_$PackingHelperPriceImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 PriceCatalog _$PriceCatalogFromJson(Map<String, dynamic> json) {
   return _PriceCatalog.fromJson(json);
 }
@@ -822,6 +1286,8 @@ mixin _$PriceCatalog {
   List<LooseItemPrice> get looseItems => throw _privateConstructorUsedError;
   List<String> get itemIcons => throw _privateConstructorUsedError;
   List<VehiclePrice> get vehicles => throw _privateConstructorUsedError;
+  List<SupplyPrice> get supplies => throw _privateConstructorUsedError;
+  PackingHelperPrice get packingHelper => throw _privateConstructorUsedError;
   @NullableTimestampConverter()
   DateTime? get updatedAt => throw _privateConstructorUsedError;
   String? get updatedBy => throw _privateConstructorUsedError;
@@ -844,8 +1310,12 @@ abstract class $PriceCatalogCopyWith<$Res> {
       List<LooseItemPrice> looseItems,
       List<String> itemIcons,
       List<VehiclePrice> vehicles,
+      List<SupplyPrice> supplies,
+      PackingHelperPrice packingHelper,
       @NullableTimestampConverter() DateTime? updatedAt,
       String? updatedBy});
+
+  $PackingHelperPriceCopyWith<$Res> get packingHelper;
 }
 
 /// @nodoc
@@ -866,6 +1336,8 @@ class _$PriceCatalogCopyWithImpl<$Res, $Val extends PriceCatalog>
     Object? looseItems = null,
     Object? itemIcons = null,
     Object? vehicles = null,
+    Object? supplies = null,
+    Object? packingHelper = null,
     Object? updatedAt = freezed,
     Object? updatedBy = freezed,
   }) {
@@ -890,6 +1362,14 @@ class _$PriceCatalogCopyWithImpl<$Res, $Val extends PriceCatalog>
           ? _value.vehicles
           : vehicles // ignore: cast_nullable_to_non_nullable
               as List<VehiclePrice>,
+      supplies: null == supplies
+          ? _value.supplies
+          : supplies // ignore: cast_nullable_to_non_nullable
+              as List<SupplyPrice>,
+      packingHelper: null == packingHelper
+          ? _value.packingHelper
+          : packingHelper // ignore: cast_nullable_to_non_nullable
+              as PackingHelperPrice,
       updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -899,6 +1379,14 @@ class _$PriceCatalogCopyWithImpl<$Res, $Val extends PriceCatalog>
           : updatedBy // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PackingHelperPriceCopyWith<$Res> get packingHelper {
+    return $PackingHelperPriceCopyWith<$Res>(_value.packingHelper, (value) {
+      return _then(_value.copyWith(packingHelper: value) as $Val);
+    });
   }
 }
 
@@ -916,8 +1404,13 @@ abstract class _$$PriceCatalogImplCopyWith<$Res>
       List<LooseItemPrice> looseItems,
       List<String> itemIcons,
       List<VehiclePrice> vehicles,
+      List<SupplyPrice> supplies,
+      PackingHelperPrice packingHelper,
       @NullableTimestampConverter() DateTime? updatedAt,
       String? updatedBy});
+
+  @override
+  $PackingHelperPriceCopyWith<$Res> get packingHelper;
 }
 
 /// @nodoc
@@ -936,6 +1429,8 @@ class __$$PriceCatalogImplCopyWithImpl<$Res>
     Object? looseItems = null,
     Object? itemIcons = null,
     Object? vehicles = null,
+    Object? supplies = null,
+    Object? packingHelper = null,
     Object? updatedAt = freezed,
     Object? updatedBy = freezed,
   }) {
@@ -960,6 +1455,14 @@ class __$$PriceCatalogImplCopyWithImpl<$Res>
           ? _value._vehicles
           : vehicles // ignore: cast_nullable_to_non_nullable
               as List<VehiclePrice>,
+      supplies: null == supplies
+          ? _value._supplies
+          : supplies // ignore: cast_nullable_to_non_nullable
+              as List<SupplyPrice>,
+      packingHelper: null == packingHelper
+          ? _value.packingHelper
+          : packingHelper // ignore: cast_nullable_to_non_nullable
+              as PackingHelperPrice,
       updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -981,6 +1484,8 @@ class _$PriceCatalogImpl extends _PriceCatalog {
       final List<LooseItemPrice> looseItems = const [],
       final List<String> itemIcons = const [],
       final List<VehiclePrice> vehicles = const [],
+      final List<SupplyPrice> supplies = const [],
+      this.packingHelper = const PackingHelperPrice(),
       @NullableTimestampConverter() this.updatedAt,
       this.updatedBy})
       : _boxes = boxes,
@@ -988,6 +1493,7 @@ class _$PriceCatalogImpl extends _PriceCatalog {
         _looseItems = looseItems,
         _itemIcons = itemIcons,
         _vehicles = vehicles,
+        _supplies = supplies,
         super._();
 
   factory _$PriceCatalogImpl.fromJson(Map<String, dynamic> json) =>
@@ -1039,6 +1545,18 @@ class _$PriceCatalogImpl extends _PriceCatalog {
     return EqualUnmodifiableListView(_vehicles);
   }
 
+  final List<SupplyPrice> _supplies;
+  @override
+  @JsonKey()
+  List<SupplyPrice> get supplies {
+    if (_supplies is EqualUnmodifiableListView) return _supplies;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_supplies);
+  }
+
+  @override
+  @JsonKey()
+  final PackingHelperPrice packingHelper;
   @override
   @NullableTimestampConverter()
   final DateTime? updatedAt;
@@ -1047,7 +1565,7 @@ class _$PriceCatalogImpl extends _PriceCatalog {
 
   @override
   String toString() {
-    return 'PriceCatalog(boxes: $boxes, looseItemCategories: $looseItemCategories, looseItems: $looseItems, itemIcons: $itemIcons, vehicles: $vehicles, updatedAt: $updatedAt, updatedBy: $updatedBy)';
+    return 'PriceCatalog(boxes: $boxes, looseItemCategories: $looseItemCategories, looseItems: $looseItems, itemIcons: $itemIcons, vehicles: $vehicles, supplies: $supplies, packingHelper: $packingHelper, updatedAt: $updatedAt, updatedBy: $updatedBy)';
   }
 
   @override
@@ -1063,6 +1581,9 @@ class _$PriceCatalogImpl extends _PriceCatalog {
             const DeepCollectionEquality()
                 .equals(other._itemIcons, _itemIcons) &&
             const DeepCollectionEquality().equals(other._vehicles, _vehicles) &&
+            const DeepCollectionEquality().equals(other._supplies, _supplies) &&
+            (identical(other.packingHelper, packingHelper) ||
+                other.packingHelper == packingHelper) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
             (identical(other.updatedBy, updatedBy) ||
@@ -1078,6 +1599,8 @@ class _$PriceCatalogImpl extends _PriceCatalog {
       const DeepCollectionEquality().hash(_looseItems),
       const DeepCollectionEquality().hash(_itemIcons),
       const DeepCollectionEquality().hash(_vehicles),
+      const DeepCollectionEquality().hash(_supplies),
+      packingHelper,
       updatedAt,
       updatedBy);
 
@@ -1102,6 +1625,8 @@ abstract class _PriceCatalog extends PriceCatalog {
       final List<LooseItemPrice> looseItems,
       final List<String> itemIcons,
       final List<VehiclePrice> vehicles,
+      final List<SupplyPrice> supplies,
+      final PackingHelperPrice packingHelper,
       @NullableTimestampConverter() final DateTime? updatedAt,
       final String? updatedBy}) = _$PriceCatalogImpl;
   const _PriceCatalog._() : super._();
@@ -1119,6 +1644,10 @@ abstract class _PriceCatalog extends PriceCatalog {
   List<String> get itemIcons;
   @override
   List<VehiclePrice> get vehicles;
+  @override
+  List<SupplyPrice> get supplies;
+  @override
+  PackingHelperPrice get packingHelper;
   @override
   @NullableTimestampConverter()
   DateTime? get updatedAt;

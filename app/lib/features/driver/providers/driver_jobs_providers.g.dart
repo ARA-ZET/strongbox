@@ -6,9 +6,9 @@ part of 'driver_jobs_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$driverAllJobsHash() => r'c1e4b43b9c1d7fa057d29466be97b98b9923c420';
+String _$driverAllJobsHash() => r'bf153edf10409d8fec7caa6bba59fe9da74e0e7c';
 
-/// The signed-in driver's jobs. Day-split is done client-side so the query
+/// The current driver's jobs. Day-split is done client-side so the query
 /// stays on a single-field index (no composite index needed).
 ///
 /// Copied from [driverAllJobs].
@@ -55,6 +55,23 @@ final driverUpcomingJobsProvider = AutoDisposeProvider<List<Job>>.internal(
 );
 
 typedef DriverUpcomingJobsRef = AutoDisposeProviderRef<List<Job>>;
+String _$driverOverdueJobsHash() => r'a0d513cd982fbceebe4d6fbe713b7f399da4b3be';
+
+/// Open jobs scheduled before today — still to finish.
+///
+/// Copied from [driverOverdueJobs].
+@ProviderFor(driverOverdueJobs)
+final driverOverdueJobsProvider = AutoDisposeProvider<List<Job>>.internal(
+  driverOverdueJobs,
+  name: r'driverOverdueJobsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$driverOverdueJobsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DriverOverdueJobsRef = AutoDisposeProviderRef<List<Job>>;
 String _$driverJobHash() => r'f2106432a529060231ee3012104b05523e218ead';
 
 /// Copied from Dart SDK
@@ -532,14 +549,14 @@ final driverJobsCompletedTodayProvider = AutoDisposeProvider<int>.internal(
 );
 
 typedef DriverJobsCompletedTodayRef = AutoDisposeProviderRef<int>;
-String _$driverJobActionsHash() => r'd7fff7c870d63d4d066225230080e8b13d327f92';
+String _$driverJobActionsHash() => r'de4ade32d8b6676a3b56df3a2ad69e78b695d288';
 
-/// Driver-side writes: start job, confirm unit, capture photo, sign off.
+/// Driver-side writes: start, check-ins, scans, photos, sign off.
 ///
 /// Copied from [DriverJobActions].
 @ProviderFor(DriverJobActions)
 final driverJobActionsProvider =
-    AutoDisposeAsyncNotifierProvider<DriverJobActions, void>.internal(
+    AsyncNotifierProvider<DriverJobActions, void>.internal(
   DriverJobActions.new,
   name: r'driverJobActionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -549,6 +566,6 @@ final driverJobActionsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DriverJobActions = AutoDisposeAsyncNotifier<void>;
+typedef _$DriverJobActions = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

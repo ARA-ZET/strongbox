@@ -95,6 +95,17 @@ class _ClientNotificationsScreenState
                       _sectionRow(tt, 'DELIVERY UPDATES'),
                       _prefRow(
                         tt,
+                        title: 'Booking received & confirmed',
+                        subtitle: 'When we receive, confirm or can\'t '
+                            'confirm a pickup or delivery you booked.',
+                        email: prefs.bookingUpdatesEmail,
+                        sms: false,
+                        onEmail: (v) =>
+                            update(prefs.copyWith(bookingUpdatesEmail: v)),
+                        onSms: null,
+                      ),
+                      _prefRow(
+                        tt,
                         title: 'Driver on the way',
                         subtitle:
                             'Real-time alert when the courier begins transit '
@@ -226,7 +237,8 @@ class _ClientNotificationsScreenState
     required bool email,
     required bool sms,
     required ValueChanged<bool> onEmail,
-    required ValueChanged<bool> onSms,
+    /// Null when the update has no SMS option (the switch is disabled).
+    required ValueChanged<bool>? onSms,
     bool last = false,
   }) =>
       Container(

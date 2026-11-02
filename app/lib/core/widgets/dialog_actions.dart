@@ -19,7 +19,9 @@ class DialogActions extends StatelessWidget {
   });
 
   final String saveLabel;
-  final VoidCallback onSave;
+
+  /// Null disables the primary button.
+  final VoidCallback? onSave;
 
   /// Shows a spinner on the primary button and disables both.
   final bool saving;

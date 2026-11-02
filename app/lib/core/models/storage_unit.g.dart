@@ -32,6 +32,9 @@ _$StorageUnitImpl _$$StorageUnitImplFromJson(Map<String, dynamic> json) =>
       weight: (json['weight'] as num?)?.toDouble(),
       jobId: json['jobId'] as String?,
       warehouseLocationId: json['warehouseLocationId'] as String?,
+      condition: $enumDecodeNullable(_$UnitConditionEnumMap, json['condition']),
+      receivedAt:
+          const NullableTimestampConverter().fromJson(json['receivedAt']),
       isDeleted: json['isDeleted'] as bool? ?? false,
       deletedAt: const NullableTimestampConverter().fromJson(json['deletedAt']),
       createdAt: const NullableTimestampConverter().fromJson(json['createdAt']),
@@ -57,6 +60,9 @@ Map<String, dynamic> _$$StorageUnitImplToJson(_$StorageUnitImpl instance) =>
       'weight': instance.weight,
       'jobId': instance.jobId,
       'warehouseLocationId': instance.warehouseLocationId,
+      'condition': _$UnitConditionEnumMap[instance.condition],
+      'receivedAt':
+          const NullableTimestampConverter().toJson(instance.receivedAt),
       'isDeleted': instance.isDeleted,
       'deletedAt':
           const NullableTimestampConverter().toJson(instance.deletedAt),
@@ -79,4 +85,9 @@ const _$StorageStatusEnumMap = {
   StorageStatus.delivered: 'delivered',
   StorageStatus.cancelled: 'cancelled',
   StorageStatus.archived: 'archived',
+};
+
+const _$UnitConditionEnumMap = {
+  UnitCondition.good: 'good',
+  UnitCondition.damaged: 'damaged',
 };

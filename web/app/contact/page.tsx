@@ -11,10 +11,14 @@ import {
   HQ_MAPS_HREF,
   HQ_SUBURB,
   OPENING_HOURS_LINES,
-  SERVICE_AREAS,
+  WHATSAPP_HREF,
 } from "@/lib/constants";
+import { REGIONS } from "@/lib/areas";
+import Link from "next/link";
+import SuburbChecker from "@/components/SuburbChecker";
 import SocialIcon from "@/components/graphics/SocialIcon";
 import Illustration from "@/components/graphics/Illustration";
+import LaunchNotice from "@/components/LaunchNotice";
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
@@ -56,7 +60,8 @@ export default function ContactPage() {
           <div>
             <h1 className="text-headline-h1 font-bold text-navy-deep mb-4">Get in Touch</h1>
             <p className="text-on-surface-variant text-body-main max-w-xl">
-              Experience the gold standard of valet storage. Our concierge team typically responds within 2 hours during operating hours.
+              Call, WhatsApp or email us. We usually reply within 2 hours during
+              operating hours, and a real person answers.
             </p>
           </div>
           <Illustration name="contact-us" priority className="max-w-[380px] mx-auto" />
@@ -65,6 +70,7 @@ export default function ContactPage() {
 
       <section className="py-16 bg-surface-white">
         <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+          <LaunchNotice tone="light" className="mb-10" />
           <div className="grid md:grid-cols-12 gap-10 items-start">
             {/* Form */}
             <div className="md:col-span-7 bg-surface-white rounded-xl shadow-tactile border border-navy-deep/5 p-8 md:p-10">
@@ -106,7 +112,7 @@ export default function ContactPage() {
                         type="text"
                         required
                         autoComplete="name"
-                        placeholder="John Doe"
+                        placeholder="Your name"
                         className="w-full bg-mist border border-navy-deep/10 rounded-lg px-4 py-3 text-navy-deep placeholder:text-on-surface-variant/50 focus:outline-none focus:border-accent-deep focus:ring-2 focus:ring-accent-deep/20 transition-all"
                       />
                     </div>
@@ -120,7 +126,7 @@ export default function ContactPage() {
                         type="email"
                         required
                         autoComplete="email"
-                        placeholder="john@example.com"
+                        placeholder="you@example.co.za"
                         className="w-full bg-mist border border-navy-deep/10 rounded-lg px-4 py-3 text-navy-deep placeholder:text-on-surface-variant/50 focus:outline-none focus:border-accent-deep focus:ring-2 focus:ring-accent-deep/20 transition-all"
                       />
                     </div>
@@ -135,7 +141,7 @@ export default function ContactPage() {
                         name="phone"
                         type="tel"
                         autoComplete="tel"
-                        placeholder="+27 00 000 0000"
+                        placeholder="082 000 0000"
                         className="w-full bg-mist border border-navy-deep/10 rounded-lg px-4 py-3 text-navy-deep placeholder:text-on-surface-variant/50 focus:outline-none focus:border-accent-deep focus:ring-2 focus:ring-accent-deep/20 transition-all"
                       />
                     </div>
@@ -145,6 +151,7 @@ export default function ContactPage() {
                       </label>
                       <select id="contact-subject" name="subject" defaultValue="General Inquiry" className="w-full bg-mist border border-navy-deep/10 rounded-lg px-4 py-3 text-navy-deep focus:outline-none focus:border-accent-deep focus:ring-2 focus:ring-accent-deep/20 transition-all">
                         <option>General Inquiry</option>
+                        <option>How StrongBox Works</option>
                         <option>Get a Quote</option>
                         <option>Business Enquiry</option>
                         <option>Support</option>
@@ -160,7 +167,7 @@ export default function ContactPage() {
                       name="message"
                       rows={5}
                       required
-                      placeholder="How can our valet team assist you today?"
+                      placeholder="Tell us your suburb and roughly what you'd like to store."
                       className="w-full bg-mist border border-navy-deep/10 rounded-lg px-4 py-3 text-navy-deep placeholder:text-on-surface-variant/50 focus:outline-none focus:border-accent-deep focus:ring-2 focus:ring-accent-deep/20 transition-all resize-none"
                     />
                   </div>
@@ -185,6 +192,7 @@ export default function ContactPage() {
                     { icon: "location_on", title: "Cape Town HQ", lines: HQ_ADDRESS_LINES, href: HQ_MAPS_HREF },
                     { icon: "mail", title: "Email Us", lines: [CONTACT_EMAIL], href: CONTACT_EMAIL_HREF },
                     { icon: "phone", title: "Phone Support", lines: [CONTACT_PHONE_DISPLAY], href: CONTACT_PHONE_HREF },
+                    { icon: "chat", title: "WhatsApp", lines: [CONTACT_PHONE_DISPLAY], href: WHATSAPP_HREF },
                     { icon: "schedule", title: "Operating Hours", lines: OPENING_HOURS_LINES },
                   ].map(({ icon, title, lines, href }) => (
                     <div key={title} className="flex items-start gap-4">
@@ -271,25 +279,36 @@ export default function ContactPage() {
       */}
       <section className="py-16 bg-mist">
         <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <h2 className="text-headline-h2 font-bold text-navy-deep mb-3">
-            Where we collect and deliver
-          </h2>
-          <p className="text-on-surface-variant text-body-main max-w-2xl mb-8">
-            One facility, in {HQ_SUBURB}, and a fleet that covers the whole of
-            Cape Town. You never travel to us — we come to your door, and these are
-            the suburbs we run to regularly. If yours is not listed, call us; it is
-            usually still a yes.
-          </p>
-          <ul className="flex flex-wrap gap-2">
-            {SERVICE_AREAS.map((area) => (
-              <li
-                key={area}
-                className="bg-surface-white border border-navy-deep/10 rounded-full px-4 py-2 text-sm text-navy-deep"
-              >
-                {area}
-              </li>
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)] gap-10 items-start mb-10">
+            <div>
+              <h2 className="text-headline-h2 font-bold text-navy-deep mb-3">
+                Where we collect and deliver
+              </h2>
+              <p className="text-on-surface-variant text-body-main max-w-2xl">
+                One facility, in {HQ_SUBURB}, and a fleet that covers the whole of
+                Cape Town. You never travel to us. We come to your door, and the
+                collection fee depends on the vehicle, not your suburb. If yours is not
+                listed, ask us. The answer is usually still yes.
+              </p>
+            </div>
+            <div className="bg-surface-white rounded-xl shadow-tactile border border-outline-variant p-6">
+              <SuburbChecker />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+            {REGIONS.map((r) => (
+              <div key={r.slug}>
+                <h3 className="font-body-strong text-navy-deep mb-1">
+                  <Link href={`/areas/${r.slug}`} className="hover:text-accent-deep transition-colors">
+                    {r.name}
+                  </Link>
+                </h3>
+                <p className="text-sm text-on-surface-variant leading-relaxed">
+                  {r.suburbs.join(", ")}
+                </p>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </section>
     </>

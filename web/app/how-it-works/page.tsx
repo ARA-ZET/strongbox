@@ -213,7 +213,7 @@ export default function HowItWorksPage() {
             it stays in view for the whole list on a tall screen.
           */}
           <div className="grid lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] gap-12 items-start">
-            <div className="lg:sticky lg:top-28">
+            <div className="lg:sticky lg:top-36">
               <SitePhoto id="collection-day" className="shadow-tactile" />
             </div>
 

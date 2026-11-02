@@ -32,7 +32,7 @@ strongbox/
   `package_2` + bold "StrongBox". In Flutter use `BrandLogo` / `BrandMark`
   (`lib/core/widgets/brand_logo.dart`) — never another icon. App launcher icons are rasterised from
   the site favicon (`web/app/icon.svg`) by `node packages/brand/build.mjs`. See `packages/brand/README.md`.
-- **Never hardcode a price.** Admins set prices (boxes, loose items, pickup vehicles) in the app at
+- **Never hardcode a price.** Admins set prices (boxes, loose items, pickup vehicles, packing supplies, packing helper) in the app at
   `/admin/pricing`, which writes Firestore `priceLists/{tenantId}`. The app reads it via
   `priceCatalogProvider` (live); the site via `getPrices()` in `web/lib/prices.ts` (≤5 min cache).
   `packages/pricing/pricing.json` holds only the defaults used before the first publish —
@@ -76,10 +76,22 @@ accounts are promoted in Settings → Team instead.
 emails opted-in clients through the `mail` collection, which `onMailCreated` sends over SMTP
 (secret `SMTP_URL`; see `functions/README.md`).
 
+**The journey (as built):** `docs/journey/JOURNEY.md` has the step-by-step client / admin /
+driver flow and the status model; `docs/journey/strongbox-journey-v5.drawio` is the same as a
+swimlane diagram. In short: client bookings (`bookPickup`) and delivery requests
+(`requestDelivery`) arrive `pendingConfirmation` → admin confirms (or declines) and dispatches →
+driver starts, checks in "on my way" / "arrived", scans units (pickup: `pendingPickup →
+inTransit`), client signs (pickup job → `collected`) → driver scans units **in at the facility**
+(`inStorage` + bay; last one → `completed`). Deliveries: scan out → on my way → arrived →
+handover scan → sign → `delivered`. Path A bookings add a linked `supplyDrop` job that brings
+empty boxes + packing supplies first. Once-off charges (vehicle + supplies + packing helper,
+`Job.onceOffZar`) go on the next invoice after collection. Client job writes only go through
+these callables; all job/unit status changes go through `JobRepository`.
+
 Three user roles share one Firebase backend:
 - **Admin/Staff** — operations dashboard, inventory, QR management, job dispatch
 - **Driver** — daily job list, QR scanning, photo capture, client sign-off
-- **Client** — view stored items, request deliveries, see invoices and how to pay
+- **Client** — book pickups, photograph boxes while packing, view stored items, request deliveries, see invoices and how to pay
 
 ---
 
@@ -312,6 +324,8 @@ Always use these — do not rebuild them inline. See `docs/11_COMPONENT_LIBRARY.
 | `QRDisplayCard` | `qrData, label` | QR image + print/copy actions |
 | `PhotoGallery` | `photoUrls, onAddPhoto?` | Scrollable gallery + lightbox |
 | `PhotoUploadZone` | `onPhotosSelected, existingPhotos` | Dashed upload zone |
+| `CameraCapture` | `CameraCapture.open(context, title:)` → `Uint8List?` | In-app camera (live preview, shutter, switch, retake). Use for "Take photo" — `ImagePicker(source: camera)` is only a file input on desktop browsers |
+| `StorageImage` | `url, fit?, width?, height?, error?` | Every Storage photo — on web it falls back to an `<img>` element (no bucket CORS needed). Never use `CachedNetworkImage` / `Image.network` directly for Storage URLs |
 | `StepIndicator` | `steps, currentStep` | Multi-step form stepper |
 | `SectionHeader` | `title, action?` | Section heading row |
 | `LoadingSkeleton` | `.card()`, `.listTile()` | Shimmer loading placeholders |
@@ -321,6 +335,8 @@ Always use these — do not rebuild them inline. See `docs/11_COMPONENT_LIBRARY.
 | `ConfirmDialog` | `title, message, isDestructive, onConfirm` | Confirmation modal |
 | `TableScroll` | `minWidth, child` | Horizontal scroll for tables with `Expanded` cells — never hand-build `SingleChildScrollView` + `ConstrainedBox(minWidth)` (renders nothing) |
 | `DialogActions` | `saveLabel, onSave, saving?` | Cancel + save row for custom dialogs — never hand-build a Row of themed buttons (they're full-width and vanish in a Row) |
+| `LabelPrintDialog` | `units, preselected?, groupNames?` | Tick boxes/items → print their QR labels (A4, 12/page); `groupNames` groups by client (admin) |
+| `printInventory()` | `units, client, business, prices` | `lib/core/utils/inventory_pdf.dart` — client's inventory report PDF |
 | `ConnectivityBanner` | — | Offline warning auto-shown |
 
 ---
@@ -344,6 +360,7 @@ qrCodeId: String (unique SBX-XXXX-XX format)
 photoIds: List<String> (Photo doc IDs, not Storage URLs)
 label, notes?
 status: StorageStatus (pendingPickup|inTransit|inStorage|pendingDelivery|delivered)
+warehouseLocationId? (bay, set at receiving), condition?: UnitCondition, receivedAt?
 jobId?, createdAt, updatedAt, isDeleted, deletedAt?
 ```
 
@@ -355,13 +372,15 @@ photoIds: List<String>, description, status, createdAt, isDeleted
 
 ### Job
 ```dart
-id, tenantId, type: JobType (pickup|delivery)
-clientId, driverId?
-status: JobStatus (scheduled|assigned|inProgress|completed|cancelled)
-scheduledDate, timeWindow: TimeWindow
-unitIds: List<String>, scannedUnitIds: List<String>
-notes?, driverPhotoIds: List<String>
-clientSignatureUrl?, completedAt?
+id, tenantId, type: JobType (pickup|delivery|supplyDrop)
+clientId, driverId?, driverName?, fleetVehicleId?
+status: JobStatus (pendingConfirmation|scheduled|assigned|inProgress|collected|completed|cancelled)
+scheduledDate, timeWindow: TimeWindow, address, accessNotes?, notes?
+storageUnitIds, scannedUnitIds, receivedUnitIds, handedOverUnitIds
+supplies: List<SupplyLine>, emptyBoxes, helperHours, suppliesFirst, linkedJobId?
+onceOffZar, invoicedIn?
+confirmedAt?, departedAt?, arrivedAt?, collectedAt?, completedAt?
+photoIds, clientSignatureUrl?, recipientName?, source? (quote|request)
 createdAt, updatedAt, isDeleted
 ```
 
@@ -411,6 +430,8 @@ mail/{id}                  ← outbound email queue; onMailCreated sends + recor
 /admin/fleet/:driverId
 /admin/reports
 /admin/notifications
+/admin/issues            ← driver issue reports: open → in review → resolved
+/admin/pricing
 /admin/settings
 
 /driver/jobs             ← redirect here if role == driver
@@ -420,13 +441,17 @@ mail/{id}                  ← outbound email queue; onMailCreated sends + recor
 /driver/scan
 /driver/shift
 /driver/account
-/driver/report-issue
+/driver/report-issue     ← ?jobId= when reported from a job
 /driver/notifications
 
-/client/dashboard        ← redirect here if role == client
-/client/storage
-/client/storage/:unitId   ← was :boxId
-/client/requests/new
+/client/dashboard        ← redirect here if role == client: To do, stats, active orders, storage by status
+/client/storage           ← ?status=inStorage etc. (filter lives in the URL so screens can link to it)
+/client/storage/:unitId   ← was :boxId; links to the unit's order
+/client/orders            ← pickups, deliveries, supply drop-offs; ?view=past (old /client/deliveries redirects)
+/client/orders/:jobId     ← one order: timeline, items (→ unit), packing progress, driver E-ID, charges
+/client/requests/new      ← "Get items back" (request a delivery)
+/client/order             ← build a quote (boxes, loose items, pickup vehicle) — "New order"
+/client/order/book        ← book the pickup for that quote
 /client/subscription      ← billing: invoices + how to pay
 /client/account
 /client/notifications
@@ -449,8 +474,11 @@ Root `/` redirects based on role. Unauthenticated → `/login`. `/quote` (legacy
 - Bottom NavigationBar: Jobs, Scan, Shift, Account
 
 ### Client Shell
-- **Desktop:** Top nav bar — Logo + nav links + notification bell + avatar
-- **Mobile:** Bottom NavigationBar: Home, Storage, Requests, Account
+- **Desktop:** Top nav bar — Logo + Home, My Storage, Orders, Billing + "New order" menu (Store more
+  items / Get items back) + notification bell + avatar
+- **Mobile:** Bottom NavigationBar: Home, My Storage, Orders, Billing, Account; "New order" menu in the app bar
+- Order wording, timeline steps and dashboard to-dos are pure functions in
+  `lib/features/client/utils/client_orders.dart` (tested) — reuse them, don't re-word statuses in widgets
 
 ---
 
@@ -492,6 +520,9 @@ Always read the PNG first with the Read tool before implementing any screen.
 - Real-time Firestore data → `StreamProvider`
 - One-time reads → `FutureProvider`
 - Mutable state (forms, filters) → `Notifier` / `AsyncNotifier`
+- Action notifiers (`build() {}` + async write methods, called via `.notifier`) → **`@Riverpod(keepAlive: true)`**.
+  Screens don't watch them, so auto-dispose tears them down mid-write and the success
+  lands as "Bad state: Future already completed" though the write went through.
 - Never call Firestore directly from widgets — always go through a repository
 
 ### Responsive Layout
@@ -510,12 +541,17 @@ LayoutBuilder(builder: (context, constraints) {
 
 ### QR Code Formats
 - Storage unit: `SBX-{4digits}-{letter}{digit}` e.g. `SBX-9942-A1`
+- A label's QR holds a link, `qrPayload(code)` → `https://app.strongbox.co.za/s/SBX-9942-A1`, so a
+  normal phone camera opens the item; scanners must read codes with `codeFromScan(raw)`
 - Item: `ITM-{4digits}-{letter}{digit}` e.g. `ITM-1234-B2`
-- Driver E-ID: `DRV-{first 8 chars of uid}`
+- Driver E-ID: `staffRef(uid)` → `DRV-Q2N7HC` (never derived visibly from the uid)
+- Booked pickups: `bookPickup` gives every unit its own `SBX-` code at booking; clients print
+  labels from My Storage, drivers can print them from the job, and scan them at collection
 
 ### Photo Storage Paths
 ```
 {tenantId}/storageUnits/{unitId}/exterior/{timestamp}-{8charUUID}.jpg
+{tenantId}/storageUnits/{unitId}/client/{timestamp}.jpg   ← client packing photos (pendingPickup only)
 {tenantId}/jobs/{jobId}/driver-photos/{timestamp}-{8charUUID}.jpg
 {tenantId}/jobs/{jobId}/signature.png
 {tenantId}/drivers/{uid}/profile.jpg
@@ -553,3 +589,6 @@ See `strongbox_claude_code_prompts.md` for the full prompt for each stage. **All
 - Do not use `setState` for anything that spans multiple screens
 - Do not skip reading the screen PNG before implementing a screen
 - Do not query Firestore without filtering `tenantId` and `isDeleted == false`
+- Do not show Firebase ids (uids, client / job / unit / invoice ids) on screen, in labels or
+  documents — use `clientRef` / `jobRef` / `staffRef` (`lib/core/utils/public_ref.dart`,
+  mirrored in `functions/src/references.js`). Ids in route URLs are fine.

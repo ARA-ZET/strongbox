@@ -43,7 +43,14 @@ mixin _$StorageUnit {
   String? get category => throw _privateConstructorUsedError;
   double? get weight => throw _privateConstructorUsedError;
   String? get jobId => throw _privateConstructorUsedError;
+
+  /// Bay / shelf at the facility, recorded when scanned in.
   String? get warehouseLocationId => throw _privateConstructorUsedError;
+
+  /// Condition the driver recorded at collection.
+  UnitCondition? get condition => throw _privateConstructorUsedError;
+  @NullableTimestampConverter()
+  DateTime? get receivedAt => throw _privateConstructorUsedError;
   bool get isDeleted => throw _privateConstructorUsedError;
   @NullableTimestampConverter()
   DateTime? get deletedAt => throw _privateConstructorUsedError;
@@ -82,6 +89,8 @@ abstract class $StorageUnitCopyWith<$Res> {
       double? weight,
       String? jobId,
       String? warehouseLocationId,
+      UnitCondition? condition,
+      @NullableTimestampConverter() DateTime? receivedAt,
       bool isDeleted,
       @NullableTimestampConverter() DateTime? deletedAt,
       @NullableTimestampConverter() DateTime? createdAt,
@@ -118,6 +127,8 @@ class _$StorageUnitCopyWithImpl<$Res, $Val extends StorageUnit>
     Object? weight = freezed,
     Object? jobId = freezed,
     Object? warehouseLocationId = freezed,
+    Object? condition = freezed,
+    Object? receivedAt = freezed,
     Object? isDeleted = null,
     Object? deletedAt = freezed,
     Object? createdAt = freezed,
@@ -192,6 +203,14 @@ class _$StorageUnitCopyWithImpl<$Res, $Val extends StorageUnit>
           ? _value.warehouseLocationId
           : warehouseLocationId // ignore: cast_nullable_to_non_nullable
               as String?,
+      condition: freezed == condition
+          ? _value.condition
+          : condition // ignore: cast_nullable_to_non_nullable
+              as UnitCondition?,
+      receivedAt: freezed == receivedAt
+          ? _value.receivedAt
+          : receivedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       isDeleted: null == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
@@ -238,6 +257,8 @@ abstract class _$$StorageUnitImplCopyWith<$Res>
       double? weight,
       String? jobId,
       String? warehouseLocationId,
+      UnitCondition? condition,
+      @NullableTimestampConverter() DateTime? receivedAt,
       bool isDeleted,
       @NullableTimestampConverter() DateTime? deletedAt,
       @NullableTimestampConverter() DateTime? createdAt,
@@ -272,6 +293,8 @@ class __$$StorageUnitImplCopyWithImpl<$Res>
     Object? weight = freezed,
     Object? jobId = freezed,
     Object? warehouseLocationId = freezed,
+    Object? condition = freezed,
+    Object? receivedAt = freezed,
     Object? isDeleted = null,
     Object? deletedAt = freezed,
     Object? createdAt = freezed,
@@ -346,6 +369,14 @@ class __$$StorageUnitImplCopyWithImpl<$Res>
           ? _value.warehouseLocationId
           : warehouseLocationId // ignore: cast_nullable_to_non_nullable
               as String?,
+      condition: freezed == condition
+          ? _value.condition
+          : condition // ignore: cast_nullable_to_non_nullable
+              as UnitCondition?,
+      receivedAt: freezed == receivedAt
+          ? _value.receivedAt
+          : receivedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       isDeleted: null == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
@@ -387,6 +418,8 @@ class _$StorageUnitImpl implements _StorageUnit {
       this.weight,
       this.jobId,
       this.warehouseLocationId,
+      this.condition,
+      @NullableTimestampConverter() this.receivedAt,
       this.isDeleted = false,
       @NullableTimestampConverter() this.deletedAt,
       @NullableTimestampConverter() this.createdAt,
@@ -455,8 +488,17 @@ class _$StorageUnitImpl implements _StorageUnit {
   final double? weight;
   @override
   final String? jobId;
+
+  /// Bay / shelf at the facility, recorded when scanned in.
   @override
   final String? warehouseLocationId;
+
+  /// Condition the driver recorded at collection.
+  @override
+  final UnitCondition? condition;
+  @override
+  @NullableTimestampConverter()
+  final DateTime? receivedAt;
   @override
   @JsonKey()
   final bool isDeleted;
@@ -472,7 +514,7 @@ class _$StorageUnitImpl implements _StorageUnit {
 
   @override
   String toString() {
-    return 'StorageUnit(id: $id, tenantId: $tenantId, clientId: $clientId, qrCodeId: $qrCodeId, parentId: $parentId, type: $type, priceKey: $priceKey, monthlyRateZar: $monthlyRateZar, label: $label, description: $description, status: $status, photoIds: $photoIds, tags: $tags, category: $category, weight: $weight, jobId: $jobId, warehouseLocationId: $warehouseLocationId, isDeleted: $isDeleted, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'StorageUnit(id: $id, tenantId: $tenantId, clientId: $clientId, qrCodeId: $qrCodeId, parentId: $parentId, type: $type, priceKey: $priceKey, monthlyRateZar: $monthlyRateZar, label: $label, description: $description, status: $status, photoIds: $photoIds, tags: $tags, category: $category, weight: $weight, jobId: $jobId, warehouseLocationId: $warehouseLocationId, condition: $condition, receivedAt: $receivedAt, isDeleted: $isDeleted, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -506,6 +548,10 @@ class _$StorageUnitImpl implements _StorageUnit {
             (identical(other.jobId, jobId) || other.jobId == jobId) &&
             (identical(other.warehouseLocationId, warehouseLocationId) ||
                 other.warehouseLocationId == warehouseLocationId) &&
+            (identical(other.condition, condition) ||
+                other.condition == condition) &&
+            (identical(other.receivedAt, receivedAt) ||
+                other.receivedAt == receivedAt) &&
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.deletedAt, deletedAt) ||
@@ -537,6 +583,8 @@ class _$StorageUnitImpl implements _StorageUnit {
         weight,
         jobId,
         warehouseLocationId,
+        condition,
+        receivedAt,
         isDeleted,
         deletedAt,
         createdAt,
@@ -576,6 +624,8 @@ abstract class _StorageUnit implements StorageUnit {
           final double? weight,
           final String? jobId,
           final String? warehouseLocationId,
+          final UnitCondition? condition,
+          @NullableTimestampConverter() final DateTime? receivedAt,
           final bool isDeleted,
           @NullableTimestampConverter() final DateTime? deletedAt,
           @NullableTimestampConverter() final DateTime? createdAt,
@@ -625,7 +675,16 @@ abstract class _StorageUnit implements StorageUnit {
   @override
   String? get jobId;
   @override
+
+  /// Bay / shelf at the facility, recorded when scanned in.
   String? get warehouseLocationId;
+  @override
+
+  /// Condition the driver recorded at collection.
+  UnitCondition? get condition;
+  @override
+  @NullableTimestampConverter()
+  DateTime? get receivedAt;
   @override
   bool get isDeleted;
   @override

@@ -10,7 +10,9 @@ import {
   SOCIAL_LINKS,
 } from "@/lib/constants";
 import SocialIcon from "@/components/graphics/SocialIcon";
+import LaunchNotice from "@/components/LaunchNotice";
 import { ARTICLES } from "@/lib/resources";
+import { REGIONS } from "@/lib/areas";
 
 /**
  * Footer sitemap. Mirrors the shape of the site's four content surfaces —
@@ -27,6 +29,7 @@ const COLUMNS: { heading: string; items: { href: string; label: string }[] }[] =
       { href: "/how-it-works", label: "How It Works" },
       { href: "/pricing", label: "Pricing" },
       { href: "/loose-items", label: "Loose Items" },
+      { href: "/areas", label: "Areas We Serve" },
       { href: "/about", label: "About Us" },
     ],
   },
@@ -87,7 +90,8 @@ export default function Footer() {
             StrongBox
           </div>
           <p className="text-on-navy-variant text-body-main max-w-xs">
-            Cape Town&apos;s premium valet storage solution. Secure, professional, and domestic-focused storage at your fingertips.
+            Valet storage for the whole of Cape Town. We collect from your door, store
+            your things safely, and bring them back when you ask.
           </p>
           <div className="space-y-2">
             <a
@@ -104,6 +108,7 @@ export default function Footer() {
               <span className="material-symbols-outlined text-lg">mail</span>
               {CONTACT_EMAIL}
             </a>
+            <LaunchNotice compact className="pt-2 max-w-xs" />
           </div>
           <div className="flex gap-3">
             {SOCIAL_LINKS.filter((s) => s.href).map(({ platform, label, href }) => (
@@ -176,6 +181,32 @@ export default function Footer() {
           </form>
         </div>
       </div>
+
+      {/*
+        Every region page, linked from every page. This is the internal link
+        that tells a crawler these pages matter, and the list of names tells
+        a visitor from Delft or Durbanville that "Cape Town" includes them.
+      */}
+      <nav
+        aria-label="Areas we serve"
+        className="max-w-container-max mx-auto px-6 md:px-margin-desktop pb-8"
+      >
+        <h4 className="text-surface-white font-body-strong mb-4 uppercase tracking-wider text-xs">
+          Areas We Serve
+        </h4>
+        <ul className="flex flex-wrap gap-x-5 gap-y-2">
+          {REGIONS.map((r) => (
+            <li key={r.slug}>
+              <Link
+                href={`/areas/${r.slug}`}
+                className="text-on-navy-variant hover:text-sky transition-colors text-sm"
+              >
+                {r.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop pt-8 border-t border-surface-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="text-xs text-on-navy-variant/70 uppercase tracking-widest text-center md:text-left">

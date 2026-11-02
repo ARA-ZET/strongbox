@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'audit_repository.dart';
+import 'booking_repository.dart';
 import 'client_repository.dart';
 import 'driver_invite_repository.dart';
 import 'item_repository.dart';
@@ -14,6 +15,7 @@ import 'notification_repository.dart';
 import 'photo_repository.dart';
 import 'price_list_repository.dart';
 import 'push_repository.dart';
+import 'quote_draft_store.dart';
 import 'qr_repository.dart';
 import 'shift_repository.dart';
 import 'storage_unit_repository.dart';
@@ -106,3 +108,10 @@ DriverInviteRepository driverInviteRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 VehicleRepository vehicleRepository(Ref ref) =>
     FirestoreVehicleRepository(ref.watch(firestoreProvider));
+
+@Riverpod(keepAlive: true)
+BookingRepository bookingRepository(Ref ref) =>
+    FunctionsBookingRepository(ref.watch(firebaseFunctionsProvider));
+
+@Riverpod(keepAlive: true)
+QuoteDraftStore quoteDraftStore(Ref ref) => PrefsQuoteDraftStore();

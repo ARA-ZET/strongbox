@@ -38,7 +38,43 @@ final todaysJobsProvider = AutoDisposeProvider<List<Job>>.internal(
 );
 
 typedef TodaysJobsRef = AutoDisposeProviderRef<List<Job>>;
-String _$filteredJobsHash() => r'5c8c4a92ade2329c3c4f79a819f08f03b7f97936';
+String _$jobsToConfirmHash() => r'7e7cd776a81cc666f648deece66c266109b85388';
+
+/// Client bookings and delivery requests waiting for an admin, oldest
+/// first. A Path A supply drop-off is confirmed with its pickup, so only
+/// the pickup is listed.
+///
+/// Copied from [jobsToConfirm].
+@ProviderFor(jobsToConfirm)
+final jobsToConfirmProvider = AutoDisposeProvider<List<Job>>.internal(
+  jobsToConfirm,
+  name: r'jobsToConfirmProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$jobsToConfirmHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef JobsToConfirmRef = AutoDisposeProviderRef<List<Job>>;
+String _$jobsToReceiveHash() => r'4d4100c52ab2c3c03770bafcef1e13c093836b1f';
+
+/// Pickups collected and on their way to (or at) the facility.
+///
+/// Copied from [jobsToReceive].
+@ProviderFor(jobsToReceive)
+final jobsToReceiveProvider = AutoDisposeProvider<List<Job>>.internal(
+  jobsToReceive,
+  name: r'jobsToReceiveProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$jobsToReceiveHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef JobsToReceiveRef = AutoDisposeProviderRef<List<Job>>;
+String _$filteredJobsHash() => r'e6053a158e893b7aa81b2763656f75f881a87a7a';
 
 /// Jobs after all filters (client-side).
 ///
@@ -70,7 +106,7 @@ final jobsFilterStateProvider =
 );
 
 typedef _$JobsFilterState = AutoDisposeNotifier<JobsFilter>;
-String _$newJobDraftHash() => r'f4845db9dadc1eec689893fe2a1bbbad9e86c35f';
+String _$newJobDraftHash() => r'51f5d3364b791e65e795bbd088d6bf2a08c4664e';
 
 /// See also [NewJobDraft].
 @ProviderFor(NewJobDraft)
@@ -85,14 +121,13 @@ final newJobDraftProvider =
 );
 
 typedef _$NewJobDraft = AutoDisposeNotifier<NewJobData>;
-String _$jobMutationsHash() => r'1586b5f2aacd68ced80d23264e928aab717377c0';
+String _$jobMutationsHash() => r'8695c94fe8675f2cb2db44bf59989b43f3d37ae2';
 
 /// Firestore writes for jobs.
 ///
 /// Copied from [JobMutations].
 @ProviderFor(JobMutations)
-final jobMutationsProvider =
-    AutoDisposeAsyncNotifierProvider<JobMutations, void>.internal(
+final jobMutationsProvider = AsyncNotifierProvider<JobMutations, void>.internal(
   JobMutations.new,
   name: r'jobMutationsProvider',
   debugGetCreateSourceHash:
@@ -101,6 +136,6 @@ final jobMutationsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$JobMutations = AutoDisposeAsyncNotifier<void>;
+typedef _$JobMutations = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

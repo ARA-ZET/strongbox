@@ -4,7 +4,6 @@ import '../../../core/utils/currency.dart';
 import '../widgets/unit_size_field.dart';
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -24,7 +23,8 @@ import '../../../core/models/item.dart';
 import '../../../core/models/job.dart';
 import '../providers/clients_providers.dart';
 import '../providers/inventory_providers.dart';
-import '../utils/qr_pdf_generator.dart';
+import '../../../core/utils/qr_label_pdf.dart';
+import '../../../core/widgets/storage_image.dart';
 
 /// Single box view: inspection photos, items inside, QR panel and job
 /// history timeline. Design: admin_box_detail/screen.png.
@@ -41,14 +41,16 @@ class AdminBoxDetailScreen extends ConsumerWidget {
     return box.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, _) => Center(
-        child: Text('Could not load box: $error',
-            style:
-                textTheme.bodyMedium?.copyWith(color: AppColors.statusError)),
+        child: Text(
+          'Could not load box: $error',
+          style: textTheme.bodyMedium?.copyWith(color: AppColors.statusError),
+        ),
       ),
       data: (model) {
         if (model == null) {
           return Center(
-              child: Text('Box not found.', style: textTheme.titleMedium));
+            child: Text('Box not found.', style: textTheme.titleMedium),
+          );
         }
         return _BoxDetailBody(box: model);
       },
@@ -67,8 +69,7 @@ class _BoxDetailBody extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.surface,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: const Text('Edit Label'),
         content: TextField(
           controller: controller,
@@ -89,8 +90,12 @@ class _BoxDetailBody extends ConsumerWidget {
       ),
     );
     if (label != null && context.mounted) {
-      await reportFailure(context, 'Could not update label', () =>
-          ref.read(unitMutationsProvider.notifier).updateLabel(box.id, label));
+      await reportFailure(
+        context,
+        'Could not update label',
+        () =>
+            ref.read(unitMutationsProvider.notifier).updateLabel(box.id, label),
+      );
     }
   }
 
@@ -99,12 +104,12 @@ class _BoxDetailBody extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.surface,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: const Text('Archive this box?'),
         content: Text(
-            'Box ${box.qrCodeId} will be removed from active inventory and '
-            'released from the client\'s storage allowance.'),
+          'Box ${box.qrCodeId} will be removed from active inventory and '
+          'released from the client\'s storage allowance.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -139,122 +144,127 @@ class _BoxDetailBody extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final clientNames = ref.watch(clientNamesProvider);
 
-    return LayoutBuilder(builder: (context, constraints) {
-      final desktop = constraints.maxWidth > 900;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final desktop = constraints.maxWidth > 900;
 
-      final leftColumn = Column(
-        children: [
-          _PhotosCard(box: box),
-          if (box.type == UnitType.open) ...[
-            const SizedBox(height: 24),
-            _ItemsCard(box: box),
-          ],
-        ],
-      );
-      final rightColumn = Column(
-        children: [
-          QRDisplayCard(
-            qrData: box.qrCodeId,
-            label: box.qrCodeId,
-            onPrint: () => printQrLabels(
-              [box.qrCodeId],
-              labels: {box.qrCodeId: box.label},
-            ),
-          ),
-          const SizedBox(height: 24),
-          _DetailsCard(box: box, ownerName: clientNames[box.clientId]),
-          const SizedBox(height: 24),
-          const _ScannerPromoCard(),
-        ],
-      );
-
-      return SingleChildScrollView(
-        padding: EdgeInsets.all(desktop ? 24 : 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        final leftColumn = Column(
           children: [
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back, size: 20),
-                  onPressed: () => context.go('/admin/inventory'),
-                ),
-                Flexible(
-                  child: Text(
-                    'Inventory / Box #${box.qrCodeId}',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: AppColors.textSecondary),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Text('Storage Unit #${box.qrCodeId}',
-                    style: textTheme.displaySmall),
-                OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(0, 44),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                  onPressed: () => _editLabel(context, ref),
-                  icon: const Icon(Icons.edit_outlined, size: 18),
-                  label: const Text('Edit Label'),
-                ),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.navy,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(0, 44),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                  onPressed: () => printQrLabels(
-                    [box.qrCodeId],
-                    labels: {box.qrCodeId: box.label},
-                  ),
-                  icon: const Icon(Icons.print_outlined, size: 18),
-                  label: const Text('Print QR'),
-                ),
-                OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.statusError,
-                    side: const BorderSide(color: AppColors.statusError),
-                    minimumSize: const Size(0, 44),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                  onPressed: () => _archive(context, ref),
-                  icon: const Icon(Icons.archive_outlined, size: 18),
-                  label: const Text('Archive'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            if (desktop)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(flex: 65, child: leftColumn),
-                  const SizedBox(width: 24),
-                  Expanded(flex: 35, child: rightColumn),
-                ],
-              )
-            else ...[
-              leftColumn,
+            _PhotosCard(box: box),
+            if (box.type == UnitType.open) ...[
               const SizedBox(height: 24),
-              rightColumn,
+              _ItemsCard(box: box),
             ],
-            const SizedBox(height: 24),
-            _JobHistoryTimeline(boxId: box.id),
           ],
-        ),
-      );
-    });
+        );
+        final rightColumn = Column(
+          children: [
+            QRDisplayCard(
+              qrData: box.qrCodeId,
+              label: box.qrCodeId,
+              onPrint: () => printQrLabels(
+                [box.qrCodeId],
+                labels: {box.qrCodeId: box.label},
+              ),
+            ),
+            const SizedBox(height: 24),
+            _DetailsCard(box: box, ownerName: clientNames[box.clientId]),
+            const SizedBox(height: 24),
+            const _ScannerPromoCard(),
+          ],
+        );
+
+        return SingleChildScrollView(
+          padding: EdgeInsets.all(desktop ? 24 : 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, size: 20),
+                    onPressed: () => context.go('/admin/inventory'),
+                  ),
+                  Flexible(
+                    child: Text(
+                      'Inventory / Box #${box.qrCodeId}',
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    'Storage Unit #${box.qrCodeId}',
+                    style: textTheme.displaySmall,
+                  ),
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(0, 44),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                    onPressed: () => _editLabel(context, ref),
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    label: const Text('Edit Label'),
+                  ),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.navy,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(0, 44),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                    onPressed: () => printQrLabels(
+                      [box.qrCodeId],
+                      labels: {box.qrCodeId: box.label},
+                    ),
+                    icon: const Icon(Icons.print_outlined, size: 18),
+                    label: const Text('Print QR'),
+                  ),
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.statusError,
+                      side: const BorderSide(color: AppColors.statusError),
+                      minimumSize: const Size(0, 44),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                    onPressed: () => _archive(context, ref),
+                    icon: const Icon(Icons.archive_outlined, size: 18),
+                    label: const Text('Archive'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              if (desktop)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(flex: 65, child: leftColumn),
+                    const SizedBox(width: 24),
+                    Expanded(flex: 35, child: rightColumn),
+                  ],
+                )
+              else ...[
+                leftColumn,
+                const SizedBox(height: 24),
+                rightColumn,
+              ],
+              const SizedBox(height: 24),
+              _JobHistoryTimeline(boxId: box.id),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -273,9 +283,14 @@ class _PhotosCard extends ConsumerWidget {
   }
 
   Future<void> _uploadPhotos(
-          BuildContext context, WidgetRef ref, List<Uint8List> bytes) =>
-      reportFailure(context, 'Could not upload photos', () =>
-          ref.read(unitMutationsProvider.notifier).addPhotos(box.id, bytes));
+    BuildContext context,
+    WidgetRef ref,
+    List<Uint8List> bytes,
+  ) => reportFailure(
+    context,
+    'Could not upload photos',
+    () => ref.read(unitMutationsProvider.notifier).addPhotos(box.id, bytes),
+  );
 
   void _openLightbox(BuildContext context, String url) {
     showDialog<void>(
@@ -283,9 +298,7 @@ class _PhotosCard extends ConsumerWidget {
       builder: (_) => Dialog(
         backgroundColor: Colors.black87,
         insetPadding: const EdgeInsets.all(24),
-        child: InteractiveViewer(
-          child: CachedNetworkImage(imageUrl: url, fit: BoxFit.contain),
-        ),
+        child: InteractiveViewer(child: StorageImage(url, fit: BoxFit.contain)),
       ),
     );
   }
@@ -312,7 +325,8 @@ class _PhotosCard extends ConsumerWidget {
               Text('Inspection Photos', style: textTheme.headlineSmall),
               TextButton.icon(
                 style: TextButton.styleFrom(
-                    foregroundColor: AppColors.accentDeep),
+                  foregroundColor: AppColors.accentDeep,
+                ),
                 onPressed: () => _addPhotos(context, ref),
                 icon: const Icon(Icons.add_a_photo_outlined, size: 18),
                 label: const Text('Add New'),
@@ -322,8 +336,7 @@ class _PhotosCard extends ConsumerWidget {
           const SizedBox(height: 12),
           if (photos.isEmpty)
             PhotoUploadZone(
-              onPhotosSelected: (bytes) =>
-                  _uploadPhotos(context, ref, bytes),
+              onPhotosSelected: (bytes) => _uploadPhotos(context, ref, bytes),
             )
           else
             SizedBox(
@@ -333,21 +346,14 @@ class _PhotosCard extends ConsumerWidget {
                 itemCount: photos.length,
                 separatorBuilder: (_, _) => const SizedBox(width: 12),
                 itemBuilder: (context, index) => InkWell(
-                  onTap: () =>
-                      _openLightbox(context, photos[index].storageUrl),
+                  onTap: () => _openLightbox(context, photos[index].storageUrl),
                   borderRadius: BorderRadius.circular(8),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: CachedNetworkImage(
-                      imageUrl: photos[index].storageUrl,
+                    child: StorageImage(
+                      photos[index].storageUrl,
                       width: 150,
                       height: 120,
-                      fit: BoxFit.cover,
-                      placeholder: (_, _) => const SizedBox(
-                        width: 150,
-                        child:
-                            ColoredBox(color: AppColors.surfaceContainer),
-                      ),
                     ),
                   ),
                 ),
@@ -384,31 +390,35 @@ class _ItemsCard extends ConsumerWidget {
           Text('Items Inside', style: textTheme.headlineSmall),
           const SizedBox(height: 16),
           items.when(
-            loading: () =>
-                const Center(child: CircularProgressIndicator()),
-            error: (error, _) => Text('Could not load items: $error',
-                style: textTheme.bodyMedium
-                    ?.copyWith(color: AppColors.statusError)),
-            data: (list) => LayoutBuilder(builder: (context, constraints) {
-              final columns = constraints.maxWidth > 560 ? 2 : 1;
-              return GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columns,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  mainAxisExtent: 104,
-                ),
-                itemCount: list.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == list.length) {
-                    return _AddItemGhost(box: box);
-                  }
-                  return _ItemTile(item: list[index]);
-                },
-              );
-            }),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, _) => Text(
+              'Could not load items: $error',
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.statusError,
+              ),
+            ),
+            data: (list) => LayoutBuilder(
+              builder: (context, constraints) {
+                final columns = constraints.maxWidth > 560 ? 2 : 1;
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columns,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    mainAxisExtent: 104,
+                  ),
+                  itemCount: list.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == list.length) {
+                      return _AddItemGhost(box: box);
+                    }
+                    return _ItemTile(item: list[index]);
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -439,8 +449,10 @@ class _ItemTile extends StatelessWidget {
               width: 80,
               height: 80,
               color: AppColors.border.withValues(alpha: 0.4),
-              child: const Icon(Icons.category_outlined,
-                  color: AppColors.textSecondary),
+              child: const Icon(
+                Icons.category_outlined,
+                color: AppColors.textSecondary,
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -453,8 +465,9 @@ class _ItemTile extends StatelessWidget {
                   (item.description ?? '').isEmpty
                       ? item.qrCodeId
                       : item.description!,
-                  style: textTheme.bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w700),
+                  style: textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -493,8 +506,7 @@ class _AddItemGhost extends ConsumerWidget {
           children: [
             const Icon(Icons.add, color: AppColors.accentDeep),
             const SizedBox(width: 8),
-            Text('Add Item',
-                style: Theme.of(context).textTheme.labelLarge),
+            Text('Add Item', style: Theme.of(context).textTheme.labelLarge),
           ],
         ),
       ),
@@ -527,7 +539,9 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
     if (_description.text.trim().isEmpty) return;
     setState(() => _saving = true);
     try {
-      await ref.read(unitMutationsProvider.notifier).addItem(
+      await ref
+          .read(unitMutationsProvider.notifier)
+          .addItem(
             unit: widget.box,
             description: _description.text.trim(),
             status: _status,
@@ -537,9 +551,9 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
     } catch (error) {
       if (mounted) {
         setState(() => _saving = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not add item: $error')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Could not add item: $error')));
       }
     }
   }
@@ -566,7 +580,8 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
               TextField(
                 controller: _description,
                 decoration: const InputDecoration(
-                    hintText: 'e.g. RF-Scanner Z10 · Qty 2'),
+                  hintText: 'e.g. RF-Scanner Z10 · Qty 2',
+                ),
               ),
               const SizedBox(height: 16),
               Text('Status', style: textTheme.labelLarge),
@@ -575,14 +590,17 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
                 initialValue: _status,
                 items: const [
                   DropdownMenuItem(
-                      value: StorageStatus.inStorage,
-                      child: Text('In Storage')),
+                    value: StorageStatus.inStorage,
+                    child: Text('In Storage'),
+                  ),
                   DropdownMenuItem(
-                      value: StorageStatus.inTransit,
-                      child: Text('In Transit')),
+                    value: StorageStatus.inTransit,
+                    child: Text('In Transit'),
+                  ),
                   DropdownMenuItem(
-                      value: StorageStatus.delivered,
-                      child: Text('Delivered')),
+                    value: StorageStatus.delivered,
+                    child: Text('Delivered'),
+                  ),
                 ],
                 onChanged: (value) =>
                     setState(() => _status = value ?? StorageStatus.inStorage),
@@ -597,7 +615,10 @@ class _AddItemDialogState extends ConsumerState<_AddItemDialog> {
               ),
               const SizedBox(height: 20),
               DialogActions(
-                saving: _saving, onSave: _save, saveLabel: 'Add Item'),
+                saving: _saving,
+                onSave: _save,
+                saveLabel: 'Add Item',
+              ),
             ],
           ),
         ),
@@ -651,9 +672,13 @@ class _DetailsCard extends ConsumerWidget {
       ),
     );
     if (priceKey != null && priceKey != box.priceKey && context.mounted) {
-      await reportFailure(context, 'Could not update size', () => ref
-          .read(unitMutationsProvider.notifier)
-          .updatePriceKey(box.id, priceKey));
+      await reportFailure(
+        context,
+        'Could not update size',
+        () => ref
+            .read(unitMutationsProvider.notifier)
+            .updatePriceKey(box.id, priceKey),
+      );
     }
   }
 
@@ -667,17 +692,20 @@ class _DetailsCard extends ConsumerWidget {
         : prices.monthlyFor(box.priceKey);
 
     Widget row(String label, Widget value) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(label,
-                  style: textTheme.bodyMedium
-                      ?.copyWith(color: AppColors.textSecondary)),
-              value,
-            ],
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: textTheme.bodyMedium?.copyWith(
+              color: AppColors.textSecondary,
+            ),
           ),
-        );
+          value,
+        ],
+      ),
+    );
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -693,19 +721,23 @@ class _DetailsCard extends ConsumerWidget {
           const Divider(),
           row(
             'Unique ID',
-            Text(box.qrCodeId,
-                style: textTheme.bodyMedium
-                    ?.copyWith(fontWeight: FontWeight.w700)),
+            Text(
+              box.qrCodeId,
+              style: textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
           row(
             'Created Date',
-            Text(DateFormat('MMM d, y').format(box.createdAt ?? DateTime.now()),
-                style: textTheme.bodyMedium),
+            Text(
+              DateFormat('MMM d, y').format(box.createdAt ?? DateTime.now()),
+              style: textTheme.bodyMedium,
+            ),
           ),
           row(
             'Owner',
-            Text(ownerName ?? 'Warehouse',
-                style: textTheme.bodyMedium),
+            Text(ownerName ?? 'Warehouse', style: textTheme.bodyMedium),
           ),
           row(
             'Size',
@@ -721,33 +753,44 @@ class _DetailsCard extends ConsumerWidget {
                       color: sizeLabel == null
                           ? AppColors.statusWarning
                           : AppColors.textPrimary,
-                      fontWeight:
-                          sizeLabel == null ? FontWeight.w600 : null,
+                      fontWeight: sizeLabel == null ? FontWeight.w600 : null,
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Icon(Icons.edit_outlined,
-                      size: 16, color: AppColors.accentDeep),
+                  const Icon(
+                    Icons.edit_outlined,
+                    size: 16,
+                    color: AppColors.accentDeep,
+                  ),
                 ],
               ),
             ),
           ),
           row(
             'Monthly Rate',
-            Text(rate == null ? '—' : '${formatZar(rate)}/mo',
-                style: textTheme.bodyMedium
-                    ?.copyWith(fontWeight: FontWeight.w600)),
+            Text(
+              rate == null ? '—' : '${formatZar(rate)}/mo',
+              style: textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           row(
             'Security Seal',
             Row(
               children: [
-                const Icon(Icons.verified_outlined,
-                    size: 16, color: AppColors.statusSuccess),
+                const Icon(
+                  Icons.verified_outlined,
+                  size: 16,
+                  color: AppColors.statusSuccess,
+                ),
                 const SizedBox(width: 4),
-                Text('Verified',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: AppColors.statusSuccess)),
+                Text(
+                  'Verified',
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: AppColors.statusSuccess,
+                  ),
+                ),
               ],
             ),
           ),
@@ -775,17 +818,19 @@ class _ScannerPromoCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Icon(Icons.qr_code_scanner,
-              color: AppColors.sky, size: 32),
+          const Icon(Icons.qr_code_scanner, color: AppColors.sky, size: 32),
           const SizedBox(height: 12),
-          Text('Need an Update?',
-              style: textTheme.titleMedium?.copyWith(color: Colors.white)),
+          Text(
+            'Need an Update?',
+            style: textTheme.titleMedium?.copyWith(color: Colors.white),
+          ),
           const SizedBox(height: 6),
           Text(
             'Scan to update location or report contents damage.',
             textAlign: TextAlign.center,
-            style: textTheme.bodySmall
-                ?.copyWith(color: Colors.white.withValues(alpha: 0.7)),
+            style: textTheme.bodySmall?.copyWith(
+              color: Colors.white.withValues(alpha: 0.7),
+            ),
           ),
           const SizedBox(height: 16),
           SizedBox(
@@ -827,20 +872,29 @@ class _JobHistoryTimeline extends ConsumerWidget {
           Text('Job History', style: textTheme.headlineSmall),
           const SizedBox(height: 16),
           jobs.when(
-            loading: () =>
-                const Center(child: CircularProgressIndicator()),
-            error: (error, _) => Text('Could not load history: $error',
-                style: textTheme.bodyMedium
-                    ?.copyWith(color: AppColors.statusError)),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, _) => Text(
+              'Could not load history: $error',
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.statusError,
+              ),
+            ),
             data: (list) => list.isEmpty
-                ? Text('No jobs have touched this box yet.',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: AppColors.textSecondary))
+                ? Text(
+                    'No jobs have touched this box yet.',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  )
                 : Column(
                     children: [
                       for (final (index, job) in list.indexed)
-                        _timelineEntry(job, index == 0,
-                            index == list.length - 1, textTheme),
+                        _timelineEntry(
+                          job,
+                          index == 0,
+                          index == list.length - 1,
+                          textTheme,
+                        ),
                     ],
                   ),
           ),
@@ -850,7 +904,11 @@ class _JobHistoryTimeline extends ConsumerWidget {
   }
 
   Widget _timelineEntry(
-      Job job, bool isLatest, bool isLast, TextTheme textTheme) {
+    Job job,
+    bool isLatest,
+    bool isLast,
+    TextTheme textTheme,
+  ) {
     final title = job.type == JobType.pickup
         ? 'Pickup — ${_statusLabel(job.status.name)}'
         : 'Delivery — ${_statusLabel(job.status.name)}';
@@ -873,7 +931,10 @@ class _JobHistoryTimeline extends ConsumerWidget {
               if (!isLast)
                 const Expanded(
                   child: VerticalDivider(
-                      width: 12, thickness: 1.5, color: AppColors.border),
+                    width: 12,
+                    thickness: 1.5,
+                    color: AppColors.border,
+                  ),
                 ),
             ],
           ),
@@ -884,9 +945,12 @@ class _JobHistoryTimeline extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: textTheme.bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w700)),
+                  Text(
+                    title,
+                    style: textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   Text(
                     '${job.storageUnitIds.length} boxes on job'
                     '${job.notes == null || job.notes!.isEmpty ? '' : ' • ${job.notes}'}',
@@ -898,7 +962,10 @@ class _JobHistoryTimeline extends ConsumerWidget {
               ),
             ),
           ),
-          Text(relativeTime(job.scheduledDate ?? DateTime.now()), style: textTheme.bodySmall),
+          Text(
+            relativeTime(job.scheduledDate ?? DateTime.now()),
+            style: textTheme.bodySmall,
+          ),
         ],
       ),
     );
@@ -906,7 +973,10 @@ class _JobHistoryTimeline extends ConsumerWidget {
 
   String _statusLabel(String status) => status
       .split('_')
-      .map((word) =>
-          word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
+      .map(
+        (word) => word.isEmpty
+            ? word
+            : '${word[0].toUpperCase()}${word.substring(1)}',
+      )
       .join(' ');
 }

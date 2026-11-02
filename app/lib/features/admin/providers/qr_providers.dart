@@ -32,7 +32,7 @@ class BatchPreview extends _$BatchPreview {
 enum QrLookupStatus { alreadyLinked, available, unknown }
 
 /// Firestore writes for the QR module.
-@riverpod
+@Riverpod(keepAlive: true)
 class QrMutations extends _$QrMutations {
   @override
   FutureOr<void> build() {}

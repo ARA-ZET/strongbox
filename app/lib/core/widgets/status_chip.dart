@@ -15,32 +15,57 @@ class StatusChip extends StatelessWidget {
 
   // Normalised (lowercased, separators stripped) status keys.
   static const _success = {
-    'completed', 'active', 'delivered', 'instorage', 'available', 'paid'
+    'completed',
+    'active',
+    'delivered',
+    'instorage',
+    'available',
+    'paid',
   };
   static const _warning = {
-    'inprogress', 'intransit', 'pendingdelivery', 'onjob', 'trialing',
-    'maintenance'
+    'inprogress',
+    'intransit',
+    'pendingdelivery',
+    'onjob',
+    'trialing',
+    'maintenance',
+    'collected',
   };
   // Everything else (scheduled, pending, pendingPickup, assigned, …) uses
   // the neutral pending style via the default branch.
   static const _error = {
-    'cancelled', 'critical', 'archived', 'unpaid', 'outofservice'
+    'cancelled',
+    'critical',
+    'archived',
+    'unpaid',
+    'outofservice',
   };
-  static const _pastDue = {'pastdue'};
+  static const _pastDue = {'pastdue', 'pendingconfirmation'};
+
+  /// Wording that reads better than the humanised enum name.
+  static const _labels = {'pendingconfirmation': 'Awaiting Confirmation'};
 
   @override
   Widget build(BuildContext context) {
     final key = status.toLowerCase().replaceAll(RegExp('[_ ]'), '');
 
     final (Color bg, Color fg) = switch (key) {
-      _ when _success.contains(key) =>
-        (AppColors.statusSuccessBg, AppColors.statusSuccess),
-      _ when _warning.contains(key) =>
-        (AppColors.statusWarningBg, AppColors.statusWarning),
-      _ when _error.contains(key) =>
-        (AppColors.statusErrorBg, AppColors.statusError),
-      _ when _pastDue.contains(key) =>
-        (AppColors.statusPastDueBg, AppColors.statusPastDue),
+      _ when _success.contains(key) => (
+        AppColors.statusSuccessBg,
+        AppColors.statusSuccess,
+      ),
+      _ when _warning.contains(key) => (
+        AppColors.statusWarningBg,
+        AppColors.statusWarning,
+      ),
+      _ when _error.contains(key) => (
+        AppColors.statusErrorBg,
+        AppColors.statusError,
+      ),
+      _ when _pastDue.contains(key) => (
+        AppColors.statusPastDueBg,
+        AppColors.statusPastDue,
+      ),
       _ => (AppColors.statusPendingBg, AppColors.textSecondary),
     };
 
@@ -51,7 +76,7 @@ class StatusChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
-        label ?? _humanise(status),
+        label ?? _labels[key] ?? _humanise(status),
         style: GoogleFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.w500,
@@ -65,8 +90,7 @@ class StatusChip extends StatelessWidget {
   static String _humanise(String raw) {
     final spaced = raw
         .replaceAll('_', ' ')
-        .replaceAllMapped(RegExp('([a-z])([A-Z])'),
-            (m) => '${m[1]} ${m[2]}');
+        .replaceAllMapped(RegExp('([a-z])([A-Z])'), (m) => '${m[1]} ${m[2]}');
     return spaced
         .split(' ')
         .where((w) => w.isNotEmpty)

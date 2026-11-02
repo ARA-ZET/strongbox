@@ -67,6 +67,37 @@ class VehiclePrice with _$VehiclePrice {
       _$VehiclePriceFromJson(json);
 }
 
+/// A packing supply (wrapping, paper, tape), charged once per unit sold.
+/// Delivered before the pickup (supply drop-off) or brought on the day.
+@freezed
+class SupplyPrice with _$SupplyPrice {
+  const factory SupplyPrice({
+    required String id,
+    required String label,
+    @JsonKey(name: 'desc') @Default('') String description,
+    @JsonKey(name: 'price') required int onceOffZar,
+    @Default(true) bool active,
+  }) = _SupplyPrice;
+
+  factory SupplyPrice.fromJson(Map<String, dynamic> json) =>
+      _$SupplyPriceFromJson(json);
+}
+
+/// A professional packer on pickup day, charged per hour with a minimum.
+@freezed
+class PackingHelperPrice with _$PackingHelperPrice {
+  const factory PackingHelperPrice({
+    @Default('Packing helper') String label,
+    @JsonKey(name: 'desc') @Default('') String description,
+    @JsonKey(name: 'price') @Default(0) int hourlyZar,
+    @Default(2) int minHours,
+    @Default(true) bool active,
+  }) = _PackingHelperPrice;
+
+  factory PackingHelperPrice.fromJson(Map<String, dynamic> json) =>
+      _$PackingHelperPriceFromJson(json);
+}
+
 /// The live price list — `priceLists/{tenantId}`, edited by admins and read
 /// by the app and the website. Until an admin first saves, everyone uses
 /// the defaults in packages/pricing/pricing.json (`PriceList.catalog`).
@@ -80,6 +111,8 @@ class PriceCatalog with _$PriceCatalog {
     @Default([]) List<LooseItemPrice> looseItems,
     @Default([]) List<String> itemIcons,
     @Default([]) List<VehiclePrice> vehicles,
+    @Default([]) List<SupplyPrice> supplies,
+    @Default(PackingHelperPrice()) PackingHelperPrice packingHelper,
     @NullableTimestampConverter() DateTime? updatedAt,
     String? updatedBy,
   }) = _PriceCatalog;
@@ -118,6 +151,19 @@ class PriceCatalog with _$PriceCatalog {
       looseItems.where((i) => i.active).toList();
   List<VehiclePrice> get activeVehicles =>
       vehicles.where((v) => v.active).toList();
+  List<SupplyPrice> get activeSupplies =>
+      supplies.where((s) => s.active).toList();
+
+  /// Supply for [id], retired or not.
+  SupplyPrice? supply(String? id) {
+    for (final s in supplies) {
+      if (s.id == id) return s;
+    }
+    return null;
+  }
+
+  /// Whether a packing helper can be booked.
+  bool get offersHelper => packingHelper.active && packingHelper.hourlyZar > 0;
 
   int get boxFrom => _min(activeBoxes.map((b) => b.monthlyZar));
   int get looseItemFrom => _min(activeLooseItems.map((i) => i.monthlyZar));

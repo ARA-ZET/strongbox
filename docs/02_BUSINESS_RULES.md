@@ -1,5 +1,11 @@
 # 02 — Business Rules
 
+> **As built (journey v5)** — the end-to-end flow is [`docs/journey/JOURNEY.md`](journey/JOURNEY.md). Rules it settles:
+> client bookings and delivery requests need an admin's confirmation; units become `inStorage`
+> only when scanned in at the facility, never at the client's door; a pickup's once-off charges
+> are billed on the next invoice after collection. v1 has no plans, Stripe or OTP — see
+> `23_BILLING.md`.
+
 These are the non-negotiable rules that govern how StrongBox works. Every developer and AI agent must read and follow these before writing any code.
 
 ---

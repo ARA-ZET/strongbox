@@ -13,6 +13,7 @@ import '../../../core/widgets/initials_avatar.dart';
 import '../../../core/widgets/secondary_button.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/client_providers.dart';
+import '../../../core/utils/public_ref.dart';
 
 /// Account settings: personal info, security, danger zone.
 /// Design: client_designs/account_settings/screen.png.
@@ -146,8 +147,7 @@ class _ClientAccountScreenState extends ConsumerState<ClientAccountScreen> {
                   borderRadius: AppRadius.pill,
                 ),
                 child: Text(
-                  'CLIENT ID: '
-                  '${client.id.substring(0, client.id.length.clamp(0, 6)).toUpperCase()}',
+                  'ACCOUNT ${clientRef(client.id)}',
                   style: tt.bodySmall?.copyWith(letterSpacing: 0.5),
                 ),
               ),

@@ -25,6 +25,7 @@ const mobileLinks = [
   { href: "/", label: "Home" },
   ...links,
   { href: "/loose-items", label: "Loose Items" },
+  { href: "/areas", label: "Areas We Serve" },
   { href: "/contact", label: "Contact" },
 ];
 

@@ -12,7 +12,7 @@ import '../../auth/providers/auth_provider.dart';
 part 'issue_report_providers.g.dart';
 
 /// Submits maintenance/support reports from the driver.
-@riverpod
+@Riverpod(keepAlive: true)
 class IssueReportActions extends _$IssueReportActions {
   @override
   FutureOr<void> build() {}
@@ -21,10 +21,11 @@ class IssueReportActions extends _$IssueReportActions {
     required IssueType issueType,
     required String description,
     required bool isUrgent,
+    String? jobId,
     List<Uint8List> photos = const [],
   }) async {
     final tenantId = ref.read(currentTenantIdProvider);
-    final driverId = ref.read(currentActorIdProvider);
+    final driverId = ref.read(currentUserIdProvider) ?? '';
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final issueRepo = ref.read(issueRepositoryProvider);
@@ -55,6 +56,7 @@ class IssueReportActions extends _$IssueReportActions {
         description: description,
         photoIds: photoIds,
         isUrgent: isUrgent,
+        jobId: jobId,
       );
     });
     state.throwIfError();

@@ -21,10 +21,27 @@ class Address with _$Address {
       _$AddressFromJson(json);
 }
 
+/// One line of packing supplies on a job: what, how many, and the
+/// once-off price each that was quoted (doc 03).
+@freezed
+class SupplyLine with _$SupplyLine {
+  const factory SupplyLine({
+    required String id,
+    @Default('') String label,
+    @Default(0) int qty,
+    @Default(0) int unitZar,
+  }) = _SupplyLine;
+
+  factory SupplyLine.fromJson(Map<String, dynamic> json) =>
+      _$SupplyLineFromJson(json);
+}
+
 /// Per-user notification delivery preferences (doc 03).
 @freezed
 class NotificationPrefs with _$NotificationPrefs {
   const factory NotificationPrefs({
+    /// Booking received / confirmed / declined.
+    @Default(true) bool bookingUpdatesEmail,
     @Default(true) bool pickupStartedEmail,
     @Default(false) bool pickupStartedSms,
     @Default(true) bool deliveryCompletedEmail,
