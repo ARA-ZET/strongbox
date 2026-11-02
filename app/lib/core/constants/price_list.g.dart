@@ -83,5 +83,11 @@ class PriceList {
       VehiclePrice(id: 'medium-truck', label: 'Medium Truck', description: 'Up to 3 m³', capacityM3: 3.0, onceOffZar: 450, recommended: true, icon: 'open_in_full'),
       VehiclePrice(id: 'large-fleet', label: 'Large Fleet', description: 'Up to 8 m³', capacityM3: 8.0, onceOffZar: 850, recommended: false, icon: 'local_shipping'),
     ],
+    supplies: [
+      SupplyPrice(id: 'bubble-wrap', label: 'Bubble wrap roll', description: '1.5 m × 10 m roll for fragile items', onceOffZar: 50),
+      SupplyPrice(id: 'packing-paper', label: 'Packing paper', description: 'Bundle of 50 sheets', onceOffZar: 45),
+      SupplyPrice(id: 'tape', label: 'Packing tape', description: '48 mm roll', onceOffZar: 25),
+    ],
+    packingHelper: PackingHelperPrice(label: 'Packing helper', description: 'A professional packer helps you pack, wrap and label on pickup day', hourlyZar: 250, minHours: 2),
   );
 }

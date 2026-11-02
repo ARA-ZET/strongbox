@@ -27,6 +27,7 @@ class _DriverJobsScreenState extends ConsumerState<DriverJobsScreen> {
     final jobs = _today
         ? ref.watch(driverTodayJobsProvider)
         : ref.watch(driverUpcomingJobsProvider);
+    final overdue = ref.watch(driverOverdueJobsProvider);
     final clientNames = ref.watch(clientNamesProvider);
     final textTheme = Theme.of(context).textTheme;
 
@@ -52,6 +53,16 @@ class _DriverJobsScreenState extends ConsumerState<DriverJobsScreen> {
             onChanged: (value) => setState(() => _today = value),
           ),
           const SizedBox(height: 16),
+          if (_today && overdue.isNotEmpty) ...[
+            Text('OVERDUE — STILL TO FINISH',
+                style: textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
+                    color: AppColors.statusError)),
+            const SizedBox(height: 8),
+            _buildList(overdue, clientNames, textTheme),
+            const SizedBox(height: 16),
+          ],
           _buildList(jobs, clientNames, textTheme),
         ],
       ),
@@ -196,7 +207,7 @@ class _JobCard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
-                    pickup ? 'Pickup' : 'Delivery',
+                    job.type.label,
                     style: tt.bodySmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: pickup
@@ -245,7 +256,7 @@ class _JobCard extends ConsumerWidget {
                 const SizedBox(width: 6),
                 Text('${job.storageUnitIds.length} Units', style: tt.bodyMedium),
                 const Spacer(),
-                _DriverStatusChip(status: job.status.name),
+                _DriverStatusChip(status: job.status),
               ],
             ),
             if (inProgress) ...[
@@ -274,15 +285,17 @@ class _JobCard extends ConsumerWidget {
 class _DriverStatusChip extends StatelessWidget {
   const _DriverStatusChip({required this.status});
 
-  final String status;
+  final JobStatus status;
 
   @override
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
     final (label, color) = switch (status) {
-      'inProgress' => ('In Transit', AppColors.statusWarning),
-      'completed' => ('Completed', AppColors.statusSuccess),
-      'assigned' => ('Assigned', AppColors.textSecondary),
+      JobStatus.inProgress => ('In Progress', AppColors.statusWarning),
+      JobStatus.collected => ('Collected — to facility', AppColors.statusWarning),
+      JobStatus.completed => ('Completed', AppColors.statusSuccess),
+      JobStatus.cancelled => ('Cancelled', AppColors.statusError),
+      JobStatus.assigned => ('Assigned', AppColors.textSecondary),
       _ => ('Pending', AppColors.textSecondary),
     };
 

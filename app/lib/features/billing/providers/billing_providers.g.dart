@@ -168,7 +168,7 @@ class _ClientInvoicesProviderElement
   String get clientId => (origin as ClientInvoicesProvider).clientId;
 }
 
-String _$invoiceActionsHash() => r'fa73c37db5f60cd926136d12bf5396624b89cd78';
+String _$invoiceActionsHash() => r'754c129e8dd2fbfc81391ae5054c657aeec5a755';
 
 /// Settles invoices: clients pay by EFT, an admin records it here. The
 /// client's billing status follows via the onInvoiceUpdated function.
@@ -176,7 +176,7 @@ String _$invoiceActionsHash() => r'fa73c37db5f60cd926136d12bf5396624b89cd78';
 /// Copied from [InvoiceActions].
 @ProviderFor(InvoiceActions)
 final invoiceActionsProvider =
-    AutoDisposeAsyncNotifierProvider<InvoiceActions, void>.internal(
+    AsyncNotifierProvider<InvoiceActions, void>.internal(
   InvoiceActions.new,
   name: r'invoiceActionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -186,6 +186,6 @@ final invoiceActionsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$InvoiceActions = AutoDisposeAsyncNotifier<void>;
+typedef _$InvoiceActions = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

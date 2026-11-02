@@ -45,6 +45,15 @@ export type Vehicle = {
   icon: string;
 };
 
+export type Supply = { id: string; label: string; desc: string; price: number };
+export type PackingHelper = {
+  label: string;
+  desc: string;
+  /** Per hour, once-off on pickup day. */
+  price: number;
+  minHours: number;
+};
+
 export type Prices = {
   /** Only entries on sale — retired ones are dropped here. */
   boxes: BoxType[];
@@ -52,6 +61,10 @@ export type Prices = {
   looseItemCategories: string[];
   looseItems: LooseItem[];
   vehicles: Vehicle[];
+  /** Packing supplies — once-off each. */
+  supplies: Supply[];
+  /** Null when packing help isn't offered. */
+  packingHelper: PackingHelper | null;
   /** Cheapest box, for "from R…" copy. */
   boxFrom: number;
   looseItemFrom: number;
@@ -129,6 +142,33 @@ function normalise(raw: Raw): Prices | null {
     }))
     .filter((v) => v.id && v.label && v.price);
 
+  // Lists published before supplies existed use the packaged defaults,
+  // as the app and the booking function do.
+  const rawSupplies = "supplies" in raw ? raw.supplies : DEFAULT_PRICES.supplies;
+  const supplies: Supply[] = list(rawSupplies)
+    .filter(onSale)
+    .map((s) => ({
+      id: str(s.id),
+      label: str(s.label),
+      desc: str(s.desc),
+      price: typeof s.price === "number" && s.price >= 0 ? Math.round(s.price) : -1,
+    }))
+    .filter((s) => s.id && s.label && s.price >= 0);
+
+  const rawHelper = ("packingHelper" in raw ? raw.packingHelper : DEFAULT_PRICES.packingHelper) as
+    | Raw
+    | undefined;
+  const helperPrice = rawHelper ? price(rawHelper.price) : 0;
+  const packingHelper: PackingHelper | null =
+    rawHelper && onSale(rawHelper) && helperPrice
+      ? {
+          label: str(rawHelper.label) || "Packing helper",
+          desc: str(rawHelper.desc),
+          price: helperPrice,
+          minHours: Math.max(1, Math.floor(Number(rawHelper.minHours) || 1)),
+        }
+      : null;
+
   // Calculators need at least one of each to render.
   if (!boxes.length || !vehicles.length) return null;
 
@@ -145,6 +185,8 @@ function normalise(raw: Raw): Prices | null {
     looseItemCategories: ["All", ...categories],
     looseItems,
     vehicles,
+    supplies,
+    packingHelper,
     boxFrom: min(boxes.map((b) => b.price)),
     looseItemFrom: min(looseItems.map((i) => i.price)),
     pickupFrom: min(vehicles.map((v) => v.price)),

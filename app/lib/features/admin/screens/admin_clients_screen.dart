@@ -13,6 +13,7 @@ import '../../../core/widgets/status_chip.dart';
 import '../providers/clients_providers.dart';
 import '../widgets/client_form_dialog.dart';
 import '../../../core/widgets/table_scroll.dart';
+import '../../../core/utils/public_ref.dart';
 
 const _pageSize = 10;
 
@@ -309,7 +310,7 @@ class _ClientRowState extends ConsumerState<_ClientRow> {
                                   ?.copyWith(fontWeight: FontWeight.w600),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis),
-                          Text('ID: ${client.id.substring(0, client.id.length.clamp(0, 6))}',
+                          Text('Account ${clientRef(client.id)}',
                               style: textTheme.bodySmall),
                         ],
                       ),

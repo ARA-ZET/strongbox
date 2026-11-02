@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/firebase_options.dart';
 import 'core/theme/app_theme.dart';
+import 'features/admin/widgets/view_as.dart';
 import 'features/notifications/widgets/push_listener.dart';
 import 'routing/app_router.dart';
 
@@ -35,8 +36,9 @@ class StrongBoxApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: router,
-      builder: (context, child) =>
-          PushListener(child: child ?? const SizedBox.shrink()),
+      builder: (context, child) => PushListener(
+        child: ViewAsBanner(child: child ?? const SizedBox.shrink()),
+      ),
     );
   }
 }

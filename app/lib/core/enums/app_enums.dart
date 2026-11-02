@@ -19,9 +19,26 @@ enum StorageStatus {
   archived,
 }
 
-enum JobStatus { scheduled, assigned, inProgress, completed, cancelled }
+/// Job lifecycle. Client bookings and delivery requests start in
+/// [pendingConfirmation] until an admin confirms them. A pickup is
+/// [collected] once the client signs at the door, and [completed] when the
+/// driver has scanned every unit in at the facility.
+enum JobStatus {
+  pendingConfirmation,
+  scheduled,
+  assigned,
+  inProgress,
+  collected,
+  completed,
+  cancelled,
+}
 
-enum JobType { pickup, delivery }
+/// [supplyDrop] brings empty boxes and packing supplies before a pickup
+/// (journey Path A); it carries no storage units.
+enum JobType { pickup, delivery, supplyDrop }
+
+/// Condition a driver records for a unit at collection.
+enum UnitCondition { good, damaged }
 
 enum UnitType { closed, open }
 
@@ -51,16 +68,23 @@ enum AuditAction {
   unitArchived,
   photoUploaded,
   jobCreated,
+  jobConfirmed,
+  jobDeclined,
   jobAssigned,
   jobStarted,
+  driverEnRoute,
+  driverArrived,
+  jobCollected,
   jobCompleted,
   jobCancelled,
   clientSignOff,
+  unitReceived,
   subscriptionCreated,
   subscriptionUpdated,
   subscriptionCancelled,
   adminImpersonated,
   issueReported,
+  issueUpdated,
   shiftStarted,
   shiftEnded,
   quoteAccepted,
@@ -80,12 +104,19 @@ enum PaymentStatus { paid, open, voided, uncollectible }
 /// Also written by Cloud Functions (functions/src/constants.js — keep the
 /// names in sync).
 enum NotificationType {
+  bookingReceived,
+  bookingConfirmed,
+  bookingDeclined,
   jobScheduled,
   jobAssigned,
   jobStarted,
+  driverEnRoute,
+  driverArrived,
   jobCompleted,
   jobCancelled,
   pickupConfirmed,
+  unitsReceived,
+  suppliesDelivered,
   deliveryCompleted,
   deliveryRequested,
   invoiceReady,
@@ -197,11 +228,23 @@ extension StorageStatusX on StorageStatus {
 }
 
 extension JobStatusX on JobStatus {
-  String get label => _title(name);
+  String get label => switch (this) {
+        JobStatus.pendingConfirmation => 'Awaiting Confirmation',
+        JobStatus.collected => 'Collected',
+        _ => _title(name),
+      };
+
+  /// Still to happen or happening — not yet finished or cancelled.
+  bool get isOpen => this != JobStatus.completed && this != JobStatus.cancelled;
+
+  /// Confirmed by ops but not started — can still be (re)assigned.
+  bool get isDispatchable =>
+      this == JobStatus.scheduled || this == JobStatus.assigned;
 
   Color get chipBgColour => switch (this) {
         JobStatus.completed => AppColors.statusSuccessBg,
-        JobStatus.inProgress => AppColors.statusWarningBg,
+        JobStatus.inProgress || JobStatus.collected => AppColors.statusWarningBg,
+        JobStatus.pendingConfirmation => AppColors.statusPastDueBg,
         JobStatus.scheduled ||
         JobStatus.assigned =>
           AppColors.statusPendingBg,
@@ -210,14 +253,26 @@ extension JobStatusX on JobStatus {
 
   Color get chipTextColour => switch (this) {
         JobStatus.completed => AppColors.statusSuccess,
-        JobStatus.inProgress => AppColors.statusWarning,
+        JobStatus.inProgress || JobStatus.collected => AppColors.statusWarning,
+        JobStatus.pendingConfirmation => AppColors.statusPastDue,
         JobStatus.scheduled || JobStatus.assigned => AppColors.statusPending,
         JobStatus.cancelled => AppColors.statusError,
       };
 }
 
 extension JobTypeX on JobType {
-  String get label => _title(name);
+  String get label => switch (this) {
+        JobType.pickup => 'Pickup',
+        JobType.delivery => 'Delivery',
+        JobType.supplyDrop => 'Supply Drop-off',
+      };
+}
+
+extension UnitConditionX on UnitCondition {
+  String get label => switch (this) {
+        UnitCondition.good => 'Good',
+        UnitCondition.damaged => 'Damaged',
+      };
 }
 
 extension UnitTypeX on UnitType {
@@ -257,6 +312,14 @@ extension TimeWindowX on TimeWindow {
 
 extension IssueTypeX on IssueType {
   String get label => _title(name);
+}
+
+extension IssueStatusX on IssueStatus {
+  String get label => switch (this) {
+        IssueStatus.open => 'Open',
+        IssueStatus.inReview => 'In Review',
+        IssueStatus.resolved => 'Resolved',
+      };
 }
 
 

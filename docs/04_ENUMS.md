@@ -1,5 +1,11 @@
 # 04 — Enums
 
+> **As built (journey v5)** — `JobStatus`: `pendingConfirmation, scheduled, assigned, inProgress,
+> collected, completed, cancelled`. `JobType`: `pickup, delivery, supplyDrop`. New
+> `UnitCondition { good, damaged }`. New `NotificationType`s: `bookingReceived`,
+> `bookingConfirmed`, `bookingDeclined`, `driverEnRoute`, `driverArrived`, `unitsReceived`,
+> `suppliesDelivered`. The code in `app/lib/core/enums/app_enums.dart` is authoritative.
+
 All enums are defined here. Never use raw strings where an enum exists.
 In Flutter, implement these as Dart `enum` types with extension methods for display labels and colours.
 

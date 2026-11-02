@@ -35,7 +35,8 @@ test("an unassigned new job alerts admins; delivery requests say so", () => {
   const delivery = jobCreatedMessages(
       { ...base, type: "delivery" }, JOB_ID, "Thandi");
   assert.deepEqual(types(delivery), ["admins:deliveryRequested"]);
-  assert.match(delivery[0].title, /#JB-AB12/);
+  assert.match(delivery[0].title, /DL-[0-9A-Z]{6}/);
+  assert.doesNotMatch(delivery[0].title, /AB12/i); // never the raw id
   assert.match(delivery[0].body, /^Thandi · 3 items · Tue 3 Nov, morning$/);
 });
 
@@ -58,19 +59,65 @@ test("assigning or reassigning a driver notifies the new driver only", () => {
       JOB_ID), []);
 });
 
-test("start and completion reach the client; completion also admins", () => {
-  const assigned = { ...base, status: "assigned", driverId: "drv-1" };
-  const started = { ...assigned, status: "inProgress" };
-  assert.deepEqual(types(jobUpdatedMessages(assigned, started, JOB_ID)),
-      ["client:jobStarted"]);
+test("a client booking asks admins to confirm and tells the client", () => {
+  const booking = { ...base, status: "pendingConfirmation",
+    suppliesFirst: true, helperHours: 2 };
+  const msgs = jobCreatedMessages(booking, JOB_ID, "Thandi");
+  assert.deepEqual(types(msgs), ["admins:jobScheduled", "client:bookingReceived"]);
+  assert.match(msgs[0].title, /to confirm/);
+  assert.match(msgs[0].body, /supplies first, 2h packing help/);
+  // Its paired supply drop-off adds nothing of its own.
+  assert.deepEqual(jobCreatedMessages({ ...booking, type: "supplyDrop",
+    linkedJobId: "p1" }, "s1", "Thandi"), []);
+});
 
-  const done = { ...started, status: "completed" };
-  assert.deepEqual(types(jobUpdatedMessages(started, done, JOB_ID)),
-      ["client:pickupConfirmed", "admins:jobCompleted"]);
+test("confirming or declining a booking tells the client", () => {
+  const pending = { ...base, status: "pendingConfirmation" };
+  assert.deepEqual(types(jobUpdatedMessages(pending,
+      { ...pending, status: "scheduled" }, JOB_ID)),
+  ["client:bookingConfirmed"]);
+  const declined = jobUpdatedMessages(pending,
+      { ...pending, status: "cancelled", cancelReason: "Area not served." },
+      JOB_ID);
+  assert.deepEqual(types(declined), ["client:bookingDeclined"]);
+  assert.match(declined[0].body, /Area not served/);
+});
+
+test("check-ins tell the client who is coming, then that they arrived", () => {
+  const assigned = { ...base, status: "assigned", driverId: "drv-1" };
+  const started = { ...assigned, status: "inProgress", departedAt: new Date() };
+  const enRoute = jobUpdatedMessages(assigned, started, JOB_ID,
+      { driverName: "Sipho" });
+  assert.deepEqual(types(enRoute), ["client:driverEnRoute"]);
+  assert.match(enRoute[0].body, /^Sipho \(E-ID DRV-[0-9A-Z]{6}\) is on the way/);
+  const arrived = { ...started, arrivedAt: new Date() };
+  assert.deepEqual(types(jobUpdatedMessages(started, arrived, JOB_ID)),
+      ["client:driverArrived"]);
+  // A delivery starting at the facility says nothing until it departs.
+  const loading = { ...assigned, type: "delivery", status: "inProgress" };
+  assert.deepEqual(jobUpdatedMessages({ ...assigned, type: "delivery" },
+      loading, JOB_ID), []);
+});
+
+test("collection, receiving and completion reach the client", () => {
+  const started = { ...base, status: "inProgress", driverId: "drv-1" };
+  const collected = { ...started, status: "collected" };
+  assert.deepEqual(types(jobUpdatedMessages(started, collected, JOB_ID)),
+      ["client:pickupConfirmed"]);
+  const stored = { ...collected, status: "completed" };
+  assert.deepEqual(types(jobUpdatedMessages(collected, stored, JOB_ID)),
+      ["client:unitsReceived", "admins:jobCompleted"]);
   const delivered = jobUpdatedMessages(
-      { ...started, type: "delivery" }, { ...done, type: "delivery" }, JOB_ID);
+      { ...started, type: "delivery" },
+      { ...started, type: "delivery", status: "completed",
+        recipientName: "Ann" }, JOB_ID);
   assert.deepEqual(types(delivered),
       ["client:deliveryCompleted", "admins:jobCompleted"]);
+  assert.match(delivered[0].body, /signed for by Ann/);
+  const supplies = jobUpdatedMessages({ ...started, type: "supplyDrop" },
+      { ...started, type: "supplyDrop", status: "completed" }, JOB_ID);
+  assert.deepEqual(types(supplies),
+      ["client:suppliesDelivered", "admins:jobCompleted"]);
 });
 
 test("cancellation tells the client and the driver who had it", () => {
@@ -87,7 +134,8 @@ test("cancellation tells the client and the driver who had it", () => {
 test("routes open a screen each role can see", () => {
   const job = { entityType: "job", entityId: "j1" };
   assert.equal(routeFor("driver", job), "/driver/jobs/j1");
-  assert.equal(routeFor("client", job), "/client/deliveries");
+  assert.equal(routeFor("client", job), "/client/orders/j1");
+  assert.equal(routeFor("client", { entityType: "job" }), "/client/orders");
   assert.equal(routeFor("admin", job), "/admin/jobs");
   assert.equal(routeFor("client", { entityType: "invoice", entityId: "i" }),
       "/client/subscription");

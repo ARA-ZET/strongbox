@@ -59,6 +59,18 @@ class PricingEditor extends _$PricingEditor {
     return c.copyWith(vehicles: list);
   });
 
+  // ---- packing supplies & helper
+
+  Future<void> upsertSupply(SupplyPrice supply) => _save((c) {
+    final list = [...c.supplies];
+    final i = list.indexWhere((s) => s.id == supply.id);
+    i == -1 ? list.add(supply) : list[i] = supply;
+    return c.copyWith(supplies: list);
+  });
+
+  Future<void> setPackingHelper(PackingHelperPrice helper) =>
+      _save((c) => c.copyWith(packingHelper: helper));
+
   Future<void> _save(PriceCatalog Function(PriceCatalog) change) async {
     try {
       await ref
@@ -96,6 +108,7 @@ Set<String> savedPriceIds(Ref ref) {
     ...live.boxes.map((b) => b.id),
     ...live.looseItems.map((i) => i.id),
     ...live.vehicles.map((v) => v.id),
+    ...live.supplies.map((s) => s.id),
   };
 }
 
@@ -139,6 +152,19 @@ List<String> validatePriceCatalog(PriceCatalog catalog) {
   for (final v in catalog.vehicles) {
     if (v.label.trim().isEmpty) problems.add('Every vehicle needs a name.');
     checkPrice(v.label, v.onceOffZar);
+  }
+  for (final s in catalog.supplies) {
+    if (s.label.trim().isEmpty) problems.add('Every supply needs a name.');
+    if (s.onceOffZar < 0 || s.onceOffZar > maxPriceZar) {
+      problems.add('${s.label} needs a price between R0 and R$maxPriceZar.');
+    }
+  }
+  final helper = catalog.packingHelper;
+  if (helper.active) {
+    checkPrice('The packing helper', helper.hourlyZar);
+    if (helper.minHours < 1 || helper.minHours > 12) {
+      problems.add('Packing help needs a minimum of 1–12 hours.');
+    }
   }
   return problems;
 }

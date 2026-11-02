@@ -33,6 +33,9 @@ mixin _$Invoice {
   PaymentStatus get status => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   List<InvoiceLine> get lines => throw _privateConstructorUsedError;
+
+  /// Once-off job charges on this invoice.
+  List<InvoiceCharge> get charges => throw _privateConstructorUsedError;
   int get unitCount => throw _privateConstructorUsedError;
 
   /// Billable units with no size — not on this invoice.
@@ -77,6 +80,7 @@ abstract class $InvoiceCopyWith<$Res> {
       PaymentStatus status,
       String? description,
       List<InvoiceLine> lines,
+      List<InvoiceCharge> charges,
       int unitCount,
       int unpricedUnitCount,
       String? pdfUrl,
@@ -114,6 +118,7 @@ class _$InvoiceCopyWithImpl<$Res, $Val extends Invoice>
     Object? status = null,
     Object? description = freezed,
     Object? lines = null,
+    Object? charges = null,
     Object? unitCount = null,
     Object? unpricedUnitCount = null,
     Object? pdfUrl = freezed,
@@ -165,6 +170,10 @@ class _$InvoiceCopyWithImpl<$Res, $Val extends Invoice>
           ? _value.lines
           : lines // ignore: cast_nullable_to_non_nullable
               as List<InvoiceLine>,
+      charges: null == charges
+          ? _value.charges
+          : charges // ignore: cast_nullable_to_non_nullable
+              as List<InvoiceCharge>,
       unitCount: null == unitCount
           ? _value.unitCount
           : unitCount // ignore: cast_nullable_to_non_nullable
@@ -238,6 +247,7 @@ abstract class _$$InvoiceImplCopyWith<$Res> implements $InvoiceCopyWith<$Res> {
       PaymentStatus status,
       String? description,
       List<InvoiceLine> lines,
+      List<InvoiceCharge> charges,
       int unitCount,
       int unpricedUnitCount,
       String? pdfUrl,
@@ -273,6 +283,7 @@ class __$$InvoiceImplCopyWithImpl<$Res>
     Object? status = null,
     Object? description = freezed,
     Object? lines = null,
+    Object? charges = null,
     Object? unitCount = null,
     Object? unpricedUnitCount = null,
     Object? pdfUrl = freezed,
@@ -324,6 +335,10 @@ class __$$InvoiceImplCopyWithImpl<$Res>
           ? _value._lines
           : lines // ignore: cast_nullable_to_non_nullable
               as List<InvoiceLine>,
+      charges: null == charges
+          ? _value._charges
+          : charges // ignore: cast_nullable_to_non_nullable
+              as List<InvoiceCharge>,
       unitCount: null == unitCount
           ? _value.unitCount
           : unitCount // ignore: cast_nullable_to_non_nullable
@@ -393,6 +408,7 @@ class _$InvoiceImpl extends _Invoice {
       this.status = PaymentStatus.open,
       this.description,
       final List<InvoiceLine> lines = const [],
+      final List<InvoiceCharge> charges = const [],
       this.unitCount = 0,
       this.unpricedUnitCount = 0,
       this.pdfUrl,
@@ -407,6 +423,7 @@ class _$InvoiceImpl extends _Invoice {
       @NullableTimestampConverter() this.createdAt,
       @NullableTimestampConverter() this.updatedAt})
       : _lines = lines,
+        _charges = charges,
         super._();
 
   factory _$InvoiceImpl.fromJson(Map<String, dynamic> json) =>
@@ -443,6 +460,18 @@ class _$InvoiceImpl extends _Invoice {
     if (_lines is EqualUnmodifiableListView) return _lines;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_lines);
+  }
+
+  /// Once-off job charges on this invoice.
+  final List<InvoiceCharge> _charges;
+
+  /// Once-off job charges on this invoice.
+  @override
+  @JsonKey()
+  List<InvoiceCharge> get charges {
+    if (_charges is EqualUnmodifiableListView) return _charges;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_charges);
   }
 
   @override
@@ -487,7 +516,7 @@ class _$InvoiceImpl extends _Invoice {
 
   @override
   String toString() {
-    return 'Invoice(id: $id, tenantId: $tenantId, clientId: $clientId, reference: $reference, amount: $amount, currency: $currency, status: $status, description: $description, lines: $lines, unitCount: $unitCount, unpricedUnitCount: $unpricedUnitCount, pdfUrl: $pdfUrl, periodStart: $periodStart, periodEnd: $periodEnd, dueAt: $dueAt, paidAt: $paidAt, paidBy: $paidBy, paymentNote: $paymentNote, voidReason: $voidReason, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Invoice(id: $id, tenantId: $tenantId, clientId: $clientId, reference: $reference, amount: $amount, currency: $currency, status: $status, description: $description, lines: $lines, charges: $charges, unitCount: $unitCount, unpricedUnitCount: $unpricedUnitCount, pdfUrl: $pdfUrl, periodStart: $periodStart, periodEnd: $periodEnd, dueAt: $dueAt, paidAt: $paidAt, paidBy: $paidBy, paymentNote: $paymentNote, voidReason: $voidReason, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -509,6 +538,7 @@ class _$InvoiceImpl extends _Invoice {
             (identical(other.description, description) ||
                 other.description == description) &&
             const DeepCollectionEquality().equals(other._lines, _lines) &&
+            const DeepCollectionEquality().equals(other._charges, _charges) &&
             (identical(other.unitCount, unitCount) ||
                 other.unitCount == unitCount) &&
             (identical(other.unpricedUnitCount, unpricedUnitCount) ||
@@ -546,6 +576,7 @@ class _$InvoiceImpl extends _Invoice {
         status,
         description,
         const DeepCollectionEquality().hash(_lines),
+        const DeepCollectionEquality().hash(_charges),
         unitCount,
         unpricedUnitCount,
         pdfUrl,
@@ -586,6 +617,7 @@ abstract class _Invoice extends Invoice {
       final PaymentStatus status,
       final String? description,
       final List<InvoiceLine> lines,
+      final List<InvoiceCharge> charges,
       final int unitCount,
       final int unpricedUnitCount,
       final String? pdfUrl,
@@ -625,6 +657,10 @@ abstract class _Invoice extends Invoice {
   String? get description;
   @override
   List<InvoiceLine> get lines;
+  @override
+
+  /// Once-off job charges on this invoice.
+  List<InvoiceCharge> get charges;
   @override
   int get unitCount;
   @override
@@ -890,5 +926,180 @@ abstract class _InvoiceLine implements InvoiceLine {
   @override
   @JsonKey(ignore: true)
   _$$InvoiceLineImplCopyWith<_$InvoiceLineImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+InvoiceCharge _$InvoiceChargeFromJson(Map<String, dynamic> json) {
+  return _InvoiceCharge.fromJson(json);
+}
+
+/// @nodoc
+mixin _$InvoiceCharge {
+  String get jobId => throw _privateConstructorUsedError;
+  String get label => throw _privateConstructorUsedError;
+  int get amountZar => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $InvoiceChargeCopyWith<InvoiceCharge> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $InvoiceChargeCopyWith<$Res> {
+  factory $InvoiceChargeCopyWith(
+          InvoiceCharge value, $Res Function(InvoiceCharge) then) =
+      _$InvoiceChargeCopyWithImpl<$Res, InvoiceCharge>;
+  @useResult
+  $Res call({String jobId, String label, int amountZar});
+}
+
+/// @nodoc
+class _$InvoiceChargeCopyWithImpl<$Res, $Val extends InvoiceCharge>
+    implements $InvoiceChargeCopyWith<$Res> {
+  _$InvoiceChargeCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? jobId = null,
+    Object? label = null,
+    Object? amountZar = null,
+  }) {
+    return _then(_value.copyWith(
+      jobId: null == jobId
+          ? _value.jobId
+          : jobId // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      amountZar: null == amountZar
+          ? _value.amountZar
+          : amountZar // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$InvoiceChargeImplCopyWith<$Res>
+    implements $InvoiceChargeCopyWith<$Res> {
+  factory _$$InvoiceChargeImplCopyWith(
+          _$InvoiceChargeImpl value, $Res Function(_$InvoiceChargeImpl) then) =
+      __$$InvoiceChargeImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String jobId, String label, int amountZar});
+}
+
+/// @nodoc
+class __$$InvoiceChargeImplCopyWithImpl<$Res>
+    extends _$InvoiceChargeCopyWithImpl<$Res, _$InvoiceChargeImpl>
+    implements _$$InvoiceChargeImplCopyWith<$Res> {
+  __$$InvoiceChargeImplCopyWithImpl(
+      _$InvoiceChargeImpl _value, $Res Function(_$InvoiceChargeImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? jobId = null,
+    Object? label = null,
+    Object? amountZar = null,
+  }) {
+    return _then(_$InvoiceChargeImpl(
+      jobId: null == jobId
+          ? _value.jobId
+          : jobId // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      amountZar: null == amountZar
+          ? _value.amountZar
+          : amountZar // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$InvoiceChargeImpl implements _InvoiceCharge {
+  const _$InvoiceChargeImpl(
+      {required this.jobId, this.label = '', this.amountZar = 0});
+
+  factory _$InvoiceChargeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$InvoiceChargeImplFromJson(json);
+
+  @override
+  final String jobId;
+  @override
+  @JsonKey()
+  final String label;
+  @override
+  @JsonKey()
+  final int amountZar;
+
+  @override
+  String toString() {
+    return 'InvoiceCharge(jobId: $jobId, label: $label, amountZar: $amountZar)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$InvoiceChargeImpl &&
+            (identical(other.jobId, jobId) || other.jobId == jobId) &&
+            (identical(other.label, label) || other.label == label) &&
+            (identical(other.amountZar, amountZar) ||
+                other.amountZar == amountZar));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, jobId, label, amountZar);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$InvoiceChargeImplCopyWith<_$InvoiceChargeImpl> get copyWith =>
+      __$$InvoiceChargeImplCopyWithImpl<_$InvoiceChargeImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$InvoiceChargeImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _InvoiceCharge implements InvoiceCharge {
+  const factory _InvoiceCharge(
+      {required final String jobId,
+      final String label,
+      final int amountZar}) = _$InvoiceChargeImpl;
+
+  factory _InvoiceCharge.fromJson(Map<String, dynamic> json) =
+      _$InvoiceChargeImpl.fromJson;
+
+  @override
+  String get jobId;
+  @override
+  String get label;
+  @override
+  int get amountZar;
+  @override
+  @JsonKey(ignore: true)
+  _$$InvoiceChargeImplCopyWith<_$InvoiceChargeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

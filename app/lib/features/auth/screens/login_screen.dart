@@ -145,11 +145,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 // Desktop
 // ---------------------------------------------------------------------------
 
-/// Pricing and quotes live on the marketing site; the app is for accounts.
-void _openPricing() => launchUrl(
-  Uri.parse(ContactInfo.pricingUrl),
-  mode: LaunchMode.externalApplication,
-);
+/// Services, pricing and quotes live on the marketing site; the app is for
+/// accounts.
+void _openSite(String url) =>
+    launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+
+void _openPricing() => _openSite(ContactInfo.pricingUrl);
 
 class _DesktopLayout extends StatelessWidget {
   const _DesktopLayout({
@@ -236,7 +237,18 @@ class _DesktopLayout extends StatelessWidget {
                         children: [
                           card,
                           const SizedBox(height: 12),
-                          const _ContactLine(onNavy: true, showLead: false),
+                          // One line for both, so a short laptop needn't
+                          // scroll.
+                          const Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 20,
+                            runSpacing: 4,
+                            children: [
+                              _WebsiteLinks(compact: true),
+                              _ContactLine(onNavy: true, showLead: false),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -279,7 +291,11 @@ class _BrandPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const BrandLogo(onDark: true),
+            // The website link rides beside the logo, where it costs no height.
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [BrandLogo(onDark: true), _WebsiteLinks(compact: true)],
+            ),
             const Spacer(),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
@@ -378,6 +394,61 @@ class _ContactLine extends ConsumerWidget {
           ),
         action(Icons.call, contact.contactPhone, contact.phoneUri),
         action(Icons.email_outlined, contact.contactEmail, contact.emailUri),
+      ],
+    );
+  }
+}
+
+/// Links out to the website for visitors who want to explore before (or
+/// instead of) signing in. Always sits on a navy ground.
+class _WebsiteLinks extends StatelessWidget {
+  const _WebsiteLinks({
+    this.alignment = WrapAlignment.start,
+    this.compact = false,
+  });
+
+  final WrapAlignment alignment;
+
+  /// One short "Our website" link, for desktop where the page must fit a
+  /// laptop screen without scrolling.
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    Widget link(IconData icon, String label, String url) => InkWell(
+      onTap: () => _openSite(url),
+      borderRadius: BorderRadius.circular(4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16, color: AppColors.sky),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.sky,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (compact) {
+      return link(Icons.open_in_new, 'Our website', ContactInfo.websiteUrl);
+    }
+    return Wrap(
+      spacing: 20,
+      runSpacing: 4,
+      alignment: alignment,
+      children: [
+        link(Icons.open_in_new, 'Explore our services', ContactInfo.websiteUrl),
+        link(Icons.info_outline, 'About us', ContactInfo.aboutUrl),
       ],
     );
   }
@@ -688,17 +759,7 @@ class _MobileLayout extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Center(
-              child: InkWell(
-                onTap: _openPricing,
-                child: Text(
-                  'New to StrongBox? See our pricing',
-                  style: textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.6),
-                  ),
-                ),
-              ),
-            ),
+            const _WebsiteLinks(alignment: WrapAlignment.center),
             const SizedBox(height: 20),
             const ContactUsCard(dense: true),
             const SizedBox(height: 20),

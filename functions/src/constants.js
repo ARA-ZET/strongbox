@@ -26,14 +26,21 @@ const BILLABLE_STATUSES = new Set(["inTransit", "inStorage", "pendingDelivery"])
 
 /** NotificationType values written by these functions. */
 const NOTIFY = {
+  bookingReceived: "bookingReceived",
+  bookingConfirmed: "bookingConfirmed",
+  bookingDeclined: "bookingDeclined",
   jobScheduled: "jobScheduled",
   jobAssigned: "jobAssigned",
   jobStarted: "jobStarted",
+  driverEnRoute: "driverEnRoute",
+  driverArrived: "driverArrived",
   jobCompleted: "jobCompleted",
   jobCancelled: "jobCancelled",
   pickupConfirmed: "pickupConfirmed",
   deliveryCompleted: "deliveryCompleted",
   deliveryRequested: "deliveryRequested",
+  unitsReceived: "unitsReceived",
+  suppliesDelivered: "suppliesDelivered",
   invoiceReady: "invoiceReady",
   invoicePaid: "invoicePaid",
   qrUnlinkedAlert: "qrUnlinkedAlert",

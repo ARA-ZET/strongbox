@@ -26,6 +26,11 @@ abstract class StorageUnitRepository {
       {required String actorId, String? jobId});
   Future<void> softDelete(StorageUnit unit, {required String actorId});
   Future<void> addPhotoId(String unitId, String photoId);
+
+  /// The client's note of what they packed in [unit] (its `description`),
+  /// written with an audit event in one batch.
+  Future<void> setPackingNotes(StorageUnit unit, String notes,
+      {required String actorId});
 }
 
 class FirestoreStorageUnitRepository
@@ -230,4 +235,29 @@ class FirestoreStorageUnitRepository
             'photoIds': FieldValue.arrayUnion([photoId]),
             'updatedAt': FieldValue.serverTimestamp(),
           }));
+
+  @override
+  Future<void> setPackingNotes(StorageUnit unit, String notes,
+          {required String actorId}) =>
+      guardRepo(() async {
+        final text = notes.trim();
+        final batch = db.batch()
+          ..update(_units.doc(unit.id), {
+            'description': text.isEmpty ? null : text,
+            'updatedAt': FieldValue.serverTimestamp(),
+          })
+          ..set(
+            auditDoc(),
+            auditEventData(
+              tenantId: unit.tenantId,
+              actorId: actorId,
+              actorRole: UserRole.client,
+              action: AuditAction.unitUpdated,
+              entityType: 'storageUnit',
+              entityId: unit.id,
+              metadata: {'fields': ['description']},
+            ),
+          );
+        await batch.commit();
+      });
 }

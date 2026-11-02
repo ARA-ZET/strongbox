@@ -296,12 +296,206 @@ abstract class _Address implements Address {
       throw _privateConstructorUsedError;
 }
 
+SupplyLine _$SupplyLineFromJson(Map<String, dynamic> json) {
+  return _SupplyLine.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SupplyLine {
+  String get id => throw _privateConstructorUsedError;
+  String get label => throw _privateConstructorUsedError;
+  int get qty => throw _privateConstructorUsedError;
+  int get unitZar => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SupplyLineCopyWith<SupplyLine> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SupplyLineCopyWith<$Res> {
+  factory $SupplyLineCopyWith(
+          SupplyLine value, $Res Function(SupplyLine) then) =
+      _$SupplyLineCopyWithImpl<$Res, SupplyLine>;
+  @useResult
+  $Res call({String id, String label, int qty, int unitZar});
+}
+
+/// @nodoc
+class _$SupplyLineCopyWithImpl<$Res, $Val extends SupplyLine>
+    implements $SupplyLineCopyWith<$Res> {
+  _$SupplyLineCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? label = null,
+    Object? qty = null,
+    Object? unitZar = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      qty: null == qty
+          ? _value.qty
+          : qty // ignore: cast_nullable_to_non_nullable
+              as int,
+      unitZar: null == unitZar
+          ? _value.unitZar
+          : unitZar // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SupplyLineImplCopyWith<$Res>
+    implements $SupplyLineCopyWith<$Res> {
+  factory _$$SupplyLineImplCopyWith(
+          _$SupplyLineImpl value, $Res Function(_$SupplyLineImpl) then) =
+      __$$SupplyLineImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String id, String label, int qty, int unitZar});
+}
+
+/// @nodoc
+class __$$SupplyLineImplCopyWithImpl<$Res>
+    extends _$SupplyLineCopyWithImpl<$Res, _$SupplyLineImpl>
+    implements _$$SupplyLineImplCopyWith<$Res> {
+  __$$SupplyLineImplCopyWithImpl(
+      _$SupplyLineImpl _value, $Res Function(_$SupplyLineImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? label = null,
+    Object? qty = null,
+    Object? unitZar = null,
+  }) {
+    return _then(_$SupplyLineImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      qty: null == qty
+          ? _value.qty
+          : qty // ignore: cast_nullable_to_non_nullable
+              as int,
+      unitZar: null == unitZar
+          ? _value.unitZar
+          : unitZar // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SupplyLineImpl implements _SupplyLine {
+  const _$SupplyLineImpl(
+      {required this.id, this.label = '', this.qty = 0, this.unitZar = 0});
+
+  factory _$SupplyLineImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SupplyLineImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  @JsonKey()
+  final String label;
+  @override
+  @JsonKey()
+  final int qty;
+  @override
+  @JsonKey()
+  final int unitZar;
+
+  @override
+  String toString() {
+    return 'SupplyLine(id: $id, label: $label, qty: $qty, unitZar: $unitZar)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SupplyLineImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.label, label) || other.label == label) &&
+            (identical(other.qty, qty) || other.qty == qty) &&
+            (identical(other.unitZar, unitZar) || other.unitZar == unitZar));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, label, qty, unitZar);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SupplyLineImplCopyWith<_$SupplyLineImpl> get copyWith =>
+      __$$SupplyLineImplCopyWithImpl<_$SupplyLineImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SupplyLineImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SupplyLine implements SupplyLine {
+  const factory _SupplyLine(
+      {required final String id,
+      final String label,
+      final int qty,
+      final int unitZar}) = _$SupplyLineImpl;
+
+  factory _SupplyLine.fromJson(Map<String, dynamic> json) =
+      _$SupplyLineImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get label;
+  @override
+  int get qty;
+  @override
+  int get unitZar;
+  @override
+  @JsonKey(ignore: true)
+  _$$SupplyLineImplCopyWith<_$SupplyLineImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 NotificationPrefs _$NotificationPrefsFromJson(Map<String, dynamic> json) {
   return _NotificationPrefs.fromJson(json);
 }
 
 /// @nodoc
 mixin _$NotificationPrefs {
+  /// Booking received / confirmed / declined.
+  bool get bookingUpdatesEmail => throw _privateConstructorUsedError;
   bool get pickupStartedEmail => throw _privateConstructorUsedError;
   bool get pickupStartedSms => throw _privateConstructorUsedError;
   bool get deliveryCompletedEmail => throw _privateConstructorUsedError;
@@ -324,7 +518,8 @@ abstract class $NotificationPrefsCopyWith<$Res> {
       _$NotificationPrefsCopyWithImpl<$Res, NotificationPrefs>;
   @useResult
   $Res call(
-      {bool pickupStartedEmail,
+      {bool bookingUpdatesEmail,
+      bool pickupStartedEmail,
       bool pickupStartedSms,
       bool deliveryCompletedEmail,
       bool deliveryCompletedSms,
@@ -347,6 +542,7 @@ class _$NotificationPrefsCopyWithImpl<$Res, $Val extends NotificationPrefs>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? bookingUpdatesEmail = null,
     Object? pickupStartedEmail = null,
     Object? pickupStartedSms = null,
     Object? deliveryCompletedEmail = null,
@@ -357,6 +553,10 @@ class _$NotificationPrefsCopyWithImpl<$Res, $Val extends NotificationPrefs>
     Object? storageThresholdSms = null,
   }) {
     return _then(_value.copyWith(
+      bookingUpdatesEmail: null == bookingUpdatesEmail
+          ? _value.bookingUpdatesEmail
+          : bookingUpdatesEmail // ignore: cast_nullable_to_non_nullable
+              as bool,
       pickupStartedEmail: null == pickupStartedEmail
           ? _value.pickupStartedEmail
           : pickupStartedEmail // ignore: cast_nullable_to_non_nullable
@@ -402,7 +602,8 @@ abstract class _$$NotificationPrefsImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {bool pickupStartedEmail,
+      {bool bookingUpdatesEmail,
+      bool pickupStartedEmail,
       bool pickupStartedSms,
       bool deliveryCompletedEmail,
       bool deliveryCompletedSms,
@@ -423,6 +624,7 @@ class __$$NotificationPrefsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? bookingUpdatesEmail = null,
     Object? pickupStartedEmail = null,
     Object? pickupStartedSms = null,
     Object? deliveryCompletedEmail = null,
@@ -433,6 +635,10 @@ class __$$NotificationPrefsImplCopyWithImpl<$Res>
     Object? storageThresholdSms = null,
   }) {
     return _then(_$NotificationPrefsImpl(
+      bookingUpdatesEmail: null == bookingUpdatesEmail
+          ? _value.bookingUpdatesEmail
+          : bookingUpdatesEmail // ignore: cast_nullable_to_non_nullable
+              as bool,
       pickupStartedEmail: null == pickupStartedEmail
           ? _value.pickupStartedEmail
           : pickupStartedEmail // ignore: cast_nullable_to_non_nullable
@@ -473,7 +679,8 @@ class __$$NotificationPrefsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$NotificationPrefsImpl implements _NotificationPrefs {
   const _$NotificationPrefsImpl(
-      {this.pickupStartedEmail = true,
+      {this.bookingUpdatesEmail = true,
+      this.pickupStartedEmail = true,
       this.pickupStartedSms = false,
       this.deliveryCompletedEmail = true,
       this.deliveryCompletedSms = true,
@@ -485,6 +692,10 @@ class _$NotificationPrefsImpl implements _NotificationPrefs {
   factory _$NotificationPrefsImpl.fromJson(Map<String, dynamic> json) =>
       _$$NotificationPrefsImplFromJson(json);
 
+  /// Booking received / confirmed / declined.
+  @override
+  @JsonKey()
+  final bool bookingUpdatesEmail;
   @override
   @JsonKey()
   final bool pickupStartedEmail;
@@ -512,7 +723,7 @@ class _$NotificationPrefsImpl implements _NotificationPrefs {
 
   @override
   String toString() {
-    return 'NotificationPrefs(pickupStartedEmail: $pickupStartedEmail, pickupStartedSms: $pickupStartedSms, deliveryCompletedEmail: $deliveryCompletedEmail, deliveryCompletedSms: $deliveryCompletedSms, invoiceReadyEmail: $invoiceReadyEmail, invoiceReadySms: $invoiceReadySms, storageThresholdEmail: $storageThresholdEmail, storageThresholdSms: $storageThresholdSms)';
+    return 'NotificationPrefs(bookingUpdatesEmail: $bookingUpdatesEmail, pickupStartedEmail: $pickupStartedEmail, pickupStartedSms: $pickupStartedSms, deliveryCompletedEmail: $deliveryCompletedEmail, deliveryCompletedSms: $deliveryCompletedSms, invoiceReadyEmail: $invoiceReadyEmail, invoiceReadySms: $invoiceReadySms, storageThresholdEmail: $storageThresholdEmail, storageThresholdSms: $storageThresholdSms)';
   }
 
   @override
@@ -520,6 +731,8 @@ class _$NotificationPrefsImpl implements _NotificationPrefs {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationPrefsImpl &&
+            (identical(other.bookingUpdatesEmail, bookingUpdatesEmail) ||
+                other.bookingUpdatesEmail == bookingUpdatesEmail) &&
             (identical(other.pickupStartedEmail, pickupStartedEmail) ||
                 other.pickupStartedEmail == pickupStartedEmail) &&
             (identical(other.pickupStartedSms, pickupStartedSms) ||
@@ -542,6 +755,7 @@ class _$NotificationPrefsImpl implements _NotificationPrefs {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      bookingUpdatesEmail,
       pickupStartedEmail,
       pickupStartedSms,
       deliveryCompletedEmail,
@@ -568,7 +782,8 @@ class _$NotificationPrefsImpl implements _NotificationPrefs {
 
 abstract class _NotificationPrefs implements NotificationPrefs {
   const factory _NotificationPrefs(
-      {final bool pickupStartedEmail,
+      {final bool bookingUpdatesEmail,
+      final bool pickupStartedEmail,
       final bool pickupStartedSms,
       final bool deliveryCompletedEmail,
       final bool deliveryCompletedSms,
@@ -580,6 +795,10 @@ abstract class _NotificationPrefs implements NotificationPrefs {
   factory _NotificationPrefs.fromJson(Map<String, dynamic> json) =
       _$NotificationPrefsImpl.fromJson;
 
+  @override
+
+  /// Booking received / confirmed / declined.
+  bool get bookingUpdatesEmail;
   @override
   bool get pickupStartedEmail;
   @override

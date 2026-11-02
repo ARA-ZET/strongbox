@@ -5,6 +5,10 @@
  * unit is charged the rate recorded when it was registered; units registered
  * before rates were recorded fall back to the current price list. Billing is
  * monthly in advance, with no contract, minimum term or discounts.
+ *
+ * Once-off charges (pickup vehicle, packing supplies, packing helper) are
+ * recorded on the job as `onceOffZar` when booked, and billed on the first
+ * invoice after the job is collected or completed.
  */
 const {
   BILLABLE_STATUSES,
@@ -12,6 +16,7 @@ const {
   INVOICE_DUE_DAYS,
 } = require("./constants");
 const defaultRates = require("./default-rates.g.json").monthlyZar;
+const { clientRef, jobRef } = require("./references");
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -48,9 +53,10 @@ function billingPeriod(now) {
 function ratesFrom(priceList) {
   if (!priceList) return { ...defaultRates };
   const rates = {};
-  for (const box of priceList.boxes || []) rates[box.id] = box.monthlyZar;
-  for (const item of priceList.looseItems || []) {
-    rates[item.id] = item.monthlyZar;
+  // Stored with the app's JSON names (PriceCatalog): `price`, `desc`.
+  for (const entry of [...(priceList.boxes || []),
+    ...(priceList.looseItems || [])]) {
+    rates[entry.id] = Number(entry.price) || 0;
   }
   return rates;
 }
@@ -60,10 +66,41 @@ function invoiceId(clientId, period) {
   return `${clientId}_${period.key}`;
 }
 
-/** "INV-202611-AB12CD" — what clients quote as their EFT reference. */
+/**
+ * "INV-202611-7K3QX9" — what clients quote as their EFT reference. Ends in
+ * the client's account number (never their Firebase id), so a payment can
+ * be matched to the client.
+ */
 function invoiceReference(clientId, period) {
-  return `INV-${period.key.replace("-", "")}-` +
-    clientId.slice(0, 6).toUpperCase();
+  return `INV-${period.key.replace("-", "")}-` + clientRef(clientId).slice(3);
+}
+
+/** Job statuses whose once-off charges are due. */
+const CHARGEABLE_JOB_STATUSES = new Set(["collected", "completed"]);
+
+const JOB_KIND = {
+  pickup: "Pickup",
+  delivery: "Delivery",
+  supplyDrop: "Supply drop-off",
+};
+
+/**
+ * Once-off charge lines for [jobs] not billed yet.
+ * @param {Array<object>} jobs the client's jobs docs (with id)
+ * @return {Array<{jobId: string, label: string, amountZar: number}>}
+ */
+function onceOffCharges(jobs) {
+  return jobs
+      .filter((job) => !job.isDeleted && !job.invoicedIn &&
+        CHARGEABLE_JOB_STATUSES.has(job.status) &&
+        Number(job.onceOffZar) > 0)
+      .map((job) => ({
+        jobId: job.id,
+        label: `${JOB_KIND[job.type] || "Job"} ` +
+          `${jobRef(job.id, job.type)} — once-off`,
+        amountZar: Math.round(Number(job.onceOffZar)),
+      }))
+      .sort((a, b) => a.jobId.localeCompare(b.jobId));
 }
 
 /**
@@ -72,9 +109,11 @@ function invoiceReference(clientId, period) {
  * @param {Array<object>} units the client's storageUnits docs (with id)
  * @param {Object<string, number>} rates from ratesFrom()
  * @param {ReturnType<typeof billingPeriod>} period
+ * @param {Array<object>} jobs the client's jobs docs (with id), for
+ *   once-off charges
  * @return {object|null} invoice fields, minus server timestamps
  */
-function buildInvoice(client, units, rates, period) {
+function buildInvoice(client, units, rates, period, jobs = []) {
   const lines = [];
   let unpriced = 0;
   for (const unit of units) {
@@ -94,10 +133,13 @@ function buildInvoice(client, units, rates, period) {
       rateZar: rate,
     });
   }
-  if (lines.length === 0) return null;
+  const charges = onceOffCharges(jobs);
+  if (lines.length === 0 && charges.length === 0) return null;
 
   lines.sort((a, b) => a.qrCodeId.localeCompare(b.qrCodeId));
-  const amount = lines.reduce((sum, line) => sum + line.rateZar, 0);
+  const storage = lines.reduce((sum, line) => sum + line.rateZar, 0);
+  const amount = storage +
+    charges.reduce((sum, charge) => sum + charge.amountZar, 0);
   return {
     tenantId: client.tenantId,
     clientId: client.id,
@@ -107,6 +149,8 @@ function buildInvoice(client, units, rates, period) {
     currency: "zar",
     status: "open",
     lines,
+    charges,
+    storageZar: storage,
     unitCount: lines.length,
     unpricedUnitCount: unpriced,
     periodStart: period.start,
@@ -150,6 +194,7 @@ module.exports = {
   invoiceId,
   invoiceReference,
   buildInvoice,
+  onceOffCharges,
   billingStatusFor,
   formatZar,
 };

@@ -13,6 +13,7 @@ _$JobImpl _$$JobImplFromJson(Map<String, dynamic> json) => _$JobImpl(
           $enumDecodeNullable(_$JobTypeEnumMap, json['type']) ?? JobType.pickup,
       clientId: json['clientId'] as String,
       driverId: json['driverId'] as String?,
+      driverName: json['driverName'] as String?,
       status: $enumDecodeNullable(_$JobStatusEnumMap, json['status']) ??
           JobStatus.scheduled,
       scheduledDate:
@@ -44,6 +45,40 @@ _$JobImpl _$$JobImplFromJson(Map<String, dynamic> json) => _$JobImpl(
       clientSignatureUrl: json['clientSignatureUrl'] as String?,
       clientConfirmMethod: json['clientConfirmMethod'] as String?,
       estimatedFee: (json['estimatedFee'] as num?)?.toDouble(),
+      pickupVehicleId: json['pickupVehicleId'] as String?,
+      source: json['source'] as String?,
+      fleetVehicleId: json['fleetVehicleId'] as String?,
+      helperHours: (json['helperHours'] as num?)?.toInt() ?? 0,
+      accessNotes: json['accessNotes'] as String?,
+      supplies: (json['supplies'] as List<dynamic>?)
+              ?.map((e) => SupplyLine.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      emptyBoxes: (json['emptyBoxes'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, (e as num).toInt()),
+          ) ??
+          const {},
+      suppliesFirst: json['suppliesFirst'] as bool? ?? false,
+      linkedJobId: json['linkedJobId'] as String?,
+      onceOffZar: (json['onceOffZar'] as num?)?.toInt() ?? 0,
+      invoicedIn: json['invoicedIn'] as String?,
+      confirmedAt:
+          const NullableTimestampConverter().fromJson(json['confirmedAt']),
+      confirmedBy: json['confirmedBy'] as String?,
+      departedAt:
+          const NullableTimestampConverter().fromJson(json['departedAt']),
+      arrivedAt: const NullableTimestampConverter().fromJson(json['arrivedAt']),
+      collectedAt:
+          const NullableTimestampConverter().fromJson(json['collectedAt']),
+      receivedUnitIds: (json['receivedUnitIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      handedOverUnitIds: (json['handedOverUnitIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      recipientName: json['recipientName'] as String?,
       isRushJob: json['isRushJob'] as bool? ?? false,
       completedAt:
           const NullableTimestampConverter().fromJson(json['completedAt']),
@@ -61,6 +96,7 @@ Map<String, dynamic> _$$JobImplToJson(_$JobImpl instance) => <String, dynamic>{
       'type': _$JobTypeEnumMap[instance.type]!,
       'clientId': instance.clientId,
       'driverId': instance.driverId,
+      'driverName': instance.driverName,
       'status': _$JobStatusEnumMap[instance.status]!,
       'scheduledDate':
           const NullableTimestampConverter().toJson(instance.scheduledDate),
@@ -75,6 +111,29 @@ Map<String, dynamic> _$$JobImplToJson(_$JobImpl instance) => <String, dynamic>{
       'clientSignatureUrl': instance.clientSignatureUrl,
       'clientConfirmMethod': instance.clientConfirmMethod,
       'estimatedFee': instance.estimatedFee,
+      'pickupVehicleId': instance.pickupVehicleId,
+      'source': instance.source,
+      'fleetVehicleId': instance.fleetVehicleId,
+      'helperHours': instance.helperHours,
+      'accessNotes': instance.accessNotes,
+      'supplies': instance.supplies.map((e) => e.toJson()).toList(),
+      'emptyBoxes': instance.emptyBoxes,
+      'suppliesFirst': instance.suppliesFirst,
+      'linkedJobId': instance.linkedJobId,
+      'onceOffZar': instance.onceOffZar,
+      'invoicedIn': instance.invoicedIn,
+      'confirmedAt':
+          const NullableTimestampConverter().toJson(instance.confirmedAt),
+      'confirmedBy': instance.confirmedBy,
+      'departedAt':
+          const NullableTimestampConverter().toJson(instance.departedAt),
+      'arrivedAt':
+          const NullableTimestampConverter().toJson(instance.arrivedAt),
+      'collectedAt':
+          const NullableTimestampConverter().toJson(instance.collectedAt),
+      'receivedUnitIds': instance.receivedUnitIds,
+      'handedOverUnitIds': instance.handedOverUnitIds,
+      'recipientName': instance.recipientName,
       'isRushJob': instance.isRushJob,
       'completedAt':
           const NullableTimestampConverter().toJson(instance.completedAt),
@@ -91,12 +150,15 @@ Map<String, dynamic> _$$JobImplToJson(_$JobImpl instance) => <String, dynamic>{
 const _$JobTypeEnumMap = {
   JobType.pickup: 'pickup',
   JobType.delivery: 'delivery',
+  JobType.supplyDrop: 'supplyDrop',
 };
 
 const _$JobStatusEnumMap = {
+  JobStatus.pendingConfirmation: 'pendingConfirmation',
   JobStatus.scheduled: 'scheduled',
   JobStatus.assigned: 'assigned',
   JobStatus.inProgress: 'inProgress',
+  JobStatus.collected: 'collected',
   JobStatus.completed: 'completed',
   JobStatus.cancelled: 'cancelled',
 };

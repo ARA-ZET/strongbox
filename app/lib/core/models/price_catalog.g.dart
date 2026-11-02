@@ -69,6 +69,44 @@ Map<String, dynamic> _$$VehiclePriceImplToJson(_$VehiclePriceImpl instance) =>
       'active': instance.active,
     };
 
+_$SupplyPriceImpl _$$SupplyPriceImplFromJson(Map<String, dynamic> json) =>
+    _$SupplyPriceImpl(
+      id: json['id'] as String,
+      label: json['label'] as String,
+      description: json['desc'] as String? ?? '',
+      onceOffZar: (json['price'] as num).toInt(),
+      active: json['active'] as bool? ?? true,
+    );
+
+Map<String, dynamic> _$$SupplyPriceImplToJson(_$SupplyPriceImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'label': instance.label,
+      'desc': instance.description,
+      'price': instance.onceOffZar,
+      'active': instance.active,
+    };
+
+_$PackingHelperPriceImpl _$$PackingHelperPriceImplFromJson(
+        Map<String, dynamic> json) =>
+    _$PackingHelperPriceImpl(
+      label: json['label'] as String? ?? 'Packing helper',
+      description: json['desc'] as String? ?? '',
+      hourlyZar: (json['price'] as num?)?.toInt() ?? 0,
+      minHours: (json['minHours'] as num?)?.toInt() ?? 2,
+      active: json['active'] as bool? ?? true,
+    );
+
+Map<String, dynamic> _$$PackingHelperPriceImplToJson(
+        _$PackingHelperPriceImpl instance) =>
+    <String, dynamic>{
+      'label': instance.label,
+      'desc': instance.description,
+      'price': instance.hourlyZar,
+      'minHours': instance.minHours,
+      'active': instance.active,
+    };
+
 _$PriceCatalogImpl _$$PriceCatalogImplFromJson(Map<String, dynamic> json) =>
     _$PriceCatalogImpl(
       boxes: (json['boxes'] as List<dynamic>?)
@@ -91,6 +129,14 @@ _$PriceCatalogImpl _$$PriceCatalogImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => VehiclePrice.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      supplies: (json['supplies'] as List<dynamic>?)
+              ?.map((e) => SupplyPrice.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      packingHelper: json['packingHelper'] == null
+          ? const PackingHelperPrice()
+          : PackingHelperPrice.fromJson(
+              json['packingHelper'] as Map<String, dynamic>),
       updatedAt: const NullableTimestampConverter().fromJson(json['updatedAt']),
       updatedBy: json['updatedBy'] as String?,
     );
@@ -102,6 +148,8 @@ Map<String, dynamic> _$$PriceCatalogImplToJson(_$PriceCatalogImpl instance) =>
       'looseItems': instance.looseItems.map((e) => e.toJson()).toList(),
       'itemIcons': instance.itemIcons,
       'vehicles': instance.vehicles.map((e) => e.toJson()).toList(),
+      'supplies': instance.supplies.map((e) => e.toJson()).toList(),
+      'packingHelper': instance.packingHelper.toJson(),
       'updatedAt':
           const NullableTimestampConverter().toJson(instance.updatedAt),
       'updatedBy': instance.updatedBy,

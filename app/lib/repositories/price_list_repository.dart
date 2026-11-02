@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../core/constants/firestore_collections.dart';
+import '../core/constants/price_list.g.dart';
 import '../core/enums/app_enums.dart';
 import '../core/models/price_catalog.dart';
 import 'repository_base.dart';
@@ -37,10 +38,25 @@ class FirestorePriceListRepository
   DocumentReference<Map<String, dynamic>> _doc(String tenantId) =>
       col(Collections.priceLists).doc(tenantId);
 
+  /// A stored list. Lists saved before supplies and the packing helper
+  /// existed take those from the defaults (as the website and functions do).
+  static PriceCatalog _read(DocumentSnapshot<Map<String, dynamic>> doc) {
+    final data = doc.data()!;
+    final stored = PriceCatalog.fromFirestore(doc);
+    return stored.copyWith(
+      supplies: data.containsKey('supplies')
+          ? stored.supplies
+          : PriceList.catalog.supplies,
+      packingHelper: data.containsKey('packingHelper')
+          ? stored.packingHelper
+          : PriceList.catalog.packingHelper,
+    );
+  }
+
   @override
   Stream<PriceCatalog?> watch(String tenantId) => _doc(tenantId)
       .snapshots()
-      .map((doc) => doc.exists ? PriceCatalog.fromFirestore(doc) : null);
+      .map((doc) => doc.exists ? _read(doc) : null);
 
   @override
   Future<PriceCatalog> update(
@@ -51,7 +67,7 @@ class FirestorePriceListRepository
   }) => guardRepo(
     () => db.runTransaction((tx) async {
       final snap = await tx.get(_doc(tenantId));
-      final current = snap.exists ? PriceCatalog.fromFirestore(snap) : defaults;
+      final current = snap.exists ? _read(snap) : defaults;
       final next = change(current);
       tx.set(_doc(tenantId), {
         // The icon set is fixed by the website build, not stored.

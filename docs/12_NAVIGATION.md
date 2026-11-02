@@ -37,8 +37,11 @@ All navigation uses `go_router`. Never use `Navigator.push` directly.
 | `/driver/report-issue` | ReportIssueScreen | driver | DriverShell |
 | `/client` | Redirect → `/client/dashboard` | client | ClientShell |
 | `/client/dashboard` | ClientDashboardScreen | client | ClientShell |
-| `/client/storage` | MyStorageScreen | client | ClientShell |
-| `/client/storage/:unitId` | UnitDetailScreen (client) | client | ClientShell |
+| `/client/storage` | ClientStorageScreen (`?status=` filter) | client | ClientShell |
+| `/client/storage/:unitId` | ClientUnitDetailScreen | client | ClientShell |
+| `/client/orders` | ClientOrdersScreen (`?view=past`) | client | ClientShell |
+| `/client/orders/:jobId` | ClientOrderDetailScreen | client | ClientShell |
+| `/client/deliveries` | Redirect → `/client/orders` (old links) | client | ClientShell |
 | `/client/requests/new` | DeliveryRequestScreen | client | ClientShell |
 | `/client/subscription` | SubscriptionScreen | client | ClientShell |
 | `/client/account` | ClientAccountScreen | client | ClientShell |
@@ -116,8 +119,8 @@ Full-screen routes (photo capture, scanner) are **not** inside a shell route —
 
 ### Client requests delivery
 ```
-/client/dashboard → [Request Delivery] → /client/requests/new
-→ [select items → date → address → confirm] → /client/dashboard
+/client/dashboard → [Get items back] → /client/requests/new
+→ [select items → date → address → confirm] → /client/orders/:jobId
 ```
 
 ### QR Scan (standalone)

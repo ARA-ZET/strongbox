@@ -1,13 +1,36 @@
+import { REGIONS } from "@/lib/areas";
+
 // Overridable per-environment via apphosting.yaml; falls back to production
 export const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL ?? "https://app.strongbox.co.za";
 
 // Human contact channels — shown in the navbar, footer, and contact page so
 // a prospect can reach a real person fast (new-business trust signal).
-export const CONTACT_PHONE_DISPLAY = "+27 071 909 0839";
+// Local format: "+27 071…" mixes the international prefix with the trunk 0,
+// which is neither how Capetonians write a number nor dialable as shown.
+export const CONTACT_PHONE_DISPLAY = "071 909 0839";
 export const CONTACT_PHONE_HREF = "tel:+27719090839";
 export const CONTACT_EMAIL = "info@strongbox.co.za";
 export const CONTACT_EMAIL_HREF = "mailto:info@strongbox.co.za";
+/** WhatsApp is how most of Cape Town would rather ask a quick question. */
+export const WHATSAPP_HREF = "https://wa.me/27719090839";
+
+/**
+ * When the client app opens for bookings. Until then the launch notice (hero,
+ * contact form, footer) counts down to it and sends visitors to a person, so
+ * an early enquiry is answered rather than lost. Midnight SAST, so the count
+ * ticks over on the Cape Town calendar, not the visitor's or the server's.
+ * The notice hides itself from this moment on — no edit needed at launch.
+ */
+export const APP_LAUNCH_AT = "2026-12-01T00:00:00+02:00";
+export const APP_LAUNCH_LABEL = "1 December 2026";
+/** For the slim bar on phones, where the full label gets truncated. */
+export const APP_LAUNCH_LABEL_SHORT = "1 Dec 2026";
+
+/** Whole days left until launch: 1 on the last day before it, ≤ 0 once live. */
+export function daysUntilLaunch(now: number = Date.now()): number {
+  return Math.ceil((Date.parse(APP_LAUNCH_AT) - now) / 86_400_000);
+}
 
 /**
  * Social presence. WhatsApp is derived from the real support number, so it
@@ -18,7 +41,7 @@ export const CONTACT_EMAIL_HREF = "mailto:info@strongbox.co.za";
 export type SocialPlatform = "whatsapp" | "facebook" | "instagram" | "x";
 
 export const SOCIAL_LINKS: { platform: SocialPlatform; label: string; href: string }[] = [
-  { platform: "whatsapp", label: "WhatsApp", href: "https://wa.me/27719090839" },
+  { platform: "whatsapp", label: "WhatsApp", href: WHATSAPP_HREF },
   { platform: "facebook", label: "Facebook", href: "" },
   { platform: "instagram", label: "Instagram", href: "" },
   { platform: "x", label: "X", href: "" },
@@ -46,21 +69,11 @@ export const HQ_MAPS_HREF = "https://maps.google.com/?q=Kensington,Cape+Town,750
 export const HQ_GEO = { lat: -33.9243, lng: 18.5333 } as const;
 
 /**
- * Where we collect and deliver. One facility, whole-metro coverage — this is
- * what tells Google the service reaches a searcher's suburb without claiming
- * a branch there. Read by `areaServed` in the structured data and by the
- * coverage section on the contact page.
+ * Every suburb we collect from and deliver to — one facility, whole-metro
+ * coverage. Flattened from the regions in `lib/areas.ts`, which is where a
+ * suburb is added.
  */
-export const SERVICE_AREAS = [
-  "Sea Point", "Green Point", "Camps Bay", "Clifton", "Bantry Bay",
-  "City Bowl", "Gardens", "Tamboerskloof", "Oranjezicht", "Vredehoek",
-  "Woodstock", "Salt River", "Observatory", "Mowbray", "Rosebank",
-  "Rondebosch", "Newlands", "Claremont", "Kenilworth", "Wynberg",
-  "Constantia", "Tokai", "Muizenberg", "Kalk Bay", "Fish Hoek",
-  "Century City", "Milnerton", "Table View", "Bloubergstrand", "Parklands",
-  "Pinelands", "Kensington", "Maitland", "Goodwood", "Bellville",
-  "Durbanville", "Brackenfell", "Somerset West", "Hout Bay", "Noordhoek",
-] as const;
+export const SERVICE_AREAS: readonly string[] = REGIONS.flatMap((r) => r.suburbs);
 
 /**
  * Trading hours, in 24h local time, with schema.org day names.
@@ -148,7 +161,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Do you provide packing materials?",
-    a: "Yes! We supply all StrongBox-branded packing boxes, tape, and protective wrap. You can also request our team to pack items for you as an add-on service.",
+    a: "Yes. Empty StrongBox boxes come free with every box you store, and you can add bubble wrap, packing paper and tape to your quote. We can drop them off before your pickup day, or bring them on the day — and you can book a packing helper by the hour to pack with you.",
   },
   {
     q: "Is there a minimum storage period?",
@@ -157,6 +170,10 @@ export const FAQ_ITEMS = [
   {
     q: "How do you handle fragile items?",
     a: "Fragile items are wrapped individually, photographed before collection, and stored in climate-controlled zones. Your digital inventory shows exactly how each item was packed.",
+  },
+  {
+    q: "Do you collect from my suburb?",
+    a: "Almost certainly. We cover the whole City of Cape Town — the Atlantic Seaboard and City Bowl, the Southern and Northern Suburbs, the Cape Flats, Mitchells Plain and Khayelitsha, Blouberg and the West Coast, the South Peninsula and the Helderberg. The collection fee depends on the size of vehicle you need, not on where you live. Check your suburb on our areas page, or WhatsApp us if it is not listed.",
   },
   {
     q: "Where is the storage facility located?",

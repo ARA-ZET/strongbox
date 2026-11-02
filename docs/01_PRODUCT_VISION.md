@@ -112,6 +112,21 @@ Clients (storage customers) pay a monthly fee based on how many boxes/items they
 - Moving company vertical
 - Insurance marketplace integration
 
+## v2 Backlog (out of scope for v1)
+
+Things the original journey diagram described that v1 deliberately leaves out — v1 is invoices
++ EFT, push + email, and driver check-in buttons (see `journey/JOURNEY.md`):
+
+- Card payments / payment provider (Stripe or a local PSP) and subscription plans
+- SMS notifications (the SMS toggles in the client's settings are placeholders)
+- Live GPS tracking and ETAs (v1 uses "on my way" / "arrived" check-ins)
+- Phone OTP at sign-up or as an alternative to signature
+- Pro-rated billing and mid-month credits
+- Insurance cover and a client damage-claim flow (v1 records Good / Damaged at collection and
+  drivers can report cargo damage)
+- Delivery fees and slot capacity limits
+- Client self-service cancel / reschedule
+
 ## Success Metrics
 - Monthly Active Clients (paying subscribers)
 - Jobs completed per month

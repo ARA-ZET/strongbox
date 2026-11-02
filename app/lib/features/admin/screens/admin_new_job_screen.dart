@@ -39,19 +39,15 @@ class _AdminNewJobScreenState extends ConsumerState<AdminNewJobScreen> {
     context.go('/admin/jobs');
   }
 
-  Future<void> _submit({required bool asDraft}) async {
+  Future<void> _submit() async {
     final data = ref.read(newJobDraftProvider);
     setState(() => _submitting = true);
     try {
-      await ref
-          .read(jobMutationsProvider.notifier)
-          .submit(data, asDraft: asDraft);
+      await ref.read(jobMutationsProvider.notifier).submit(data);
       ref.read(newJobDraftProvider.notifier).reset();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content:
-                  Text(asDraft ? 'Draft saved' : 'Job submitted')),
+          const SnackBar(content: Text('Job submitted')),
         );
         context.go('/admin/jobs');
       }
@@ -107,15 +103,13 @@ class _AdminNewJobScreenState extends ConsumerState<AdminNewJobScreen> {
                   draft: draft,
                   submitting: _submitting,
                   onBack: _back,
-                  onSaveDraft: () => _submit(asDraft: true),
                   onNext: _next,
                 ),
               _ => _ConfirmStep(
                   draft: draft,
                   desktop: desktop,
                   submitting: _submitting,
-                  onSubmit: () => _submit(asDraft: false),
-                  onSaveDraft: () => _submit(asDraft: true),
+                  onSubmit: _submit,
                 ),
             },
           ],
@@ -353,13 +347,14 @@ class _ItemsStep extends ConsumerWidget {
     final allBoxes = ref.watch(allUnitsProvider).valueOrNull ?? <StorageUnit>[];
     final textTheme = Theme.of(context).textTheme;
 
-    // Delivery jobs pull from storage; pickups collect anything not
-    // already in the warehouse.
+    // Delivery jobs pull from storage; pickups collect units still with
+    // the client. Units already on another job aren't offered.
     final clientBoxes = allBoxes.where((box) {
-      if (box.clientId != draft.clientId || box.status == StorageStatus.archived) {
-        return false;
-      }
-      return draft.type == JobType.delivery ? box.status == StorageStatus.inStorage : true;
+      if (box.clientId != draft.clientId || box.jobId != null) return false;
+      return box.status ==
+          (draft.type == JobType.delivery
+              ? StorageStatus.inStorage
+              : StorageStatus.pendingPickup);
     }).toList();
 
     final selection = Column(
@@ -651,14 +646,12 @@ class _ScheduleStep extends ConsumerWidget {
     required this.draft,
     required this.submitting,
     required this.onBack,
-    required this.onSaveDraft,
     required this.onNext,
   });
 
   final NewJobData draft;
   final bool submitting;
   final VoidCallback onBack;
-  final VoidCallback onSaveDraft;
   final VoidCallback onNext;
 
   @override
@@ -804,6 +797,18 @@ class _ScheduleStep extends ConsumerWidget {
             ),
             textTheme,
           ),
+          const SizedBox(height: 20),
+          _labelled(
+            'Access (shown to the driver)',
+            TextFormField(
+              initialValue: draft.accessNotes,
+              decoration: const InputDecoration(
+                hintText: 'Gate code, parking, stairs, lift…',
+              ),
+              onChanged: notifier.setAccessNotes,
+            ),
+            textTheme,
+          ),
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 12),
@@ -816,10 +821,6 @@ class _ScheduleStep extends ConsumerWidget {
                 onPressed: onBack,
                 icon: const Icon(Icons.arrow_back, size: 18),
                 label: const Text('Back to Items'),
-              ),
-              OutlinedButton(
-                onPressed: submitting ? null : onSaveDraft,
-                child: const Text('Save as Draft'),
               ),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
@@ -862,14 +863,12 @@ class _ConfirmStep extends ConsumerWidget {
     required this.desktop,
     required this.submitting,
     required this.onSubmit,
-    required this.onSaveDraft,
   });
 
   final NewJobData draft;
   final bool desktop;
   final bool submitting;
   final VoidCallback onSubmit;
-  final VoidCallback onSaveDraft;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1108,14 +1107,6 @@ class _ConfirmStep extends ConsumerWidget {
                   )
                 : const Icon(Icons.send, size: 18),
             label: const Text('Submit Job'),
-          ),
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            onPressed: submitting ? null : onSaveDraft,
-            child: const Text('Save as Draft'),
           ),
         ),
       ],

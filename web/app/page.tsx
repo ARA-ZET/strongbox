@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import QuickCalculator from "@/components/QuickCalculator";
+import SuburbChecker from "@/components/SuburbChecker";
 import FacilityProof from "@/components/FacilityProof";
 import FAQAccordion from "@/components/FAQAccordion";
 import ComparisonTable from "@/components/ComparisonTable";
 import SitePhoto from "@/components/SitePhoto";
+import LaunchNotice from "@/components/LaunchNotice";
 import SectionDivider from "@/components/graphics/SectionDivider";
 import { DeliveryVanArt } from "@/components/graphics/Illustrations";
 import { PALETTE } from "@/lib/palette";
@@ -13,13 +15,16 @@ import { STORAGE_MODES, USE_CASES } from "@/lib/service-details";
 import JsonLd from "@/components/JsonLd";
 import { pageMeta, faqJsonLd, serviceJsonLd } from "@/lib/seo";
 import { TESTIMONIALS, APP_URL, CUSTOMER_COUNT } from "@/lib/constants";
+import { REGIONS } from "@/lib/areas";
 import { getPrices } from "@/lib/prices";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { boxFrom } = await getPrices();
   return pageMeta({
-    title: "Cape Town's First Valet Storage Service | StrongBox",
-    description: `StrongBox collects, stores, and returns your belongings on demand in Cape Town. No lock-in contracts. Monitored, climate-controlled facility. From R${boxFrom}/month.`,
+    // "Storage" + "Cape Town" lead, because that is what people type; the
+    // unverifiable "first" claim this title used to carry is gone.
+    title: "Storage in Cape Town, Collected From Your Door | StrongBox",
+    description: `Storage that comes to you, anywhere in Cape Town — Blouberg to Gordon's Bay, Sea Point to Khayelitsha. We collect, store and return on request. From R${boxFrom}/box a month.`,
     path: "",
   });
 }
@@ -69,6 +74,7 @@ export default async function HomePage() {
       {/* ── Hero ── */}
       <section className="bg-navy-deep relative overflow-hidden flex items-center">
         <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid md:grid-cols-2 gap-gutter items-center py-14 md:py-20 relative z-10">
+          <LaunchNotice tone="dark" className="md:col-span-2 mb-4 md:mb-8" />
           <div className="text-surface-white">
             <h1 className="text-display-bold font-bold text-surface-white mb-6 leading-tight">
               Storage that comes to you
@@ -77,6 +83,17 @@ export default async function HomePage() {
               We collect your boxes from your door, store them in a monitored,
               climate-controlled facility in Cape Town, and bring them back whenever you
               ask. No truck to hire, no unit to visit, no lock-in.
+            </p>
+            <p className="text-on-navy text-sm mb-8 -mt-4 flex items-start gap-2">
+              <span aria-hidden="true" className="material-symbols-outlined text-sky text-lg shrink-0">
+                location_on
+              </span>
+              <span>
+                Anywhere in the metro, from Bloubergstrand to Gordon&apos;s Bay.{" "}
+                <Link href="/areas" className="text-surface-white underline underline-offset-4 hover:text-sky">
+                  Check your suburb
+                </Link>
+              </span>
             </p>
 
             <div className="flex flex-wrap gap-4 mb-10">
@@ -165,20 +182,66 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── Across Cape Town ── */}
+      {/*
+        "Do you come to me?" is the first question nearly every caller asks,
+        and the answer used to sit on the contact page as a chip cloud of
+        mostly Atlantic Seaboard and Southern Suburbs names. Answering it on
+        the homepage, for the whole metro, is the local-relevance signal that
+        matters most to a visitor and to a suburb search alike.
+      */}
+      <section className="py-20 bg-mist">
+        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid lg:grid-cols-2 gap-12 items-start">
+          <div>
+            <span className="font-label-caps text-accent-deep tracking-widest uppercase text-xs mb-3 block">
+              All Of Cape Town
+            </span>
+            <h2 className="text-headline-h1 font-bold text-navy-deep mb-4">
+              Wherever you live in the city, we come to you
+            </h2>
+            <p className="text-on-surface-variant text-body-main mb-8 max-w-xl">
+              One facility and one fleet, covering the whole metro. Storage costs the same in
+              every suburb, and the collection fee depends on the vehicle you need, not
+              how far you are from us.
+            </p>
+            <div className="bg-surface-white rounded-xl shadow-tactile border border-outline-variant p-6">
+              <SuburbChecker />
+            </div>
+          </div>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {REGIONS.map((r) => (
+              <li key={r.slug}>
+                <Link
+                  href={`/areas/${r.slug}`}
+                  className="group flex items-center justify-between gap-3 bg-surface-white rounded-xl border border-outline-variant px-5 py-4 min-h-[64px] hover:border-accent-deep transition-colors"
+                >
+                  <span className="font-body-strong text-navy-deep group-hover:text-accent-deep transition-colors">
+                    {r.name}
+                  </span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-accent-deep text-lg shrink-0">
+                    arrow_forward
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ── Who it's for ── */}
       {/*
         Self-identification. A visitor who recognises their own situation in
         one of these six converts far better than one who has to work out
         whether a generic "storage" pitch applies to them.
       */}
-      <section className="py-24 bg-mist">
+      <section className="py-24 bg-surface-white">
         <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
           <div className="text-center mb-14">
             <span className="font-label-caps text-accent-deep tracking-widest uppercase text-xs mb-3 block">
               Who It&apos;s For
             </span>
             <h2 className="text-headline-h1 font-bold text-navy-deep mb-3">
-              Most people come to us for one of six reasons
+              Most people come to us for one of these reasons
             </h2>
             <p className="text-on-surface-variant max-w-2xl mx-auto">
               If one of these is your situation, the service was built for it.
@@ -208,7 +271,7 @@ export default async function HomePage() {
         the service can do for someone, and it was documented in the product
         spec but absent from the site entirely.
       */}
-      <section className="py-24 bg-surface-white">
+      <section className="py-24 bg-mist">
         <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
           <div className="text-center mb-14">
             <span className="font-label-caps text-accent-deep tracking-widest uppercase text-xs mb-3 block">
@@ -280,10 +343,10 @@ export default async function HomePage() {
       </section>
 
       {/* ── Proof: inside the facility ── */}
-      <FacilityProof tone="mist" />
+      <FacilityProof tone="light" />
 
       {/* ── Comparison strip ── */}
-      <section className="py-24 bg-surface-white">
+      <section className="py-24 bg-mist">
         <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
           <div className="text-center mb-12">
             <span className="font-label-caps text-accent-deep tracking-widest uppercase text-xs mb-3 block">
@@ -310,7 +373,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <SectionDivider from="white" to="navyDeep" variant="angle" />
+      <SectionDivider from="mist" to="navyDeep" variant="angle" />
 
       {/* ── Simple pricing ── */}
       <section className="py-24 bg-navy-deep text-surface-white">

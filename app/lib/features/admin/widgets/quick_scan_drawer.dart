@@ -9,6 +9,7 @@ import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../providers/inventory_providers.dart';
+import '../../../core/utils/qr_link.dart';
 
 /// Right-side Quick Scan panel opened from the sidebar button: scan a label
 /// with the camera, or type the code, to pull up the unit.
@@ -56,13 +57,14 @@ class _QuickScanDrawerState extends ConsumerState<QuickScanDrawer> {
         .firstWhere((value) => value != null && value.isNotEmpty,
             orElse: () => null);
     if (code == null || _loading) return;
-    _controller.text = code;
+    // Labels hold a link to the item; older ones just the code.
+    _controller.text = codeFromScan(code);
     _stopCamera();
     _lookup();
   }
 
   Future<void> _lookup() async {
-    final code = _controller.text.trim().toUpperCase();
+    final code = codeFromScan(_controller.text);
     if (code.isEmpty) return;
 
     setState(() {

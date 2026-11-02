@@ -162,6 +162,7 @@ void main() {
           authStateProvider
               .overrideWith((ref) => Stream.value(_FakeUser('driver-1'))),
           currentActorIdProvider.overrideWithValue('driver-1'),
+          currentUserIdProvider.overrideWithValue('driver-1'),
         ],
         child: MaterialApp.router(routerConfig: router),
       ));

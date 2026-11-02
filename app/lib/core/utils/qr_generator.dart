@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'public_ref.dart';
 
 final _random = Random();
 
@@ -16,9 +17,8 @@ String generateBoxQrCode() =>
 String generateItemQrCode() =>
     'ITM-${1000 + _random.nextInt(9000)}-${_suffix()}';
 
-/// Driver E-ID QR code from a uid.
-String generateDriverEId(String uid) =>
-    'DRV-${uid.substring(0, uid.length.clamp(0, 8)).toUpperCase()}';
+/// Driver E-ID QR code, e.g. `DRV-Q2N7HC` — never the uid itself.
+String generateDriverEId(String uid) => staffRef(uid);
 
 /// [count] unique unit codes for a printed batch.
 List<String> generateBoxQrBatch(int count) {

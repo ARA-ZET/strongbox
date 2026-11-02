@@ -5,6 +5,11 @@ class StoragePaths {
   static String unitPhoto(String tenantId, String unitId, String fileName) =>
       '$tenantId/storageUnits/$unitId/exterior/$fileName';
 
+  /// Photos a client takes while packing a box before pickup.
+  static String clientPackingPhoto(
+          String tenantId, String unitId, String fileName) =>
+      '$tenantId/storageUnits/$unitId/client/$fileName';
+
   static String itemPhoto(String tenantId, String itemId, String fileName) =>
       '$tenantId/items/$itemId/$fileName';
 

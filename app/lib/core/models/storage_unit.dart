@@ -34,7 +34,12 @@ class StorageUnit with _$StorageUnit {
     String? category,
     double? weight,
     String? jobId,
+    /// Bay / shelf at the facility, recorded when scanned in.
     String? warehouseLocationId,
+
+    /// Condition the driver recorded at collection.
+    UnitCondition? condition,
+    @NullableTimestampConverter() DateTime? receivedAt,
     @Default(false) bool isDeleted,
     @NullableTimestampConverter() DateTime? deletedAt,
     @NullableTimestampConverter() DateTime? createdAt,
@@ -47,4 +52,13 @@ class StorageUnit with _$StorageUnit {
   factory StorageUnit.fromFirestore(DocumentSnapshot doc) =>
       StorageUnit.fromJson(
           {...doc.data()! as Map<String, dynamic>, 'id': doc.id});
+}
+
+extension StorageUnitLabelX on StorageUnit {
+  /// Booked from a quote and not labelled yet — the driver links a QR
+  /// label at collection.
+  bool get isLabelled => qrCodeId.isNotEmpty;
+
+  /// The QR code, or a placeholder until it has one.
+  String get displayCode => isLabelled ? qrCodeId : 'Not labelled yet';
 }

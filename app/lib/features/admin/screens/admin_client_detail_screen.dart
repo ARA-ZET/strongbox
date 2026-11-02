@@ -20,6 +20,7 @@ import '../../billing/widgets/invoice_table.dart';
 import '../providers/clients_providers.dart';
 import '../widgets/client_form_dialog.dart';
 import '../../../core/widgets/table_scroll.dart';
+import '../../../core/utils/public_ref.dart';
 
 /// Single client view: profile header, subscription + insight, stored
 /// inventory grid, job history. Design: admin_client_detail/screen.png.
@@ -604,7 +605,7 @@ class _MiniBoxCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          box.qrCodeId.isEmpty ? box.id : box.qrCodeId,
+                          box.qrCodeId.isEmpty ? 'Unlabelled' : box.qrCodeId,
                           style: textTheme.bodyMedium
                               ?.copyWith(fontWeight: FontWeight.w700),
                           maxLines: 1,
@@ -736,7 +737,7 @@ class _JobHistoryCard extends ConsumerWidget {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        '#JOB-${job.id.substring(0, job.id.length.clamp(0, 5)).toUpperCase()}',
+                        jobRef(job),
                         style: textTheme.bodyMedium
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),

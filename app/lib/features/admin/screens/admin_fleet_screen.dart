@@ -17,6 +17,7 @@ import '../providers/fleet_providers.dart';
 import '../widgets/invite_link_dialog.dart';
 import '../widgets/vehicle_registry.dart';
 import '../../../core/widgets/table_scroll.dart';
+import '../../../core/utils/public_ref.dart';
 
 const _pageSize = 10;
 
@@ -430,7 +431,7 @@ class _DriverRowState extends State<_DriverRow> {
                 child: Text(
                   job == null
                       ? '--'
-                      : '#JB-${job.id.substring(0, job.id.length.clamp(0, 4)).toUpperCase()}',
+                      : jobRef(job),
                   style: textTheme.bodyMedium?.copyWith(
                     color: job == null
                         ? AppColors.textSecondary

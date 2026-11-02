@@ -1,0 +1,38 @@
+rules_version = '2';
+
+// Firebase Storage rules (doc 06). Paths are tenant-scoped:
+//   {tenantId}/storageUnits/{unitId}/exterior|interior/…   ops photos
+//   {tenantId}/storageUnits/{unitId}/client/…              client packing photos
+//   {tenantId}/jobs/{jobId}/…                              driver captures, signatures
+service firebase.storage {
+  match /b/{bucket}/o {
+    function me() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data;
+    }
+    function inTenant(tenantId) {
+      return request.auth != null && me().tenantId == tenantId;
+    }
+    function isStaff() {
+      return me().role == 'admin' || me().role == 'driver';
+    }
+    function isImage(maxMb) {
+      return request.resource.contentType.matches('image/.*') &&
+        request.resource.size < maxMb * 1024 * 1024;
+    }
+
+    match /{tenantId}/{allPaths=**} {
+      allow read: if inTenant(tenantId);
+      allow write: if inTenant(tenantId) && isStaff();
+    }
+
+    // A client photographs their own box while packing it, until it's
+    // collected. Photos are never overwritten or deleted from the client.
+    match /{tenantId}/storageUnits/{unitId}/client/{fileName} {
+      allow create: if inTenant(tenantId) &&
+        me().role == 'client' &&
+        isImage(10) &&
+        firestore.get(/databases/(default)/documents/storageUnits/$(unitId)).data.clientId == me().clientId &&
+        firestore.get(/databases/(default)/documents/storageUnits/$(unitId)).data.status == 'pendingPickup';
+    }
+  }
+}

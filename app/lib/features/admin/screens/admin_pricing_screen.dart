@@ -102,6 +102,31 @@ class AdminPricingScreen extends ConsumerWidget {
                     ),
                 ],
               ),
+              _Section(
+                title: 'Packing supplies & help · once-off',
+                onAdd: () => _SupplyDialog.show(context, ref, null),
+                rows: [
+                  for (final supply in catalog.supplies)
+                    _PriceRow(
+                      icon: Icons.layers_outlined,
+                      title: supply.label,
+                      detail: supply.description,
+                      price: formatZar(supply.onceOffZar),
+                      active: supply.active,
+                      onTap: () => _SupplyDialog.show(context, ref, supply),
+                    ),
+                  _PriceRow(
+                    icon: Icons.groups_outlined,
+                    title: catalog.packingHelper.label,
+                    detail:
+                        'Minimum ${catalog.packingHelper.minHours} hours',
+                    price: '${formatZar(catalog.packingHelper.hourlyZar)}/h',
+                    active: catalog.packingHelper.active,
+                    onTap: () => _HelperDialog.show(
+                        context, ref, catalog.packingHelper),
+                  ),
+                ],
+              ),
             ],
           ),
         );
@@ -595,6 +620,94 @@ class _VehicleDialog {
 
   static String _trimZero(double n) =>
       n == n.roundToDouble() ? n.toInt().toString() : n.toString();
+}
+
+class _SupplyDialog {
+  static Future<void> show(
+    BuildContext context,
+    WidgetRef ref,
+    SupplyPrice? supply,
+  ) {
+    final label = TextEditingController(text: supply?.label);
+    final desc = TextEditingController(text: supply?.description);
+    final price = TextEditingController(text: supply?.onceOffZar.toString());
+    var active = supply?.active ?? true;
+    final edits = ref.read(pricingEditorProvider.notifier);
+    return _showEditor(
+      context,
+      title: supply == null ? 'New packing supply' : 'Edit packing supply',
+      isNew: supply == null,
+      active: active,
+      onActive: (v) => active = v,
+      fields: (setState) => [
+        _textField(label, 'Name, e.g. Bubble wrap roll', validator: _required),
+        _textField(desc, 'Short description, e.g. 1.5 m × 10 m'),
+        _textField(
+          price,
+          'Once-off price (R, 0 = free)',
+          validator: (v) {
+            final n = int.tryParse(v ?? '');
+            return n == null || n < 0 || n > maxPriceZar
+                ? 'R0 to R$maxPriceZar'
+                : null;
+          },
+        ),
+      ],
+      onSave: () => edits.upsertSupply(
+        SupplyPrice(
+          id: supply?.id ?? priceIdFor(label.text, _takenIds(ref)),
+          label: label.text.trim(),
+          description: desc.text.trim(),
+          onceOffZar: int.parse(price.text),
+          active: active,
+        ),
+      ),
+    );
+  }
+}
+
+class _HelperDialog {
+  static Future<void> show(
+    BuildContext context,
+    WidgetRef ref,
+    PackingHelperPrice helper,
+  ) {
+    final label = TextEditingController(text: helper.label);
+    final desc = TextEditingController(text: helper.description);
+    final price = TextEditingController(text: helper.hourlyZar.toString());
+    final minHours = TextEditingController(text: helper.minHours.toString());
+    var active = helper.active;
+    final edits = ref.read(pricingEditorProvider.notifier);
+    return _showEditor(
+      context,
+      title: 'Packing helper',
+      isNew: false,
+      active: active,
+      onActive: (v) => active = v,
+      fields: (setState) => [
+        _textField(label, 'Name', validator: _required),
+        _textField(desc, 'Short description'),
+        _priceField(price, 'Per hour'),
+        _textField(
+          minHours,
+          'Minimum hours',
+          validator: (v) {
+            final n = int.tryParse(v ?? '');
+            return n == null || n < 1 || n > 12 ? '1 to 12' : null;
+          },
+        ),
+      ],
+      onSave: () => edits.setPackingHelper(
+        helper.copyWith(
+          label: label.text.trim(),
+          description: desc.text.trim(),
+          hourlyZar: int.parse(price.text),
+          minHours: int.parse(minHours.text),
+          active: active,
+        ),
+      ),
+    );
+  }
 }
 
 /// Flutter's twin of a Material Symbols name from [PriceCatalog.itemIcons].

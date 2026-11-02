@@ -15,6 +15,7 @@ import '../providers/clients_providers.dart';
 import '../providers/fleet_providers.dart';
 import '../widgets/invite_link_dialog.dart';
 import '../../../core/widgets/table_scroll.dart';
+import '../../../core/utils/public_ref.dart';
 
 /// Single driver view: profile header, stats, active assignment,
 /// compliance and recent history. Design: admin_driver_detail_view/screen.png.
@@ -276,7 +277,7 @@ class _HeaderCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 4),
-              Text('Driver • DRV-${driver.id.substring(0, driver.id.length.clamp(0, 8)).toUpperCase()}',
+              Text('Driver • ${staffRef(driver.id)}',
                   style: textTheme.bodySmall),
               const SizedBox(height: 8),
               Wrap(
@@ -491,7 +492,7 @@ class _ActiveAssignmentCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '#JB-${current.id.substring(0, current.id.length.clamp(0, 4)).toUpperCase()} — '
+                        '${jobRef(current)} — '
                         '${current.type == JobType.pickup ? 'Pickup' : 'Delivery'}',
                         style: textTheme.titleMedium
                             ?.copyWith(color: Colors.white),
@@ -661,7 +662,7 @@ class _RecentHistoryCard extends ConsumerWidget {
                                   Expanded(
                                     flex: 2,
                                     child: Text(
-                                      '#JB-${job.id.substring(0, job.id.length.clamp(0, 4)).toUpperCase()}',
+                                      jobRef(job),
                                       style: textTheme.bodyMedium?.copyWith(
                                           fontWeight: FontWeight.w700),
                                     ),

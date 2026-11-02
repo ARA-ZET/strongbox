@@ -26,8 +26,10 @@ Map<String, Job> activeJobsByDriver(Ref ref) {
   for (final job in jobs) {
     final driverId = job.driverId;
     if (driverId == null) continue;
+    // A collected pickup is still on the driver's truck until received.
     if (job.status == JobStatus.assigned ||
-        job.status == JobStatus.inProgress) {
+        job.status == JobStatus.inProgress ||
+        job.status == JobStatus.collected) {
       map.putIfAbsent(driverId, () => job);
     }
   }
@@ -51,7 +53,7 @@ int driverCompletedCount(Ref ref, String driverId) {
 }
 
 /// Create/update actions on driver records.
-@riverpod
+@Riverpod(keepAlive: true)
 class DriverMutations extends _$DriverMutations {
   @override
   FutureOr<void> build() {}

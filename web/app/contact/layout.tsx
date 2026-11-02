@@ -11,7 +11,7 @@ import { pageMeta, breadcrumbJsonLd } from "@/lib/seo";
 export const metadata: Metadata = pageMeta({
   title: "Contact Us",
   description:
-    "Speak to StrongBox Valet Storage in Cape Town. Call, email, or send us a message — our concierge team replies within 2 business hours.",
+    "Speak to StrongBox Valet Storage in Cape Town. Call, WhatsApp or email us — we reply within 2 business hours and collect from anywhere in the metro.",
   path: "/contact",
 });
 

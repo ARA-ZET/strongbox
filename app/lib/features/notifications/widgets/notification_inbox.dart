@@ -194,6 +194,9 @@ class _NotificationTile extends ConsumerWidget {
   static (IconData, Color, Color) _style(NotificationType type) =>
       switch (type) {
         NotificationType.jobCompleted ||
+        NotificationType.bookingConfirmed ||
+        NotificationType.unitsReceived ||
+        NotificationType.suppliesDelivered ||
         NotificationType.pickupConfirmed ||
         NotificationType.deliveryCompleted ||
         NotificationType.invoicePaid =>
@@ -202,7 +205,9 @@ class _NotificationTile extends ConsumerWidget {
             AppColors.statusSuccess,
             AppColors.statusSuccessBg
           ),
-        NotificationType.jobCancelled => (
+        NotificationType.jobCancelled ||
+        NotificationType.bookingDeclined =>
+          (
             Icons.cancel_outlined,
             AppColors.statusError,
             AppColors.statusErrorBg
@@ -227,9 +232,12 @@ class _NotificationTile extends ConsumerWidget {
             AppColors.accentDeep,
             AppColors.surfaceContainer
           ),
+        NotificationType.bookingReceived ||
         NotificationType.jobScheduled ||
         NotificationType.jobAssigned ||
         NotificationType.jobStarted ||
+        NotificationType.driverEnRoute ||
+        NotificationType.driverArrived ||
         NotificationType.deliveryRequested =>
           (
             Icons.local_shipping_outlined,

@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
+import 'storage_image.dart';
 
 /// Horizontal scroll of photo thumbnails with a full-screen lightbox
 /// (doc 11). Pass [onAddPhoto] to show a trailing "+ Add" tile.
@@ -28,8 +28,7 @@ class PhotoGallery extends StatelessWidget {
         backgroundColor: Colors.black87,
         insetPadding: const EdgeInsets.all(AppSpacing.lg),
         child: InteractiveViewer(
-          child: CachedNetworkImage(
-              imageUrl: photoUrls[index], fit: BoxFit.contain),
+          child: StorageImage(photoUrls[index], fit: BoxFit.contain),
         ),
       ),
     );
@@ -52,19 +51,10 @@ class PhotoGallery extends StatelessWidget {
             borderRadius: AppRadius.sm,
             child: ClipRRect(
               borderRadius: AppRadius.sm,
-              child: CachedNetworkImage(
-                imageUrl: photoUrls[index],
+              child: StorageImage(
+                photoUrls[index],
                 width: thumbWidth,
                 height: thumbHeight,
-                fit: BoxFit.cover,
-                placeholder: (_, _) => Container(
-                    width: thumbWidth, color: AppColors.surfaceContainer),
-                errorWidget: (_, _, _) => Container(
-                  width: thumbWidth,
-                  color: AppColors.surfaceContainer,
-                  child: const Icon(Icons.broken_image_outlined,
-                      color: AppColors.textSecondary),
-                ),
               ),
             ),
           );

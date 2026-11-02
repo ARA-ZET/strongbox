@@ -30,9 +30,26 @@ Map<String, dynamic> _$$AddressImplToJson(_$AddressImpl instance) =>
       'lng': instance.lng,
     };
 
+_$SupplyLineImpl _$$SupplyLineImplFromJson(Map<String, dynamic> json) =>
+    _$SupplyLineImpl(
+      id: json['id'] as String,
+      label: json['label'] as String? ?? '',
+      qty: (json['qty'] as num?)?.toInt() ?? 0,
+      unitZar: (json['unitZar'] as num?)?.toInt() ?? 0,
+    );
+
+Map<String, dynamic> _$$SupplyLineImplToJson(_$SupplyLineImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'label': instance.label,
+      'qty': instance.qty,
+      'unitZar': instance.unitZar,
+    };
+
 _$NotificationPrefsImpl _$$NotificationPrefsImplFromJson(
         Map<String, dynamic> json) =>
     _$NotificationPrefsImpl(
+      bookingUpdatesEmail: json['bookingUpdatesEmail'] as bool? ?? true,
       pickupStartedEmail: json['pickupStartedEmail'] as bool? ?? true,
       pickupStartedSms: json['pickupStartedSms'] as bool? ?? false,
       deliveryCompletedEmail: json['deliveryCompletedEmail'] as bool? ?? true,
@@ -46,6 +63,7 @@ _$NotificationPrefsImpl _$$NotificationPrefsImplFromJson(
 Map<String, dynamic> _$$NotificationPrefsImplToJson(
         _$NotificationPrefsImpl instance) =>
     <String, dynamic>{
+      'bookingUpdatesEmail': instance.bookingUpdatesEmail,
       'pickupStartedEmail': instance.pickupStartedEmail,
       'pickupStartedSms': instance.pickupStartedSms,
       'deliveryCompletedEmail': instance.deliveryCompletedEmail,

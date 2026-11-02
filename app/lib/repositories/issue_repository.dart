@@ -17,6 +17,10 @@ abstract class IssueRepository {
     String? jobId,
   });
   Stream<List<IssueReport>> watchAll(String tenantId);
+
+  /// Ops moves a report to in review or resolved.
+  Future<void> updateStatus(IssueReport report, IssueStatus status,
+      {required String actorId});
 }
 
 class FirestoreIssueRepository
@@ -71,4 +75,30 @@ class FirestoreIssueRepository
       .orderBy('createdAt', descending: true)
       .snapshots()
       .map((snap) => snap.docs.map(IssueReport.fromFirestore).toList());
+
+  @override
+  Future<void> updateStatus(IssueReport report, IssueStatus status,
+          {required String actorId}) =>
+      guardRepo(() async {
+        final batch = db.batch()
+          ..update(_issues.doc(report.id), {
+            'status': status.name,
+            if (status == IssueStatus.resolved) ...{
+              'resolvedBy': actorId,
+              'resolvedAt': FieldValue.serverTimestamp(),
+            },
+          })
+          ..set(
+            auditDoc(),
+            auditEventData(
+              tenantId: report.tenantId,
+              actorId: actorId,
+              action: AuditAction.issueUpdated,
+              entityType: 'issueReport',
+              entityId: report.id,
+              metadata: {'toStatus': status.name},
+            ),
+          );
+        await batch.commit();
+      });
 }

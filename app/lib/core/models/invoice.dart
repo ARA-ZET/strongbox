@@ -10,7 +10,9 @@ part 'invoice.g.dart';
 /// One client's monthly storage invoice (doc 03, doc 23).
 ///
 /// Issued on the 1st of each month by the `monthlyInvoices` Cloud Function —
-/// one line per billable unit at its recorded rate. Clients pay by EFT
+/// one line per billable unit at its recorded rate, plus any once-off
+/// charges (pickup vehicle, supplies, packing help) from jobs collected or
+/// completed since the last invoice. Clients pay by EFT
 /// quoting [reference]; an admin then marks it [PaymentStatus.paid]. The app
 /// never creates invoices or changes amounts.
 @freezed
@@ -31,6 +33,9 @@ class Invoice with _$Invoice {
     @Default(PaymentStatus.open) PaymentStatus status,
     String? description,
     @Default([]) List<InvoiceLine> lines,
+
+    /// Once-off job charges on this invoice.
+    @Default([]) List<InvoiceCharge> charges,
     @Default(0) int unitCount,
 
     /// Billable units with no size — not on this invoice.
@@ -76,4 +81,17 @@ class InvoiceLine with _$InvoiceLine {
 
   factory InvoiceLine.fromJson(Map<String, dynamic> json) =>
       _$InvoiceLineFromJson(json);
+}
+
+/// A once-off job charge on an [Invoice].
+@freezed
+class InvoiceCharge with _$InvoiceCharge {
+  const factory InvoiceCharge({
+    required String jobId,
+    @Default('') String label,
+    @Default(0) int amountZar,
+  }) = _InvoiceCharge;
+
+  factory InvoiceCharge.fromJson(Map<String, dynamic> json) =>
+      _$InvoiceChargeFromJson(json);
 }

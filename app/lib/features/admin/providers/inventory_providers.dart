@@ -15,6 +15,7 @@ import '../../../core/providers/tenant_provider.dart';
 import '../../../core/utils/qr_generator.dart';
 import '../../../repositories/repository_providers.dart';
 import '../../auth/providers/auth_provider.dart';
+import 'clients_providers.dart';
 
 part 'inventory_providers.g.dart';
 
@@ -65,6 +66,41 @@ List<StorageUnit> filteredUnits(Ref ref) {
   }).toList();
 }
 
+/// One client's units, for the inventory grouped by customer.
+typedef ClientInventory = ({
+  String clientId,
+  String clientName,
+  List<StorageUnit> units,
+});
+
+/// [filteredUnits] without archived units, grouped by client: A–Z by
+/// name, newest unit first within each. Clients whose record is gone
+/// (empty name) sort last.
+@riverpod
+List<ClientInventory> inventoryByClient(Ref ref) {
+  final names = ref.watch(clientNamesProvider);
+  final groups = <String, List<StorageUnit>>{};
+  for (final unit in ref.watch(filteredUnitsProvider)) {
+    if (unit.status == StorageStatus.archived) continue;
+    groups.putIfAbsent(unit.clientId, () => []).add(unit);
+  }
+  final out = [
+    for (final entry in groups.entries)
+      (
+        clientId: entry.key,
+        clientName: names[entry.key] ?? '',
+        units: entry.value,
+      ),
+  ];
+  out.sort((a, b) {
+    if (a.clientName.isEmpty != b.clientName.isEmpty) {
+      return a.clientName.isEmpty ? 1 : -1;
+    }
+    return a.clientName.toLowerCase().compareTo(b.clientName.toLowerCase());
+  });
+  return out;
+}
+
 /// One unit, live.
 @riverpod
 Stream<StorageUnit?> unitById(Ref ref, String unitId) =>
@@ -101,7 +137,7 @@ Future<StorageUnit?> unitByQrCode(Ref ref, String code) async {
 }
 
 /// Create/update actions on units and their items.
-@riverpod
+@Riverpod(keepAlive: true)
 class UnitMutations extends _$UnitMutations {
   @override
   FutureOr<void> build() {}

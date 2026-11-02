@@ -10,6 +10,9 @@
         {timestamp}_{uuid}.jpg       ← exterior photos of closed/open units
       interior/
         {timestamp}_{uuid}.jpg       ← interior photos of open units
+      client/
+        {timestamp}.jpg              ← client's packing photos (contents / sealed box),
+                                       uploaded only while the unit is pendingPickup
   items/
     {itemId}/
       {timestamp}_{uuid}.jpg         ← photos of individual catalogued items
@@ -45,6 +48,11 @@
 - Example: `1720012345678_a1b2c3d4.jpg`
 
 ## Access Rules (Firebase Storage Security Rules)
+
+> **As built:** the rules are in `/storage.rules` (deployed with `firebase deploy --only storage`).
+> They add one client permission: create images under `storageUnits/{unitId}/client/` for their
+> own unit while it is `pendingPickup`. Client packing photos need these and `firestore.rules`
+> deployed together.
 
 ```
 rules_version = '2';

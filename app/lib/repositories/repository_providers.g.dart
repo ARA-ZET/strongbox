@@ -316,5 +316,35 @@ final vehicleRepositoryProvider = Provider<VehicleRepository>.internal(
 );
 
 typedef VehicleRepositoryRef = ProviderRef<VehicleRepository>;
+String _$bookingRepositoryHash() => r'97cf477e2e3ce7d5f917c362f6df05c3b1fb05cd';
+
+/// See also [bookingRepository].
+@ProviderFor(bookingRepository)
+final bookingRepositoryProvider = Provider<BookingRepository>.internal(
+  bookingRepository,
+  name: r'bookingRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$bookingRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef BookingRepositoryRef = ProviderRef<BookingRepository>;
+String _$quoteDraftStoreHash() => r'cc978437b9e3fc0c8d62e99313206a5641d540fa';
+
+/// See also [quoteDraftStore].
+@ProviderFor(quoteDraftStore)
+final quoteDraftStoreProvider = Provider<QuoteDraftStore>.internal(
+  quoteDraftStore,
+  name: r'quoteDraftStoreProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$quoteDraftStoreHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef QuoteDraftStoreRef = ProviderRef<QuoteDraftStore>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

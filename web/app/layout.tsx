@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { LaunchBar } from "@/components/LaunchNotice";
 import JsonLd from "@/components/JsonLd";
 import { ICON_NAMES } from "@/lib/icons";
 import { getPrices } from "@/lib/prices";
@@ -34,11 +35,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "StrongBox | Cape Town's Premier Valet Storage Service",
+    default: "StrongBox | Storage Collected From Your Door in Cape Town",
     template: "%s | StrongBox Valet Storage Cape Town",
   },
   description:
-    "StrongBox is Cape Town's first valet storage service. We collect, store, and return your belongings on demand — without you leaving home. Secure, seamless, domestic-focused storage in Cape Town, South Africa.",
+    "StrongBox collects your boxes and furniture from your door anywhere in Cape Town, stores them in a monitored facility, and brings them back when you ask. Monthly billing, no lock-in.",
   applicationName: SITE_NAME,
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
@@ -55,8 +56,12 @@ export const metadata: Metadata = {
     "on demand storage South Africa",
     "storage vs self storage",
     "StrongBox storage",
-    "Sea Point storage",
-    "Woodstock storage",
+    "storage near me Cape Town",
+    "student storage Cape Town",
+    "storage Northern Suburbs",
+    "storage Southern Suburbs",
+    "storage Table View",
+    "storage Mitchells Plain",
   ],
   openGraph: {
     type: "website",
@@ -129,6 +134,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className="bg-surface font-sans text-on-surface antialiased">
         <Navbar />
+        <LaunchBar />
         <main className="pt-[72px]">{children}</main>
         <Footer />
       </body>

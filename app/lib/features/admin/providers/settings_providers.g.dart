@@ -29,22 +29,22 @@ class _SystemHash {
   }
 }
 
-/// Everyone with [role], live — the admins and drivers on the Team list.
+/// Everyone with [role], live — the Team list and the "View as" picker.
 ///
 /// Copied from [teamMembers].
 @ProviderFor(teamMembers)
 const teamMembersProvider = TeamMembersFamily();
 
-/// Everyone with [role], live — the admins and drivers on the Team list.
+/// Everyone with [role], live — the Team list and the "View as" picker.
 ///
 /// Copied from [teamMembers].
 class TeamMembersFamily extends Family<AsyncValue<List<AppUser>>> {
-  /// Everyone with [role], live — the admins and drivers on the Team list.
+  /// Everyone with [role], live — the Team list and the "View as" picker.
   ///
   /// Copied from [teamMembers].
   const TeamMembersFamily();
 
-  /// Everyone with [role], live — the admins and drivers on the Team list.
+  /// Everyone with [role], live — the Team list and the "View as" picker.
   ///
   /// Copied from [teamMembers].
   TeamMembersProvider call(
@@ -79,11 +79,11 @@ class TeamMembersFamily extends Family<AsyncValue<List<AppUser>>> {
   String? get name => r'teamMembersProvider';
 }
 
-/// Everyone with [role], live — the admins and drivers on the Team list.
+/// Everyone with [role], live — the Team list and the "View as" picker.
 ///
 /// Copied from [teamMembers].
 class TeamMembersProvider extends AutoDisposeStreamProvider<List<AppUser>> {
-  /// Everyone with [role], live — the admins and drivers on the Team list.
+  /// Everyone with [role], live — the Team list and the "View as" picker.
   ///
   /// Copied from [teamMembers].
   TeamMembersProvider(

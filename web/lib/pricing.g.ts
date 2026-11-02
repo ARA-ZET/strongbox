@@ -227,5 +227,31 @@ export const DEFAULT_PRICES = {
       "icon": "local_shipping",
       "recommended": false
     }
-  ]
+  ],
+  "supplies": [
+    {
+      "id": "bubble-wrap",
+      "label": "Bubble wrap roll",
+      "desc": "1.5 m × 10 m roll for fragile items",
+      "price": 50
+    },
+    {
+      "id": "packing-paper",
+      "label": "Packing paper",
+      "desc": "Bundle of 50 sheets",
+      "price": 45
+    },
+    {
+      "id": "tape",
+      "label": "Packing tape",
+      "desc": "48 mm roll",
+      "price": 25
+    }
+  ],
+  "packingHelper": {
+    "label": "Packing helper",
+    "desc": "A professional packer helps you pack, wrap and label on pickup day",
+    "price": 250,
+    "minHours": 2
+  }
 };

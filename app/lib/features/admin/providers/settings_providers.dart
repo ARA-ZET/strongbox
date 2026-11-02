@@ -11,7 +11,7 @@ import '../../auth/providers/auth_provider.dart';
 
 part 'settings_providers.g.dart';
 
-/// Everyone with [role], live — the admins and drivers on the Team list.
+/// Everyone with [role], live — the Team list and the "View as" picker.
 @riverpod
 Stream<List<AppUser>> teamMembers(Ref ref, UserRole role) {
   final tenantId = ref.watch(currentTenantIdProvider);

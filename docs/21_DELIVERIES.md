@@ -1,5 +1,14 @@
 # 21 — Deliveries Feature Spec
 
+> **As built (journey v5)** — see [`docs/journey/JOURNEY.md`](journey/JOURNEY.md); where this spec differs, that file and the code win.
+> - Clients request deliveries through the `requestDelivery` function (checks the units are theirs
+>   and `inStorage`, tomorrow → +30 days). Units move to `pendingDelivery` and the job is
+>   `pendingConfirmation` until an admin confirms it.
+> - Driver: Start (at the facility) → **scan out** each unit (`inTransit`) → "Loaded — on my way"
+>   → "Arrived" → **handover scan** each unit → photos → client signs → `completed`, units
+>   `delivered`. The client sees the driver's name and E-ID.
+> - No delivery fee in v1.
+
 ## Purpose
 Cover the full lifecycle of a delivery job: client requests it, admin schedules and assigns a driver, driver executes the delivery in the field (scans units at facility exit, drives to client address, delivers, collects sign-off). Deliveries are the exit point for items leaving the facility.
 

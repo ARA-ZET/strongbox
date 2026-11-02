@@ -18,10 +18,16 @@ const nodemailer = require("nodemailer");
 /** Test hook: `SMTP_URL=json://` builds messages without sending them. */
 const JSON_TRANSPORT = "json://";
 
+/**
+ * Placeholder secret value meaning "not set up yet" — lets the functions
+ * deploy before an SMTP account exists (see docs/EMAIL_SETUP.md).
+ */
+const NOT_CONFIGURED = "none";
+
 /** A nodemailer transport for [smtpUrl], or null when it isn't set. */
 function transportFor(smtpUrl) {
   const url = String(smtpUrl || "").trim();
-  if (!url) return null;
+  if (!url || url.toLowerCase() === NOT_CONFIGURED) return null;
   if (url === JSON_TRANSPORT) return nodemailer.createTransport({ jsonTransport: true });
   return nodemailer.createTransport(url);
 }
@@ -63,4 +69,4 @@ async function sendMail(mail, { transport, from, replyTo }) {
   }
 }
 
-module.exports = { transportFor, sendMail, JSON_TRANSPORT };
+module.exports = { transportFor, sendMail, JSON_TRANSPORT, NOT_CONFIGURED };

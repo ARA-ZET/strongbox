@@ -8,6 +8,7 @@
  * `notifications/{id}` in the app's AppNotification shape.
  */
 const { NOTIFY, TIME_ZONE, APP_URL } = require("./constants");
+const { jobRef, publicRef } = require("./references");
 
 const WINDOW_LABEL = {
   morning: "morning",
@@ -15,9 +16,14 @@ const WINDOW_LABEL = {
   evening: "evening",
 };
 
-/** The app's Job.reference: "#JB-9042". */
-function jobReference(jobId) {
-  return `#JB-${jobId.slice(0, 4).toUpperCase()}`;
+/** The app's jobRef(): "PU-4F8K2M" — never the Firebase id. */
+function jobReference(job, jobId) {
+  return jobRef(jobId, job.type);
+}
+
+/** A driver's E-ID, the app's staffRef(): "DRV-Q2N7HC". */
+function staffRef(uid) {
+  return publicRef("DRV", uid);
 }
 
 function toDate(value) {
@@ -60,7 +66,13 @@ function itemCount(job) {
 }
 
 function kind(job) {
+  if (job.type === "supplyDrop") return "supply drop-off";
   return job.type === "delivery" ? "delivery" : "pickup";
+}
+
+/** Whether a Firestore timestamp field went from unset to set. */
+function newlySet(before, after, field) {
+  return !before[field] && !!after[field];
 }
 
 function capitalise(word) {
@@ -78,8 +90,10 @@ function assignedMessage(job, jobId) {
     to: "driver",
     userId: job.driverId,
     type: NOTIFY.jobAssigned,
-    title: `New ${kind(job)} assigned — ${jobReference(jobId)}`,
-    body: [jobWhen(job), where, itemCount(job)].filter(Boolean).join(" · "),
+    title: `New ${kind(job)} assigned — ${jobReference(job, jobId)}`,
+    body: [jobWhen(job), where,
+      job.type === "supplyDrop" ? "supplies" : itemCount(job)]
+        .filter(Boolean).join(" · "),
     entityType: "job",
     entityId: jobId,
   };
@@ -94,15 +108,43 @@ function assignedMessage(job, jobId) {
  */
 function jobCreatedMessages(job, jobId, clientName) {
   if (job.isDeleted || job.status === "cancelled") return [];
+  // A Path A supply drop-off travels with its pickup: one set of messages.
+  if (job.type === "supplyDrop" && job.linkedJobId) return [];
   if (job.driverId) return [assignedMessage(job, jobId)];
   const who = clientName ? `${clientName} · ` : "";
+  const ref = jobReference(job, jobId);
+  const adminType = job.type === "delivery" ?
+    NOTIFY.deliveryRequested :
+    NOTIFY.jobScheduled;
+  if (job.status === "pendingConfirmation") {
+    const extras = [
+      job.suppliesFirst ? "supplies first" : "",
+      job.helperHours > 0 ? `${job.helperHours}h packing help` : "",
+    ].filter(Boolean).join(", ");
+    return [{
+      to: "admins",
+      type: adminType,
+      title: `New ${kind(job)} to confirm — ${ref}`,
+      body: `${who}${itemCount(job)} · ${jobWhen(job)}` +
+        (extras ? ` · ${extras}` : ""),
+      entityType: "job",
+      entityId: jobId,
+    }, {
+      to: "client",
+      type: NOTIFY.bookingReceived,
+      title: job.type === "delivery" ?
+        "Delivery request received" :
+        "Pickup booking received",
+      body: `We've got your ${kind(job)} for ${jobWhen(job)} (${ref}). ` +
+        "We'll confirm it shortly.",
+      entityType: "job",
+      entityId: jobId,
+    }];
+  }
   return [{
     to: "admins",
-    type: job.type === "delivery" ?
-      NOTIFY.deliveryRequested :
-      NOTIFY.jobScheduled,
-    title: `${capitalise(kind(job))} awaiting a driver — ` +
-      jobReference(jobId),
+    type: adminType,
+    title: `${capitalise(kind(job))} awaiting a driver — ${ref}`,
     body: `${who}${itemCount(job)} · ${jobWhen(job)}`,
     entityType: "job",
     entityId: jobId,
@@ -110,25 +152,27 @@ function jobCreatedMessages(job, jobId, clientName) {
 }
 
 /**
- * Messages for a job update: driver (re)assigned, started, completed or
+ * Messages for a job update: confirmed or declined, driver (re)assigned,
+ * on the way, arrived, collected, received into storage, completed or
  * cancelled. Unit statuses are settled by the app in the same transaction
  * as the job (JobRepository) — this only notifies.
  * @param {object} before
  * @param {object} after
  * @param {string} jobId
+ * @param {{driverName?: string}} context who is driving, for the client
  * @return {Array<object>}
  */
-function jobUpdatedMessages(before, after, jobId) {
+function jobUpdatedMessages(before, after, jobId, context = {}) {
   const out = [];
-  const ref = jobReference(jobId);
-  const pickup = kind(after) === "pickup";
+  const ref = jobReference(after, jobId);
+  const type = after.type;
   const what = itemCount(after);
   const closed = after.status === "completed" || after.status === "cancelled";
+  const pairedSupply = type === "supplyDrop" && after.linkedJobId;
 
   if (after.driverId && after.driverId !== before.driverId && !closed) {
     out.push(assignedMessage(after, jobId));
   }
-  if (before.status === after.status) return out;
 
   const client = (fields) => ({
     to: "client",
@@ -137,28 +181,83 @@ function jobUpdatedMessages(before, after, jobId) {
     ...fields,
   });
 
+  // Driver check-ins — the client sees who is coming and their E-ID.
+  if (newlySet(before, after, "departedAt") && after.status === "inProgress") {
+    const badge = after.driverId ? ` (E-ID ${staffRef(after.driverId)})` : "";
+    const who = context.driverName ?
+      `${context.driverName}${badge}` :
+      `Your driver${badge}`;
+    out.push(client({
+      type: NOTIFY.driverEnRoute,
+      title: type === "delivery" ?
+        "Your delivery is on its way" :
+        "Your driver is on the way",
+      body: `${who} is on the way for your ${kind(after)} (${ref}). ` +
+        "Check the E-ID on their badge when they arrive.",
+    }));
+  }
+  if (newlySet(before, after, "arrivedAt") && after.status === "inProgress") {
+    out.push(client({
+      type: NOTIFY.driverArrived,
+      title: "Your driver has arrived",
+      body: `Your driver is at ${place(after) || "your address"} ` +
+        `for ${ref}.`,
+    }));
+  }
+
+  if (before.status === after.status) return out;
+
+  if (before.status === "pendingConfirmation" &&
+    (after.status === "scheduled" || after.status === "assigned")) {
+    out.push(client({
+      type: NOTIFY.bookingConfirmed,
+      title: `Your ${kind(after)} is confirmed`,
+      body: `${capitalise(kind(after))} ${ref} is booked for ` +
+        `${jobWhen(after)}.` +
+        (type === "pickup" ? " Print your labels from My Storage while " +
+          "you pack." : ""),
+    }));
+    return out;
+  }
+  if (before.status === "pendingConfirmation" &&
+    after.status === "cancelled") {
+    if (pairedSupply) return out;
+    const reason = after.cancelReason ? ` ${after.cancelReason}` : "";
+    out.push(client({
+      type: NOTIFY.bookingDeclined,
+      title: `We couldn't confirm your ${kind(after)}`,
+      body: `${ref} (${jobWhen(after)}) wasn't confirmed.${reason} ` +
+        "Contact us and we'll find a time that works.",
+    }));
+    return out;
+  }
+
   switch (after.status) {
-    case "inProgress":
+    case "collected":
       out.push(client({
-        type: NOTIFY.jobStarted,
-        title: pickup ?
-          "Your driver is on the way" :
-          "Your delivery is on its way",
-        body: pickup ?
-          `We're on our way to collect ${what} (${ref}).` :
-          `Your driver has left our facility with ${what} (${ref}).`,
+        type: NOTIFY.pickupConfirmed,
+        title: "Your items are collected",
+        body: `${capitalise(what)} collected and on the way to secure ` +
+          `storage (${ref}).`,
       }));
       break;
     case "completed":
-      out.push(client(pickup ? {
-        type: NOTIFY.pickupConfirmed,
-        title: "Your items are safely collected",
-        body: `${capitalise(what)} collected and on the way to secure ` +
-          `storage (${ref}).`,
+      out.push(client(type === "pickup" ? {
+        type: NOTIFY.unitsReceived,
+        title: "Your items are in storage",
+        body: `${capitalise(what)} checked in at our facility (${ref}). ` +
+          "See photos and details under My Storage.",
+      } : type === "supplyDrop" ? {
+        type: NOTIFY.suppliesDelivered,
+        title: "Your packing supplies are here",
+        body: "Pack and label your boxes with the printed QR labels " +
+          `before your pickup (${ref}).`,
       } : {
         type: NOTIFY.deliveryCompleted,
         title: "Delivery complete",
-        body: `${capitalise(what)} delivered and signed for (${ref}).`,
+        body: `${capitalise(what)} delivered and signed for` +
+          (after.recipientName ? ` by ${after.recipientName}` : "") +
+          ` (${ref}).`,
       }));
       out.push({
         to: "admins",
@@ -171,7 +270,7 @@ function jobUpdatedMessages(before, after, jobId) {
       break;
     case "cancelled": {
       const reason = after.cancelReason ? ` Reason: ${after.cancelReason}` : "";
-      out.push(client({
+      if (!pairedSupply) out.push(client({
         type: NOTIFY.jobCancelled,
         title: `Your ${kind(after)} was cancelled`,
         body: `${ref} (${jobWhen(after)}) was cancelled.${reason} ` +
@@ -198,8 +297,8 @@ function jobUpdatedMessages(before, after, jobId) {
 }
 
 /**
- * Where tapping a notification takes [role]. Admin and client have no job
- * detail route, so jobs open the list.
+ * Where tapping a notification takes [role]. Drivers and clients open the
+ * job itself; admins open the jobs list.
  * @param {string} role UserRole
  * @param {{entityType?: string, entityId?: string}} n
  * @return {string}
@@ -213,12 +312,15 @@ function routeFor(role, n) {
       if (n.entityType === "unit" && id) return `/admin/inventory/${id}`;
       if (n.entityType === "qr") return "/admin/qr";
       if (n.entityType === "settings") return "/admin/settings";
+      if (n.entityType === "issue") return "/admin/issues";
       return "/admin/notifications";
     case "driver":
       if (n.entityType === "job" && id) return `/driver/jobs/${id}`;
       return "/driver/notifications";
     default:
-      if (n.entityType === "job") return "/client/deliveries";
+      if (n.entityType === "job") {
+        return id ? `/client/orders/${id}` : "/client/orders";
+      }
       if (n.entityType === "invoice") return "/client/subscription";
       if (n.entityType === "unit" && id) return `/client/storage/${id}`;
       return "/client/notifications";
@@ -231,7 +333,13 @@ function routeFor(role, n) {
  * here are push / in-app only.
  */
 const EMAIL_PREF = {
+  [NOTIFY.bookingReceived]: "bookingUpdatesEmail",
+  [NOTIFY.bookingConfirmed]: "bookingUpdatesEmail",
+  [NOTIFY.bookingDeclined]: "bookingUpdatesEmail",
   [NOTIFY.jobStarted]: "pickupStartedEmail",
+  [NOTIFY.driverEnRoute]: "pickupStartedEmail",
+  [NOTIFY.unitsReceived]: "deliveryCompletedEmail",
+  [NOTIFY.suppliesDelivered]: "deliveryCompletedEmail",
   [NOTIFY.pickupConfirmed]: "deliveryCompletedEmail",
   [NOTIFY.deliveryCompleted]: "deliveryCompletedEmail",
   [NOTIFY.invoiceReady]: "invoiceReadyEmail",
@@ -239,6 +347,7 @@ const EMAIL_PREF = {
   [NOTIFY.storageThreshold]: "storageThresholdEmail",
 };
 const EMAIL_PREF_DEFAULTS = {
+  bookingUpdatesEmail: true,
   pickupStartedEmail: true,
   deliveryCompletedEmail: true,
   invoiceReadyEmail: true,
@@ -310,6 +419,7 @@ function welcomeEmail(client) {
 module.exports = {
   sastDay,
   jobReference,
+  staffRef,
   jobWhen,
   jobCreatedMessages,
   jobUpdatedMessages,

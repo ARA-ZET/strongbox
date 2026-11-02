@@ -8,6 +8,7 @@ import '../../../core/widgets/brand_logo.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../auth/providers/auth_provider.dart';
 import 'quick_scan_drawer.dart';
+import 'view_as.dart';
 
 /// Navigation entry shared between sidebar, bottom nav and the More drawer.
 class _NavItem {
@@ -30,6 +31,7 @@ const _mainNav = [
 
 const _secondaryNav = [
   _NavItem('QR Management', Icons.qr_code_2_outlined, '/admin/qr'),
+  _NavItem('Driver Issues', Icons.report_problem_outlined, '/admin/issues'),
   _NavItem('Notifications', Icons.notifications_outlined,
       '/admin/notifications'),
   _NavItem('Settings', Icons.settings_outlined, '/admin/settings'),
@@ -66,7 +68,12 @@ class _AdminShellState extends ConsumerState<AdminShell> {
       return Scaffold(
         key: _scaffoldKey,
         endDrawer: const QuickScanDrawer(),
-        drawer: desktop ? null : _MoreDrawer(onLogout: _logout),
+        drawer: desktop
+            ? null
+            : _MoreDrawer(
+                onViewAs: () => ViewAsDialog.show(context),
+                onLogout: _logout,
+              ),
         bottomNavigationBar: desktop ? null : _buildBottomNav(),
         body: desktop
             ? Row(
@@ -148,6 +155,10 @@ class _AdminShellState extends ConsumerState<AdminShell> {
                   ),
                 ),
                 const SizedBox(height: 8),
+                _sidebarItem(
+                  const _NavItem('View as user', Icons.visibility_outlined, ''),
+                  onTap: () => ViewAsDialog.show(context),
+                ),
                 _sidebarItem(_secondaryNav[2]), // Settings
                 _sidebarItem(
                   const _NavItem('Support', Icons.help_outline, ''),
@@ -238,8 +249,9 @@ class _AdminShellState extends ConsumerState<AdminShell> {
 
 /// Drawer with overflow destinations on mobile.
 class _MoreDrawer extends StatelessWidget {
-  const _MoreDrawer({required this.onLogout});
+  const _MoreDrawer({required this.onViewAs, required this.onLogout});
 
+  final VoidCallback onViewAs;
   final Future<void> Function() onLogout;
 
   @override
@@ -262,6 +274,16 @@ class _MoreDrawer extends StatelessWidget {
                   context.go(item.route);
                 },
               ),
+            ListTile(
+              leading:
+                  const Icon(Icons.visibility_outlined, color: Colors.white70),
+              title: Text('View as user',
+                  style: GoogleFonts.inter(color: Colors.white70)),
+              onTap: () {
+                Navigator.of(context).pop();
+                onViewAs();
+              },
+            ),
             const Divider(color: Colors.white24),
             ListTile(
               leading: const Icon(Icons.logout, color: Colors.white70),

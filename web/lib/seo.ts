@@ -7,9 +7,9 @@ import {
   HQ_SUBURB,
   HQ_POSTCODE,
   HQ_GEO,
-  SERVICE_AREAS,
   OPENING_HOURS,
 } from "@/lib/constants";
+import { REGIONS, type Region } from "@/lib/areas";
 import type { Article } from "@/lib/resources";
 import type { BoxType } from "@/lib/prices";
 
@@ -129,10 +129,17 @@ export function localBusinessJsonLd(boxFrom: number) {
       latitude: HQ_GEO.lat,
       longitude: HQ_GEO.lng,
     },
-    areaServed: SERVICE_AREAS.map((name) => ({
-      "@type": "Place",
-      name: `${name}, Cape Town`,
-    })),
+    // The city, then its regions, each pointing at the page that lists its
+    // suburbs. Listing all ~120 suburbs here put the whole list in the head
+    // of every page; the region pages carry them instead.
+    areaServed: [
+      { "@type": "City", name: "Cape Town" },
+      ...REGIONS.map((r) => ({
+        "@type": "Place",
+        name: `${r.name}, Cape Town`,
+        url: url(`/areas/${r.slug}`),
+      })),
+    ],
     openingHoursSpecification: OPENING_HOURS.map(({ days, opens, closes }) => ({
       "@type": "OpeningHoursSpecification",
       dayOfWeek: days,
@@ -221,6 +228,34 @@ export function articleJsonLd(article: Article) {
     mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
     articleSection: article.category,
     timeRequired: `PT${article.readMinutes}M`,
+  };
+}
+
+/** The service as offered in one region — emitted by `/areas/[slug]`. */
+export function regionServiceJsonLd(region: Region, boxFrom: number) {
+  const canonical = url(`/areas/${region.slug}`);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${canonical}#service`,
+    name: `Valet storage ${region.where}`,
+    serviceType: "Valet storage",
+    url: canonical,
+    provider: { "@id": BUSINESS_ID },
+    areaServed: region.suburbs.map((name) => ({
+      "@type": "Place",
+      name: `${name}, Cape Town`,
+    })),
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "ZAR",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        minPrice: boxFrom,
+        priceCurrency: "ZAR",
+        unitCode: "MON",
+      },
+    },
   };
 }
 

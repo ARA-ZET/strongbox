@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/errors/app_exception.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/storage_unit.dart';
 import '../../../core/models/value_objects.dart';
@@ -36,19 +37,23 @@ class _ClientDeliveryRequestScreenState
   Future<void> _submit() async {
     setState(() => _submitting = true);
     try {
-      await ref.read(deliveryRequestProvider.notifier).submit();
+      final jobId = await ref.read(deliveryRequestProvider.notifier).submit();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Delivery request submitted — we are on it!')),
+              content: Text('Delivery requested — we\'ll confirm it '
+                  'shortly and let you know.')),
         );
-        context.go('/client/dashboard');
+        context.go('/client/orders/$jobId');
       }
     } catch (error) {
       if (mounted) {
         setState(() => _submitting = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not submit request: $error')),
+          SnackBar(
+              content: Text(error is AppException
+                  ? error.message
+                  : 'Could not submit request: $error')),
         );
       }
     }

@@ -6,7 +6,7 @@ part of 'pricing_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$savedPriceIdsHash() => r'dd8945a435e9e18ada6ec3674ddf65865e89f2c1';
+String _$savedPriceIdsHash() => r'693984ce85324034380b180d49f6da885309a58e';
 
 /// Ids already in the live list — used to keep a new entry's id unique.
 ///
@@ -23,7 +23,7 @@ final savedPriceIdsProvider = AutoDisposeProvider<Set<String>>.internal(
 );
 
 typedef SavedPriceIdsRef = AutoDisposeProviderRef<Set<String>>;
-String _$pricingEditorHash() => r'84f9f77cd468f911fe7cedde238cb53912e17bd0';
+String _$pricingEditorHash() => r'4c823e9dbf42d958f2073ed99b942d0c783501b5';
 
 /// Edits to the shared price list. Each call saves straight to Firestore —
 /// there is no draft to lose — so the app updates at once and the website

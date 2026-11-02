@@ -11,6 +11,7 @@ import '../../../core/models/job.dart';
 import '../../../core/models/storage_unit.dart';
 import '../../../core/providers/tenant_provider.dart';
 import '../../../repositories/repository_providers.dart';
+import '../../../core/utils/public_ref.dart';
 
 part 'clients_providers.g.dart';
 
@@ -74,7 +75,7 @@ List<Client> filteredClients(Ref ref) {
     if (query.isEmpty) return true;
     return client.displayName.toLowerCase().contains(query) ||
         client.email.toLowerCase().contains(query) ||
-        client.id.toLowerCase().contains(query);
+        clientRef(client.id).toLowerCase().contains(query);
   }).toList();
 }
 
@@ -102,7 +103,7 @@ Stream<List<Job>> clientJobs(Ref ref, String clientId) {
 }
 
 /// Create/update actions on client documents.
-@riverpod
+@Riverpod(keepAlive: true)
 class ClientMutations extends _$ClientMutations {
   @override
   FutureOr<void> build() {}

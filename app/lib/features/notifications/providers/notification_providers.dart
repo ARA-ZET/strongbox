@@ -13,11 +13,11 @@ import '../../auth/providers/auth_provider.dart';
 
 part 'notification_providers.g.dart';
 
-/// The signed-in user's notifications, newest first (doc 22). Written by
+/// The current user's notifications, newest first (doc 22). Written by
 /// Cloud Functions on job and billing events, and by admins' messages.
 @riverpod
 Stream<List<AppNotification>> myNotifications(Ref ref) {
-  final uid = ref.watch(authStateProvider).valueOrNull?.uid;
+  final uid = ref.watch(currentUserIdProvider);
   if (uid == null) return Stream.value(const []);
   final tenantId = ref.watch(currentTenantIdProvider);
   return ref
@@ -33,7 +33,7 @@ int unreadNotificationCount(Ref ref) =>
         .length;
 
 /// Mark-read actions for the inbox.
-@riverpod
+@Riverpod(keepAlive: true)
 class NotificationActions extends _$NotificationActions {
   @override
   FutureOr<void> build() {}
@@ -47,10 +47,10 @@ class NotificationActions extends _$NotificationActions {
     state.throwIfError();
   }
 
-  /// Marks all of the signed-in user's notifications read.
+  /// Marks all of the current user's notifications read.
   Future<void> markAllRead() async {
-    final uid = ref.read(currentActorIdProvider);
-    if (uid.isEmpty) return;
+    final uid = ref.read(currentUserIdProvider);
+    if (uid == null) return;
     state = const AsyncLoading();
     state = await AsyncValue.guard(() => ref
         .read(notificationRepositoryProvider)

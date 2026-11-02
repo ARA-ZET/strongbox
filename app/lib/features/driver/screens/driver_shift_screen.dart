@@ -12,6 +12,7 @@ import '../../../core/models/app_user.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../../core/models/driver_shift.dart';
 import '../providers/shift_providers.dart';
+import '../../../core/utils/public_ref.dart';
 
 /// Shift management + facility-access E-ID. Design:
 /// driver_shift_management_id/screen.png.
@@ -231,9 +232,8 @@ class _EidCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
     final uid = user?.id ?? '';
-    final employeeId =
-        'SB-${uid.substring(0, uid.length.clamp(0, 6)).toUpperCase()}';
-    final gateCode = 'DRV-${uid.substring(0, uid.length.clamp(0, 8))}';
+    final employeeId = staffRef(uid);
+    final gateCode = employeeId;
 
     return Container(
       padding: const EdgeInsets.all(20),

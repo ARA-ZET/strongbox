@@ -1,5 +1,19 @@
 # 20 — Pickups Feature Spec
 
+> **As built (journey v5)** — see [`docs/journey/JOURNEY.md`](journey/JOURNEY.md); where this spec differs, that file and the code win.
+> - Client bookings (`bookPickup`) arrive `pendingConfirmation`; an admin confirms or declines them.
+>   Admins' own jobs skip that step.
+> - Start Job no longer moves units. The driver checks in "on my way" / "arrived", and each
+>   **scan at the door** moves a unit `pendingPickup → inTransit`.
+> - Client sign-off makes the job **`collected`** (units stay `inTransit`). At the facility the
+>   driver **scans each unit in** (`inStorage`, optional bay); the last one completes the job.
+>   Admins can receive units from the job sheet as a fallback.
+> - Packing supplies and a packing helper can be booked. With "supplies first" (Path A) a linked
+>   `supplyDrop` job delivers empty boxes + supplies at least a day before the pickup.
+> - At least one photo per job before sign-off; photos carry a Good / Damaged condition per unit.
+> - Notice: bookings from tomorrow, up to 6 months ahead. Time windows are the admin setting
+>   (defaults Morning 08–12, Afternoon 12–16, Evening 16–20 — `BusinessSettings`).
+
 ## Purpose
 Cover the full lifecycle of a pickup job: admin creates it, assigns a driver, driver executes it in the field (scans each unit, captures photos, collects sign-off), and the system automatically advances all unit statuses. Pickups are the entry point for items entering the StrongBox facility.
 

@@ -40,14 +40,13 @@ final batchPreviewProvider =
 );
 
 typedef _$BatchPreview = AutoDisposeNotifier<List<String>>;
-String _$qrMutationsHash() => r'04ec7f7928900fba841fd8a27c1c9e14ab0e4e51';
+String _$qrMutationsHash() => r'ea8ecf8acbdd341882ae1aabaabc5ffc94f342cb';
 
 /// Firestore writes for the QR module.
 ///
 /// Copied from [QrMutations].
 @ProviderFor(QrMutations)
-final qrMutationsProvider =
-    AutoDisposeAsyncNotifierProvider<QrMutations, void>.internal(
+final qrMutationsProvider = AsyncNotifierProvider<QrMutations, void>.internal(
   QrMutations.new,
   name: r'qrMutationsProvider',
   debugGetCreateSourceHash:
@@ -56,6 +55,6 @@ final qrMutationsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$QrMutations = AutoDisposeAsyncNotifier<void>;
+typedef _$QrMutations = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

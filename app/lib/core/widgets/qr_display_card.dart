@@ -4,8 +4,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
+import '../utils/qr_link.dart';
 
 /// White card with a centred QR code, its ID text, and Print / Copy actions.
+/// The QR is the label link ([qrPayload]); Copy copies the bare code.
 class QRDisplayCard extends StatelessWidget {
   const QRDisplayCard({
     super.key,
@@ -33,7 +35,7 @@ class QRDisplayCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           QrImageView(
-            data: qrData,
+            data: qrPayload(qrData),
             size: 160,
             dataModuleStyle: const QrDataModuleStyle(
               dataModuleShape: QrDataModuleShape.square,

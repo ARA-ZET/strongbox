@@ -124,10 +124,12 @@ test("a delivery request flows through to the right people", async () => {
     (await notificationsAll()).find((n) => n.id === assigned.id &&
       n.route === "/driver/jobs/job-1"));
 
+  // Loaded at the facility and on the way: the client hears who's coming.
   await seed((db) => updateDoc(doc(db, "jobs", "job-1"),
-      { status: "inProgress" }));
+      { status: "inProgress", departedAt: new Date() }));
   const started = await eventually(async () =>
-    (await notificationsAll()).find((n) => n.type === "jobStarted"));
+    (await notificationsAll()).find((n) => n.type === "driverEnRoute"));
+  assert.match(started.body, /E-ID DRV-/);
   assert.equal(started.userId, "client");
   // Clients get this one by email too (default preferences).
   const mail = await eventually(() => mailDoc(`notification-${started.id}`));
@@ -172,6 +174,79 @@ test("a new client with a login gets a welcome email", async () => {
 });
 
 // ---------------------------------------------------------------- rules
+
+test("rules: clients book only through the functions; drivers work " +
+    "only their confirmed jobs", async () => {
+  await seed(async (db) => {
+    await setDoc(doc(db, "storageUnits", "u9"), { tenantId: TENANT,
+      clientId: "client-1", status: "inStorage", isDeleted: false });
+    await setDoc(doc(db, "jobs", "j9"), { tenantId: TENANT, type: "pickup",
+      clientId: "client-1", driverId: "driver", status: "pendingConfirmation",
+      storageUnitIds: [], isDeleted: false });
+    await setDoc(doc(db, "jobs", "j10"), { tenantId: TENANT, type: "pickup",
+      clientId: "client-1", driverId: "driver", status: "assigned",
+      storageUnitIds: [], isDeleted: false });
+  });
+  const client = env.authenticatedContext("client").firestore();
+  await assertFails(setDoc(doc(client, "jobs", "mine"), {
+    tenantId: TENANT, type: "delivery", clientId: "client-1",
+    status: "scheduled", driverId: null,
+  }));
+  await assertFails(updateDoc(doc(client, "storageUnits", "u9"),
+      { status: "pendingDelivery", jobId: "x", updatedAt: serverTimestamp() }));
+
+  const driver = env.authenticatedContext("driver").firestore();
+  // Not confirmed yet — hands off.
+  await assertFails(updateDoc(doc(driver, "jobs", "j9"),
+      { status: "inProgress", updatedAt: serverTimestamp() }));
+  await assertSucceeds(updateDoc(doc(driver, "jobs", "j10"),
+      { status: "inProgress", departedAt: serverTimestamp(),
+        updatedAt: serverTimestamp() }));
+  // Can't hand the job to someone else or re-price it.
+  await assertFails(updateDoc(doc(driver, "jobs", "j10"),
+      { driverId: "someone-else" }));
+  await assertFails(updateDoc(doc(driver, "jobs", "j10"),
+      { onceOffZar: 0, updatedAt: serverTimestamp() }));
+});
+
+test("rules: clients add and remove packing photos only while packing",
+    async () => {
+  await seed(async (db) => {
+    await setDoc(doc(db, "storageUnits", "pack-1"), { tenantId: TENANT,
+      clientId: "client-1", status: "pendingPickup", photoIds: [],
+      isDeleted: false });
+    await setDoc(doc(db, "storageUnits", "stored-1"), { tenantId: TENANT,
+      clientId: "client-1", status: "inStorage", photoIds: [],
+      isDeleted: false });
+  });
+  const client = env.authenticatedContext("client").firestore();
+  const photo = (unitId, extra = {}) => ({ tenantId: TENANT,
+    storageUrl: "https://x", storagePath: "p", type: "interior",
+    entityType: "storageUnit", entityId: unitId, jobId: null,
+    uploadedBy: "client", isDeleted: false, ...extra });
+
+  await assertSucceeds(setDoc(doc(client, "photos", "ph-1"), photo("pack-1")));
+  // What the app sends: photos first, on a unit with no description yet.
+  await assertSucceeds(updateDoc(doc(client, "storageUnits", "pack-1"),
+      { photoIds: ["ph-1"], updatedAt: serverTimestamp() }));
+  await assertSucceeds(updateDoc(doc(client, "storageUnits", "pack-1"),
+      { description: "Boots", updatedAt: serverTimestamp() }));
+  await assertSucceeds(updateDoc(doc(client, "photos", "ph-1"),
+      { isDeleted: true, deletedAt: serverTimestamp() }));
+  // Not the unit's status, label or price, and not once it's with us.
+  await assertFails(updateDoc(doc(client, "storageUnits", "pack-1"),
+      { status: "inStorage" }));
+  await assertFails(updateDoc(doc(client, "storageUnits", "pack-1"),
+      { monthlyRateZar: 1 }));
+  await assertFails(setDoc(doc(client, "photos", "ph-2"), photo("stored-1")));
+  await assertFails(updateDoc(doc(client, "storageUnits", "stored-1"),
+      { photoIds: ["x"], updatedAt: serverTimestamp() }));
+  // Only as themselves, only packing photo types.
+  await assertFails(setDoc(doc(client, "photos", "ph-3"),
+      photo("pack-1", { uploadedBy: "driver" })));
+  await assertFails(setDoc(doc(client, "photos", "ph-4"),
+      photo("pack-1", { type: "signature" })));
+});
 
 test("rules: only admins address notifications to people", async () => {
   const client = env.authenticatedContext("client").firestore();

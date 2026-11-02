@@ -162,6 +162,28 @@ Future<Uint8List> generateInvoicePdf(
               ]),
           ],
         ),
+        if (invoice.charges.isNotEmpty) ...[
+          pw.SizedBox(height: 14),
+          pw.Text('Once-off charges', style: bold),
+          pw.SizedBox(height: 6),
+          pw.Table(
+            columnWidths: const {
+              0: pw.FlexColumnWidth(6),
+              1: pw.FlexColumnWidth(2),
+            },
+            border: pw.TableBorder(
+              horizontalInside: pw.BorderSide(
+                  color: _pdf(AppColors.border), width: 0.5),
+            ),
+            children: [
+              for (final charge in invoice.charges)
+                pw.TableRow(children: [
+                  cell(charge.label),
+                  cell(formatZarExact(charge.amountZar), right: true),
+                ]),
+            ],
+          ),
+        ],
         pw.Divider(color: _pdf(AppColors.border)),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.end,

@@ -8,9 +8,12 @@ import '../../../core/enums/app_enums.dart';
 import '../../../core/models/storage_unit.dart';
 import '../../admin/providers/clients_providers.dart';
 import '../providers/driver_jobs_providers.dart';
+import '../../../core/utils/qr_link.dart';
 
 /// Full-screen camera QR scanner. When [jobId] is set, a successful scan
-/// confirms the box on that job; standalone scans just show box info.
+/// records the box for the job's current step ([scanStepFor]: collect,
+/// receive into a bay, load out, or hand over) and keeps scanning until the
+/// step is done; standalone scans just show box info.
 /// Design: driver_qr_scanner/screen.png.
 class DriverScannerScreen extends ConsumerStatefulWidget {
   const DriverScannerScreen({super.key, this.jobId});
@@ -24,11 +27,13 @@ class DriverScannerScreen extends ConsumerStatefulWidget {
 
 class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
   final _controller = MobileScannerController();
+  final _bay = TextEditingController();
   bool _handling = false;
 
   @override
   void dispose() {
     _controller.dispose();
+    _bay.dispose();
     super.dispose();
   }
 
@@ -39,7 +44,8 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
         .firstWhere((value) => value != null && value.isNotEmpty,
             orElse: () => null);
     if (raw == null) return;
-    await _handleCode(raw);
+    // Labels hold a link to the item; older ones just the code.
+    await _handleCode(codeFromScan(raw));
   }
 
   Future<void> _handleCode(String code) async {
@@ -111,9 +117,18 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
       return;
     }
 
+    final step = job == null ? null : scanStepFor(job);
+    if (job != null && step == null) {
+      await _showError('Nothing to scan on this job right now.');
+      return;
+    }
+    if (job != null && step!.doneOn(job).contains(box.id)) {
+      await _showError('${box.displayCode} is already scanned.');
+      return;
+    }
+
     final clientName =
         ref.read(clientNamesProvider)[box.clientId] ?? 'Client';
-    final pickup = job?.type == JobType.pickup;
 
     await showModalBottomSheet<bool>(
       context: context,
@@ -165,35 +180,59 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
                           'Status', _prettyStatus(box.status.name), tt)),
                 ],
               ),
+              if (step == ScanStep.receive) ...[
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _bay,
+                  textCapitalization: TextCapitalization.characters,
+                  decoration: const InputDecoration(
+                    labelText: 'Storage bay / shelf (optional)',
+                    hintText: 'e.g. B-12',
+                  ),
+                ),
+              ],
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () => Navigator.of(sheetContext).pop(true),
-                  child: Text(job == null
-                      ? 'Done'
-                      : pickup
-                          ? 'Confirm Pickup'
-                          : 'Confirm Delivery'),
+                  child: Text(switch (step) {
+                    null => 'Done',
+                    ScanStep.collect => 'Confirm Collected',
+                    ScanStep.receive => 'Confirm In Storage',
+                    ScanStep.load => 'Confirm Loaded',
+                    ScanStep.handOver => 'Confirm Handed Over',
+                  }),
                 ),
               ),
+              if (step != null)
+                TextButton(
+                  onPressed: () => Navigator.of(sheetContext).pop(false),
+                  child: const Text('Not this one — keep scanning'),
+                ),
             ],
           ),
         );
       },
     ).then((confirmed) async {
-      if (confirmed == true && job != null) {
+      if (confirmed == true && job != null && step != null) {
         try {
-          await ref
-              .read(driverJobActionsProvider.notifier)
-              .confirmUnit(job.id, box.id);
+          await ref.read(driverJobActionsProvider.notifier).confirmUnit(
+              job.id, box.id,
+              step: step, bay: step == ScanStep.receive ? _bay.text : null);
         } catch (error) {
           if (mounted) await _showError('Could not confirm box: $error');
           return;
         }
-        if (mounted) context.go('/driver/jobs/${job.id}');
-        return;
+        if (!mounted) return;
+        final left = job.storageUnitIds.length - step.doneOn(job).length - 1;
+        if (left <= 0) {
+          context.go('/driver/jobs/${job.id}');
+          return;
+        }
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('${box.displayCode} done — $left to go')));
       }
       // Standalone scan or dismissed — resume scanning.
       if (mounted) {
@@ -259,7 +298,7 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
       ),
     );
     if (code != null && code.isNotEmpty) {
-      await _handleCode(code.toUpperCase());
+      await _handleCode(codeFromScan(code));
     } else if (mounted) {
       await _controller.start();
     }
@@ -295,8 +334,11 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _circleButton(Icons.close,
-                        () => context.go('/driver/jobs')),
+                    _circleButton(
+                        Icons.close,
+                        () => context.go(widget.jobId == null
+                            ? '/driver/jobs'
+                            : '/driver/jobs/${widget.jobId}')),
                     Row(
                       children: [
                         _circleButton(Icons.bolt,
@@ -326,6 +368,24 @@ class _DriverScannerScreenState extends ConsumerState<DriverScannerScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (widget.jobId != null)
+                      Consumer(builder: (context, ref, _) {
+                        final job =
+                            ref.watch(driverJobProvider(widget.jobId!)).valueOrNull;
+                        final step = job == null ? null : scanStepFor(job);
+                        if (job == null || step == null) {
+                          return const SizedBox.shrink();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            '${step.title} · ${step.doneOn(job).length}/'
+                            '${job.storageUnitIds.length}',
+                            style: tt.titleMedium
+                                ?.copyWith(color: Colors.white),
+                          ),
+                        );
+                      }),
                     Text('SCANNING…',
                         style: tt.labelLarge?.copyWith(
                             color: AppColors.sky,

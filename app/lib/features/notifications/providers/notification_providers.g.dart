@@ -6,9 +6,9 @@ part of 'notification_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$myNotificationsHash() => r'4a890647e3f2c2c6a6ba9d439d9b75028c7812ff';
+String _$myNotificationsHash() => r'a573054e2044eeed599cc156037df62400e2b721';
 
-/// The signed-in user's notifications, newest first (doc 22). Written by
+/// The current user's notifications, newest first (doc 22). Written by
 /// Cloud Functions on job and billing events, and by admins' messages.
 ///
 /// Copied from [myNotifications].
@@ -45,14 +45,14 @@ final unreadNotificationCountProvider = AutoDisposeProvider<int>.internal(
 
 typedef UnreadNotificationCountRef = AutoDisposeProviderRef<int>;
 String _$notificationActionsHash() =>
-    r'700183e1e9c7f5ee79cceba084b7d657fa101add';
+    r'203499bd51663c022eefa96957f3669cd40dd85a';
 
 /// Mark-read actions for the inbox.
 ///
 /// Copied from [NotificationActions].
 @ProviderFor(NotificationActions)
 final notificationActionsProvider =
-    AutoDisposeAsyncNotifierProvider<NotificationActions, void>.internal(
+    AsyncNotifierProvider<NotificationActions, void>.internal(
   NotificationActions.new,
   name: r'notificationActionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -62,7 +62,7 @@ final notificationActionsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$NotificationActions = AutoDisposeAsyncNotifier<void>;
+typedef _$NotificationActions = AsyncNotifier<void>;
 String _$pushNotificationsHash() => r'55398617423213d808033fec94456e7e383c767d';
 
 /// Registers this device for push while someone is signed in (doc 22).

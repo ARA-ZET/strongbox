@@ -21,15 +21,64 @@ FirebaseAuth firebaseAuth(Ref ref) => FirebaseAuth.instance;
 Stream<User?> authState(Ref ref) =>
     ref.watch(firebaseAuthProvider).authStateChanges();
 
-/// The signed-in user's `users/{uid}` document as an [AppUser], or null.
+/// The signed-in account's own `users/{uid}` document, or null. Unlike
+/// [currentUser], never switches to the account an admin is viewing as.
 @Riverpod(keepAlive: true)
-Stream<AppUser?> currentUser(Ref ref) {
+Stream<AppUser?> signedInUser(Ref ref) {
   final user = ref.watch(authStateProvider).valueOrNull;
   if (user == null) return Stream.value(null);
   return ref.watch(userRepositoryProvider).watchUser(user.uid);
 }
 
+/// "View as": the uid of the account an admin is previewing the app as, or
+/// null. In memory only — a reload, sign-out or account switch ends it.
+@Riverpod(keepAlive: true)
+class ViewAs extends _$ViewAs {
+  @override
+  String? build() {
+    ref.watch(authStateProvider.select((auth) => auth.valueOrNull?.uid));
+    return null;
+  }
+
+  /// Shows the app as [user] sees it (their portal, data and role guards).
+  void start(AppUser user) => state = user.id;
+
+  /// Back to the admin's own view.
+  void stop() => state = null;
+}
+
+/// The user whose portal is on screen: the signed-in account, or — while
+/// an admin uses [ViewAs] — the account being viewed. Role routing and the
+/// client/driver portals read this, so they behave as for that user.
+@Riverpod(keepAlive: true)
+Stream<AppUser?> currentUser(Ref ref) {
+  final me = ref.watch(signedInUserProvider).valueOrNull;
+  final viewAsId = ref.watch(viewAsProvider);
+  if (me == null || !me.isAdmin || viewAsId == null || viewAsId == me.id) {
+    return Stream.value(me);
+  }
+  // If the viewed account disappears, fall back to the admin's own view.
+  return ref
+      .watch(userRepositoryProvider)
+      .watchUser(viewAsId)
+      .map((viewed) => viewed ?? me);
+}
+
+/// True while an admin is viewing the app as someone else.
+@riverpod
+bool isViewingAs(Ref ref) {
+  final me = ref.watch(signedInUserProvider).valueOrNull;
+  final shown = ref.watch(currentUserProvider).valueOrNull;
+  return me != null && shown != null && shown.id != me.id;
+}
+
+/// The uid of [currentUser] — whose jobs, storage and notifications the
+/// portals load. Use [currentActorId] for who performed a write.
+@riverpod
+String? currentUserId(Ref ref) => ref.watch(currentUserProvider).valueOrNull?.id;
+
 /// The signed-in user's uid, used as the `actorId` on repository writes.
+/// Stays the admin's own uid during [ViewAs], so the audit trail is honest.
 @riverpod
 String currentActorId(Ref ref) =>
     ref.watch(authStateProvider).valueOrNull?.uid ?? '';

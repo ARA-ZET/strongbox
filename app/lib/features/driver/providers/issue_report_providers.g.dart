@@ -7,14 +7,14 @@ part of 'issue_report_providers.dart';
 // **************************************************************************
 
 String _$issueReportActionsHash() =>
-    r'7add3d5bd3e9e7ff919ebd9987d1408d639528ca';
+    r'25f25079c476e79e66b68582763af788e0f92734';
 
 /// Submits maintenance/support reports from the driver.
 ///
 /// Copied from [IssueReportActions].
 @ProviderFor(IssueReportActions)
 final issueReportActionsProvider =
-    AutoDisposeAsyncNotifierProvider<IssueReportActions, void>.internal(
+    AsyncNotifierProvider<IssueReportActions, void>.internal(
   IssueReportActions.new,
   name: r'issueReportActionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -24,6 +24,6 @@ final issueReportActionsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$IssueReportActions = AutoDisposeAsyncNotifier<void>;
+typedef _$IssueReportActions = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

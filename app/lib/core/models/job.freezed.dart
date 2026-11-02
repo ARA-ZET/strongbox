@@ -25,6 +25,10 @@ mixin _$Job {
   JobType get type => throw _privateConstructorUsedError;
   String get clientId => throw _privateConstructorUsedError;
   String? get driverId => throw _privateConstructorUsedError;
+
+  /// The driver's name, saved at dispatch so the client can see who is
+  /// coming (clients can't read staff profiles).
+  String? get driverName => throw _privateConstructorUsedError;
   JobStatus get status => throw _privateConstructorUsedError;
   @NullableTimestampConverter()
   DateTime? get scheduledDate => throw _privateConstructorUsedError;
@@ -38,7 +42,67 @@ mixin _$Job {
   List<String> get photoIds => throw _privateConstructorUsedError;
   String? get clientSignatureUrl => throw _privateConstructorUsedError;
   String? get clientConfirmMethod => throw _privateConstructorUsedError;
+
+  /// Pickup fee (once-off, by vehicle) quoted when booked.
   double? get estimatedFee => throw _privateConstructorUsedError;
+
+  /// Price-list vehicle chosen when a client booked from a quote.
+  String? get pickupVehicleId => throw _privateConstructorUsedError;
+
+  /// `quote` when a client booked it from the app, `request` for a
+  /// client delivery request; null for ops-created.
+  String? get source => throw _privateConstructorUsedError;
+
+  /// Fleet vehicle (vehicles/{id}) dispatched for the job.
+  String? get fleetVehicleId => throw _privateConstructorUsedError;
+
+  /// Packing-helper hours booked for pickup day (0 = none).
+  int get helperHours => throw _privateConstructorUsedError;
+
+  /// Gate codes, parking, stairs — shown to the driver.
+  String? get accessNotes => throw _privateConstructorUsedError;
+
+  /// Packing supplies: what a supply drop-off delivers, or what the
+  /// driver brings on a same-day pickup.
+  List<SupplyLine> get supplies => throw _privateConstructorUsedError;
+
+  /// Empty boxes per size a supply drop-off delivers (price-list box id
+  /// → count). Free — the boxes are charged monthly once stored.
+  Map<String, int> get emptyBoxes => throw _privateConstructorUsedError;
+
+  /// Pickup booked with supplies delivered first (journey Path A).
+  bool get suppliesFirst => throw _privateConstructorUsedError;
+
+  /// The pickup ↔ supply drop-off pair of a Path A booking.
+  String? get linkedJobId => throw _privateConstructorUsedError;
+
+  /// Once-off charges for the job (vehicle + supplies + helper), billed
+  /// on the client's next monthly invoice.
+  int get onceOffZar => throw _privateConstructorUsedError;
+
+  /// Invoice id (`{clientId}_{YYYY-MM}`) that billed [onceOffZar].
+  String? get invoicedIn => throw _privateConstructorUsedError;
+  @NullableTimestampConverter()
+  DateTime? get confirmedAt => throw _privateConstructorUsedError;
+  String? get confirmedBy => throw _privateConstructorUsedError;
+
+  /// Driver checked in "on my way" / "arrived".
+  @NullableTimestampConverter()
+  DateTime? get departedAt => throw _privateConstructorUsedError;
+  @NullableTimestampConverter()
+  DateTime? get arrivedAt => throw _privateConstructorUsedError;
+
+  /// Pickup signed for at the client's door.
+  @NullableTimestampConverter()
+  DateTime? get collectedAt => throw _privateConstructorUsedError;
+
+  /// Units scanned in at the facility (pickup) or handed over at the
+  /// door (delivery).
+  List<String> get receivedUnitIds => throw _privateConstructorUsedError;
+  List<String> get handedOverUnitIds => throw _privateConstructorUsedError;
+
+  /// Who signed for the job.
+  String? get recipientName => throw _privateConstructorUsedError;
   bool get isRushJob => throw _privateConstructorUsedError;
   @NullableTimestampConverter()
   DateTime? get completedAt => throw _privateConstructorUsedError;
@@ -67,6 +131,7 @@ abstract class $JobCopyWith<$Res> {
       JobType type,
       String clientId,
       String? driverId,
+      String? driverName,
       JobStatus status,
       @NullableTimestampConverter() DateTime? scheduledDate,
       TimeWindow timeWindow,
@@ -80,6 +145,25 @@ abstract class $JobCopyWith<$Res> {
       String? clientSignatureUrl,
       String? clientConfirmMethod,
       double? estimatedFee,
+      String? pickupVehicleId,
+      String? source,
+      String? fleetVehicleId,
+      int helperHours,
+      String? accessNotes,
+      List<SupplyLine> supplies,
+      Map<String, int> emptyBoxes,
+      bool suppliesFirst,
+      String? linkedJobId,
+      int onceOffZar,
+      String? invoicedIn,
+      @NullableTimestampConverter() DateTime? confirmedAt,
+      String? confirmedBy,
+      @NullableTimestampConverter() DateTime? departedAt,
+      @NullableTimestampConverter() DateTime? arrivedAt,
+      @NullableTimestampConverter() DateTime? collectedAt,
+      List<String> receivedUnitIds,
+      List<String> handedOverUnitIds,
+      String? recipientName,
       bool isRushJob,
       @NullableTimestampConverter() DateTime? completedAt,
       @NullableTimestampConverter() DateTime? cancelledAt,
@@ -108,6 +192,7 @@ class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
     Object? type = null,
     Object? clientId = null,
     Object? driverId = freezed,
+    Object? driverName = freezed,
     Object? status = null,
     Object? scheduledDate = freezed,
     Object? timeWindow = null,
@@ -121,6 +206,25 @@ class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
     Object? clientSignatureUrl = freezed,
     Object? clientConfirmMethod = freezed,
     Object? estimatedFee = freezed,
+    Object? pickupVehicleId = freezed,
+    Object? source = freezed,
+    Object? fleetVehicleId = freezed,
+    Object? helperHours = null,
+    Object? accessNotes = freezed,
+    Object? supplies = null,
+    Object? emptyBoxes = null,
+    Object? suppliesFirst = null,
+    Object? linkedJobId = freezed,
+    Object? onceOffZar = null,
+    Object? invoicedIn = freezed,
+    Object? confirmedAt = freezed,
+    Object? confirmedBy = freezed,
+    Object? departedAt = freezed,
+    Object? arrivedAt = freezed,
+    Object? collectedAt = freezed,
+    Object? receivedUnitIds = null,
+    Object? handedOverUnitIds = null,
+    Object? recipientName = freezed,
     Object? isRushJob = null,
     Object? completedAt = freezed,
     Object? cancelledAt = freezed,
@@ -149,6 +253,10 @@ class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
       driverId: freezed == driverId
           ? _value.driverId
           : driverId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      driverName: freezed == driverName
+          ? _value.driverName
+          : driverName // ignore: cast_nullable_to_non_nullable
               as String?,
       status: null == status
           ? _value.status
@@ -202,6 +310,82 @@ class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
           ? _value.estimatedFee
           : estimatedFee // ignore: cast_nullable_to_non_nullable
               as double?,
+      pickupVehicleId: freezed == pickupVehicleId
+          ? _value.pickupVehicleId
+          : pickupVehicleId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      source: freezed == source
+          ? _value.source
+          : source // ignore: cast_nullable_to_non_nullable
+              as String?,
+      fleetVehicleId: freezed == fleetVehicleId
+          ? _value.fleetVehicleId
+          : fleetVehicleId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      helperHours: null == helperHours
+          ? _value.helperHours
+          : helperHours // ignore: cast_nullable_to_non_nullable
+              as int,
+      accessNotes: freezed == accessNotes
+          ? _value.accessNotes
+          : accessNotes // ignore: cast_nullable_to_non_nullable
+              as String?,
+      supplies: null == supplies
+          ? _value.supplies
+          : supplies // ignore: cast_nullable_to_non_nullable
+              as List<SupplyLine>,
+      emptyBoxes: null == emptyBoxes
+          ? _value.emptyBoxes
+          : emptyBoxes // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
+      suppliesFirst: null == suppliesFirst
+          ? _value.suppliesFirst
+          : suppliesFirst // ignore: cast_nullable_to_non_nullable
+              as bool,
+      linkedJobId: freezed == linkedJobId
+          ? _value.linkedJobId
+          : linkedJobId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      onceOffZar: null == onceOffZar
+          ? _value.onceOffZar
+          : onceOffZar // ignore: cast_nullable_to_non_nullable
+              as int,
+      invoicedIn: freezed == invoicedIn
+          ? _value.invoicedIn
+          : invoicedIn // ignore: cast_nullable_to_non_nullable
+              as String?,
+      confirmedAt: freezed == confirmedAt
+          ? _value.confirmedAt
+          : confirmedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      confirmedBy: freezed == confirmedBy
+          ? _value.confirmedBy
+          : confirmedBy // ignore: cast_nullable_to_non_nullable
+              as String?,
+      departedAt: freezed == departedAt
+          ? _value.departedAt
+          : departedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      arrivedAt: freezed == arrivedAt
+          ? _value.arrivedAt
+          : arrivedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      collectedAt: freezed == collectedAt
+          ? _value.collectedAt
+          : collectedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      receivedUnitIds: null == receivedUnitIds
+          ? _value.receivedUnitIds
+          : receivedUnitIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      handedOverUnitIds: null == handedOverUnitIds
+          ? _value.handedOverUnitIds
+          : handedOverUnitIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      recipientName: freezed == recipientName
+          ? _value.recipientName
+          : recipientName // ignore: cast_nullable_to_non_nullable
+              as String?,
       isRushJob: null == isRushJob
           ? _value.isRushJob
           : isRushJob // ignore: cast_nullable_to_non_nullable
@@ -254,6 +438,7 @@ abstract class _$$JobImplCopyWith<$Res> implements $JobCopyWith<$Res> {
       JobType type,
       String clientId,
       String? driverId,
+      String? driverName,
       JobStatus status,
       @NullableTimestampConverter() DateTime? scheduledDate,
       TimeWindow timeWindow,
@@ -267,6 +452,25 @@ abstract class _$$JobImplCopyWith<$Res> implements $JobCopyWith<$Res> {
       String? clientSignatureUrl,
       String? clientConfirmMethod,
       double? estimatedFee,
+      String? pickupVehicleId,
+      String? source,
+      String? fleetVehicleId,
+      int helperHours,
+      String? accessNotes,
+      List<SupplyLine> supplies,
+      Map<String, int> emptyBoxes,
+      bool suppliesFirst,
+      String? linkedJobId,
+      int onceOffZar,
+      String? invoicedIn,
+      @NullableTimestampConverter() DateTime? confirmedAt,
+      String? confirmedBy,
+      @NullableTimestampConverter() DateTime? departedAt,
+      @NullableTimestampConverter() DateTime? arrivedAt,
+      @NullableTimestampConverter() DateTime? collectedAt,
+      List<String> receivedUnitIds,
+      List<String> handedOverUnitIds,
+      String? recipientName,
       bool isRushJob,
       @NullableTimestampConverter() DateTime? completedAt,
       @NullableTimestampConverter() DateTime? cancelledAt,
@@ -293,6 +497,7 @@ class __$$JobImplCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res, _$JobImpl>
     Object? type = null,
     Object? clientId = null,
     Object? driverId = freezed,
+    Object? driverName = freezed,
     Object? status = null,
     Object? scheduledDate = freezed,
     Object? timeWindow = null,
@@ -306,6 +511,25 @@ class __$$JobImplCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res, _$JobImpl>
     Object? clientSignatureUrl = freezed,
     Object? clientConfirmMethod = freezed,
     Object? estimatedFee = freezed,
+    Object? pickupVehicleId = freezed,
+    Object? source = freezed,
+    Object? fleetVehicleId = freezed,
+    Object? helperHours = null,
+    Object? accessNotes = freezed,
+    Object? supplies = null,
+    Object? emptyBoxes = null,
+    Object? suppliesFirst = null,
+    Object? linkedJobId = freezed,
+    Object? onceOffZar = null,
+    Object? invoicedIn = freezed,
+    Object? confirmedAt = freezed,
+    Object? confirmedBy = freezed,
+    Object? departedAt = freezed,
+    Object? arrivedAt = freezed,
+    Object? collectedAt = freezed,
+    Object? receivedUnitIds = null,
+    Object? handedOverUnitIds = null,
+    Object? recipientName = freezed,
     Object? isRushJob = null,
     Object? completedAt = freezed,
     Object? cancelledAt = freezed,
@@ -334,6 +558,10 @@ class __$$JobImplCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res, _$JobImpl>
       driverId: freezed == driverId
           ? _value.driverId
           : driverId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      driverName: freezed == driverName
+          ? _value.driverName
+          : driverName // ignore: cast_nullable_to_non_nullable
               as String?,
       status: null == status
           ? _value.status
@@ -387,6 +615,82 @@ class __$$JobImplCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res, _$JobImpl>
           ? _value.estimatedFee
           : estimatedFee // ignore: cast_nullable_to_non_nullable
               as double?,
+      pickupVehicleId: freezed == pickupVehicleId
+          ? _value.pickupVehicleId
+          : pickupVehicleId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      source: freezed == source
+          ? _value.source
+          : source // ignore: cast_nullable_to_non_nullable
+              as String?,
+      fleetVehicleId: freezed == fleetVehicleId
+          ? _value.fleetVehicleId
+          : fleetVehicleId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      helperHours: null == helperHours
+          ? _value.helperHours
+          : helperHours // ignore: cast_nullable_to_non_nullable
+              as int,
+      accessNotes: freezed == accessNotes
+          ? _value.accessNotes
+          : accessNotes // ignore: cast_nullable_to_non_nullable
+              as String?,
+      supplies: null == supplies
+          ? _value._supplies
+          : supplies // ignore: cast_nullable_to_non_nullable
+              as List<SupplyLine>,
+      emptyBoxes: null == emptyBoxes
+          ? _value._emptyBoxes
+          : emptyBoxes // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
+      suppliesFirst: null == suppliesFirst
+          ? _value.suppliesFirst
+          : suppliesFirst // ignore: cast_nullable_to_non_nullable
+              as bool,
+      linkedJobId: freezed == linkedJobId
+          ? _value.linkedJobId
+          : linkedJobId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      onceOffZar: null == onceOffZar
+          ? _value.onceOffZar
+          : onceOffZar // ignore: cast_nullable_to_non_nullable
+              as int,
+      invoicedIn: freezed == invoicedIn
+          ? _value.invoicedIn
+          : invoicedIn // ignore: cast_nullable_to_non_nullable
+              as String?,
+      confirmedAt: freezed == confirmedAt
+          ? _value.confirmedAt
+          : confirmedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      confirmedBy: freezed == confirmedBy
+          ? _value.confirmedBy
+          : confirmedBy // ignore: cast_nullable_to_non_nullable
+              as String?,
+      departedAt: freezed == departedAt
+          ? _value.departedAt
+          : departedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      arrivedAt: freezed == arrivedAt
+          ? _value.arrivedAt
+          : arrivedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      collectedAt: freezed == collectedAt
+          ? _value.collectedAt
+          : collectedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      receivedUnitIds: null == receivedUnitIds
+          ? _value._receivedUnitIds
+          : receivedUnitIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      handedOverUnitIds: null == handedOverUnitIds
+          ? _value._handedOverUnitIds
+          : handedOverUnitIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      recipientName: freezed == recipientName
+          ? _value.recipientName
+          : recipientName // ignore: cast_nullable_to_non_nullable
+              as String?,
       isRushJob: null == isRushJob
           ? _value.isRushJob
           : isRushJob // ignore: cast_nullable_to_non_nullable
@@ -428,6 +732,7 @@ class _$JobImpl extends _Job {
       this.type = JobType.pickup,
       required this.clientId,
       this.driverId,
+      this.driverName,
       this.status = JobStatus.scheduled,
       @NullableTimestampConverter() this.scheduledDate,
       this.timeWindow = TimeWindow.morning,
@@ -441,6 +746,25 @@ class _$JobImpl extends _Job {
       this.clientSignatureUrl,
       this.clientConfirmMethod,
       this.estimatedFee,
+      this.pickupVehicleId,
+      this.source,
+      this.fleetVehicleId,
+      this.helperHours = 0,
+      this.accessNotes,
+      final List<SupplyLine> supplies = const [],
+      final Map<String, int> emptyBoxes = const {},
+      this.suppliesFirst = false,
+      this.linkedJobId,
+      this.onceOffZar = 0,
+      this.invoicedIn,
+      @NullableTimestampConverter() this.confirmedAt,
+      this.confirmedBy,
+      @NullableTimestampConverter() this.departedAt,
+      @NullableTimestampConverter() this.arrivedAt,
+      @NullableTimestampConverter() this.collectedAt,
+      final List<String> receivedUnitIds = const [],
+      final List<String> handedOverUnitIds = const [],
+      this.recipientName,
       this.isRushJob = false,
       @NullableTimestampConverter() this.completedAt,
       @NullableTimestampConverter() this.cancelledAt,
@@ -452,6 +776,10 @@ class _$JobImpl extends _Job {
         _scannedUnitIds = scannedUnitIds,
         _itemIds = itemIds,
         _photoIds = photoIds,
+        _supplies = supplies,
+        _emptyBoxes = emptyBoxes,
+        _receivedUnitIds = receivedUnitIds,
+        _handedOverUnitIds = handedOverUnitIds,
         super._();
 
   factory _$JobImpl.fromJson(Map<String, dynamic> json) =>
@@ -468,6 +796,11 @@ class _$JobImpl extends _Job {
   final String clientId;
   @override
   final String? driverId;
+
+  /// The driver's name, saved at dispatch so the client can see who is
+  /// coming (clients can't read staff profiles).
+  @override
+  final String? driverName;
   @override
   @JsonKey()
   final JobStatus status;
@@ -524,8 +857,125 @@ class _$JobImpl extends _Job {
   final String? clientSignatureUrl;
   @override
   final String? clientConfirmMethod;
+
+  /// Pickup fee (once-off, by vehicle) quoted when booked.
   @override
   final double? estimatedFee;
+
+  /// Price-list vehicle chosen when a client booked from a quote.
+  @override
+  final String? pickupVehicleId;
+
+  /// `quote` when a client booked it from the app, `request` for a
+  /// client delivery request; null for ops-created.
+  @override
+  final String? source;
+
+  /// Fleet vehicle (vehicles/{id}) dispatched for the job.
+  @override
+  final String? fleetVehicleId;
+
+  /// Packing-helper hours booked for pickup day (0 = none).
+  @override
+  @JsonKey()
+  final int helperHours;
+
+  /// Gate codes, parking, stairs — shown to the driver.
+  @override
+  final String? accessNotes;
+
+  /// Packing supplies: what a supply drop-off delivers, or what the
+  /// driver brings on a same-day pickup.
+  final List<SupplyLine> _supplies;
+
+  /// Packing supplies: what a supply drop-off delivers, or what the
+  /// driver brings on a same-day pickup.
+  @override
+  @JsonKey()
+  List<SupplyLine> get supplies {
+    if (_supplies is EqualUnmodifiableListView) return _supplies;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_supplies);
+  }
+
+  /// Empty boxes per size a supply drop-off delivers (price-list box id
+  /// → count). Free — the boxes are charged monthly once stored.
+  final Map<String, int> _emptyBoxes;
+
+  /// Empty boxes per size a supply drop-off delivers (price-list box id
+  /// → count). Free — the boxes are charged monthly once stored.
+  @override
+  @JsonKey()
+  Map<String, int> get emptyBoxes {
+    if (_emptyBoxes is EqualUnmodifiableMapView) return _emptyBoxes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_emptyBoxes);
+  }
+
+  /// Pickup booked with supplies delivered first (journey Path A).
+  @override
+  @JsonKey()
+  final bool suppliesFirst;
+
+  /// The pickup ↔ supply drop-off pair of a Path A booking.
+  @override
+  final String? linkedJobId;
+
+  /// Once-off charges for the job (vehicle + supplies + helper), billed
+  /// on the client's next monthly invoice.
+  @override
+  @JsonKey()
+  final int onceOffZar;
+
+  /// Invoice id (`{clientId}_{YYYY-MM}`) that billed [onceOffZar].
+  @override
+  final String? invoicedIn;
+  @override
+  @NullableTimestampConverter()
+  final DateTime? confirmedAt;
+  @override
+  final String? confirmedBy;
+
+  /// Driver checked in "on my way" / "arrived".
+  @override
+  @NullableTimestampConverter()
+  final DateTime? departedAt;
+  @override
+  @NullableTimestampConverter()
+  final DateTime? arrivedAt;
+
+  /// Pickup signed for at the client's door.
+  @override
+  @NullableTimestampConverter()
+  final DateTime? collectedAt;
+
+  /// Units scanned in at the facility (pickup) or handed over at the
+  /// door (delivery).
+  final List<String> _receivedUnitIds;
+
+  /// Units scanned in at the facility (pickup) or handed over at the
+  /// door (delivery).
+  @override
+  @JsonKey()
+  List<String> get receivedUnitIds {
+    if (_receivedUnitIds is EqualUnmodifiableListView) return _receivedUnitIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_receivedUnitIds);
+  }
+
+  final List<String> _handedOverUnitIds;
+  @override
+  @JsonKey()
+  List<String> get handedOverUnitIds {
+    if (_handedOverUnitIds is EqualUnmodifiableListView)
+      return _handedOverUnitIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_handedOverUnitIds);
+  }
+
+  /// Who signed for the job.
+  @override
+  final String? recipientName;
   @override
   @JsonKey()
   final bool isRushJob;
@@ -549,7 +999,7 @@ class _$JobImpl extends _Job {
 
   @override
   String toString() {
-    return 'Job(id: $id, tenantId: $tenantId, type: $type, clientId: $clientId, driverId: $driverId, status: $status, scheduledDate: $scheduledDate, timeWindow: $timeWindow, address: $address, storageUnitIds: $storageUnitIds, scannedUnitIds: $scannedUnitIds, itemIds: $itemIds, notes: $notes, driverNotes: $driverNotes, photoIds: $photoIds, clientSignatureUrl: $clientSignatureUrl, clientConfirmMethod: $clientConfirmMethod, estimatedFee: $estimatedFee, isRushJob: $isRushJob, completedAt: $completedAt, cancelledAt: $cancelledAt, cancelReason: $cancelReason, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Job(id: $id, tenantId: $tenantId, type: $type, clientId: $clientId, driverId: $driverId, driverName: $driverName, status: $status, scheduledDate: $scheduledDate, timeWindow: $timeWindow, address: $address, storageUnitIds: $storageUnitIds, scannedUnitIds: $scannedUnitIds, itemIds: $itemIds, notes: $notes, driverNotes: $driverNotes, photoIds: $photoIds, clientSignatureUrl: $clientSignatureUrl, clientConfirmMethod: $clientConfirmMethod, estimatedFee: $estimatedFee, pickupVehicleId: $pickupVehicleId, source: $source, fleetVehicleId: $fleetVehicleId, helperHours: $helperHours, accessNotes: $accessNotes, supplies: $supplies, emptyBoxes: $emptyBoxes, suppliesFirst: $suppliesFirst, linkedJobId: $linkedJobId, onceOffZar: $onceOffZar, invoicedIn: $invoicedIn, confirmedAt: $confirmedAt, confirmedBy: $confirmedBy, departedAt: $departedAt, arrivedAt: $arrivedAt, collectedAt: $collectedAt, receivedUnitIds: $receivedUnitIds, handedOverUnitIds: $handedOverUnitIds, recipientName: $recipientName, isRushJob: $isRushJob, completedAt: $completedAt, cancelledAt: $cancelledAt, cancelReason: $cancelReason, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -565,6 +1015,8 @@ class _$JobImpl extends _Job {
                 other.clientId == clientId) &&
             (identical(other.driverId, driverId) ||
                 other.driverId == driverId) &&
+            (identical(other.driverName, driverName) ||
+                other.driverName == driverName) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.scheduledDate, scheduledDate) ||
                 other.scheduledDate == scheduledDate) &&
@@ -586,6 +1038,42 @@ class _$JobImpl extends _Job {
                 other.clientConfirmMethod == clientConfirmMethod) &&
             (identical(other.estimatedFee, estimatedFee) ||
                 other.estimatedFee == estimatedFee) &&
+            (identical(other.pickupVehicleId, pickupVehicleId) ||
+                other.pickupVehicleId == pickupVehicleId) &&
+            (identical(other.source, source) || other.source == source) &&
+            (identical(other.fleetVehicleId, fleetVehicleId) ||
+                other.fleetVehicleId == fleetVehicleId) &&
+            (identical(other.helperHours, helperHours) ||
+                other.helperHours == helperHours) &&
+            (identical(other.accessNotes, accessNotes) ||
+                other.accessNotes == accessNotes) &&
+            const DeepCollectionEquality().equals(other._supplies, _supplies) &&
+            const DeepCollectionEquality()
+                .equals(other._emptyBoxes, _emptyBoxes) &&
+            (identical(other.suppliesFirst, suppliesFirst) ||
+                other.suppliesFirst == suppliesFirst) &&
+            (identical(other.linkedJobId, linkedJobId) ||
+                other.linkedJobId == linkedJobId) &&
+            (identical(other.onceOffZar, onceOffZar) ||
+                other.onceOffZar == onceOffZar) &&
+            (identical(other.invoicedIn, invoicedIn) ||
+                other.invoicedIn == invoicedIn) &&
+            (identical(other.confirmedAt, confirmedAt) ||
+                other.confirmedAt == confirmedAt) &&
+            (identical(other.confirmedBy, confirmedBy) ||
+                other.confirmedBy == confirmedBy) &&
+            (identical(other.departedAt, departedAt) ||
+                other.departedAt == departedAt) &&
+            (identical(other.arrivedAt, arrivedAt) ||
+                other.arrivedAt == arrivedAt) &&
+            (identical(other.collectedAt, collectedAt) ||
+                other.collectedAt == collectedAt) &&
+            const DeepCollectionEquality()
+                .equals(other._receivedUnitIds, _receivedUnitIds) &&
+            const DeepCollectionEquality()
+                .equals(other._handedOverUnitIds, _handedOverUnitIds) &&
+            (identical(other.recipientName, recipientName) ||
+                other.recipientName == recipientName) &&
             (identical(other.isRushJob, isRushJob) ||
                 other.isRushJob == isRushJob) &&
             (identical(other.completedAt, completedAt) ||
@@ -611,6 +1099,7 @@ class _$JobImpl extends _Job {
         type,
         clientId,
         driverId,
+        driverName,
         status,
         scheduledDate,
         timeWindow,
@@ -624,6 +1113,25 @@ class _$JobImpl extends _Job {
         clientSignatureUrl,
         clientConfirmMethod,
         estimatedFee,
+        pickupVehicleId,
+        source,
+        fleetVehicleId,
+        helperHours,
+        accessNotes,
+        const DeepCollectionEquality().hash(_supplies),
+        const DeepCollectionEquality().hash(_emptyBoxes),
+        suppliesFirst,
+        linkedJobId,
+        onceOffZar,
+        invoicedIn,
+        confirmedAt,
+        confirmedBy,
+        departedAt,
+        arrivedAt,
+        collectedAt,
+        const DeepCollectionEquality().hash(_receivedUnitIds),
+        const DeepCollectionEquality().hash(_handedOverUnitIds),
+        recipientName,
         isRushJob,
         completedAt,
         cancelledAt,
@@ -654,6 +1162,7 @@ abstract class _Job extends Job {
       final JobType type,
       required final String clientId,
       final String? driverId,
+      final String? driverName,
       final JobStatus status,
       @NullableTimestampConverter() final DateTime? scheduledDate,
       final TimeWindow timeWindow,
@@ -667,6 +1176,25 @@ abstract class _Job extends Job {
       final String? clientSignatureUrl,
       final String? clientConfirmMethod,
       final double? estimatedFee,
+      final String? pickupVehicleId,
+      final String? source,
+      final String? fleetVehicleId,
+      final int helperHours,
+      final String? accessNotes,
+      final List<SupplyLine> supplies,
+      final Map<String, int> emptyBoxes,
+      final bool suppliesFirst,
+      final String? linkedJobId,
+      final int onceOffZar,
+      final String? invoicedIn,
+      @NullableTimestampConverter() final DateTime? confirmedAt,
+      final String? confirmedBy,
+      @NullableTimestampConverter() final DateTime? departedAt,
+      @NullableTimestampConverter() final DateTime? arrivedAt,
+      @NullableTimestampConverter() final DateTime? collectedAt,
+      final List<String> receivedUnitIds,
+      final List<String> handedOverUnitIds,
+      final String? recipientName,
       final bool isRushJob,
       @NullableTimestampConverter() final DateTime? completedAt,
       @NullableTimestampConverter() final DateTime? cancelledAt,
@@ -688,6 +1216,11 @@ abstract class _Job extends Job {
   String get clientId;
   @override
   String? get driverId;
+  @override
+
+  /// The driver's name, saved at dispatch so the client can see who is
+  /// coming (clients can't read staff profiles).
+  String? get driverName;
   @override
   JobStatus get status;
   @override
@@ -714,7 +1247,86 @@ abstract class _Job extends Job {
   @override
   String? get clientConfirmMethod;
   @override
+
+  /// Pickup fee (once-off, by vehicle) quoted when booked.
   double? get estimatedFee;
+  @override
+
+  /// Price-list vehicle chosen when a client booked from a quote.
+  String? get pickupVehicleId;
+  @override
+
+  /// `quote` when a client booked it from the app, `request` for a
+  /// client delivery request; null for ops-created.
+  String? get source;
+  @override
+
+  /// Fleet vehicle (vehicles/{id}) dispatched for the job.
+  String? get fleetVehicleId;
+  @override
+
+  /// Packing-helper hours booked for pickup day (0 = none).
+  int get helperHours;
+  @override
+
+  /// Gate codes, parking, stairs — shown to the driver.
+  String? get accessNotes;
+  @override
+
+  /// Packing supplies: what a supply drop-off delivers, or what the
+  /// driver brings on a same-day pickup.
+  List<SupplyLine> get supplies;
+  @override
+
+  /// Empty boxes per size a supply drop-off delivers (price-list box id
+  /// → count). Free — the boxes are charged monthly once stored.
+  Map<String, int> get emptyBoxes;
+  @override
+
+  /// Pickup booked with supplies delivered first (journey Path A).
+  bool get suppliesFirst;
+  @override
+
+  /// The pickup ↔ supply drop-off pair of a Path A booking.
+  String? get linkedJobId;
+  @override
+
+  /// Once-off charges for the job (vehicle + supplies + helper), billed
+  /// on the client's next monthly invoice.
+  int get onceOffZar;
+  @override
+
+  /// Invoice id (`{clientId}_{YYYY-MM}`) that billed [onceOffZar].
+  String? get invoicedIn;
+  @override
+  @NullableTimestampConverter()
+  DateTime? get confirmedAt;
+  @override
+  String? get confirmedBy;
+  @override
+
+  /// Driver checked in "on my way" / "arrived".
+  @NullableTimestampConverter()
+  DateTime? get departedAt;
+  @override
+  @NullableTimestampConverter()
+  DateTime? get arrivedAt;
+  @override
+
+  /// Pickup signed for at the client's door.
+  @NullableTimestampConverter()
+  DateTime? get collectedAt;
+  @override
+
+  /// Units scanned in at the facility (pickup) or handed over at the
+  /// door (delivery).
+  List<String> get receivedUnitIds;
+  @override
+  List<String> get handedOverUnitIds;
+  @override
+
+  /// Who signed for the job.
+  String? get recipientName;
   @override
   bool get isRushJob;
   @override

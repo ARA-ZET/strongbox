@@ -133,13 +133,26 @@ function createStore(db) {
         .where("clientId", "==", client.id)
         .where("isDeleted", "==", false)
         .get();
+    const jobs = await db.collection(COL.jobs)
+        .where("tenantId", "==", client.tenantId)
+        .where("clientId", "==", client.id)
+        .where("isDeleted", "==", false)
+        .get();
     const invoice = billing.buildInvoice(client,
         units.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
-        rates, period);
+        rates, period,
+        jobs.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     if (!invoice) return null;
 
     const id = billing.invoiceId(client.id, period);
     const batch = db.batch();
+    // Stamp each billed job so its once-off charge is never billed twice.
+    for (const charge of invoice.charges) {
+      batch.update(db.collection(COL.jobs).doc(charge.jobId), {
+        invoicedIn: id,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+    }
     batch.create(db.collection(COL.invoices).doc(id), {
       ...invoice,
       periodStart: Timestamp.fromDate(invoice.periodStart),
@@ -159,6 +172,7 @@ function createStore(db) {
             title: `Your ${period.label} invoice is ready`,
             body: `${billing.formatZar(invoice.amount)} for ` +
               `${invoice.unitCount} ${invoice.unitCount === 1 ? "unit" : "units"}` +
+              (invoice.charges.length > 0 ? " plus once-off charges" : "") +
               ` — due ${due}. Use reference ${invoice.reference} when paying.`,
             entityType: "invoice",
             entityId: id,

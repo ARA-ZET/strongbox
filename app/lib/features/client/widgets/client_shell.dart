@@ -11,6 +11,7 @@ import '../../../core/widgets/brand_logo.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../notifications/providers/notification_providers.dart';
+import 'new_order_button.dart';
 
 class _Tab {
   const _Tab(this.label, this.icon, this.route);
@@ -22,7 +23,7 @@ class _Tab {
 const _tabs = [
   _Tab('Home', Icons.home_outlined, '/client/dashboard'),
   _Tab('My Storage', Icons.inventory_2_outlined, '/client/storage'),
-  _Tab('Deliveries', Icons.local_shipping_outlined, '/client/deliveries'),
+  _Tab('Orders', Icons.local_shipping_outlined, '/client/orders'),
   _Tab('Billing', Icons.receipt_long_outlined, '/client/subscription'),
 ];
 
@@ -88,6 +89,8 @@ class ClientShell extends ConsumerWidget {
                         onTap: () => context.go(tab.route),
                       ),
                     const Spacer(),
+                    const NewOrderMenu(),
+                    const SizedBox(width: AppSpacing.sm),
                     bell,
                     const SizedBox(width: AppSpacing.sm),
                     avatar,
@@ -112,7 +115,11 @@ class ClientShell extends ConsumerWidget {
           automaticallyImplyLeading: false,
           titleSpacing: AppSpacing.md,
           title: logo,
-          actions: [bell, const SizedBox(width: AppSpacing.sm)],
+          actions: [
+            const NewOrderMenu(compact: true),
+            bell,
+            const SizedBox(width: AppSpacing.sm),
+          ],
         ),
         body: child,
         bottomNavigationBar: NavigationBar(

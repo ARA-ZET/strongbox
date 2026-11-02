@@ -19,7 +19,10 @@ Generate, print, link, and scan QR codes that uniquely identify every storage un
 
 - **Storage unit:** `SBX-{4 random digits}-{uppercase letter}{digit}` → e.g. `SBX-9942-A1`
 - **Item (open unit):** `ITM-{4 random digits}-{letter}{digit}` → e.g. `ITM-1234-B2`
-- **Driver E-ID:** `DRV-{first 8 chars of uid}` → e.g. `DRV-A1B2C3`
+- **Driver E-ID:** `DRV-` + a one-way fingerprint of the uid (`staffRef`) → e.g. `DRV-Q2N7HC`
+
+Booked pickups get their unit codes at booking (`bookPickup`, `functions/src/qr.js`); the
+client prints the labels from My Storage while packing, and the driver scans them at collection.
 
 All formats are validated on both generation and scan with regex before writing to Firestore.
 
@@ -83,14 +86,14 @@ unlinkedCodesProvider → StreamProvider<List<QRCode>>
 5. Preview grid of generated codes rendered with `qr_flutter`
 6. "Print PDF" → `QRLabelPdfBuilder.build(codes)` → `Printing.layoutPdf()`
 
-### PDF Label Specs
-- A4 portrait, 4 columns × 3 rows = 12 labels per page (auto-paginate)
-- Each label 52mm × 35mm:
-  - "StrongBox" wordmark top-left (8px Inter Bold)
-  - QR code image centred (20mm square)
-  - Code ID text centred below (7px Inter Bold)
-  - Label text below code (italic, grey, 6px) — only if linked
-- Uses `pdf` package + `qr_flutter` rendered to PNG bytes via `QrPainter`
+### PDF Label Specs (`lib/core/utils/qr_label_pdf.dart`)
+- A4 portrait, standard 21-up sticker sheet: 3 columns × 7 rows of 63.5 × 38.1 mm
+  (Avery L7160 and equivalents); faint outline doubles as a cutting guide on plain paper
+- QR 28 mm, quartile error correction (still scans with ~25% scuffed), ≥ 4 modules of
+  quiet zone — nothing else prints there; "StrongBox", code and item name sit to the right
+- The QR holds a **link**, `https://app.strongbox.co.za/s/{code}` (`qrPayload`), so a phone's
+  own camera opens the item (route `/s/:code`, role-checked). In-app scanners read the code
+  from a link or a bare code (`codeFromScan`), so labels printed before links still work
 
 ### Batch List UI (QR Management Screen)
 - Summary cards: Total Generated / Linked / Unlinked

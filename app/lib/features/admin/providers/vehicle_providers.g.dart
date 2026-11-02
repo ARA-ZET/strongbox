@@ -23,14 +23,14 @@ final fleetVehiclesProvider = AutoDisposeStreamProvider<List<Vehicle>>.internal(
 );
 
 typedef FleetVehiclesRef = AutoDisposeStreamProviderRef<List<Vehicle>>;
-String _$vehicleMutationsHash() => r'a42d56c54ee02efb4fdb96feed75e9070329bd21';
+String _$vehicleMutationsHash() => r'222ef8fdffea6ae907034d080056fb240e3baa02';
 
 /// Add / edit / retire vehicles and trailers.
 ///
 /// Copied from [VehicleMutations].
 @ProviderFor(VehicleMutations)
 final vehicleMutationsProvider =
-    AutoDisposeAsyncNotifierProvider<VehicleMutations, void>.internal(
+    AsyncNotifierProvider<VehicleMutations, void>.internal(
   VehicleMutations.new,
   name: r'vehicleMutationsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -40,6 +40,6 @@ final vehicleMutationsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$VehicleMutations = AutoDisposeAsyncNotifier<void>;
+typedef _$VehicleMutations = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

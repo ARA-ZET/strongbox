@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { ARTICLES } from "@/lib/resources";
+import { REGIONS } from "@/lib/areas";
 import { SITE_URL as BASE } from "@/lib/seo";
 
 /**
@@ -14,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ["/how-it-works", 0.9, "monthly"],
     ["/pricing", 0.9, "monthly"],
     ["/compare", 0.9, "monthly"],
+    ["/areas", 0.8, "monthly"],
     ["/loose-items", 0.8, "monthly"],
     ["/tools", 0.8, "monthly"],
     ["/tools/savings-calculator", 0.7, "monthly"],
@@ -30,6 +32,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency,
       priority,
+    })),
+    // One page per region — the pages a suburb search lands on.
+    ...REGIONS.map((region) => ({
+      url: `${BASE}/areas/${region.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
     })),
     // Guides carry their own `updated` date, which is more honest than
     // stamping every one of them with the build time.

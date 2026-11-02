@@ -6,9 +6,9 @@ part of 'client_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentClientHash() => r'e8926e31ef23756793c53872627dedd70b680a53';
+String _$currentClientHash() => r'4357da6cfd373b61c78b2cc5c7ab77ee3ef67871';
 
-/// The signed-in user's client record, resolved by primaryUserId.
+/// The current user's client record, resolved by primaryUserId.
 ///
 /// Copied from [currentClient].
 @ProviderFor(currentClient)
@@ -89,41 +89,7 @@ final myJobsProvider = AutoDisposeStreamProvider<List<Job>>.internal(
 );
 
 typedef MyJobsRef = AutoDisposeStreamProviderRef<List<Job>>;
-String _$activeDeliveryHash() => r'bb6e93bbff1350ee82fe0b398da4640816331e36';
-
-/// The delivery currently on the road (if any) — dashboard banner.
-///
-/// Copied from [activeDelivery].
-@ProviderFor(activeDelivery)
-final activeDeliveryProvider = AutoDisposeProvider<Job?>.internal(
-  activeDelivery,
-  name: r'activeDeliveryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeDeliveryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef ActiveDeliveryRef = AutoDisposeProviderRef<Job?>;
-String _$filteredMyUnitsHash() => r'493a2087426f540a7693022e68f1734c7a54930f';
-
-/// Units after search + status filter.
-///
-/// Copied from [filteredMyUnits].
-@ProviderFor(filteredMyUnits)
-final filteredMyUnitsProvider = AutoDisposeProvider<List<StorageUnit>>.internal(
-  filteredMyUnits,
-  name: r'filteredMyUnitsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$filteredMyUnitsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef FilteredMyUnitsRef = AutoDisposeProviderRef<List<StorageUnit>>;
-String _$clientUnitDetailHash() => r'42ad62811f1a9f6173a076e48e2fbed6315deb28';
+String _$myOrderHash() => r'83de276fa68e1de0515a5ef8f429c362b8ad8c89';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -145,6 +111,320 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
+
+/// One of the client's orders (jobs), live; null until loaded or if it
+/// isn't theirs.
+///
+/// Copied from [myOrder].
+@ProviderFor(myOrder)
+const myOrderProvider = MyOrderFamily();
+
+/// One of the client's orders (jobs), live; null until loaded or if it
+/// isn't theirs.
+///
+/// Copied from [myOrder].
+class MyOrderFamily extends Family<Job?> {
+  /// One of the client's orders (jobs), live; null until loaded or if it
+  /// isn't theirs.
+  ///
+  /// Copied from [myOrder].
+  const MyOrderFamily();
+
+  /// One of the client's orders (jobs), live; null until loaded or if it
+  /// isn't theirs.
+  ///
+  /// Copied from [myOrder].
+  MyOrderProvider call(
+    String jobId,
+  ) {
+    return MyOrderProvider(
+      jobId,
+    );
+  }
+
+  @override
+  MyOrderProvider getProviderOverride(
+    covariant MyOrderProvider provider,
+  ) {
+    return call(
+      provider.jobId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'myOrderProvider';
+}
+
+/// One of the client's orders (jobs), live; null until loaded or if it
+/// isn't theirs.
+///
+/// Copied from [myOrder].
+class MyOrderProvider extends AutoDisposeProvider<Job?> {
+  /// One of the client's orders (jobs), live; null until loaded or if it
+  /// isn't theirs.
+  ///
+  /// Copied from [myOrder].
+  MyOrderProvider(
+    String jobId,
+  ) : this._internal(
+          (ref) => myOrder(
+            ref as MyOrderRef,
+            jobId,
+          ),
+          from: myOrderProvider,
+          name: r'myOrderProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$myOrderHash,
+          dependencies: MyOrderFamily._dependencies,
+          allTransitiveDependencies: MyOrderFamily._allTransitiveDependencies,
+          jobId: jobId,
+        );
+
+  MyOrderProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.jobId,
+  }) : super.internal();
+
+  final String jobId;
+
+  @override
+  Override overrideWith(
+    Job? Function(MyOrderRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: MyOrderProvider._internal(
+        (ref) => create(ref as MyOrderRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        jobId: jobId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<Job?> createElement() {
+    return _MyOrderProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MyOrderProvider && other.jobId == jobId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, jobId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin MyOrderRef on AutoDisposeProviderRef<Job?> {
+  /// The parameter `jobId` of this provider.
+  String get jobId;
+}
+
+class _MyOrderProviderElement extends AutoDisposeProviderElement<Job?>
+    with MyOrderRef {
+  _MyOrderProviderElement(super.provider);
+
+  @override
+  String get jobId => (origin as MyOrderProvider).jobId;
+}
+
+String _$myTodosHash() => r'99f318440cbefda9e7c46ee7165b21d6e2968698';
+
+/// Dashboard "To do": driver at the door, invoices to pay, boxes to pack.
+///
+/// Copied from [myTodos].
+@ProviderFor(myTodos)
+final myTodosProvider = AutoDisposeProvider<List<ClientTodo>>.internal(
+  myTodos,
+  name: r'myTodosProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$myTodosHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef MyTodosRef = AutoDisposeProviderRef<List<ClientTodo>>;
+String _$filteredMyUnitsHash() => r'bf78172633dbf560c2970081cf94b61c8959ae76';
+
+/// Units after search + status filter. [status] is a [StorageStatus] name
+/// or 'all' — it comes from the URL (/client/storage?status=inStorage) so
+/// the dashboard can link straight to a filtered view.
+///
+/// Copied from [filteredMyUnits].
+@ProviderFor(filteredMyUnits)
+const filteredMyUnitsProvider = FilteredMyUnitsFamily();
+
+/// Units after search + status filter. [status] is a [StorageStatus] name
+/// or 'all' — it comes from the URL (/client/storage?status=inStorage) so
+/// the dashboard can link straight to a filtered view.
+///
+/// Copied from [filteredMyUnits].
+class FilteredMyUnitsFamily extends Family<List<StorageUnit>> {
+  /// Units after search + status filter. [status] is a [StorageStatus] name
+  /// or 'all' — it comes from the URL (/client/storage?status=inStorage) so
+  /// the dashboard can link straight to a filtered view.
+  ///
+  /// Copied from [filteredMyUnits].
+  const FilteredMyUnitsFamily();
+
+  /// Units after search + status filter. [status] is a [StorageStatus] name
+  /// or 'all' — it comes from the URL (/client/storage?status=inStorage) so
+  /// the dashboard can link straight to a filtered view.
+  ///
+  /// Copied from [filteredMyUnits].
+  FilteredMyUnitsProvider call(
+    String status,
+  ) {
+    return FilteredMyUnitsProvider(
+      status,
+    );
+  }
+
+  @override
+  FilteredMyUnitsProvider getProviderOverride(
+    covariant FilteredMyUnitsProvider provider,
+  ) {
+    return call(
+      provider.status,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'filteredMyUnitsProvider';
+}
+
+/// Units after search + status filter. [status] is a [StorageStatus] name
+/// or 'all' — it comes from the URL (/client/storage?status=inStorage) so
+/// the dashboard can link straight to a filtered view.
+///
+/// Copied from [filteredMyUnits].
+class FilteredMyUnitsProvider extends AutoDisposeProvider<List<StorageUnit>> {
+  /// Units after search + status filter. [status] is a [StorageStatus] name
+  /// or 'all' — it comes from the URL (/client/storage?status=inStorage) so
+  /// the dashboard can link straight to a filtered view.
+  ///
+  /// Copied from [filteredMyUnits].
+  FilteredMyUnitsProvider(
+    String status,
+  ) : this._internal(
+          (ref) => filteredMyUnits(
+            ref as FilteredMyUnitsRef,
+            status,
+          ),
+          from: filteredMyUnitsProvider,
+          name: r'filteredMyUnitsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$filteredMyUnitsHash,
+          dependencies: FilteredMyUnitsFamily._dependencies,
+          allTransitiveDependencies:
+              FilteredMyUnitsFamily._allTransitiveDependencies,
+          status: status,
+        );
+
+  FilteredMyUnitsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.status,
+  }) : super.internal();
+
+  final String status;
+
+  @override
+  Override overrideWith(
+    List<StorageUnit> Function(FilteredMyUnitsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FilteredMyUnitsProvider._internal(
+        (ref) => create(ref as FilteredMyUnitsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        status: status,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<List<StorageUnit>> createElement() {
+    return _FilteredMyUnitsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FilteredMyUnitsProvider && other.status == status;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, status.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin FilteredMyUnitsRef on AutoDisposeProviderRef<List<StorageUnit>> {
+  /// The parameter `status` of this provider.
+  String get status;
+}
+
+class _FilteredMyUnitsProviderElement
+    extends AutoDisposeProviderElement<List<StorageUnit>>
+    with FilteredMyUnitsRef {
+  _FilteredMyUnitsProviderElement(super.provider);
+
+  @override
+  String get status => (origin as FilteredMyUnitsProvider).status;
+}
+
+String _$clientUnitDetailHash() => r'42ad62811f1a9f6173a076e48e2fbed6315deb28';
 
 /// One unit, live (client detail view).
 ///
@@ -731,6 +1011,146 @@ final myInvoicesProvider = AutoDisposeStreamProvider<List<Invoice>>.internal(
 );
 
 typedef MyInvoicesRef = AutoDisposeStreamProviderRef<List<Invoice>>;
+String _$myPackingPhotosHash() => r'c74650c2ceda257dd0e61329b08b54250c6b6e0e';
+
+/// Photos the signed-in client took of [unitId] while packing.
+///
+/// Copied from [myPackingPhotos].
+@ProviderFor(myPackingPhotos)
+const myPackingPhotosProvider = MyPackingPhotosFamily();
+
+/// Photos the signed-in client took of [unitId] while packing.
+///
+/// Copied from [myPackingPhotos].
+class MyPackingPhotosFamily extends Family<List<Photo>> {
+  /// Photos the signed-in client took of [unitId] while packing.
+  ///
+  /// Copied from [myPackingPhotos].
+  const MyPackingPhotosFamily();
+
+  /// Photos the signed-in client took of [unitId] while packing.
+  ///
+  /// Copied from [myPackingPhotos].
+  MyPackingPhotosProvider call(
+    String unitId,
+  ) {
+    return MyPackingPhotosProvider(
+      unitId,
+    );
+  }
+
+  @override
+  MyPackingPhotosProvider getProviderOverride(
+    covariant MyPackingPhotosProvider provider,
+  ) {
+    return call(
+      provider.unitId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'myPackingPhotosProvider';
+}
+
+/// Photos the signed-in client took of [unitId] while packing.
+///
+/// Copied from [myPackingPhotos].
+class MyPackingPhotosProvider extends AutoDisposeProvider<List<Photo>> {
+  /// Photos the signed-in client took of [unitId] while packing.
+  ///
+  /// Copied from [myPackingPhotos].
+  MyPackingPhotosProvider(
+    String unitId,
+  ) : this._internal(
+          (ref) => myPackingPhotos(
+            ref as MyPackingPhotosRef,
+            unitId,
+          ),
+          from: myPackingPhotosProvider,
+          name: r'myPackingPhotosProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$myPackingPhotosHash,
+          dependencies: MyPackingPhotosFamily._dependencies,
+          allTransitiveDependencies:
+              MyPackingPhotosFamily._allTransitiveDependencies,
+          unitId: unitId,
+        );
+
+  MyPackingPhotosProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.unitId,
+  }) : super.internal();
+
+  final String unitId;
+
+  @override
+  Override overrideWith(
+    List<Photo> Function(MyPackingPhotosRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: MyPackingPhotosProvider._internal(
+        (ref) => create(ref as MyPackingPhotosRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        unitId: unitId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<List<Photo>> createElement() {
+    return _MyPackingPhotosProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MyPackingPhotosProvider && other.unitId == unitId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, unitId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin MyPackingPhotosRef on AutoDisposeProviderRef<List<Photo>> {
+  /// The parameter `unitId` of this provider.
+  String get unitId;
+}
+
+class _MyPackingPhotosProviderElement
+    extends AutoDisposeProviderElement<List<Photo>> with MyPackingPhotosRef {
+  _MyPackingPhotosProviderElement(super.provider);
+
+  @override
+  String get unitId => (origin as MyPackingPhotosProvider).unitId;
+}
+
 String _$storageSearchQueryHash() =>
     r'3673d098bdc1678f78884f7c035738984168e103';
 
@@ -750,26 +1170,27 @@ final storageSearchQueryProvider =
 );
 
 typedef _$StorageSearchQuery = AutoDisposeNotifier<String>;
-String _$storageStatusFilterHash() =>
-    r'ec1ca558d9a188b443701be5a1b185ede407cd2b';
+String _$packingActionsHash() => r'e90dd0a4a5a7facfff77c8314c520df741756d4c';
 
-/// Storage filter chip: all | inStorage | inTransit | pendingPickup | delivered.
+/// The client photographing and describing boxes while packing — the
+/// contents before sealing, the sealed box with its label. Drivers and ops
+/// see the same photos on the unit.
 ///
-/// Copied from [StorageStatusFilter].
-@ProviderFor(StorageStatusFilter)
-final storageStatusFilterProvider =
-    AutoDisposeNotifierProvider<StorageStatusFilter, String>.internal(
-  StorageStatusFilter.new,
-  name: r'storageStatusFilterProvider',
+/// Copied from [PackingActions].
+@ProviderFor(PackingActions)
+final packingActionsProvider =
+    AsyncNotifierProvider<PackingActions, void>.internal(
+  PackingActions.new,
+  name: r'packingActionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$storageStatusFilterHash,
+      : _$packingActionsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$StorageStatusFilter = AutoDisposeNotifier<String>;
-String _$deliveryRequestHash() => r'2b0e2bbbb92c9ca51aacecf65262e8e111d907cb';
+typedef _$PackingActions = AsyncNotifier<void>;
+String _$deliveryRequestHash() => r'ce9894d221c39a44ee405153343179b5308e22ea';
 
 /// See also [DeliveryRequest].
 @ProviderFor(DeliveryRequest)
@@ -785,14 +1206,14 @@ final deliveryRequestProvider =
 );
 
 typedef _$DeliveryRequest = AutoDisposeNotifier<DeliveryRequestData>;
-String _$accountActionsHash() => r'ff555412bd03dd39a4dceefac20e75dfb782c856';
+String _$accountActionsHash() => r'791d27cb5799c20ce73642a0733a6834e66a2899';
 
 /// Profile, address, prefs and account-deletion writes for the client.
 ///
 /// Copied from [AccountActions].
 @ProviderFor(AccountActions)
 final accountActionsProvider =
-    AutoDisposeAsyncNotifierProvider<AccountActions, void>.internal(
+    AsyncNotifierProvider<AccountActions, void>.internal(
   AccountActions.new,
   name: r'accountActionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -802,6 +1223,6 @@ final accountActionsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$AccountActions = AutoDisposeAsyncNotifier<void>;
+typedef _$AccountActions = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

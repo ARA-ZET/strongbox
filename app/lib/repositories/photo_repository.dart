@@ -27,6 +27,21 @@ abstract class PhotoRepository {
   Future<String> uploadSignature(
       {required Uint8List png, required String storagePath});
 
+  /// Uploads a photo of storage unit [unitId] and, in one batch, records
+  /// the [Photo] doc and adds it to the unit's `photoIds`. Returns the id.
+  Future<String> addUnitPhoto({
+    required String tenantId,
+    required String unitId,
+    required Uint8List bytes,
+    required PhotoType type,
+    required String storagePath,
+    required String uploadedBy,
+  });
+
+  /// Soft-deletes [photo] and takes it off unit [unitId], in one batch.
+  /// The Storage file is kept (doc 06 deletion policy).
+  Future<void> removeUnitPhoto(Photo photo, String unitId);
+
   Future<List<Photo>> getForEntity(String entityId);
   Stream<List<Photo>> watchForEntity(String entityId);
   Future<Map<String, String>> resolveUrls(List<String> photoIds);
@@ -84,6 +99,62 @@ class FirestorePhotoRepository
           'createdAt': FieldValue.serverTimestamp(),
         });
         return doc.id;
+      });
+
+  @override
+  Future<String> addUnitPhoto({
+    required String tenantId,
+    required String unitId,
+    required Uint8List bytes,
+    required PhotoType type,
+    required String storagePath,
+    required String uploadedBy,
+  }) =>
+      guardRepo(() async {
+        final task = await storage.ref(storagePath).putData(
+              bytes,
+              SettableMetadata(contentType: 'image/jpeg', customMetadata: {
+                'uploadedBy': uploadedBy,
+                'entityType': 'storageUnit',
+                'entityId': unitId,
+              }),
+            );
+        final url = await task.ref.getDownloadURL();
+        final doc = _photos.doc();
+        final batch = db.batch()
+          ..set(doc, {
+            'tenantId': tenantId,
+            'storageUrl': url,
+            'storagePath': storagePath,
+            'type': type.name,
+            'entityType': 'storageUnit',
+            'entityId': unitId,
+            'jobId': null,
+            'uploadedBy': uploadedBy,
+            'isDeleted': false,
+            'createdAt': FieldValue.serverTimestamp(),
+          })
+          ..update(col(Collections.storageUnits).doc(unitId), {
+            'photoIds': FieldValue.arrayUnion([doc.id]),
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
+        await batch.commit();
+        return doc.id;
+      });
+
+  @override
+  Future<void> removeUnitPhoto(Photo photo, String unitId) =>
+      guardRepo(() async {
+        final batch = db.batch()
+          ..update(_photos.doc(photo.id), {
+            'isDeleted': true,
+            'deletedAt': FieldValue.serverTimestamp(),
+          })
+          ..update(col(Collections.storageUnits).doc(unitId), {
+            'photoIds': FieldValue.arrayRemove([photo.id]),
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
+        await batch.commit();
       });
 
   @override

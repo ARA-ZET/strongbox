@@ -15,7 +15,13 @@ import LooseItemPicker from "@/components/LooseItemPicker";
  * "Book Your Pickup" passes the finished quote on to the app's /register.
  */
 export default function FullCalculator({ prices }: { prices: Prices }) {
-  const { boxes: BOX_TYPES, vehicles: VEHICLES, looseItems: LOOSE_ITEMS } = prices;
+  const {
+    boxes: BOX_TYPES,
+    vehicles: VEHICLES,
+    looseItems: LOOSE_ITEMS,
+    supplies: SUPPLIES,
+    packingHelper: HELPER,
+  } = prices;
   const [boxes, setBoxes] = useState<Record<string, number>>(
     Object.fromEntries(BOX_TYPES.map((b) => [b.id, 0]))
   );
@@ -27,6 +33,8 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
     (VEHICLES.find((v) => v.recommended) ?? VEHICLES[0]).id
   );
   const [showAddLoose, setShowAddLoose] = useState(false);
+  const [supplies, setSupplies] = useState<Record<string, number>>({});
+  const [helperHours, setHelperHours] = useState(0);
 
   // Read after mount rather than via useSearchParams, so /pricing stays
   // statically rendered.
@@ -36,6 +44,8 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
     setBoxes(Object.fromEntries(BOX_TYPES.map((b) => [b.id, quote.boxes[b.id] ?? 0])));
     setLoose(quote.loose);
     if (quote.vehicle) setVehicleId(quote.vehicle);
+    setSupplies(quote.supplies ?? {});
+    setHelperHours(quote.helperHours ?? 0);
   }, [prices, BOX_TYPES]);
 
   const updateBox = (id: string, delta: number) => {
@@ -50,12 +60,41 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
     });
   };
 
+  const updateSupply = (id: string, delta: number) => {
+    setSupplies((prev) => {
+      const next = { ...prev, [id]: Math.min(99, Math.max(0, (prev[id] ?? 0) + delta)) };
+      if (!next[id]) delete next[id];
+      return next;
+    });
+  };
+
+  // Packing help steps from none straight to the minimum and back.
+  const updateHelper = (delta: number) => {
+    if (!HELPER) return;
+    setHelperHours((h) => {
+      const n = h + delta;
+      if (n <= 0) return 0;
+      if (n < HELPER.minHours) return delta > 0 ? HELPER.minHours : 0;
+      return Math.min(12, n);
+    });
+  };
+
   const selectedLoose = LOOSE_ITEMS.filter((i) => (loose[i.id] ?? 0) > 0);
+  const selectedSupplies = SUPPLIES.filter((s) => (supplies[s.id] ?? 0) > 0);
+  const suppliesTotal = selectedSupplies.reduce((s, x) => s + supplies[x.id] * x.price, 0);
+  const helperTotal = HELPER ? helperHours * HELPER.price : 0;
   const boxTotal = BOX_TYPES.reduce((s, b) => s + (boxes[b.id] ?? 0) * b.price, 0);
   const looseTotal = selectedLoose.reduce((s, i) => s + loose[i.id] * i.price, 0);
   const monthlyTotal = boxTotal + looseTotal;
   const vehicle = VEHICLES.find((v) => v.id === vehicleId) ?? VEHICLES[0];
-  const registerHref = `${APP_URL}/register${quoteQuery({ boxes, loose, vehicle: vehicle.id })}`;
+  const onceOffTotal = vehicle.price + suppliesTotal + helperTotal;
+  const registerHref = `${APP_URL}/register${quoteQuery({
+    boxes,
+    loose,
+    vehicle: vehicle.id,
+    supplies,
+    helperHours,
+  })}`;
 
   return (
     <div className="bg-surface-white rounded-3xl shadow-tactile-lg overflow-hidden border border-navy-deep/5">
@@ -158,11 +197,88 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
             </div>
           </div>
 
-          {/* Step 3: Vehicle */}
+          {/* Step 3: Packing & supplies */}
+          {(SUPPLIES.length > 0 || HELPER) && (
+            <div>
+              <h4 className="font-body-strong text-navy-deep mb-2 flex items-center gap-2 text-headline-h3">
+                <span className="material-symbols-outlined text-accent-deep">inventory</span>
+                3. Packing &amp; Supplies <span className="text-sm font-body-main text-on-surface-variant">(optional)</span>
+              </h4>
+              <p className="text-sm text-on-surface-variant mb-5">
+                Empty boxes come free with every box you store. Add wrapping, or a packer to help on
+                the day. Once-off. When you book, choose to have supplies delivered before pickup day.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {SUPPLIES.map((s) => (
+                  <div
+                    key={s.id}
+                    className="p-4 border rounded-xl border-navy-deep/10 flex justify-between items-center"
+                  >
+                    <div>
+                      <p className="font-body-strong text-sm text-navy-deep">{s.label}</p>
+                      <p className="text-xs text-on-surface-variant">
+                        {s.price ? `R${s.price} once-off` : "Free"}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => updateSupply(s.id, -1)}
+                        aria-label={`Remove one ${s.label}`}
+                        className="w-8 h-8 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                      >
+                        −
+                      </button>
+                      <span aria-live="polite" className="font-bold text-navy-deep w-5 text-center tabular-nums">
+                        {supplies[s.id] ?? 0}
+                      </span>
+                      <button
+                        onClick={() => updateSupply(s.id, 1)}
+                        aria-label={`Add one ${s.label}`}
+                        className="w-8 h-8 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {HELPER && (
+                  <div className="p-4 border rounded-xl border-navy-deep/10 flex justify-between items-center sm:col-span-2">
+                    <div>
+                      <p className="font-body-strong text-sm text-navy-deep">{HELPER.label} (hours)</p>
+                      <p className="text-xs text-on-surface-variant">
+                        R{HELPER.price}/hour · minimum {HELPER.minHours} hours
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => updateHelper(-1)}
+                        aria-label="One hour less packing help"
+                        className="w-8 h-8 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                      >
+                        −
+                      </button>
+                      <span aria-live="polite" className="font-bold text-navy-deep w-5 text-center tabular-nums">
+                        {helperHours}
+                      </span>
+                      <button
+                        onClick={() => updateHelper(1)}
+                        aria-label="One hour more packing help"
+                        className="w-8 h-8 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Step 4: Vehicle */}
           <div>
             <h4 className="font-body-strong text-navy-deep mb-5 flex items-center gap-2 text-headline-h3">
               <span className="material-symbols-outlined text-accent-deep">local_shipping</span>
-              3. Choose Pickup Vehicle
+              {SUPPLIES.length > 0 || HELPER ? "4" : "3"}. Choose Pickup Vehicle
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {VEHICLES.map((v) => (
@@ -228,6 +344,27 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
               {monthlyTotal === 0 && (
                 <p className="text-on-navy-variant/60 text-sm italic">No items selected yet.</p>
               )}
+              {(selectedSupplies.length > 0 || helperHours > 0) && (
+                <p className="pt-2 text-label-caps text-on-navy-variant uppercase tracking-widest text-xs">
+                  Once-off
+                </p>
+              )}
+              {selectedSupplies.map((s) => (
+                <div key={s.id} className="flex justify-between text-on-navy-variant">
+                  <span>{supplies[s.id]}× {s.label}</span>
+                  <span className="font-bold text-surface-white">
+                    R{(supplies[s.id] * s.price).toLocaleString("en-ZA")}
+                  </span>
+                </div>
+              ))}
+              {HELPER && helperHours > 0 && (
+                <div className="flex justify-between text-on-navy-variant">
+                  <span>{HELPER.label} · {helperHours} h</span>
+                  <span className="font-bold text-surface-white">
+                    R{helperTotal.toLocaleString("en-ZA")}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="flex justify-between items-end mb-8">
@@ -241,9 +378,11 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
               </div>
               <div className="text-right">
                 <p className="text-label-caps text-on-navy-variant uppercase tracking-widest mb-1 text-xs">
-                  Initial Pickup
+                  Once-off
                 </p>
-                <p className="text-2xl font-bold">R{vehicle.price}</p>
+                <p className="text-2xl font-bold tabular-nums">
+                  R{onceOffTotal.toLocaleString("en-ZA")}
+                </p>
               </div>
             </div>
           </div>

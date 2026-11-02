@@ -10,7 +10,12 @@
  *   dailyBillingSweep            overdue invoices → client pastDue
  *   weeklyUnlinkedQrSweep        flags QR labels never attached to a unit
  *   inviteDriver / resendInvite  admin callables: driver login + setup link
- *   onMailCreated                sends each `mail` doc over SMTP
+ *   onMailCreated                sends each `mail` doc over SMTP (off
+ *                                until SMTP is set up — see below)
+ *   bookPickup                   client callable: quote → pickup (+ supply
+ *                                drop-off) awaiting confirmation
+ *   requestDelivery              client callable: stored units → delivery
+ *                                awaiting confirmation
  *
  * Billing is invoices-only: clients pay by EFT and an admin marks invoices
  * paid in the app. Anything that emails writes a doc to `mail`, which
@@ -27,7 +32,8 @@ const {
 } = require("firebase-functions/v2/firestore");
 const { onSchedule } = require("firebase-functions/v2/scheduler");
 const { onCall } = require("firebase-functions/v2/https");
-const { defineSecret, defineString } = require("firebase-functions/params");
+// Email is off until SMTP is set up — see the email section below.
+// const { defineSecret, defineString } = require("firebase-functions/params");
 const logger = require("firebase-functions/logger");
 
 const {
@@ -41,7 +47,9 @@ const billing = require("./src/billing");
 const messages = require("./src/messages");
 const { createStore, NOT_FOUND } = require("./src/store");
 const { createInvites } = require("./src/invites");
-const mailer = require("./src/mailer");
+const { createBooking } = require("./src/booking");
+const { createDelivery } = require("./src/delivery");
+// const mailer = require("./src/mailer");
 
 initializeApp();
 // Firestore is in nam5, so triggers run in us-central1.
@@ -50,6 +58,8 @@ setGlobalOptions({ region: "us-central1", maxInstances: 10 });
 const db = getFirestore();
 const store = createStore(db);
 const invites = createInvites(db, getAuth());
+const booking = createBooking(db);
+const delivery = createDelivery(db);
 const { notificationData, createOnce, deliver, recomputeBillingStatus } = store;
 
 
@@ -80,8 +90,15 @@ exports.onJobUpdated = onDocumentUpdated(`${COL.jobs}/{jobId}`,
     async (event) => {
       const before = event.data.before.data();
       const after = event.data.after.data();
+      // The client is told who is coming when the driver sets off.
+      let driverName = "";
+      if (!before.departedAt && after.departedAt && after.driverId) {
+        const driver = await db.collection(COL.users).doc(after.driverId).get();
+        driverName = driver.exists ? driver.get("name") || "" : "";
+      }
       await deliver(after.tenantId,
-          messages.jobUpdatedMessages(before, after, event.params.jobId),
+          messages.jobUpdatedMessages(before, after, event.params.jobId,
+              { driverName }),
           after.clientId);
     });
 
@@ -288,53 +305,64 @@ exports.weeklyUnlinkedQrSweep = onSchedule({
 exports.inviteDriver = onCall((request) => invites.inviteDriver(request));
 exports.resendInvite = onCall((request) => invites.resendInvite(request));
 
+// -------------------------------------------------------------- booking
+
+exports.bookPickup = onCall((request) => booking.bookPickup(request));
+exports.requestDelivery = onCall((request) =>
+  delivery.requestDelivery(request));
+
 // ---------------------------------------------------------------- email
+// Off until SMTP is set up. Declaring the SMTP_URL secret blocks every
+// functions deploy until that secret exists, so it's commented out. Until
+// then `mail` docs queue unsent. To switch on: uncomment this section and
+// the `params` / `mailer` requires at the top, then follow
+// docs/EMAIL_SETUP.md (set SMTP_URL, deploy).
 
-/** SMTP connection, e.g. smtps://user:password@smtp-relay.brevo.com:465. */
-const SMTP_URL = defineSecret("SMTP_URL");
-const MAIL_FROM = defineString("MAIL_FROM", {
-  default: "StrongBox <info@strongbox.co.za>",
-  description: "From address — must be a sender your SMTP provider allows",
-});
-const MAIL_REPLY_TO = defineString("MAIL_REPLY_TO", {
-  default: "info@strongbox.co.za",
-});
-
-let transport;
-let transportUrl;
-
-exports.onMailCreated = onDocumentCreated({
-  document: `${COL.mail}/{mailId}`,
-  secrets: [SMTP_URL],
-}, async (event) => {
-  const mail = event.data.data();
-  if (mail.delivery) return; // already handled (event redelivered)
-
-  const url = SMTP_URL.value();
-  if (url !== transportUrl) {
-    transport = mailer.transportFor(url);
-    transportUrl = url;
-  }
-  const startTime = FieldValue.serverTimestamp();
-  const result = await mailer.sendMail(mail, {
-    transport,
-    from: MAIL_FROM.value(),
-    replyTo: MAIL_REPLY_TO.value(),
-  });
-  if (result.state === "ERROR") {
-    logger.error("Email not sent", { mailId: event.params.mailId,
-      error: result.error });
-  }
-  try {
-    await event.data.ref.update({
-      delivery: {
-        ...result,
-        attempts: 1,
-        startTime,
-        endTime: FieldValue.serverTimestamp(),
-      },
-    });
-  } catch (error) {
-    if (error.code !== NOT_FOUND) throw error; // doc removed meanwhile
-  }
-});
+// /** SMTP connection, e.g. smtps://user:password@smtp-relay.brevo.com:465. */
+// const SMTP_URL = defineSecret("SMTP_URL");
+// const MAIL_FROM = defineString("MAIL_FROM", {
+//   default: "StrongBox <info@strongbox.co.za>",
+//   description: "From address — must be a sender your SMTP provider allows",
+// });
+// const MAIL_REPLY_TO = defineString("MAIL_REPLY_TO", {
+//   default: "info@strongbox.co.za",
+// });
+//
+// let transport;
+// let transportUrl;
+//
+// exports.onMailCreated = onDocumentCreated({
+//   document: `${COL.mail}/{mailId}`,
+//   secrets: [SMTP_URL],
+// }, async (event) => {
+//   const mail = event.data.data();
+//   if (mail.delivery) return; // already handled (event redelivered)
+//
+//   const url = SMTP_URL.value();
+//   if (url !== transportUrl) {
+//     transport = mailer.transportFor(url);
+//     transportUrl = url;
+//   }
+//   const startTime = FieldValue.serverTimestamp();
+//   const result = await mailer.sendMail(mail, {
+//     transport,
+//     from: MAIL_FROM.value(),
+//     replyTo: MAIL_REPLY_TO.value(),
+//   });
+//   if (result.state === "ERROR") {
+//     logger.error("Email not sent", { mailId: event.params.mailId,
+//       error: result.error });
+//   }
+//   try {
+//     await event.data.ref.update({
+//       delivery: {
+//         ...result,
+//         attempts: 1,
+//         startTime,
+//         endTime: FieldValue.serverTimestamp(),
+//       },
+//     });
+//   } catch (error) {
+//     if (error.code !== NOT_FOUND) throw error; // doc removed meanwhile
+//   }
+// });

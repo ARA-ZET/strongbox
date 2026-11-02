@@ -6,9 +6,9 @@ part of 'shift_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$activeShiftHash() => r'4551290fdfaef8de5677133fa5073dae110548ac';
+String _$activeShiftHash() => r'3055b768f8939355ba9b287d89683c83c04f96b6';
 
-/// The signed-in driver's currently open shift, if any.
+/// The current driver's open shift, if any.
 ///
 /// Copied from [activeShift].
 @ProviderFor(activeShift)
@@ -22,14 +22,13 @@ final activeShiftProvider = AutoDisposeStreamProvider<DriverShift?>.internal(
 );
 
 typedef ActiveShiftRef = AutoDisposeStreamProviderRef<DriverShift?>;
-String _$shiftActionsHash() => r'e4e65eb4e45a636e4df5813fbb9a9e207bb6135a';
+String _$shiftActionsHash() => r'7a8d771d5b310b8124bbdbee26d7fc4cbb208f75';
 
 /// Start / break / resume / end actions on the driver's shift.
 ///
 /// Copied from [ShiftActions].
 @ProviderFor(ShiftActions)
-final shiftActionsProvider =
-    AutoDisposeAsyncNotifierProvider<ShiftActions, void>.internal(
+final shiftActionsProvider = AsyncNotifierProvider<ShiftActions, void>.internal(
   ShiftActions.new,
   name: r'shiftActionsProvider',
   debugGetCreateSourceHash:
@@ -38,6 +37,6 @@ final shiftActionsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ShiftActions = AutoDisposeAsyncNotifier<void>;
+typedef _$ShiftActions = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
