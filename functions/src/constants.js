@@ -9,6 +9,8 @@ const COL = {
   users: "users",
   clients: "clients",
   storageUnits: "storageUnits",
+  items: "items",
+  photos: "photos",
   jobs: "jobs",
   qrCodes: "qrCodes",
   auditEvents: "auditEvents",
@@ -54,6 +56,10 @@ const AUDIT = {
   invoiceIssued: "invoiceIssued",
   subscriptionUpdated: "subscriptionUpdated",
   userRoleChanged: "userRoleChanged",
+  accountClosureRequested: "accountClosureRequested",
+  accountClosureCancelled: "accountClosureCancelled",
+  accountClosed: "accountClosed",
+  accountRecordsPurged: "accountRecordsPurged",
 };
 
 /** actorId on audit events written by these functions. */

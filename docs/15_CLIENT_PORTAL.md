@@ -166,8 +166,14 @@ deliveryRequestNotifier → AsyncNotifier<DeliveryRequestState>
 **Notification Preferences**
 - Toggle list (see 22_NOTIFICATIONS.md)
 
-**Danger Zone**
-- "Request Account Deletion" → opens confirmation dialog → creates a support request, does not immediately delete
+**Close your account** (`AccountClosureSection`)
+- Explains what is deleted when the account closes and what is kept (and for how long) — wording from
+  `lib/core/utils/account_closure.dart`
+- "Close my account" → confirm → `requestAccountClosure` callable → closes in 30 days (see
+  02_BUSINESS_RULES.md → Account Closure). Nothing is deleted immediately
+- While pending: the closing date, a checklist of what's left (items back, orders finished, invoices
+  settled, charges invoiced), "Get my items back", and "Keep my account" (cancels)
+- A banner across the portal (ClientShell) shows the closing date and links here
 
 ---
 

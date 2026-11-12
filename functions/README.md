@@ -14,6 +14,9 @@ Node 22, Firebase Functions v2, region `us-central1` (Firestore is in `nam5`).
 | `dailyBillingSweep` | 07:00 SAST daily | Open invoices past due → client `pastDue`; settled → `active` |
 | `weeklyUnlinkedQrSweep` | 07:00 SAST Mondays | Alerts admins to QR labels unused for 30+ days |
 | `onMailCreated` | `mail/{id}` create | Sends the email over SMTP (`SMTP_URL` secret); records `delivery` on the doc |
+| `requestAccountClosure` / `cancelAccountClosure` | Callable (the client, or an admin for any client) | Schedules the account to close in 30 days (or cancels); notifies admins + client, emails the client |
+| `closeAccountNow` | Callable (admins only) | Closes a pending account now, once nothing blocks it |
+| `dailyClosureSweep` | 07:30 SAST daily | Closes accounts whose date has come (deletes the login, clears contact details, keeps records 5 years); alerts admins once if items/orders/invoices still block one; purges records past retention. See `src/closure.js` |
 | `inviteDriver` / `resendInvite` | Callable (admins only) | Creates the driver's Auth login + `users/{uid}` (role driver, `invited: true`) and emails a password-setup link, also returned for the admin to copy. Refuses emails that already have an account |
 
 The app never sends a push or email itself: it writes a `notifications` doc (or

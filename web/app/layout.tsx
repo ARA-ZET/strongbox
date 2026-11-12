@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { LaunchBar } from "@/components/LaunchNotice";
 import JsonLd from "@/components/JsonLd";
+import RevealObserver from "@/components/motion/RevealObserver";
 import { ICON_NAMES } from "@/lib/icons";
 import { getPrices } from "@/lib/prices";
 import {
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: "StrongBox | Storage Collected From Your Door in Cape Town",
-    template: "%s | StrongBox Valet Storage Cape Town",
+    template: "%s | StrongBox",
   },
   description:
     "StrongBox collects your boxes and furniture from your door anywhere in Cape Town, stores them in a monitored facility, and brings them back when you ask. Monthly billing, no lock-in.",
@@ -45,24 +46,6 @@ export const metadata: Metadata = {
   creator: SITE_NAME,
   publisher: SITE_NAME,
   category: "Storage and logistics",
-  keywords: [
-    "valet storage Cape Town",
-    "storage Cape Town",
-    "self storage Cape Town",
-    "self storage cost Cape Town",
-    "storage cost calculator",
-    "box storage Cape Town",
-    "furniture storage Cape Town",
-    "on demand storage South Africa",
-    "storage vs self storage",
-    "StrongBox storage",
-    "storage near me Cape Town",
-    "student storage Cape Town",
-    "storage Northern Suburbs",
-    "storage Southern Suburbs",
-    "storage Table View",
-    "storage Mitchells Plain",
-  ],
   openGraph: {
     type: "website",
     locale: "en_ZA",
@@ -115,8 +98,17 @@ const ICON_FONT_HREF =
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { boxFrom } = await getPrices();
   return (
-    <html lang="en-ZA" className={inter.variable}>
+    // `suppressHydrationWarning`: the inline script below adds a class to this
+    // element before React hydrates, which is the one intended mismatch.
+    <html lang="en-ZA" className={inter.variable} suppressHydrationWarning>
       <head>
+        {/*
+          Marks the document as scripted before first paint. Scroll-reveal
+          start states are scoped to `.js` (see globals.css), so without this
+          — no JavaScript, or a crawler that does not run it — nothing on the
+          page is ever hidden.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         {/*
           Warm the font host before the stylesheet below is parsed. The icon
           face is render-blocking, so the two round trips it costs land
@@ -133,10 +125,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <JsonLd data={[organizationJsonLd(), localBusinessJsonLd(boxFrom), websiteJsonLd()]} />
       </head>
       <body className="bg-surface font-sans text-on-surface antialiased">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-surface-white focus:px-4 focus:py-3 focus:font-semibold focus:text-navy-deep focus:shadow-tactile-md"
+        >
+          Skip to content
+        </a>
         <Navbar />
         <LaunchBar />
-        <main className="pt-[72px]">{children}</main>
+        <main id="main" className="pt-[72px]">{children}</main>
         <Footer />
+        <RevealObserver />
       </body>
     </html>
   );

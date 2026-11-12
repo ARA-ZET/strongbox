@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
+import '../../../core/models/client.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadow.dart';
@@ -11,6 +13,7 @@ import '../../../core/widgets/brand_logo.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../notifications/providers/notification_providers.dart';
+import '../providers/client_providers.dart';
 import 'new_order_button.dart';
 
 class _Tab {
@@ -43,6 +46,11 @@ class ClientShell extends ConsumerWidget {
     final location = GoRouterState.of(context).matchedLocation;
     final user = ref.watch(currentUserProvider).valueOrNull;
     final unread = ref.watch(unreadNotificationCountProvider);
+    final client = ref.watch(currentClientProvider).valueOrNull;
+    // Account settings shows the closure in full.
+    final closing = client != null &&
+        client.isClosing &&
+        !_isActive(location, '/client/account');
 
     return LayoutBuilder(builder: (context, constraints) {
       final desktop = constraints.maxWidth > 900;
@@ -97,6 +105,7 @@ class ClientShell extends ConsumerWidget {
                   ],
                 ),
               ),
+              if (closing) _ClosingBanner(client: client),
               Expanded(child: child),
             ],
           ),
@@ -121,7 +130,12 @@ class ClientShell extends ConsumerWidget {
             const SizedBox(width: AppSpacing.sm),
           ],
         ),
-        body: child,
+        body: closing
+            ? Column(children: [
+                _ClosingBanner(client: client),
+                Expanded(child: child),
+              ])
+            : child,
         bottomNavigationBar: NavigationBar(
           selectedIndex: onAccount ? 4 : selected,
           onDestinationSelected: (index) => index < 4
@@ -172,6 +186,48 @@ class _NavLink extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: active ? AppColors.accentDeep : AppColors.navyDeep,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Shown across the portal while the client's account is closing.
+class _ClosingBanner extends StatelessWidget {
+  const _ClosingBanner({required this.client});
+
+  final Client client;
+
+  @override
+  Widget build(BuildContext context) {
+    final due = client.closure?.scheduledFor;
+    final when =
+        due == null ? '' : ' on ${DateFormat('d MMMM y').format(due)}';
+    final tt = Theme.of(context).textTheme;
+
+    return Material(
+      color: AppColors.statusPastDueBg,
+      child: InkWell(
+        onTap: () => context.go('/client/account'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+          child: Row(
+            children: [
+              const Icon(Icons.event_busy,
+                  size: 18, color: AppColors.statusPastDue),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text('Your account closes$when.',
+                    style: tt.bodyMedium
+                        ?.copyWith(color: AppColors.statusPastDue)),
+              ),
+              Text('Manage',
+                  style: tt.labelLarge?.copyWith(
+                      color: AppColors.statusPastDue,
+                      decoration: TextDecoration.underline)),
+            ],
           ),
         ),
       ),

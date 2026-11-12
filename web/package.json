@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "icons": "node scripts/collect-icons.mjs",
+    "photos": "node scripts/process-photos.mjs",
     "prebuild": "node scripts/collect-icons.mjs --check"
   },
   "dependencies": {

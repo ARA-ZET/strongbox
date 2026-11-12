@@ -47,11 +47,15 @@ function createStore(db) {
     };
   }
 
-  /** The uid that receives a client's notifications. */
+  /**
+   * The uid that receives a client's notifications — none once the account
+   * is closed (src/closure.js).
+   */
   async function clientUserId(clientId) {
     if (!clientId) return null;
     const snap = await db.collection(COL.clients).doc(clientId).get();
-    return snap.exists ? snap.get("primaryUserId") || null : null;
+    if (!snap.exists || snap.get("isDeleted")) return null;
+    return snap.get("primaryUserId") || null;
   }
 
   /**

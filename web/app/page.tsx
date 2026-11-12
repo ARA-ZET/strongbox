@@ -5,528 +5,367 @@ import SuburbChecker from "@/components/SuburbChecker";
 import FacilityProof from "@/components/FacilityProof";
 import FAQAccordion from "@/components/FAQAccordion";
 import ComparisonTable from "@/components/ComparisonTable";
+import ClosingCta from "@/components/ClosingCta";
+import JsonLd from "@/components/JsonLd";
+import Button from "@/components/ui/Button";
+import Section from "@/components/ui/Section";
+import PhotoHero from "@/components/PhotoHero";
 import SitePhoto from "@/components/SitePhoto";
-import LaunchNotice from "@/components/LaunchNotice";
-import SectionDivider from "@/components/graphics/SectionDivider";
-import { DeliveryVanArt } from "@/components/graphics/Illustrations";
-import { PALETTE } from "@/lib/palette";
+import SectionHeading from "@/components/ui/SectionHeading";
+import IconPoint from "@/components/ui/IconPoint";
+import BoxScale from "@/components/visuals/BoxScale";
+import CoverageMap, { RegionList } from "@/components/visuals/CoverageMap";
+import { OrderScreen, StorageScreen } from "@/components/visuals/Phone";
 import { FEATURED_ROWS, withLivePrices } from "@/lib/comparison";
 import { STORAGE_MODES, USE_CASES } from "@/lib/service-details";
-import JsonLd from "@/components/JsonLd";
 import { pageMeta, faqJsonLd, serviceJsonLd } from "@/lib/seo";
-import { TESTIMONIALS, APP_URL, CUSTOMER_COUNT } from "@/lib/constants";
-import { REGIONS } from "@/lib/areas";
 import { getPrices } from "@/lib/prices";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { boxFrom } = await getPrices();
   return pageMeta({
-    // "Storage" + "Cape Town" lead, because that is what people type; the
-    // unverifiable "first" claim this title used to carry is gone.
+    // "Storage" + "Cape Town" lead, because that is what people type.
+    // The root layout's title template does not reach a page in its own
+    // segment, so the brand is written out here.
     title: "Storage in Cape Town, Collected From Your Door | StrongBox",
-    description: `Storage that comes to you, anywhere in Cape Town — Blouberg to Gordon's Bay, Sea Point to Khayelitsha. We collect, store and return on request. From R${boxFrom}/box a month.`,
+    description:
+    `Door-to-door storage across Cape Town. We collect your boxes and furniture, store them safely and bring them back on request. From R${boxFrom} a box per month.`,
     path: "",
   });
 }
 
 /**
- * The four claims that answer a first-time visitor's immediate objections.
- * They sit inside the hero rather than in a band below it: as their own
- * section the headings landed below the fold, so the first screen carried the
- * pitch with nothing supporting it.
+ * The claims that answer a first-time visitor's immediate objections. They
+ * sit inside the hero so the first screen carries the pitch and its support
+ * together.
  */
 const HERO_BADGES = [
   { icon: "shield", label: "Monitored facility" },
-  { icon: "schedule", label: "Same-day collection" },
+  { icon: "home", label: "Collected at your door" },
   { icon: "event_repeat", label: "No lock-in" },
-  { icon: "phone_iphone", label: "24/7 dashboard" },
+  { icon: "qr_code_2", label: "Every box tracked" },
 ];
 
 const STEPS = [
   {
-    num: "01",
-    icon: "event_available",
     title: "Book online",
-    body: "Pick a date and a window — morning, afternoon or evening. Tell us roughly what you are storing and the quote is built before anyone arrives.",
+    body: "Pick a date and a window: morning, afternoon or evening. Tell us roughly what you are storing and the quote is built before anyone arrives.",
   },
   {
-    num: "02",
-    icon: "inventory",
     title: "We collect",
-    body: "Our team does the lifting at your door. Every box is photographed and barcoded to your account before it leaves.",
+    body: "Our team does the lifting at your door. Every box is photographed and scanned to your account before it leaves.",
   },
   {
-    num: "03",
-    icon: "local_shipping",
-    title: "Request it back",
-    body: "Need something? Tap it in the app and we deliver it back to your door, usually the next working day.",
+    title: "Ask for it back",
+    body: "Need something? Pick it in your account and we deliver it to your door, usually the next working day.",
+  },
+];
+
+const PRICING_POINTS = [
+  {
+    icon: "inventory_2",
+    title: "Priced per box",
+    desc: "Each size has its own monthly price. Add or remove boxes as your life changes.",
+  },
+  {
+    icon: "chair",
+    title: "Loose and oversized items",
+    desc: "Bicycles, surfboards and furniture are priced by the space they actually take up.",
+  },
+  {
+    icon: "verified",
+    title: "Tracking is included",
+    desc: "Photo inventory, QR labels and your online account cost nothing extra.",
   },
 ];
 
 export default async function HomePage() {
   const prices = await getPrices();
-  const { boxes: BOX_TYPES, boxFrom: BOX_FROM } = prices;
+  const { boxes, boxFrom } = prices;
   return (
     <>
       {/* The homepage renders the FAQ block and the rate card, so it is the
           page entitled to carry their markup. */}
-      <JsonLd data={[faqJsonLd(), serviceJsonLd(BOX_TYPES)]} />
+      <JsonLd data={[faqJsonLd(), serviceJsonLd(boxes)]} />
+
       {/* ── Hero ── */}
-      <section className="bg-navy-deep relative overflow-hidden flex items-center">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid md:grid-cols-2 gap-gutter items-center py-14 md:py-20 relative z-10">
-          <LaunchNotice tone="dark" className="md:col-span-2 mb-4 md:mb-8" />
-          <div className="text-surface-white">
-            <h1 className="text-display-bold font-bold text-surface-white mb-6 leading-tight">
-              Storage that comes to you
-            </h1>
-            <p className="text-on-navy text-body-main mb-8 max-w-lg">
-              We collect your boxes from your door, store them in a monitored,
-              climate-controlled facility in Cape Town, and bring them back whenever you
-              ask. No truck to hire, no unit to visit, no lock-in.
-            </p>
-            <p className="text-on-navy text-sm mb-8 -mt-4 flex items-start gap-2">
-              <span aria-hidden="true" className="material-symbols-outlined text-sky text-lg shrink-0">
-                location_on
-              </span>
-              <span>
-                Anywhere in the metro, from Bloubergstrand to Gordon&apos;s Bay.{" "}
-                <Link href="/areas" className="text-surface-white underline underline-offset-4 hover:text-sky">
-                  Check your suburb
-                </Link>
-              </span>
-            </p>
-
-            <div className="flex flex-wrap gap-4 mb-10">
-              <Link
-                href="/pricing"
-                className="bg-accent text-on-accent h-[56px] px-8 rounded-xl font-body-strong flex items-center gap-2 hover:bg-accent-deep transition-colors"
-              >
-                Get a free quote
-                <span className="material-symbols-outlined">arrow_forward</span>
-              </Link>
-              <Link
-                href="/how-it-works"
-                className="border-2 border-surface-white/40 text-surface-white h-[56px] px-8 rounded-xl font-body-strong hover:bg-surface-white hover:text-navy-deep hover:border-surface-white transition-all flex items-center justify-center"
-              >
-                See how it works
-              </Link>
-            </div>
-
-            {/* Trust strip — inside the hero, so proof is on the first screen. */}
-            <ul className="flex flex-wrap gap-x-6 gap-y-3 border-t border-surface-white/10 pt-6">
-              {HERO_BADGES.map(({ icon, label }) => (
-                <li key={label} className="flex items-center gap-2 text-on-navy text-sm">
-                  <span className="material-symbols-outlined text-sky text-lg" aria-hidden="true">
-                    {icon}
-                  </span>
-                  {label}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="relative mt-12 md:mt-0">
-            <div className="relative">
-              <SitePhoto id="hero-collection" tone="dark" />
-              <div className="absolute bottom-6 left-6 bg-surface-white p-4 rounded-xl shadow-tactile-md flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full bg-emerald-500" />
-                <p className="text-navy-deep font-body-strong text-sm">Items collected safely</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Decorative */}
-        <div className="absolute right-0 top-0 w-1/3 h-full bg-navy opacity-30 transform translate-x-1/2 -skew-x-12 pointer-events-none" />
-      </section>
-
-      <SectionDivider from="navyDeep" to="white" variant="wave" size="sm" />
-
-      {/* ── How it works ── */}
-      <section className="pt-14 pb-24 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <div className="text-center mb-14">
-            <span className="font-label-caps text-accent-deep tracking-widest uppercase text-xs mb-3 block">
-              The Process
-            </span>
-            <h2 className="text-headline-h1 font-bold text-navy-deep">
-              Three steps, none of them involve a truck
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter relative">
-            {STEPS.map(({ num, icon, title, body }) => (
-              <div
-                key={num}
-                className="bg-surface-white border border-outline-variant p-10 rounded-xl shadow-tactile card-hover relative z-10"
-              >
-                <span className="absolute top-6 right-6 text-4xl font-bold text-outline-variant">
-                  {num}
+      <PhotoHero
+        photo="hero-home"
+        height="tall"
+        eyebrow="Door-to-door storage in Cape Town"
+        title="Storage that comes to you"
+        lead="We collect your boxes and furniture from your door, keep them in a monitored facility, and bring them back when you ask. No truck to hire, no unit to visit, no lock-in."
+        footer={
+          <ul className="mt-12 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-surface-white/15 pt-6 md:mt-16 md:grid-cols-4">
+            {HERO_BADGES.map(({ icon, label }) => (
+              <li key={label} className="flex items-center gap-2.5 text-sm font-medium text-on-navy">
+                <span aria-hidden="true" className="material-symbols-outlined text-xl text-sky">
+                  {icon}
                 </span>
-                <div className="w-12 h-12 rounded-lg bg-sky-tint flex items-center justify-center mb-6">
-                  <span className="material-symbols-outlined text-accent-deep text-3xl">{icon}</span>
-                </div>
-                <h3 className="text-headline-h3 font-bold text-navy-deep mb-3">{title}</h3>
-                <p className="text-on-surface-variant text-body-main">{body}</p>
-              </div>
-            ))}
-            <div className="hidden md:block absolute top-1/2 left-0 w-full h-[2px] border-t-2 border-dashed border-outline-variant -translate-y-1/2 z-0" />
-          </div>
-          <div className="text-center mt-10">
-            <Link
-              href="/how-it-works"
-              className="text-accent-deep font-body-strong hover:underline inline-flex items-center gap-1"
-            >
-              See the full process
-              <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Across Cape Town ── */}
-      {/*
-        "Do you come to me?" is the first question nearly every caller asks,
-        and the answer used to sit on the contact page as a chip cloud of
-        mostly Atlantic Seaboard and Southern Suburbs names. Answering it on
-        the homepage, for the whole metro, is the local-relevance signal that
-        matters most to a visitor and to a suburb search alike.
-      */}
-      <section className="py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid lg:grid-cols-2 gap-12 items-start">
-          <div>
-            <span className="font-label-caps text-accent-deep tracking-widest uppercase text-xs mb-3 block">
-              All Of Cape Town
-            </span>
-            <h2 className="text-headline-h1 font-bold text-navy-deep mb-4">
-              Wherever you live in the city, we come to you
-            </h2>
-            <p className="text-on-surface-variant text-body-main mb-8 max-w-xl">
-              One facility and one fleet, covering the whole metro. Storage costs the same in
-              every suburb, and the collection fee depends on the vehicle you need, not
-              how far you are from us.
-            </p>
-            <div className="bg-surface-white rounded-xl shadow-tactile border border-outline-variant p-6">
-              <SuburbChecker />
-            </div>
-          </div>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {REGIONS.map((r) => (
-              <li key={r.slug}>
-                <Link
-                  href={`/areas/${r.slug}`}
-                  className="group flex items-center justify-between gap-3 bg-surface-white rounded-xl border border-outline-variant px-5 py-4 min-h-[64px] hover:border-accent-deep transition-colors"
-                >
-                  <span className="font-body-strong text-navy-deep group-hover:text-accent-deep transition-colors">
-                    {r.name}
-                  </span>
-                  <span aria-hidden="true" className="material-symbols-outlined text-accent-deep text-lg shrink-0">
-                    arrow_forward
-                  </span>
-                </Link>
+                {label}
               </li>
             ))}
           </ul>
+        }
+      >
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Button href="/pricing#calculator" arrow>
+            Get a quote
+          </Button>
+          <Button href="/how-it-works" variant="on-dark">
+            See how it works
+          </Button>
         </div>
-      </section>
 
-      {/* ── Who it's for ── */}
-      {/*
-        Self-identification. A visitor who recognises their own situation in
-        one of these six converts far better than one who has to work out
-        whether a generic "storage" pitch applies to them.
-      */}
-      <section className="py-24 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <div className="text-center mb-14">
-            <span className="font-label-caps text-accent-deep tracking-widest uppercase text-xs mb-3 block">
-              Who It&apos;s For
-            </span>
-            <h2 className="text-headline-h1 font-bold text-navy-deep mb-3">
-              Most people come to us for one of these reasons
-            </h2>
-            <p className="text-on-surface-variant max-w-2xl mx-auto">
-              If one of these is your situation, the service was built for it.
-            </p>
+        <p className="mt-6 flex items-start gap-2 text-sm text-on-navy">
+          <span aria-hidden="true" className="material-symbols-outlined shrink-0 text-lg text-sky">
+            location_on
+          </span>
+          <span>
+            Anywhere in the metro, from Bloubergstrand to Gordon&apos;s Bay.{" "}
+            <Link href="/areas" className="text-surface-white underline underline-offset-4 hover:text-sky">
+              Check your suburb
+            </Link>
+          </span>
+        </p>
+      </PhotoHero>
+
+      {/* ── How it works ── */}
+      <Section>
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+          <div>
+            <SectionHeading
+              title="Three steps, and none of them involves a truck"
+              lead="You book, we carry, and it comes back when you ask for it."
+              className="!mb-10"
+            />
+            <ol className="relative">
+              {STEPS.map(({ title, body }, i) => (
+                <li
+                  key={title}
+                  data-reveal
+                  style={{ ["--i" as string]: i }}
+                  className="relative flex gap-5 pb-9 last:pb-0"
+                >
+                  {i < STEPS.length - 1 && (
+                    <span aria-hidden="true" className="absolute left-5 top-11 h-[calc(100%-2.75rem)] w-px bg-outline-variant" />
+                  )}
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy-deep text-sm font-bold text-surface-white">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <h3 className="text-headline-h3 font-semibold text-navy-deep">{title}</h3>
+                    <p className="mt-1.5 text-body-main text-on-surface-variant">{body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <Link
+              href="/how-it-works"
+              className="mt-9 inline-flex items-center gap-1.5 font-semibold text-accent-deep hover:underline"
+            >
+              See the full process
+              <span aria-hidden="true" className="material-symbols-outlined text-lg">arrow_forward</span>
+            </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-            {USE_CASES.map(({ icon, title, body }) => (
-              <div
-                key={title}
-                className="bg-surface-white rounded-xl p-8 border border-outline-variant shadow-tactile card-hover"
-              >
-                <div className="w-11 h-11 rounded-lg bg-sky-tint flex items-center justify-center mb-5">
-                  <span className="material-symbols-outlined text-accent-deep text-2xl">{icon}</span>
-                </div>
-                <h3 className="text-headline-h3 font-bold text-navy-deep mb-2">{title}</h3>
-                <p className="text-on-surface-variant text-body-main">{body}</p>
-              </div>
-            ))}
+
+          {/* What you see while it happens: the order, and the stored item. */}
+          <div className="mx-auto flex w-full max-w-[520px] items-start justify-center gap-5">
+            <div className="w-[248px] shrink-0">
+              <OrderScreen />
+            </div>
+            <div className="mt-16 hidden w-[248px] shrink-0 sm:block">
+              <StorageScreen />
+            </div>
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ── Two ways to store ── */}
-
       {/*
         The closed/open choice is the biggest functional difference in what
-        the service can do for someone, and it was documented in the product
-        spec but absent from the site entirely.
+        the service can do for someone. It is a difference you can see in a
+        second and only understand slowly from prose, so the picture leads.
       */}
-      <section className="py-24 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <div className="text-center mb-14">
-            <span className="font-label-caps text-accent-deep tracking-widest uppercase text-xs mb-3 block">
-              Two Ways To Store
-            </span>
-            <h2 className="text-headline-h1 font-bold text-navy-deep mb-3">
-              Sealed and untouched, or catalogued item by item
-            </h2>
-            <p className="text-on-surface-variant max-w-2xl mx-auto">
-              You choose per box, and you can mix the two. The difference decides how
-              precisely you can reach back into storage later.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-            {STORAGE_MODES.map(({ id, name, icon, tagline, body, bestFor, points }) => (
-              <div
-                key={id}
-                className="bg-surface-white rounded-xl shadow-tactile border border-outline-variant flex flex-col overflow-hidden"
-              >
-                {/*
-                  Closed versus open is a difference you can see in a second
-                  and only understand slowly from prose, so the picture leads
-                  and the text explains what it means.
-                */}
+      <Section tone="mist">
+        <SectionHeading
+          title="Sealed and untouched, or listed item by item"
+          lead="You choose per box, and you can mix the two. The difference decides how precisely you can reach back into storage later."
+        />
+        <div className="grid gap-gutter md:grid-cols-2">
+          {STORAGE_MODES.map(({ id, name, tagline, body, bestFor, points }, i) => (
+            <article
+              key={id}
+              data-reveal
+              style={{ ["--i" as string]: i }}
+              className="flex flex-col overflow-hidden rounded-2xl border border-outline-variant bg-surface-white"
+            >
+              <div className="relative aspect-[16/9] border-b border-outline-variant bg-mist">
                 <SitePhoto
-                  id={id === "closed" ? "storage-closed-box" : "storage-open-box"}
-                  rounded=""
+                  id={id === "closed" ? "box-closed" : "box-open"}
+                  sizes="(min-width: 1280px) 576px, (min-width: 768px) 50vw, 100vw"
+                  className="absolute inset-0"
                 />
-
-                <div className="p-8 md:p-10 flex flex-col flex-1">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="w-12 h-12 rounded-lg bg-sky-tint flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-accent-deep text-3xl">
-                      {icon}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-headline-h3 font-bold text-navy-deep">{name}</h3>
-                    <p className="text-sm text-accent-deep font-body-strong">{tagline}</p>
-                  </div>
-                </div>
-
-                <p className="text-on-surface-variant text-body-main mb-6">{body}</p>
-
-                <ul className="space-y-2.5 mb-6">
+              </div>
+              <div className="flex flex-1 flex-col p-6 sm:p-8">
+                <p className="text-sm font-semibold text-accent-deep">{tagline}</p>
+                <h3 className="mt-1 text-headline-h2 font-semibold text-navy-deep">{name}</h3>
+                <p className="mt-3 text-body-main text-on-surface-variant">{body}</p>
+                <ul className="mt-5 mb-auto space-y-2.5">
                   {points.map((point) => (
-                    <li key={point} className="flex items-start gap-3 text-navy-deep text-sm">
-                      <span
-                        aria-hidden="true"
-                        className="material-symbols-outlined text-accent-deep text-lg shrink-0"
-                      >
-                        check_circle
+                    <li key={point} className="flex items-start gap-3 text-[15px] text-navy-deep">
+                      <span aria-hidden="true" className="material-symbols-outlined mt-0.5 shrink-0 text-lg text-accent-deep">
+                        check
                       </span>
                       {point}
                     </li>
                   ))}
                 </ul>
-
-                <p className="mt-auto pt-5 border-t border-outline-variant text-sm text-on-surface-variant">
-                  <span className="font-body-strong text-navy-deep">Best for: </span>
+                <p className="mt-6 border-t border-outline-variant pt-5 text-sm text-on-surface-variant">
+                  <span className="font-semibold text-navy-deep">Best for: </span>
                   {bestFor}
                 </p>
-                </div>
               </div>
-            ))}
-          </div>
+            </article>
+          ))}
         </div>
-      </section>
+      </Section>
 
-      {/* ── Proof: inside the facility ── */}
-      <FacilityProof tone="light" />
-
-      {/* ── Comparison strip ── */}
-      <section className="py-24 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <div className="text-center mb-12">
-            <span className="font-label-caps text-accent-deep tracking-widest uppercase text-xs mb-3 block">
-              Versus The Alternatives
-            </span>
-            <h2 className="text-headline-h1 font-bold text-navy-deep mb-3">
-              Stop renting space you don&apos;t use
+      {/* ── Who it's for ── */}
+      {/*
+        Self-identification. A visitor who recognises their own situation in
+        one of these converts far better than one who has to work out whether
+        a generic "storage" pitch applies to them. A ruled list, not a grid of
+        cards: nine cards in a row is a wall, a list can be scanned.
+      */}
+      <Section>
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-16">
+          <div data-reveal className="lg:sticky lg:top-36 lg:self-start">
+            <h2 className="text-headline-h1 font-bold text-navy-deep">
+              Most people come to us for one of these reasons
             </h2>
-            <p className="text-on-surface-variant max-w-2xl mx-auto">
-              The smallest self-storage unit in Cape Town is bigger than most people
-              need. Pay by the box instead — and let someone else do the driving.
+            <p className="mt-4 text-body-lead text-on-surface-variant">
+              If one of them is your situation, the service was built for it.
             </p>
           </div>
-          <ComparisonTable rows={withLivePrices(FEATURED_ROWS, BOX_TYPES)} />
-          <div className="text-center mt-10">
-            <Link
-              href="/compare"
-              className="text-accent-deep font-body-strong hover:underline inline-flex items-center gap-1"
-            >
-              See the full comparison — including where we lose
-              <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <SectionDivider from="mist" to="navyDeep" variant="angle" />
-
-      {/* ── Simple pricing ── */}
-      <section className="py-24 bg-navy-deep text-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <span className="font-label-caps text-sky tracking-widest uppercase text-xs mb-4 block">
-                Simple Pricing
-              </span>
-              <h2 className="text-headline-h1 font-bold mb-6">
-                From R{BOX_FROM} per box, per month
-              </h2>
-              <p className="text-on-navy text-lg mb-8">
-                No rigid plans and no paying for empty space. You pay for the boxes and
-                items you actually store, billed monthly — cancel any time.
-              </p>
-              <div className="space-y-5">
-                {[
-                  {
-                    icon: "inventory_2",
-                    title: "Box-level precision",
-                    desc: "Four standard sizes, priced individually. Add or remove boxes as your life changes.",
-                  },
-                  {
-                    icon: "shopping_basket",
-                    title: "Loose and oversized items",
-                    desc: "Bicycles, surfboards and furniture are priced by the space they actually occupy.",
-                  },
-                  {
-                    icon: "verified",
-                    title: "Everything else included",
-                    desc: "Photo inventory, barcode tracking and your dashboard cost nothing extra.",
-                  },
-                ].map(({ icon, title, desc }) => (
-                  <div key={title} className="flex items-start gap-4">
-                    <div className="bg-surface-white/10 p-2 rounded-lg shrink-0">
-                      <span className="material-symbols-outlined text-sky">{icon}</span>
-                    </div>
-                    <div>
-                      <h3 className="font-body-strong">{title}</h3>
-                      <p className="text-on-navy-variant text-sm">{desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {BOX_TYPES.map(({ id, label, price, desc }) => (
-                <div
-                  key={id}
-                  className="bg-surface-white/5 border border-surface-white/10 p-6 rounded-xl hover:bg-surface-white/10 transition-colors"
-                >
-                  <p className="font-label-caps text-sky uppercase text-xs mb-2">{label}</p>
-                  <div className="flex items-baseline gap-1 mb-3">
-                    <span className="text-2xl font-bold">R{price}</span>
-                    <span className="text-on-navy-variant text-xs">/mo</span>
-                  </div>
-                  <p className="text-xs text-on-navy-variant">{desc}</p>
+          <ul className="grid gap-x-10 sm:grid-cols-2">
+            {USE_CASES.map(({ icon, title, body }, i) => (
+              <li
+                key={title}
+                data-reveal
+                style={{ ["--i" as string]: i % 2 }}
+                className="flex gap-4 border-t border-outline-variant py-5"
+              >
+                <span aria-hidden="true" className="material-symbols-outlined mt-0.5 shrink-0 text-2xl text-accent-deep">
+                  {icon}
+                </span>
+                <div>
+                  <h3 className="font-semibold text-navy-deep">{title}</h3>
+                  <p className="mt-1 text-[15px] leading-relaxed text-on-surface-variant">{body}</p>
                 </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Section>
+
+      {/* ── Proof: inside the facility ── */}
+      <FacilityProof tone="mist" />
+
+      {/* ── Pricing ── */}
+      <Section tone="navy">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div data-reveal>
+            <h2 className="text-headline-h1 font-bold">From R{boxFrom} per box, per month</h2>
+            <p className="mt-4 text-body-lead text-on-navy">
+              No plans and no paying for empty space. You pay for the boxes and items you
+              actually store, billed monthly, and you can stop at any time.
+            </p>
+            <div className="mt-8 space-y-6">
+              {PRICING_POINTS.map(({ icon, title, desc }) => (
+                <IconPoint key={title} icon={icon} title={title} dark>
+                  {desc}
+                </IconPoint>
               ))}
             </div>
           </div>
+          <div>
+            <BoxScale boxes={boxes} dark />
+            <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-surface-white/10 sm:grid-cols-4">
+              {boxes.map(({ id, label, price }) => (
+                <div key={id} className="bg-navy-deep p-4">
+                  <dt className="text-xs text-on-navy-variant">{label}</dt>
+                  <dd className="mt-1 text-xl font-bold">
+                    R{price}
+                    <span className="text-xs font-normal text-on-navy-variant"> /mo</span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-3 text-xs text-on-navy-variant">
+              Boxes drawn to scale by volume, beside a dining chair.{" "}
+              <Link href="/pricing" className="text-on-navy underline underline-offset-4 hover:text-surface-white">
+                Full price list
+              </Link>
+            </p>
+          </div>
         </div>
-      </section>
-
-      <SectionDivider from="navyDeep" to="mist" variant="wave" />
+      </Section>
 
       {/* ── Calculator ── */}
       <QuickCalculator prices={prices} />
 
-      {/* ── Testimonials ── */}
-      <section className="py-24 bg-navy">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <div className="mb-14">
-            <h2 className="text-headline-h1 font-bold text-surface-white mb-2">
-              Trusted by {CUSTOMER_COUNT} Capetonians
-            </h2>
-            <p className="text-on-navy-variant">
-              See how we&apos;re changing the way the city lives.
-            </p>
+      {/* ── Across Cape Town ── */}
+      {/*
+        "Do you come to me?" is the first question nearly every caller asks.
+        Answering it on the homepage, for the whole metro, is the
+        local-relevance signal that matters most to a visitor and to a suburb
+        search alike.
+      */}
+      <Section>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
+          <div>
+            <SectionHeading
+              title="Wherever you live in Cape Town, we come to you"
+              lead="One facility and one fleet, covering the whole metro. Storage costs the same in every suburb, and the collection fee depends on the vehicle you need, not on how far you are from us."
+              className="!mb-8"
+            />
+            <div data-reveal className="rounded-2xl border border-outline-variant bg-mist p-5 sm:p-6">
+              <SuburbChecker />
+            </div>
+            <RegionList className="mt-8" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            {TESTIMONIALS.map(({ quote, name, initials, location, stars }) => (
-              <div
-                key={name}
-                className="bg-surface-white/10 p-8 rounded-xl border border-surface-white/5"
-              >
-                <div className="flex gap-1 mb-4" aria-label={`${stars} out of 5 stars`}>
-                  {Array.from({ length: stars }).map((_, i) => (
-                    <span
-                      key={i}
-                      aria-hidden="true"
-                      className="material-symbols-outlined material-symbols-filled text-sky"
-                    >
-                      star
-                    </span>
-                  ))}
-                </div>
-                <p className="text-on-navy italic mb-8 text-body-main">&ldquo;{quote}&rdquo;</p>
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-sky text-navy-deep flex items-center justify-center font-bold text-sm">
-                    {initials}
-                  </div>
-                  <div>
-                    <p className="text-surface-white font-body-strong">{name}</p>
-                    <p className="text-xs text-on-navy-variant">{location}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="lg:sticky lg:top-36 lg:self-start">
+            <CoverageMap />
           </div>
         </div>
-      </section>
+      </Section>
+
+      {/* ── Comparison strip ── */}
+      <Section tone="mist">
+        <SectionHeading
+          title="Stop renting space you do not use"
+          lead="The smallest self-storage unit in Cape Town is bigger than most people need. Pay by the box instead, and let someone else do the driving."
+        />
+        <div data-reveal>
+          <ComparisonTable rows={withLivePrices(FEATURED_ROWS, boxes)} />
+        </div>
+        <Link
+          href="/compare"
+          className="mt-8 inline-flex items-center gap-1.5 font-semibold text-accent-deep hover:underline"
+        >
+          See the full comparison, including where we lose
+          <span aria-hidden="true" className="material-symbols-outlined text-lg">arrow_forward</span>
+        </Link>
+      </Section>
 
       {/* ── FAQ ── */}
       <FAQAccordion />
 
-      {/* ── Closing CTA ── */}
-      <section className="py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <div className="bg-accent rounded-xl p-10 md:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="relative z-10">
-              <h2 className="text-headline-h1 font-bold text-on-accent mb-3">
-                Ready to reclaim your space?
-              </h2>
-              <p className="text-on-accent/90 text-lg max-w-xl">
-                The service starts at your door, stores your boxes safely, and ends right
-                back at your door. Pay by the box, not by the locker.
-              </p>
-            </div>
-            <div className="relative z-10 flex flex-col sm:flex-row gap-4 shrink-0">
-              <a
-                href={`${APP_URL}/register`}
-                className="bg-navy-deep text-surface-white px-8 py-4 rounded-xl font-body-strong shadow-lg hover:bg-navy transition-colors text-center"
-              >
-                Get started
-              </a>
-              <Link
-                href="/contact"
-                className="bg-surface-white text-navy-deep px-8 py-4 rounded-xl font-body-strong hover:bg-sky-tint transition-colors text-center"
-              >
-                Speak to an expert
-              </Link>
-            </div>
-            <div className="absolute -right-16 -bottom-16 w-72 h-72 bg-navy-deep/10 rounded-full pointer-events-none" />
-            <div className="absolute -left-16 -top-16 w-56 h-56 bg-navy-deep/10 rounded-full pointer-events-none" />
-            {/* Van watermark — reinforces "we bring it back" without stealing the CTA */}
-            <div className="hidden lg:block absolute -right-4 -bottom-6 w-[280px] text-navy-deep opacity-[0.18] pointer-events-none">
-              <DeliveryVanArt accent="currentColor" surface={PALETTE.accent} />
-            </div>
-          </div>
-        </div>
-      </section>
+      <ClosingCta
+        title="Ready to get your space back?"
+        body="It starts at your door and ends at your door. Price your load in about a minute; no account needed to see the number."
+      />
     </>
   );
 }

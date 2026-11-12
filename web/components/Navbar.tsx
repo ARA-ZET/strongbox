@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { APP_URL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF, CONTACT_EMAIL_HREF } from "@/lib/constants";
 
 /**
@@ -12,10 +12,10 @@ import { APP_URL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF, CONTACT_EMAIL_HREF 
  * and stay in the mobile drawer and the footer.
  */
 const links = [
-  { href: "/how-it-works", label: "How It Works" },
+  { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
   { href: "/compare", label: "Compare" },
-  { href: "/tools", label: "Free Tools" },
+  { href: "/tools", label: "Free tools" },
   { href: "/resources", label: "Guides" },
   { href: "/about", label: "About" },
 ];
@@ -24,14 +24,34 @@ const links = [
 const mobileLinks = [
   { href: "/", label: "Home" },
   ...links,
-  { href: "/loose-items", label: "Loose Items" },
-  { href: "/areas", label: "Areas We Serve" },
+  { href: "/loose-items", label: "Loose items" },
+  { href: "/areas", label: "Areas we serve" },
   { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // A new page means the menu's job is done, however the visitor got there.
+  useEffect(() => setMobileOpen(false), [pathname]);
+
+  /*
+   * While the menu is open: Escape closes it, and the page behind it does not
+   * scroll. Without the lock, a swipe on the menu scrolled the page underneath
+   * and the menu stayed pinned over content the visitor could no longer see.
+   */
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMobileOpen(false);
+    document.addEventListener("keydown", onKey);
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = overflow;
+    };
+  }, [mobileOpen]);
 
   /*
    * Prefix match, so `/resources/moving-out-checklist` still highlights
@@ -41,7 +61,7 @@ export default function Navbar() {
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <nav className="fixed top-0 w-full h-[72px] bg-surface-white shadow-tactile z-50">
+    <nav aria-label="Main" className="fixed top-0 w-full h-[72px] bg-surface-white shadow-tactile z-50">
       {/*
         Three-column grid rather than justify-between. The nav column is sized
         to its content and the two 1fr side columns split the remainder evenly,
@@ -107,21 +127,22 @@ export default function Navbar() {
             href={`${APP_URL}/login`}
             className="hidden lg:inline whitespace-nowrap text-navy-deep text-sm font-semibold xl:text-body-strong hover:text-accent-deep transition-colors"
           >
-            Log In
+            Log in
           </a>
           <a
             href={`${APP_URL}/register`}
-            className="hidden lg:inline whitespace-nowrap bg-accent text-on-accent px-5 py-2.5 xl:px-6 xl:py-3 rounded-xl text-sm font-semibold xl:text-body-strong hover:opacity-90 active:scale-95 transition-all"
+            className="hidden lg:inline whitespace-nowrap bg-accent text-on-accent px-5 py-2.5 xl:px-6 xl:py-3 rounded-xl text-sm font-semibold xl:text-body-strong hover:bg-accent-deep transition-colors"
           >
-            Get Started Free
+            Get started
           </a>
 
           {/* Hamburger — everything below lg */}
           <button
-            className="lg:hidden p-2 -mr-2 text-navy-deep"
+            className="lg:hidden flex h-11 w-11 items-center justify-center -mr-2 text-navy-deep"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-expanded={mobileOpen}
-            aria-label="Toggle menu"
+            aria-controls="mobile-menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
             <span className="material-symbols-outlined text-3xl">
               {mobileOpen ? "close" : "menu"}
@@ -132,21 +153,25 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden absolute top-[72px] left-0 w-full bg-surface-white shadow-tactile-md z-50">
-          <div className="max-w-bar-max mx-auto py-6 px-6 flex flex-col gap-4">
+        <div
+          id="mobile-menu"
+          className="lg:hidden absolute top-[72px] left-0 w-full max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-contain bg-surface-white shadow-tactile-md z-50 border-t border-outline-variant/40"
+        >
+          <div className="max-w-bar-max mx-auto py-4 px-5 flex flex-col">
             {mobileLinks.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
                 onClick={() => setMobileOpen(false)}
-                className={`text-body-strong py-2 border-b border-outline-variant/30 ${
+                aria-current={isActive(href) ? "page" : undefined}
+                className={`text-body-strong flex min-h-[48px] items-center border-b border-outline-variant/30 ${
                   isActive(href) ? "text-accent-deep" : "text-navy-deep"
                 }`}
               >
                 {label}
               </Link>
             ))}
-            <div className="flex flex-col gap-3 pt-2 border-t border-outline-variant/30 mt-2">
+            <div className="flex flex-col gap-3 pt-5">
               <a
                 href={CONTACT_PHONE_HREF}
                 className="flex items-center justify-center gap-2 text-navy-deep py-2 font-body-strong"
@@ -159,19 +184,19 @@ export default function Navbar() {
                 className="flex items-center justify-center gap-2 text-navy-deep py-2 font-body-strong"
               >
                 <span className="material-symbols-outlined text-lg">mail</span>
-                Email Us
+                Email us
               </a>
               <a
                 href={`${APP_URL}/login`}
-                className="text-center border border-navy-deep text-navy-deep py-3 rounded-xl font-body-strong"
+                className="text-center border border-navy-deep/25 text-navy-deep py-3 rounded-xl font-body-strong"
               >
-                Log In
+                Log in
               </a>
               <a
                 href={`${APP_URL}/register`}
                 className="text-center bg-accent text-on-accent py-3 rounded-xl font-body-strong"
               >
-                Get Started Free
+                Get started
               </a>
             </div>
           </div>

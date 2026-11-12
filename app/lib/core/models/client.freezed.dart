@@ -35,6 +35,10 @@ mixin _$Client {
   List<String> get memberIds => throw _privateConstructorUsedError;
   int get storageUnitCount => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
+
+  /// Set while the account is closing, and kept after it closes. Written
+  /// only by the account-closure Cloud Functions.
+  AccountClosure? get closure => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
   bool get isDeleted => throw _privateConstructorUsedError;
   @NullableTimestampConverter()
@@ -67,12 +71,14 @@ abstract class $ClientCopyWith<$Res> {
       List<String> memberIds,
       int storageUnitCount,
       String? notes,
+      AccountClosure? closure,
       bool isActive,
       bool isDeleted,
       @NullableTimestampConverter() DateTime? deletedAt,
       @NullableTimestampConverter() DateTime? createdAt});
 
   $AddressCopyWith<$Res> get address;
+  $AccountClosureCopyWith<$Res>? get closure;
 }
 
 /// @nodoc
@@ -102,6 +108,7 @@ class _$ClientCopyWithImpl<$Res, $Val extends Client>
     Object? memberIds = null,
     Object? storageUnitCount = null,
     Object? notes = freezed,
+    Object? closure = freezed,
     Object? isActive = null,
     Object? isDeleted = null,
     Object? deletedAt = freezed,
@@ -164,6 +171,10 @@ class _$ClientCopyWithImpl<$Res, $Val extends Client>
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
+      closure: freezed == closure
+          ? _value.closure
+          : closure // ignore: cast_nullable_to_non_nullable
+              as AccountClosure?,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
@@ -190,6 +201,18 @@ class _$ClientCopyWithImpl<$Res, $Val extends Client>
       return _then(_value.copyWith(address: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $AccountClosureCopyWith<$Res>? get closure {
+    if (_value.closure == null) {
+      return null;
+    }
+
+    return $AccountClosureCopyWith<$Res>(_value.closure!, (value) {
+      return _then(_value.copyWith(closure: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -214,6 +237,7 @@ abstract class _$$ClientImplCopyWith<$Res> implements $ClientCopyWith<$Res> {
       List<String> memberIds,
       int storageUnitCount,
       String? notes,
+      AccountClosure? closure,
       bool isActive,
       bool isDeleted,
       @NullableTimestampConverter() DateTime? deletedAt,
@@ -221,6 +245,8 @@ abstract class _$$ClientImplCopyWith<$Res> implements $ClientCopyWith<$Res> {
 
   @override
   $AddressCopyWith<$Res> get address;
+  @override
+  $AccountClosureCopyWith<$Res>? get closure;
 }
 
 /// @nodoc
@@ -248,6 +274,7 @@ class __$$ClientImplCopyWithImpl<$Res>
     Object? memberIds = null,
     Object? storageUnitCount = null,
     Object? notes = freezed,
+    Object? closure = freezed,
     Object? isActive = null,
     Object? isDeleted = null,
     Object? deletedAt = freezed,
@@ -310,6 +337,10 @@ class __$$ClientImplCopyWithImpl<$Res>
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
+      closure: freezed == closure
+          ? _value.closure
+          : closure // ignore: cast_nullable_to_non_nullable
+              as AccountClosure?,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
@@ -348,6 +379,7 @@ class _$ClientImpl implements _Client {
       final List<String> memberIds = const [],
       this.storageUnitCount = 0,
       this.notes,
+      this.closure,
       this.isActive = true,
       this.isDeleted = false,
       @NullableTimestampConverter() this.deletedAt,
@@ -400,6 +432,11 @@ class _$ClientImpl implements _Client {
   final int storageUnitCount;
   @override
   final String? notes;
+
+  /// Set while the account is closing, and kept after it closes. Written
+  /// only by the account-closure Cloud Functions.
+  @override
+  final AccountClosure? closure;
   @override
   @JsonKey()
   final bool isActive;
@@ -415,7 +452,7 @@ class _$ClientImpl implements _Client {
 
   @override
   String toString() {
-    return 'Client(id: $id, tenantId: $tenantId, primaryUserId: $primaryUserId, displayName: $displayName, email: $email, phone: $phone, address: $address, type: $type, stripeCustomerId: $stripeCustomerId, subscriptionId: $subscriptionId, subscriptionStatus: $subscriptionStatus, memberIds: $memberIds, storageUnitCount: $storageUnitCount, notes: $notes, isActive: $isActive, isDeleted: $isDeleted, deletedAt: $deletedAt, createdAt: $createdAt)';
+    return 'Client(id: $id, tenantId: $tenantId, primaryUserId: $primaryUserId, displayName: $displayName, email: $email, phone: $phone, address: $address, type: $type, stripeCustomerId: $stripeCustomerId, subscriptionId: $subscriptionId, subscriptionStatus: $subscriptionStatus, memberIds: $memberIds, storageUnitCount: $storageUnitCount, notes: $notes, closure: $closure, isActive: $isActive, isDeleted: $isDeleted, deletedAt: $deletedAt, createdAt: $createdAt)';
   }
 
   @override
@@ -445,6 +482,7 @@ class _$ClientImpl implements _Client {
             (identical(other.storageUnitCount, storageUnitCount) ||
                 other.storageUnitCount == storageUnitCount) &&
             (identical(other.notes, notes) || other.notes == notes) &&
+            (identical(other.closure, closure) || other.closure == closure) &&
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
             (identical(other.isDeleted, isDeleted) ||
@@ -457,26 +495,28 @@ class _$ClientImpl implements _Client {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      tenantId,
-      primaryUserId,
-      displayName,
-      email,
-      phone,
-      address,
-      type,
-      stripeCustomerId,
-      subscriptionId,
-      subscriptionStatus,
-      const DeepCollectionEquality().hash(_memberIds),
-      storageUnitCount,
-      notes,
-      isActive,
-      isDeleted,
-      deletedAt,
-      createdAt);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        tenantId,
+        primaryUserId,
+        displayName,
+        email,
+        phone,
+        address,
+        type,
+        stripeCustomerId,
+        subscriptionId,
+        subscriptionStatus,
+        const DeepCollectionEquality().hash(_memberIds),
+        storageUnitCount,
+        notes,
+        closure,
+        isActive,
+        isDeleted,
+        deletedAt,
+        createdAt
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -508,6 +548,7 @@ abstract class _Client implements Client {
       final List<String> memberIds,
       final int storageUnitCount,
       final String? notes,
+      final AccountClosure? closure,
       final bool isActive,
       final bool isDeleted,
       @NullableTimestampConverter() final DateTime? deletedAt,
@@ -544,6 +585,11 @@ abstract class _Client implements Client {
   @override
   String? get notes;
   @override
+
+  /// Set while the account is closing, and kept after it closes. Written
+  /// only by the account-closure Cloud Functions.
+  AccountClosure? get closure;
+  @override
   bool get isActive;
   @override
   bool get isDeleted;
@@ -556,5 +602,384 @@ abstract class _Client implements Client {
   @override
   @JsonKey(ignore: true)
   _$$ClientImplCopyWith<_$ClientImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+AccountClosure _$AccountClosureFromJson(Map<String, dynamic> json) {
+  return _AccountClosure.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AccountClosure {
+  ClosureStatus get status => throw _privateConstructorUsedError;
+  @NullableTimestampConverter()
+  DateTime? get requestedAt => throw _privateConstructorUsedError;
+  @NullableTimestampConverter()
+  DateTime? get scheduledFor => throw _privateConstructorUsedError;
+
+  /// uid of whoever asked — the client, or an admin on their behalf.
+  String get requestedBy => throw _privateConstructorUsedError;
+  UserRole get requestedByRole => throw _privateConstructorUsedError;
+
+  /// Why, or how they asked (admin-entered), e.g. "Emailed 12 Nov".
+  String? get reason => throw _privateConstructorUsedError;
+  @NullableTimestampConverter()
+  DateTime? get closedAt => throw _privateConstructorUsedError;
+
+  /// uid of the admin who closed it early, or `system` for the sweep.
+  String? get closedBy => throw _privateConstructorUsedError;
+  @NullableTimestampConverter()
+  DateTime? get retainUntil => throw _privateConstructorUsedError;
+  @NullableTimestampConverter()
+  DateTime? get purgedAt => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $AccountClosureCopyWith<AccountClosure> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AccountClosureCopyWith<$Res> {
+  factory $AccountClosureCopyWith(
+          AccountClosure value, $Res Function(AccountClosure) then) =
+      _$AccountClosureCopyWithImpl<$Res, AccountClosure>;
+  @useResult
+  $Res call(
+      {ClosureStatus status,
+      @NullableTimestampConverter() DateTime? requestedAt,
+      @NullableTimestampConverter() DateTime? scheduledFor,
+      String requestedBy,
+      UserRole requestedByRole,
+      String? reason,
+      @NullableTimestampConverter() DateTime? closedAt,
+      String? closedBy,
+      @NullableTimestampConverter() DateTime? retainUntil,
+      @NullableTimestampConverter() DateTime? purgedAt});
+}
+
+/// @nodoc
+class _$AccountClosureCopyWithImpl<$Res, $Val extends AccountClosure>
+    implements $AccountClosureCopyWith<$Res> {
+  _$AccountClosureCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? status = null,
+    Object? requestedAt = freezed,
+    Object? scheduledFor = freezed,
+    Object? requestedBy = null,
+    Object? requestedByRole = null,
+    Object? reason = freezed,
+    Object? closedAt = freezed,
+    Object? closedBy = freezed,
+    Object? retainUntil = freezed,
+    Object? purgedAt = freezed,
+  }) {
+    return _then(_value.copyWith(
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ClosureStatus,
+      requestedAt: freezed == requestedAt
+          ? _value.requestedAt
+          : requestedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      scheduledFor: freezed == scheduledFor
+          ? _value.scheduledFor
+          : scheduledFor // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      requestedBy: null == requestedBy
+          ? _value.requestedBy
+          : requestedBy // ignore: cast_nullable_to_non_nullable
+              as String,
+      requestedByRole: null == requestedByRole
+          ? _value.requestedByRole
+          : requestedByRole // ignore: cast_nullable_to_non_nullable
+              as UserRole,
+      reason: freezed == reason
+          ? _value.reason
+          : reason // ignore: cast_nullable_to_non_nullable
+              as String?,
+      closedAt: freezed == closedAt
+          ? _value.closedAt
+          : closedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      closedBy: freezed == closedBy
+          ? _value.closedBy
+          : closedBy // ignore: cast_nullable_to_non_nullable
+              as String?,
+      retainUntil: freezed == retainUntil
+          ? _value.retainUntil
+          : retainUntil // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      purgedAt: freezed == purgedAt
+          ? _value.purgedAt
+          : purgedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AccountClosureImplCopyWith<$Res>
+    implements $AccountClosureCopyWith<$Res> {
+  factory _$$AccountClosureImplCopyWith(_$AccountClosureImpl value,
+          $Res Function(_$AccountClosureImpl) then) =
+      __$$AccountClosureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {ClosureStatus status,
+      @NullableTimestampConverter() DateTime? requestedAt,
+      @NullableTimestampConverter() DateTime? scheduledFor,
+      String requestedBy,
+      UserRole requestedByRole,
+      String? reason,
+      @NullableTimestampConverter() DateTime? closedAt,
+      String? closedBy,
+      @NullableTimestampConverter() DateTime? retainUntil,
+      @NullableTimestampConverter() DateTime? purgedAt});
+}
+
+/// @nodoc
+class __$$AccountClosureImplCopyWithImpl<$Res>
+    extends _$AccountClosureCopyWithImpl<$Res, _$AccountClosureImpl>
+    implements _$$AccountClosureImplCopyWith<$Res> {
+  __$$AccountClosureImplCopyWithImpl(
+      _$AccountClosureImpl _value, $Res Function(_$AccountClosureImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? status = null,
+    Object? requestedAt = freezed,
+    Object? scheduledFor = freezed,
+    Object? requestedBy = null,
+    Object? requestedByRole = null,
+    Object? reason = freezed,
+    Object? closedAt = freezed,
+    Object? closedBy = freezed,
+    Object? retainUntil = freezed,
+    Object? purgedAt = freezed,
+  }) {
+    return _then(_$AccountClosureImpl(
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ClosureStatus,
+      requestedAt: freezed == requestedAt
+          ? _value.requestedAt
+          : requestedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      scheduledFor: freezed == scheduledFor
+          ? _value.scheduledFor
+          : scheduledFor // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      requestedBy: null == requestedBy
+          ? _value.requestedBy
+          : requestedBy // ignore: cast_nullable_to_non_nullable
+              as String,
+      requestedByRole: null == requestedByRole
+          ? _value.requestedByRole
+          : requestedByRole // ignore: cast_nullable_to_non_nullable
+              as UserRole,
+      reason: freezed == reason
+          ? _value.reason
+          : reason // ignore: cast_nullable_to_non_nullable
+              as String?,
+      closedAt: freezed == closedAt
+          ? _value.closedAt
+          : closedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      closedBy: freezed == closedBy
+          ? _value.closedBy
+          : closedBy // ignore: cast_nullable_to_non_nullable
+              as String?,
+      retainUntil: freezed == retainUntil
+          ? _value.retainUntil
+          : retainUntil // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      purgedAt: freezed == purgedAt
+          ? _value.purgedAt
+          : purgedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AccountClosureImpl extends _AccountClosure {
+  const _$AccountClosureImpl(
+      {this.status = ClosureStatus.requested,
+      @NullableTimestampConverter() this.requestedAt,
+      @NullableTimestampConverter() this.scheduledFor,
+      this.requestedBy = '',
+      this.requestedByRole = UserRole.client,
+      this.reason,
+      @NullableTimestampConverter() this.closedAt,
+      this.closedBy,
+      @NullableTimestampConverter() this.retainUntil,
+      @NullableTimestampConverter() this.purgedAt})
+      : super._();
+
+  factory _$AccountClosureImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AccountClosureImplFromJson(json);
+
+  @override
+  @JsonKey()
+  final ClosureStatus status;
+  @override
+  @NullableTimestampConverter()
+  final DateTime? requestedAt;
+  @override
+  @NullableTimestampConverter()
+  final DateTime? scheduledFor;
+
+  /// uid of whoever asked — the client, or an admin on their behalf.
+  @override
+  @JsonKey()
+  final String requestedBy;
+  @override
+  @JsonKey()
+  final UserRole requestedByRole;
+
+  /// Why, or how they asked (admin-entered), e.g. "Emailed 12 Nov".
+  @override
+  final String? reason;
+  @override
+  @NullableTimestampConverter()
+  final DateTime? closedAt;
+
+  /// uid of the admin who closed it early, or `system` for the sweep.
+  @override
+  final String? closedBy;
+  @override
+  @NullableTimestampConverter()
+  final DateTime? retainUntil;
+  @override
+  @NullableTimestampConverter()
+  final DateTime? purgedAt;
+
+  @override
+  String toString() {
+    return 'AccountClosure(status: $status, requestedAt: $requestedAt, scheduledFor: $scheduledFor, requestedBy: $requestedBy, requestedByRole: $requestedByRole, reason: $reason, closedAt: $closedAt, closedBy: $closedBy, retainUntil: $retainUntil, purgedAt: $purgedAt)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AccountClosureImpl &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.requestedAt, requestedAt) ||
+                other.requestedAt == requestedAt) &&
+            (identical(other.scheduledFor, scheduledFor) ||
+                other.scheduledFor == scheduledFor) &&
+            (identical(other.requestedBy, requestedBy) ||
+                other.requestedBy == requestedBy) &&
+            (identical(other.requestedByRole, requestedByRole) ||
+                other.requestedByRole == requestedByRole) &&
+            (identical(other.reason, reason) || other.reason == reason) &&
+            (identical(other.closedAt, closedAt) ||
+                other.closedAt == closedAt) &&
+            (identical(other.closedBy, closedBy) ||
+                other.closedBy == closedBy) &&
+            (identical(other.retainUntil, retainUntil) ||
+                other.retainUntil == retainUntil) &&
+            (identical(other.purgedAt, purgedAt) ||
+                other.purgedAt == purgedAt));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      status,
+      requestedAt,
+      scheduledFor,
+      requestedBy,
+      requestedByRole,
+      reason,
+      closedAt,
+      closedBy,
+      retainUntil,
+      purgedAt);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AccountClosureImplCopyWith<_$AccountClosureImpl> get copyWith =>
+      __$$AccountClosureImplCopyWithImpl<_$AccountClosureImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AccountClosureImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AccountClosure extends AccountClosure {
+  const factory _AccountClosure(
+          {final ClosureStatus status,
+          @NullableTimestampConverter() final DateTime? requestedAt,
+          @NullableTimestampConverter() final DateTime? scheduledFor,
+          final String requestedBy,
+          final UserRole requestedByRole,
+          final String? reason,
+          @NullableTimestampConverter() final DateTime? closedAt,
+          final String? closedBy,
+          @NullableTimestampConverter() final DateTime? retainUntil,
+          @NullableTimestampConverter() final DateTime? purgedAt}) =
+      _$AccountClosureImpl;
+  const _AccountClosure._() : super._();
+
+  factory _AccountClosure.fromJson(Map<String, dynamic> json) =
+      _$AccountClosureImpl.fromJson;
+
+  @override
+  ClosureStatus get status;
+  @override
+  @NullableTimestampConverter()
+  DateTime? get requestedAt;
+  @override
+  @NullableTimestampConverter()
+  DateTime? get scheduledFor;
+  @override
+
+  /// uid of whoever asked — the client, or an admin on their behalf.
+  String get requestedBy;
+  @override
+  UserRole get requestedByRole;
+  @override
+
+  /// Why, or how they asked (admin-entered), e.g. "Emailed 12 Nov".
+  String? get reason;
+  @override
+  @NullableTimestampConverter()
+  DateTime? get closedAt;
+  @override
+
+  /// uid of the admin who closed it early, or `system` for the sweep.
+  String? get closedBy;
+  @override
+  @NullableTimestampConverter()
+  DateTime? get retainUntil;
+  @override
+  @NullableTimestampConverter()
+  DateTime? get purgedAt;
+  @override
+  @JsonKey(ignore: true)
+  _$$AccountClosureImplCopyWith<_$AccountClosureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

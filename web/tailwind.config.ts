@@ -54,12 +54,17 @@ const config: Config = {
         "3xl": "24px",
         full: "9999px",
       },
+      /*
+       * Fluid type. The three heading sizes scale with the viewport between a
+       * phone floor and a desktop ceiling, so a 48px headline no longer lands
+       * on a 360px screen at 48px. Each is one class at every breakpoint.
+       */
       fontSize: {
-        "display-bold": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
-        "headline-h1": ["36px", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "700" }],
-        "headline-h1-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
-        "headline-h2": ["28px", { lineHeight: "1.3", fontWeight: "600" }],
-        "headline-h3": ["22px", { lineHeight: "1.4", fontWeight: "600" }],
+        "display-bold": ["clamp(2rem, 1.25rem + 3.2vw, 3.25rem)", { lineHeight: "1.08", letterSpacing: "-0.025em", fontWeight: "700" }],
+        "headline-h1": ["clamp(1.625rem, 1.2rem + 1.9vw, 2.375rem)", { lineHeight: "1.15", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "headline-h2": ["clamp(1.375rem, 1.15rem + 1vw, 1.75rem)", { lineHeight: "1.25", letterSpacing: "-0.01em", fontWeight: "600" }],
+        "headline-h3": ["clamp(1.125rem, 1.05rem + 0.4vw, 1.3125rem)", { lineHeight: "1.35", fontWeight: "600" }],
+        "body-lead": ["clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem)", { lineHeight: "1.6", fontWeight: "400" }],
         "body-main": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
         "body-strong": ["16px", { lineHeight: "1.6", fontWeight: "600" }],
         "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "700" }],

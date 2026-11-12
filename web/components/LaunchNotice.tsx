@@ -189,7 +189,10 @@ const NAVBAR_HEIGHT = 72;
  * discovered in the DOM, so the server renders the right layout and nothing
  * jumps on load.
  */
-const FULL_BANNER_PATHS = new Set(["/", "/contact"]);
+// The homepage used to carry the full banner inside its hero, where it pushed
+// the headline below the fold on phones. It now shows the slim bar like every
+// other page.
+const FULL_BANNER_PATHS = new Set(["/contact"]);
 
 /**
  * The slim launch bar pinned under the navbar on every page: date,
@@ -243,7 +246,7 @@ export function LaunchBar() {
           visible ? "translate-y-0" : "-translate-y-full invisible"
         }`}
       >
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop h-14 flex items-center gap-2 sm:gap-3">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop h-14 flex items-center gap-2 sm:gap-3">
           {/* The icon font sets its own `display`, so `hidden` goes on a wrapper. */}
           <span aria-hidden="true" className="hidden sm:flex shrink-0">
             <span className="material-symbols-outlined text-sky text-xl">

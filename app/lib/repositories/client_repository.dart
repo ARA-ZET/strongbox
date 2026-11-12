@@ -7,6 +7,10 @@ import 'repository_base.dart';
 /// Data access for clients (doc 09).
 abstract class ClientRepository {
   Stream<List<Client>> watchAll({required String tenantId});
+
+  /// Closed (archived) client records, newest closure first — kept for
+  /// the retention period for tax records and claims.
+  Stream<List<Client>> watchClosed({required String tenantId});
   Stream<Client?> watchClient(String id);
   Stream<Client?> watchByUserId(String tenantId, String userId);
   Future<Client?> getClient(String id);
@@ -38,6 +42,19 @@ class FirestoreClientRepository
           ..sort((a, b) => a.displayName
               .toLowerCase()
               .compareTo(b.displayName.toLowerCase()));
+        return list;
+      });
+
+  @override
+  Stream<List<Client>> watchClosed({required String tenantId}) => _clients
+      .where('tenantId', isEqualTo: tenantId)
+      // Archived records, deliberately (rule 4).
+      .where('isDeleted', isEqualTo: true)
+      .snapshots()
+      .map((snap) {
+        final list = snap.docs.map(Client.fromFirestore).toList()
+          ..sort((a, b) => (b.closure?.closedAt ?? b.deletedAt ?? DateTime(0))
+              .compareTo(a.closure?.closedAt ?? a.deletedAt ?? DateTime(0)));
         return list;
       });
 

@@ -17,10 +17,10 @@ export const metadata: Metadata = { robots: { index: false, follow: true } };
  */
 export default function NotFound() {
   return (
-    <section className="py-20 md:py-28 bg-mist min-h-[70vh] flex items-center">
-      <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid md:grid-cols-2 gap-12 items-center">
+    <section className="py-14 md:py-20 md:py-28 bg-mist min-h-[70vh] flex items-center">
+      <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <span className="font-label-caps text-accent-deep uppercase tracking-widest text-xs mb-4 block">
+          <span className="text-[13px] font-semibold text-accent-deep mb-3 block">
             Error 404
           </span>
           <h1 className="text-display-bold font-bold text-navy-deep mb-4">

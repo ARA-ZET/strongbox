@@ -23,7 +23,7 @@ export default function LegalPage({
   return (
     <>
       <section className="py-16 bg-navy-deep">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <Link
             href="/"
             className="inline-flex items-center gap-1 text-on-navy-variant hover:text-sky transition-colors text-sm font-body-strong mb-6"
@@ -37,7 +37,7 @@ export default function LegalPage({
       </section>
 
       <section className="py-16 bg-surface-white">
-        <div className="max-w-3xl mx-auto px-6 md:px-margin-desktop">
+        <div className="max-w-3xl mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <p className="text-on-surface-variant text-body-main mb-12">{intro}</p>
 
           <div className="space-y-10">

@@ -97,6 +97,10 @@ enum AuditAction {
   vehicleAdded,
   vehicleUpdated,
   vehicleRetired,
+  accountClosureRequested,
+  accountClosureCancelled,
+  accountClosed,
+  accountRecordsPurged,
 }
 
 enum PaymentStatus { paid, open, voided, uncollectible }
@@ -146,6 +150,15 @@ enum ScanType { pickup, delivery, audit, lookup }
 
 /// Outcome of a `mail` doc (written by the onMailCreated function).
 enum EmailDeliveryState { sending, sent, failed }
+
+/// Where a client's account closure is (functions/src/closure.js):
+/// requested → closed (login and contact details gone, records kept) →
+/// purged (records removed after the retention period).
+enum ClosureStatus { requested, closed, purged }
+
+/// What stops an account closing — mirrors closureBlockers() in
+/// functions/src/closure.js.
+enum ClosureBlockerKind { itemsHeld, openOrders, unpaidInvoices, unbilledCharges }
 
 /// What a fleet asset is. Trailers carry load but are towed, so they have
 /// no driver of their own.

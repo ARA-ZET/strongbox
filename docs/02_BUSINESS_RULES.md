@@ -44,6 +44,28 @@ These are the non-negotiable rules that govern how StrongBox works. Every develo
 - Team members cannot manage billing — only the primary account holder can.
 - Clients cannot see other clients' data under any circumstances.
 
+## Account Closure (POPIA deletion requests)
+Implemented in `functions/src/closure.js`; the patch functions there list every field touched.
+- A client asks in **Account settings → Close my account**, or an admin starts it on the client page
+  (**⋮ → Close account…**) when they asked by email or phone. Either way it closes **30 days** later;
+  the client is notified and emailed, can still sign in, and can cancel until then.
+- An account only closes when nothing blocks it: **no items in storage** (`inTransit` / `inStorage` /
+  `pendingDelivery`), **no open orders**, **no unpaid invoices**, and **no once-off charges waiting for
+  the 1st's invoice**. `dailyClosureSweep` (07:30 SAST) closes it on the first day after its date that
+  all four are clear, and alerts admins once if they aren't. An admin can **Close now** once all four
+  are clear.
+- **Cleared at closing:** the Auth login (and push tokens), phone, addresses (on the client and on every
+  order: street, access notes, notes; the suburb stays), admin notes about the client, their
+  notification inbox, admin alerts naming them, and copies of emails sent to them.
+- **Kept, admin-only, for 5 years** (tax records and claims, as the website's privacy policy says):
+  name, email, invoices, order history, unit records, photos and signatures. The client record is
+  archived (`isDeleted: true`, `closure.status: closed`) and listed under **Clients → Closed accounts**.
+- **Purged after 5 years:** name, email, photos and signatures (Storage files too), unit and item
+  descriptions, who signed. What remains is the account number on invoices. Audit events are never
+  edited and hold ids only.
+- Only the closure functions write `clients.closure`; firestore.rules stop clients writing it, and a
+  closed login reads nothing even before its last token expires.
+
 ## Drivers
 - Drivers cannot modify client subscriptions or billing.
 - Drivers cannot create or delete storage units — only scan, photograph, and update status.

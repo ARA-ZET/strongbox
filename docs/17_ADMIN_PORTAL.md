@@ -45,6 +45,15 @@ Quick Scan amber button at bottom of sidebar opens right-side scanner drawer.
 - Step 4 shows summary; Submit calls `jobRepository.create()`
 - On submit: job created, storage unit statuses updated, driver notified via FCM
 
+## Account Closure (client page)
+- Header **⋮ → Close account…** (also in the directory's row menu) starts a closure for a client who
+  asked by email or phone — optional note on how they asked. It closes 30 days later.
+- `AccountClosureCard` shows while closing: date, who asked, a live checklist (items returned,
+  orders finished, invoices settled, charges invoiced), **Cancel closure**, and **Close now** (enabled
+  when every check is ticked). Once closed: what was removed and the date the kept records are purged.
+- Directory filters: **Closing** (pending) and **Closed accounts** (archived records, read-only page).
+- Rules and retention: 02_BUSINESS_RULES.md → Account Closure.
+
 ## Permissions
 - All admin routes require `role == admin`
 - Admin can impersonate a client (logs AuditEvent with `action: adminImpersonated`)

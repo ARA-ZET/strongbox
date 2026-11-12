@@ -159,6 +159,11 @@ enum AuditAction {
   issueReported,
   shiftStarted,
   shiftEnded,
+  // account closure (functions/src/closure.js)
+  accountClosureRequested,
+  accountClosureCancelled,
+  accountClosed,
+  accountRecordsPurged,
 }
 ```
 
@@ -236,6 +241,20 @@ enum TenantPlan { starter, professional, enterprise }
 ```
 
 ---
+
+## ClosureStatus
+```dart
+/// requested → closed (login + contact details removed, records kept 5 years)
+/// → purged (records removed). Written only by the account-closure functions.
+enum ClosureStatus { requested, closed, purged }
+```
+
+## ClosureBlockerKind
+```dart
+/// What stops an account closing: items we still hold, open orders,
+/// unpaid invoices, once-off charges not invoiced yet.
+enum ClosureBlockerKind { itemsHeld, openOrders, unpaidInvoices, unbilledCharges }
+```
 
 ## Extension Pattern (Flutter)
 Every enum should have an extension for display and styling:

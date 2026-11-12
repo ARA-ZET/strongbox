@@ -108,48 +108,6 @@ export const OPENING_HOURS_LINES = OPENING_HOURS.map(
  * discounts. The pickup fee is a one-off per collection.
  */
 
-/**
- * Headline trust figures, shown on the about page, the homepage and the
- * pricing CTA.
- *
- * TODO — placeholders inherited from the first build of the site. Replace
- * with audited figures before any paid campaign points at these pages; they
- * are referenced only through these exports.
- */
-export const TRUST_STATS = [
-  { value: "500+", label: "Happy Clients" },
-  { value: "12,000+", label: "Boxes Stored" },
-  { value: "4.9", label: "Star Rating" },
-  { value: "R0", label: "Items Lost" },
-] as const;
-
-/** Customer-count claim used in section headings and CTA copy. */
-export const CUSTOMER_COUNT = "2,000+";
-
-export const TESTIMONIALS = [
-  {
-    quote: "StrongBox changed my life in Sea Point. My flat is tiny, but now I can swap my winter gear for my surfboard in minutes. The concierge service is impeccable.",
-    name: "Thandi M.",
-    initials: "TM",
-    location: "Sea Point Resident",
-    stars: 5,
-  },
-  {
-    quote: "As an estate agent, I recommend StrongBox to all my clients who are downsizing. They are professional, punctual, and highly secure. Best in Cape Town!",
-    name: "Johan K.",
-    initials: "JK",
-    location: "Verified Customer",
-    stars: 5,
-  },
-  {
-    quote: "Storing my collection of rare books was a worry until I found StrongBox. Their humidity-controlled facility and digital inventory give me total confidence.",
-    name: "Linda S.",
-    initials: "LS",
-    location: "Verified Customer",
-    stars: 5,
-  },
-];
-
 export const FAQ_ITEMS = [
   {
     q: "Do you insure my items?",

@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'account_closure_repository.dart';
 import 'audit_repository.dart';
 import 'booking_repository.dart';
 import 'client_repository.dart';
@@ -112,6 +113,10 @@ VehicleRepository vehicleRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 BookingRepository bookingRepository(Ref ref) =>
     FunctionsBookingRepository(ref.watch(firebaseFunctionsProvider));
+
+@Riverpod(keepAlive: true)
+AccountClosureRepository accountClosureRepository(Ref ref) =>
+    FunctionsAccountClosureRepository(ref.watch(firebaseFunctionsProvider));
 
 @Riverpod(keepAlive: true)
 QuoteDraftStore quoteDraftStore(Ref ref) => PrefsQuoteDraftStore();

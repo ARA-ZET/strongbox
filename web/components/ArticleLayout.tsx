@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Illustration from "@/components/graphics/Illustration";
+import PhotoHero from "@/components/PhotoHero";
 import { formatUpdated, type Article } from "@/lib/resources";
 import { APP_URL } from "@/lib/constants";
 
@@ -14,44 +14,22 @@ export default function ArticleLayout({ article }: { article: Article }) {
   return (
     <>
       {/* Header */}
-      <section className="py-16 md:py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <Link
-              href="/resources"
-              className="inline-flex items-center gap-1 text-accent-deep font-body-strong text-sm hover:underline"
-            >
-              <span className="material-symbols-outlined text-base">arrow_back</span>
-              Guides
-            </Link>
-          </nav>
-          <div className="grid md:grid-cols-[minmax(0,1fr)_auto] gap-10 items-center">
-            <div>
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                <span className="bg-sky-tint text-accent-deep text-xs font-bold px-3 py-1 rounded-full">
-                  {article.category}
-                </span>
-                <span className="text-xs text-on-surface-variant">
-                  {article.readMinutes} min read · Updated {formatUpdated(article.updated)}
-                </span>
-              </div>
-              <h1 className="text-display-bold font-bold text-navy-deep mb-5 max-w-3xl">
-                {article.title}
-              </h1>
-              <p className="text-on-surface-variant text-lg max-w-[65ch]">{article.excerpt}</p>
-            </div>
-            <Illustration
-              name={article.illustration}
-              priority
-              className="max-w-[260px] mx-auto hidden md:block"
-            />
-          </div>
-        </div>
-      </section>
+      <PhotoHero
+        photo={article.photo}
+        trail={[
+          { name: "Guides", path: "/resources" },
+          { name: article.title, path: `/resources/${article.slug}` },
+        ]}
+        eyebrow={`${article.category} · ${article.readMinutes} min read`}
+        title={article.title}
+        lead={article.excerpt}
+      >
+        <p className="mt-5 text-sm text-on-navy-variant">Updated {formatUpdated(article.updated)}</p>
+      </PhotoHero>
 
       {/* Body */}
       <article className="py-16 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <div className="max-w-[65ch]">
             <p className="text-on-surface text-lg leading-relaxed mb-12">{article.intro}</p>
 
@@ -106,8 +84,8 @@ export default function ArticleLayout({ article }: { article: Article }) {
       </article>
 
       {/* CTA */}
-      <section className="py-20 bg-navy-deep text-center">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+      <section className="py-14 md:py-20 bg-navy-deep text-center">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <h2 className="text-headline-h1 font-bold text-surface-white mb-4">
             Need somewhere to put it?
           </h2>

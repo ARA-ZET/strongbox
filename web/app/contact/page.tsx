@@ -16,8 +16,8 @@ import {
 import { REGIONS } from "@/lib/areas";
 import Link from "next/link";
 import SuburbChecker from "@/components/SuburbChecker";
+import PhotoHero from "@/components/PhotoHero";
 import SocialIcon from "@/components/graphics/SocialIcon";
-import Illustration from "@/components/graphics/Illustration";
 import LaunchNotice from "@/components/LaunchNotice";
 
 export default function ContactPage() {
@@ -55,21 +55,15 @@ export default function ContactPage() {
   return (
     <>
       {/* Hero */}
-      <section className="py-16 md:py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <h1 className="text-headline-h1 font-bold text-navy-deep mb-4">Get in Touch</h1>
-            <p className="text-on-surface-variant text-body-main max-w-xl">
-              Call, WhatsApp or email us. We usually reply within 2 hours during
-              operating hours, and a real person answers.
-            </p>
-          </div>
-          <Illustration name="contact-us" priority className="max-w-[380px] mx-auto" />
-        </div>
-      </section>
+      <PhotoHero
+        photo="hero-contact"
+        trail={[{ name: "Contact", path: "/contact" }]}
+        title="Contact StrongBox"
+        lead="Call, WhatsApp or email us. We usually reply within 2 hours during operating hours, and a real person answers."
+      />
 
       <section className="py-16 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <LaunchNotice tone="light" className="mb-10" />
           <div className="grid md:grid-cols-12 gap-10 items-start">
             {/* Form */}
@@ -278,7 +272,7 @@ export default function ContactPage() {
         caller opens with, so it earns its place regardless of the crawler.
       */}
       <section className="py-16 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)] gap-10 items-start mb-10">
             <div>
               <h2 className="text-headline-h2 font-bold text-navy-deep mb-3">

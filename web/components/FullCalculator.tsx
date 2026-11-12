@@ -121,7 +121,7 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
                     <button
                       onClick={() => updateBox(box.id, -1)}
                       aria-label={`Remove one ${box.label}`}
-                      className="w-8 h-8 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                      className="w-10 h-10 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
                     >
                       −
                     </button>
@@ -129,7 +129,7 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
                     <button
                       onClick={() => updateBox(box.id, 1)}
                       aria-label={`Add one ${box.label}`}
-                      className="w-8 h-8 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                      className="w-10 h-10 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
                     >
                       +
                     </button>
@@ -162,7 +162,7 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
                     <button
                       onClick={() => updateLoose(item.id, -1)}
                       aria-label={loose[item.id] === 1 ? `Remove ${item.name}` : `Remove one ${item.name}`}
-                      className="w-8 h-8 rounded-full bg-surface-white flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                      className="w-10 h-10 rounded-full bg-surface-white flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
                     >
                       −
                     </button>
@@ -170,7 +170,7 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
                     <button
                       onClick={() => updateLoose(item.id, 1)}
                       aria-label={`Add one ${item.name}`}
-                      className="w-8 h-8 rounded-full bg-surface-white flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                      className="w-10 h-10 rounded-full bg-surface-white flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
                     >
                       +
                     </button>
@@ -224,7 +224,7 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
                       <button
                         onClick={() => updateSupply(s.id, -1)}
                         aria-label={`Remove one ${s.label}`}
-                        className="w-8 h-8 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                        className="w-10 h-10 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
                       >
                         −
                       </button>
@@ -234,7 +234,7 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
                       <button
                         onClick={() => updateSupply(s.id, 1)}
                         aria-label={`Add one ${s.label}`}
-                        className="w-8 h-8 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                        className="w-10 h-10 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
                       >
                         +
                       </button>
@@ -253,7 +253,7 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
                       <button
                         onClick={() => updateHelper(-1)}
                         aria-label="One hour less packing help"
-                        className="w-8 h-8 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                        className="w-10 h-10 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
                       >
                         −
                       </button>
@@ -263,7 +263,7 @@ export default function FullCalculator({ prices }: { prices: Prices }) {
                       <button
                         onClick={() => updateHelper(1)}
                         aria-label="One hour more packing help"
-                        className="w-8 h-8 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
+                        className="w-10 h-10 rounded-full bg-navy-deep/5 flex items-center justify-center font-bold text-navy-deep hover:bg-navy-deep/10 transition-colors"
                       >
                         +
                       </button>

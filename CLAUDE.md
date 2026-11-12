@@ -71,6 +71,15 @@ driver's Auth login and `users/{uid}` (`role: driver`, `invited: true`) and emai
 password-setup link. Never create user docs for other people from the client. Existing
 accounts are promoted in Settings → Team instead.
 
+**Account closure (POPIA deletion requests):** a client taps Account → Close my account, or an
+admin uses ⋮ → Close account… on the client page. It closes 30 days later via the
+`requestAccountClosure` / `cancelAccountClosure` / `closeAccountNow` callables and
+`dailyClosureSweep` (`functions/src/closure.js`), and only once no items, open orders, unpaid
+invoices or unbilled charges remain. Closing deletes the login and clears contact details; name,
+email, invoices, order history, photos and signatures are kept admin-only for 5 years, then purged.
+Never delete or scrub client data from the app; `clients.closure` is written only by those
+functions. See `docs/02_BUSINESS_RULES.md` → Account Closure.
+
 **Notifications:** the app never sends push or email itself. It (or a function) writes a
 `notifications` doc; `onNotificationCreated` pushes it via FCM to `users/{uid}.fcmTokens` and
 emails opted-in clients through the `mail` collection, which `onMailCreated` sends over SMTP
@@ -338,6 +347,7 @@ Always use these — do not rebuild them inline. See `docs/11_COMPONENT_LIBRARY.
 | `LabelPrintDialog` | `units, preselected?, groupNames?` | Tick boxes/items → print their QR labels (A4, 12/page); `groupNames` groups by client (admin) |
 | `printInventory()` | `units, client, business, prices` | `lib/core/utils/inventory_pdf.dart` — client's inventory report PDF |
 | `ConnectivityBanner` | — | Offline warning auto-shown |
+| `ClosureChecklist` | `blockers, forClient` | What's left before an account can close (from `closureBlockers()`) |
 
 ---
 
@@ -425,7 +435,7 @@ mail/{id}                  ← outbound email queue; onMailCreated sends + recor
 /admin/jobs/new
 /admin/jobs/:jobId
 /admin/clients
-/admin/clients/:clientId
+/admin/clients/:clientId    ← closure card + ⋮ → Close account… (directory filters: Closing / Closed accounts)
 /admin/fleet
 /admin/fleet/:driverId
 /admin/reports

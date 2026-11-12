@@ -83,6 +83,13 @@ GoRouter appRouter(Ref ref) {
     ..onDispose(refresh.dispose)
     ..listen(authStateProvider, (previous, next) => refresh.value++)
     ..listen(currentUserProvider, (previous, next) => refresh.value++)
+    // A closed account's login is deleted, but its session can outlive
+    // that by up to an hour — end it once its profile reads as closed.
+    ..listen(signedInUserProvider, (previous, next) {
+      if (next.valueOrNull?.isDeleted ?? false) {
+        ref.read(authNotifierProvider.notifier).signOut();
+      }
+    })
     // A saved "book after sign-in" can load after the first redirect.
     ..listen(
       quoteControllerProvider.select((q) => q.bookAfterSignIn),

@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SavingsCalculator from "@/components/SavingsCalculator";
+import PhotoHero from "@/components/PhotoHero";
 
 import JsonLd from "@/components/JsonLd";
 import { pageMeta, breadcrumbJsonLd } from "@/lib/seo";
 import { getPrices } from "@/lib/prices";
 export const metadata: Metadata = pageMeta({
-  title: "Storage Cost Comparison — Cape Town",
+  title: "Self-Storage vs Valet Storage Cost Calculator",
   description:
-    "Compare a self-storage unit against paying StrongBox per box over a year in Cape Town — rent, trips and all. Shows the break-even point honestly. No email required.",
+    "Compare a self-storage unit with paying per box over a year in Cape Town, rent and trips included. Shows the break-even point. No email needed.",
   path: "/tools/savings-calculator",
 });
 
@@ -23,39 +24,26 @@ export default async function SavingsCalculatorPage() {
         ])}
       />
       {/* Hero */}
-      <section className="py-16 md:py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <Link
-              href="/tools"
-              className="inline-flex items-center gap-1 text-accent-deep font-body-strong text-sm hover:underline"
-            >
-              <span className="material-symbols-outlined text-base">arrow_back</span>
-              Free tools
-            </Link>
-          </nav>
-          <h1 className="text-display-bold font-bold text-navy-deep mb-4 max-w-3xl">
-            What is a self-storage unit really costing you?
-          </h1>
-          <p className="text-on-surface-variant text-body-main max-w-2xl">
-            A unit is billed by the locker, not by what is in it, and the rent is only
-            part of the bill — every trip out there costs fuel and an afternoon. Set the
-            numbers to match your situation and see the twelve-month gap, including the
-            point past which a unit costs less than we do.
-          </p>
-        </div>
-      </section>
+      <PhotoHero
+        photo="hero-compare"
+        trail={[
+          { name: "Free tools", path: "/tools" },
+          { name: "Cost comparison", path: "/tools/savings-calculator" },
+        ]}
+        title="What is a self-storage unit really costing you?"
+        lead="A unit is billed by the locker, not by what is in it, and the rent is only part of the bill: every trip out there costs fuel and an afternoon. Set the numbers to match your situation and see the twelve-month gap, including the point past which a unit costs less than we do."
+      />
 
       {/* Calculator */}
       <section className="py-12 md:py-16 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <SavingsCalculator prices={prices} />
         </div>
       </section>
 
       {/* Method */}
       <section className="pb-24 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <div className="bg-mist rounded-xl p-8 md:p-10 border border-outline-variant max-w-3xl">
             <h2 className="text-headline-h3 font-bold text-navy-deep mb-4">
               How this is worked out

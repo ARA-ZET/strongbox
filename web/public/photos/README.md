@@ -1,39 +1,38 @@
 # Site photographs
 
-Every slot the site expects is declared in `lib/photos.ts`.
+Everything in this folder is generated. Do not edit or add files here by hand.
 
-## ⚠ These are temporary stock comps
+`npm run photos` (`scripts/process-photos.mjs`) reads each source in
+`assets/photos-src/{id}.jpg` and writes `{id}-{640,1280,1920}.avif` and `.jpg`
+here, with the site's shared colour grade applied (slightly desaturated, with a
+soft navy wash). The grade is what makes photographs from different sources
+read as one set.
 
-The ten `.jpg` files here are **Unsplash stock images**, dropped in so the
-layout can be reviewed with real photography in it while the commissioned
-shoot is outstanding. They are not our facility, our van, our staff or our
-customers.
+`lib/photos.ts` lists every photo: its alt text, focal point, credit and,
+where needed, a caption.
 
-Each is marked in `lib/photos.ts` with a `stock: { … }` field recording the
-Unsplash photo id it came from, and `TEMPORARY_STOCK` in that file lists
-every slot still standing on one. Replace them all before the site is
-treated as finished.
+## Where they come from
 
-Two reasons this matters beyond looking generic:
+The current set is licensed stock from Pexels (free for commercial use, no
+attribution required; each photographer is credited in `lib/photos.ts`). Each
+photo was checked before use:
 
-- Several show identifiable people. The Unsplash Licence permits commercial
-  use but does **not** grant a model release, so these people must not appear
-  to endorse StrongBox on a live marketing site.
-- A storage company illustrated with someone else's warehouse is the kind of
-  detail a customer notices, and it undercuts the "photo inventory of your
-  actual boxes" promise made beside it.
+- no other company's logo, livery, uniform or printed box branding;
+- no readable faces;
+- nothing presented as our own van, team or facility. The warehouse photo is
+  captioned "Representative image" on the page.
 
-## Adding the real photograph
+## Swapping one for your own
 
-1. Export at the `size` given for that slot (or larger, same aspect ratio)
-   as a `.jpg`.
-2. Drop it in this folder, named after the slot id — e.g.
-   `hero-collection.jpg`, overwriting the stock file.
-3. In `lib/photos.ts`, **delete that slot's `stock: { … }` line.** Leave
-   `src` as it is.
+1. Save your photograph as `assets/photos-src/{id}.jpg`, overwriting the stock
+   one. Use 2000px wide or more, landscape.
+2. Run `npm run photos`. Only changed sources are reprocessed.
+3. In `lib/photos.ts`, update that photo's `alt` and `credit`, and its `focus`
+   if the subject sits somewhere else in the frame. Remove `caption` once the
+   photo is genuinely of our facility.
 
-The frame does not change, so nothing else on the page moves. Slots can be
-done one at a time.
+Hero photos sit behind text on the left, so frame them with the subject on the
+right (or set `focus` to move the crop).
 
-Alt text is already written for every slot — edit it in `lib/photos.ts` if
-the photograph you shoot differs from the brief.
+To change the grade for every photo, edit `GRADE` in the script and run
+`npm run photos -- --force`.

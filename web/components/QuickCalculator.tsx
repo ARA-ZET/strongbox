@@ -16,7 +16,7 @@ import LooseItemPicker from "@/components/LooseItemPicker";
  * objects the pricing table, /loose-items and the full calculator render.
  *
  * Both buttons carry the quote along (lib/quote.ts): "Get Started" to the
- * app's /register, "Build Full Quote" into the full calculator.
+ * app's /register, "Build the full quote" into the full calculator.
  */
 export default function QuickCalculator({ prices }: { prices: Prices }) {
   const { boxes: BOX_TYPES, looseItems: LOOSE_ITEMS, pickupFrom: PICKUP_FROM } = prices;
@@ -65,14 +65,11 @@ export default function QuickCalculator({ prices }: { prices: Prices }) {
   );
 
   return (
-    <section className="py-24 bg-mist" id="calculator">
-      <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+    <section className="py-16 md:py-24 bg-mist" id="calculator">
+      <div className="max-w-container-max mx-auto px-5 sm:px-5 sm:px-6 md:px-margin-desktop">
         <div className="grid md:grid-cols-12 gap-gutter items-center">
           {/* Left copy */}
           <div className="md:col-span-5 mb-10 md:mb-0">
-            <span className="font-label-caps text-accent-deep uppercase tracking-widest text-xs mb-4 block">
-              Cost Estimator
-            </span>
             <h2 className="text-headline-h1 font-bold text-navy-deep mb-5">
               Estimate your monthly storage cost
             </h2>
@@ -206,15 +203,15 @@ export default function QuickCalculator({ prices }: { prices: Prices }) {
                 <div className="space-y-3 mt-8">
                   <a
                     href={`${APP_URL}/register${query}`}
-                    className="block w-full bg-accent text-on-accent py-4 rounded-xl font-body-strong text-center hover:opacity-90 transition-all"
+                    className="block w-full bg-accent text-on-accent py-4 rounded-xl font-body-strong text-center hover:bg-accent-deep transition-colors"
                   >
-                    Get Started
+                    Get started
                   </a>
                   <Link
                     href={`/pricing${query}#calculator`}
                     className="block w-full border border-surface-white/30 text-surface-white py-3 rounded-xl font-body-strong text-center text-sm hover:bg-surface-white/10 transition-all"
                   >
-                    Build Full Quote
+                    Build the full quote
                   </Link>
                   <p className="text-xs text-on-navy-variant/60 text-center">
                     15% VAT inclusive

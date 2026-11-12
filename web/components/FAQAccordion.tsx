@@ -1,59 +1,45 @@
-"use client";
-
-import { useState } from "react";
 import { FAQ_ITEMS } from "@/lib/constants";
-import Illustration from "@/components/graphics/Illustration";
+import Section from "@/components/ui/Section";
 
-export default function FAQAccordion() {
-  const [open, setOpen] = useState<number | null>(null);
-
+/**
+ * The questions people ask before booking.
+ *
+ * Built on <details>, not on React state. The previous version only put an
+ * answer in the page once its question was clicked, so the answers named in
+ * the FAQ structured data were not in the HTML a crawler receives — and the
+ * whole block did nothing without JavaScript. Native disclosure keeps every
+ * answer in the document, works with the keyboard for free, and needs no
+ * client code.
+ */
+export default function FAQAccordion({ tone = "white" }: { tone?: "white" | "mist" }) {
   return (
-    <section className="py-24 bg-mist" id="faq">
-      <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-        <div className="text-center mb-14">
-          <span className="font-label-caps text-accent-deep uppercase tracking-widest text-xs mb-3 block">
-            Common Questions
-          </span>
-          <h2 className="text-headline-h1 font-bold text-navy-deep">Everything you need to know</h2>
-          <p className="text-on-surface-variant mt-3 max-w-xl mx-auto">
-            Insurance, turnaround times, packing materials and the small print — answered
-            before you have to ask.
+    <Section tone={tone} id="faq">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+        <div data-reveal className="lg:sticky lg:top-36 lg:self-start">
+          <h2 className="text-headline-h1 font-bold text-navy-deep">Questions people ask first</h2>
+          <p className="mt-4 text-body-lead text-on-surface-variant">
+            Insurance, turnaround, packing materials and the small print.
           </p>
         </div>
-        <div className="grid lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] gap-12 items-start max-w-4xl lg:max-w-none mx-auto">
-          <div className="hidden lg:block lg:sticky lg:top-36">
-            <Illustration name="questions" className="max-w-[340px]" />
-          </div>
-          <div className="space-y-3">
-          {FAQ_ITEMS.map((item, idx) => (
-            <div
-              key={idx}
-              className="bg-surface-white rounded-xl border border-navy-deep/8 overflow-hidden shadow-tactile"
-            >
-              <button
-                className="w-full flex justify-between items-center p-6 text-left gap-4"
-                onClick={() => setOpen(open === idx ? null : idx)}
-                aria-expanded={open === idx}
-              >
-                <span className="font-body-strong text-navy-deep">{item.q}</span>
+        <div data-reveal className="divide-y divide-outline-variant border-y border-outline-variant">
+          {FAQ_ITEMS.map((item) => (
+            <details key={item.q} className="group">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left [&::-webkit-details-marker]:hidden">
+                <h3 className="text-[17px] font-semibold text-navy-deep group-hover:text-accent-deep">
+                  {item.q}
+                </h3>
                 <span
-                  className={`material-symbols-outlined text-accent-deep shrink-0 transition-transform duration-200 ${
-                    open === idx ? "rotate-180" : ""
-                  }`}
+                  aria-hidden="true"
+                  className="material-symbols-outlined shrink-0 text-accent-deep transition-transform duration-200 group-open:rotate-45"
                 >
-                  expand_more
+                  add
                 </span>
-              </button>
-              {open === idx && (
-                <div className="px-6 pb-6 text-on-surface-variant text-body-main border-t border-navy-deep/5 pt-4">
-                  {item.a}
-                </div>
-              )}
-            </div>
+              </summary>
+              <p className="max-w-2xl pb-6 text-body-main text-on-surface-variant">{item.a}</p>
+            </details>
           ))}
-          </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
