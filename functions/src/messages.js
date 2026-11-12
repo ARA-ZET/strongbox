@@ -207,6 +207,48 @@ function jobUpdatedMessages(before, after, jobId, context = {}) {
 
   if (before.status === after.status) return out;
 
+  // A cancelled job's driver (if any) is stood down.
+  const standDown = () => {
+    const driverId = after.driverId || before.driverId;
+    return driverId ? {
+      to: "driver",
+      userId: driverId,
+      type: NOTIFY.jobCancelled,
+      title: `${capitalise(kind(after))} ${ref} cancelled`,
+      body: `${jobWhen(after)} · ${place(after)}`,
+      entityType: "job",
+      entityId: jobId,
+    } : null;
+  };
+
+  // The client cancelled it themselves (cancelOrder): confirm it to them
+  // and tell ops. A paired supply drop-off goes with its pickup — one set.
+  if (after.status === "cancelled" && after.cancelledBy === "client") {
+    if (!pairedSupply) {
+      out.push(client({
+        type: NOTIFY.jobCancelled,
+        title: `Your ${kind(after)} is cancelled`,
+        body: `${capitalise(kind(after))} ${ref} (${jobWhen(after)}) is ` +
+          "cancelled, as you asked." +
+          (type === "pickup" && after.suppliesFirst ?
+            " Your supply drop-off is cancelled too." : ""),
+      }));
+      out.push({
+        to: "admins",
+        type: NOTIFY.jobCancelled,
+        title: `Client cancelled ${kind(after)} ${ref}`,
+        body: [`${capitalise(what)} · ${jobWhen(after)}`,
+          after.cancelReason ? `“${after.cancelReason}”` : ""]
+            .filter(Boolean).join(" · "),
+        entityType: "job",
+        entityId: jobId,
+      });
+    }
+    const driver = standDown();
+    if (driver) out.push(driver);
+    return out;
+  }
+
   if (before.status === "pendingConfirmation" &&
     (after.status === "scheduled" || after.status === "assigned")) {
     out.push(client({
@@ -276,18 +318,8 @@ function jobUpdatedMessages(before, after, jobId, context = {}) {
         body: `${ref} (${jobWhen(after)}) was cancelled.${reason} ` +
           "Contact us if you need to rebook.",
       }));
-      const driverId = after.driverId || before.driverId;
-      if (driverId) {
-        out.push({
-          to: "driver",
-          userId: driverId,
-          type: NOTIFY.jobCancelled,
-          title: `${capitalise(kind(after))} ${ref} cancelled`,
-          body: `${jobWhen(after)} · ${place(after)}`,
-          entityType: "job",
-          entityId: jobId,
-        });
-      }
+      const driver = standDown();
+      if (driver) out.push(driver);
       break;
     }
     default:
@@ -297,8 +329,9 @@ function jobUpdatedMessages(before, after, jobId, context = {}) {
 }
 
 /**
- * Where tapping a notification takes [role]. Drivers and clients open the
- * job itself; admins open the jobs list.
+ * Where tapping a notification takes [role]. Everyone opens the job
+ * itself — for admins, the jobs list with that job's sheet open, so a
+ * booking to confirm is one tap away.
  * @param {string} role UserRole
  * @param {{entityType?: string, entityId?: string}} n
  * @return {string}
@@ -307,7 +340,9 @@ function routeFor(role, n) {
   const id = n.entityId;
   switch (role) {
     case "admin":
-      if (n.entityType === "job") return "/admin/jobs";
+      if (n.entityType === "job") {
+        return id ? `/admin/jobs?job=${encodeURIComponent(id)}` : "/admin/jobs";
+      }
       if (n.entityType === "client" && id) return `/admin/clients/${id}`;
       if (n.entityType === "unit" && id) return `/admin/inventory/${id}`;
       if (n.entityType === "qr") return "/admin/qr";

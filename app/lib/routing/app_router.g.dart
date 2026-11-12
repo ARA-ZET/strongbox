@@ -6,7 +6,7 @@ part of 'app_router.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appRouterHash() => r'2ec02bf08478f83a6e4d6c44004e43b97d450ddc';
+String _$appRouterHash() => r'2620214502a502c9342eb93bdcbbcec6a4188675';
 
 /// App router. Redirect rules:
 /// - Signed-out visitors land on /login, which links out to the website

@@ -85,6 +85,7 @@ _$JobImpl _$$JobImplFromJson(Map<String, dynamic> json) => _$JobImpl(
       cancelledAt:
           const NullableTimestampConverter().fromJson(json['cancelledAt']),
       cancelReason: json['cancelReason'] as String?,
+      cancelledBy: json['cancelledBy'] as String?,
       isDeleted: json['isDeleted'] as bool? ?? false,
       createdAt: const NullableTimestampConverter().fromJson(json['createdAt']),
       updatedAt: const NullableTimestampConverter().fromJson(json['updatedAt']),
@@ -140,6 +141,7 @@ Map<String, dynamic> _$$JobImplToJson(_$JobImpl instance) => <String, dynamic>{
       'cancelledAt':
           const NullableTimestampConverter().toJson(instance.cancelledAt),
       'cancelReason': instance.cancelReason,
+      'cancelledBy': instance.cancelledBy,
       'isDeleted': instance.isDeleted,
       'createdAt':
           const NullableTimestampConverter().toJson(instance.createdAt),

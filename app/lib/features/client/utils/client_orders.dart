@@ -58,8 +58,43 @@ String orderNextStep(Job job) => switch (job.status) {
         ? 'Signed for by ${job.recipientName}.'
         : 'Done.',
   JobStatus.cancelled =>
-    job.cancelReason?.isNotEmpty == true ? job.cancelReason! : 'Cancelled.',
+    job.cancelledBy == 'client'
+        ? 'You cancelled this order.'
+        : job.cancelReason?.isNotEmpty == true
+        ? job.cancelReason!
+        : 'Cancelled.',
 };
+
+/// Whether the client can still cancel [job] themselves: a pickup or
+/// delivery the driver hasn't started. A supplies-first pickup can't once
+/// its supplies are on their way or delivered ([linked] is its drop-off).
+/// The cancelOrder function applies the same rules.
+bool canCancelOrder(Job job, {Job? linked}) {
+  bool notStarted(JobStatus status) =>
+      status == JobStatus.pendingConfirmation || status.isDispatchable;
+  if (job.type == JobType.supplyDrop || !notStarted(job.status)) return false;
+  if (linked == null || linked.status == JobStatus.cancelled) return true;
+  return notStarted(linked.status);
+}
+
+/// What cancelling [job] does, in the client's words.
+String cancelOrderEffect(Job job) {
+  final n = job.storageUnitIds.length;
+  return switch (job.type) {
+    JobType.delivery =>
+      n == 1
+          ? 'Your item stays in storage and keeps its monthly rate.'
+          : 'Your $n items stay in storage and keep their monthly rate.',
+    _ =>
+      (n == 1
+          ? 'We won\'t collect your item and you won\'t be charged for it.'
+          : 'We won\'t collect your $n items and you won\'t be charged for '
+                'them.') +
+          (job.linkedJobId != null
+              ? ' Your supply drop-off is cancelled too.'
+              : ''),
+  };
+}
 
 /// Open orders, soonest first (undated last).
 List<Job> activeOrders(List<Job> jobs) =>

@@ -46,7 +46,7 @@ class ClientStorageScreen extends ConsumerWidget {
     final all = ref.watch(myUnitsProvider).valueOrNull ?? const [];
     final counts = <String, int>{};
     for (final unit in all) {
-      if (unit.status == StorageStatus.archived) continue;
+      if (!unit.status.isListedForClient) continue;
       counts.update(unit.status.name, (n) => n + 1, ifAbsent: () => 1);
     }
     final total = counts.values.fold(0, (sum, n) => sum + n);

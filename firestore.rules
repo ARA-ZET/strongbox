@@ -125,10 +125,11 @@ service cloud.firestore {
       allow create: if isAdmin();
       // Drivers work their own dispatched jobs: check-ins, scans, photos,
       // sign-off and receiving. They can't reassign, re-price, reschedule
-      // or confirm a job, or touch one ops hasn't confirmed.
+      // or confirm a job, or touch one ops hasn't confirmed or that was
+      // cancelled (clients cancel via the cancelOrder function).
       allow update: if isAdmin() ||
         (isDriver() && resource.data.driverId == request.auth.uid &&
-          resource.data.status != 'pendingConfirmation' &&
+          !(resource.data.status in ['pendingConfirmation', 'cancelled']) &&
           request.resource.data.driverId == resource.data.driverId &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
             'status', 'departedAt', 'arrivedAt', 'collectedAt', 'completedAt',

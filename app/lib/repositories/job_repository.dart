@@ -189,7 +189,7 @@ class FirestoreJobRepository
   }) =>
       guardRepo(() async {
         await db.runTransaction((txn) async {
-          final linked = await _linkedPending(txn, job);
+          final linked = await _linked(txn, job, _awaitingConfirmation);
           final current = await txn.get(_jobs.doc(job.id));
           if (current.data()?['status'] != JobStatus.pendingConfirmation.name) {
             throw const AppException(
@@ -213,7 +213,7 @@ class FirestoreJobRepository
               'scheduledDate': Timestamp.fromDate(scheduledDate),
             if (timeWindow != null) 'timeWindow': timeWindow.name,
           });
-          if (linked != null) txn.update(linked, fields);
+          if (linked != null) txn.update(linked.reference, fields);
           txn.set(
             auditDoc(),
             auditEventData(
@@ -236,8 +236,13 @@ class FirestoreJobRepository
           {required String actorId, required String reason}) =>
       guardRepo(() async {
         await db.runTransaction((txn) async {
-          final linked = await _linkedPending(txn, job);
+          final linked = await _linked(txn, job, _awaitingConfirmation);
+          // Declined from its supply drop-off, a Path A pickup's units are
+          // released too.
+          final linkedJob = linked == null ? null : Job.fromFirestore(linked);
           final snaps = await _ownUnits(txn, job);
+          final linkedSnaps =
+              linkedJob == null ? null : await _ownUnits(txn, linkedJob);
           final fields = {
             'status': JobStatus.cancelled.name,
             'cancelledAt': _now(),
@@ -245,8 +250,9 @@ class FirestoreJobRepository
             'updatedAt': _now(),
           };
           txn.update(_jobs.doc(job.id), fields);
-          if (linked != null) txn.update(linked, fields);
+          if (linked != null) txn.update(linked.reference, fields);
           _releaseUnits(txn, job, snaps);
+          if (linkedJob != null) _releaseUnits(txn, linkedJob, linkedSnaps!);
           txn.set(
             auditDoc(),
             auditEventData(
@@ -255,7 +261,10 @@ class FirestoreJobRepository
               action: AuditAction.jobDeclined,
               entityType: 'job',
               entityId: job.id,
-              metadata: {'reason': reason},
+              metadata: {
+                'reason': reason,
+                if (linked != null) 'linkedJobId': linked.id,
+              },
             ),
           );
         });
@@ -314,18 +323,25 @@ class FirestoreJobRepository
   /// Cancels a job that hasn't started and releases its units: a delivery's
   /// units go back to storage; a booked pickup's units are cancelled (they
   /// only existed for that booking); an ops pickup's stay pending pickup.
-  /// Units that have since moved to another job are left alone.
+  /// Units that have since moved to another job are left alone. A Path A
+  /// pickup takes its supply drop-off with it, unless the driver has
+  /// already set off with the supplies.
   @override
   Future<void> cancel(Job job, {required String actorId, String? reason}) =>
       guardRepo(() async {
         await db.runTransaction((txn) async {
+          final drop = job.type == JobType.pickup
+              ? await _linked(txn, job, _notStarted)
+              : null;
           final snaps = await _ownUnits(txn, job);
-          txn.update(_jobs.doc(job.id), {
+          final fields = {
             'status': JobStatus.cancelled.name,
             'cancelledAt': _now(),
             if (reason != null) 'cancelReason': reason,
             'updatedAt': _now(),
-          });
+          };
+          txn.update(_jobs.doc(job.id), fields);
+          if (drop != null) txn.update(drop.reference, fields);
           _releaseUnits(txn, job, snaps);
           txn.set(
             auditDoc(),
@@ -335,7 +351,10 @@ class FirestoreJobRepository
               action: AuditAction.jobCancelled,
               entityType: 'job',
               entityId: job.id,
-              metadata: {if (reason != null) 'reason': reason},
+              metadata: {
+                if (reason != null) 'reason': reason,
+                if (drop != null) 'linkedJobId': drop.id,
+              },
             ),
           );
         });
@@ -354,9 +373,37 @@ class FirestoreJobRepository
         // A pickup or supply run leaves for the client straight away; a
         // delivery loads at the facility first and departs after.
         final leaving = job.type != JobType.delivery;
-        await _update(job, actorId, AuditAction.jobStarted, {
-          'status': JobStatus.inProgress.name,
-          if (leaving) 'departedAt': _now(),
+        await db.runTransaction((txn) async {
+          // Re-read: the client can cancel right up until this moment.
+          final snap = await txn.get(_jobs.doc(job.id));
+          final status = JobStatus.values.asNameMap()[snap.data()?['status']];
+          if (status == JobStatus.cancelled) {
+            throw const AppException(
+                code: 'failed-precondition',
+                message: 'This job was cancelled — check your job list.');
+          }
+          if (status == null || !status.isDispatchable) {
+            throw const AppException(
+                code: 'failed-precondition',
+                message: 'This job is not confirmed for dispatch.');
+          }
+          txn.update(_jobs.doc(job.id), {
+            'status': JobStatus.inProgress.name,
+            if (leaving) 'departedAt': _now(),
+            'updatedAt': _now(),
+          });
+          txn.set(
+            auditDoc(),
+            auditEventData(
+              tenantId: job.tenantId,
+              actorId: actorId,
+              actorRole: UserRole.driver,
+              action: AuditAction.jobStarted,
+              entityType: 'job',
+              entityId: job.id,
+              metadata: {'jobId': job.id},
+            ),
+          );
         });
       });
 
@@ -632,16 +679,22 @@ class FirestoreJobRepository
     }
   }
 
-  /// The supply drop-off paired with a Path A pickup, while it still
-  /// awaits confirmation.
-  Future<DocumentReference<Map<String, dynamic>>?> _linkedPending(
-      Transaction txn, Job job) async {
+  static final _awaitingConfirmation = {JobStatus.pendingConfirmation.name};
+  static final _notStarted = {
+    JobStatus.pendingConfirmation.name,
+    JobStatus.scheduled.name,
+    JobStatus.assigned.name,
+  };
+
+  /// The other half of a Path A pickup ↔ supply drop-off pair, while its
+  /// status is one of [statuses].
+  Future<DocumentSnapshot<Map<String, dynamic>>?> _linked(
+      Transaction txn, Job job, Set<String> statuses) async {
     final id = job.linkedJobId;
     if (id == null || id.isEmpty) return null;
     final snap = await txn.get(_jobs.doc(id));
-    final open = snap.exists &&
-        snap.data()?['status'] == JobStatus.pendingConfirmation.name;
-    return open ? snap.reference : null;
+    final open = snap.exists && statuses.contains(snap.data()?['status']);
+    return open ? snap : null;
   }
 
   /// The job's unit docs that still belong to it (all reads, before any

@@ -203,4 +203,66 @@ void main() {
     expect(balance.nextDue, DateTime(2026, 11, 1));
     expect(invoiceMonthLabel('2026-11'), 'November 2026');
   });
+
+  group('cancelling', () {
+    test('pickups and deliveries can be cancelled until the driver starts',
+        () {
+      for (final type in [JobType.pickup, JobType.delivery]) {
+        for (final status in [
+          JobStatus.pendingConfirmation,
+          JobStatus.scheduled,
+          JobStatus.assigned,
+        ]) {
+          expect(canCancelOrder(_job('j', type: type, status: status)), isTrue,
+              reason: '$type $status');
+        }
+        for (final status in [
+          JobStatus.inProgress,
+          JobStatus.collected,
+          JobStatus.completed,
+          JobStatus.cancelled,
+        ]) {
+          expect(canCancelOrder(_job('j', type: type, status: status)), isFalse,
+              reason: '$type $status');
+        }
+      }
+      // A supply drop-off goes with its pickup.
+      expect(canCancelOrder(_job('s', type: JobType.supplyDrop)), isFalse);
+    });
+
+    test('a supplies-first pickup, until the supplies are out', () {
+      final pickup = _job('p', units: const ['u1']);
+      Job drop(JobStatus status) =>
+          _job('s', type: JobType.supplyDrop, status: status);
+      expect(canCancelOrder(pickup, linked: drop(JobStatus.assigned)), isTrue);
+      expect(canCancelOrder(pickup, linked: drop(JobStatus.cancelled)), isTrue);
+      expect(canCancelOrder(pickup, linked: drop(JobStatus.inProgress)),
+          isFalse);
+      expect(canCancelOrder(pickup, linked: drop(JobStatus.completed)),
+          isFalse);
+    });
+
+    test('the client is told what cancelling does, and that they did it', () {
+      expect(
+        cancelOrderEffect(_job('d', type: JobType.delivery, units: ['u1'])),
+        'Your item stays in storage and keeps its monthly rate.',
+      );
+      expect(
+        cancelOrderEffect(
+            _job('d', type: JobType.delivery, units: ['u1', 'u2'])),
+        'Your 2 items stay in storage and keep their monthly rate.',
+      );
+      expect(
+        cancelOrderEffect(
+            _job('p', units: ['u1', 'u2']).copyWith(linkedJobId: 's')),
+        allOf(contains("won't collect your 2 items"),
+            contains('supply drop-off is cancelled too')),
+      );
+      final cancelled = _job('p', status: JobStatus.cancelled);
+      expect(orderNextStep(cancelled.copyWith(cancelledBy: 'client')),
+          'You cancelled this order.');
+      expect(orderNextStep(cancelled.copyWith(cancelReason: 'Out of area.')),
+          'Out of area.');
+    });
+  });
 }

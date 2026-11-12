@@ -94,8 +94,10 @@ inTransit`), client signs (pickup job → `collected`) → driver scans units **
 (`inStorage` + bay; last one → `completed`). Deliveries: scan out → on my way → arrived →
 handover scan → sign → `delivered`. Path A bookings add a linked `supplyDrop` job that brings
 empty boxes + packing supplies first. Once-off charges (vehicle + supplies + packing helper,
-`Job.onceOffZar`) go on the next invoice after collection. Client job writes only go through
-these callables; all job/unit status changes go through `JobRepository`.
+`Job.onceOffZar`) go on the next invoice after collection. Clients can cancel their own pickup or
+delivery until the driver starts it (`cancelOrder`, `functions/src/orders.js`; a Path A pickup takes
+its drop-off with it, and can't be cancelled once the supplies are out). Client job writes only go
+through these callables; all other job/unit status changes go through `JobRepository`.
 
 Three user roles share one Firebase backend:
 - **Admin/Staff** — operations dashboard, inventory, QR management, job dispatch

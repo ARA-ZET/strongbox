@@ -27,6 +27,8 @@ typedef SupplyDropSlot = ({DateTime date, TimeWindow timeWindow});
 /// - `requestDelivery` checks the units are the client's and in storage,
 ///   then creates the delivery job and moves them to pending delivery.
 /// Both arrive `pendingConfirmation` for an admin to confirm.
+/// - `cancelOrder` cancels the client's pickup or delivery until the
+///   driver starts it, releasing its units.
 abstract class BookingRepository {
   Future<BookedPickup> bookPickup({
     required QuoteDraft quote,
@@ -47,6 +49,10 @@ abstract class BookingRepository {
     required Address address,
     String? notes,
   });
+
+  /// Cancels the client's own order before the driver starts it. A
+  /// supplies-first pickup's drop-off is cancelled with it.
+  Future<void> cancelOrder(String jobId, {String? reason});
 }
 
 class FunctionsBookingRepository implements BookingRepository {
@@ -131,6 +137,24 @@ class FunctionsBookingRepository implements BookingRepository {
     } catch (error) {
       throw AppException.from(
           error, 'Could not request the delivery. Try again.');
+    }
+  }
+
+  @override
+  Future<void> cancelOrder(String jobId, {String? reason}) async {
+    try {
+      await functions.httpsCallable('cancelOrder').call({
+        'jobId': jobId,
+        if (reason != null && reason.trim().isNotEmpty) 'reason': reason.trim(),
+      });
+    } on FirebaseFunctionsException catch (error) {
+      throw AppException(
+        code: error.code,
+        message: error.message ?? 'Could not cancel the order. Try again.',
+        original: error,
+      );
+    } catch (error) {
+      throw AppException.from(error, 'Could not cancel the order. Try again.');
     }
   }
 
