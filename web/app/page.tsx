@@ -323,7 +323,9 @@ export default async function HomePage() {
         search alike.
       */}
       <Section>
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
+        {/* grid-cols-1, not the implicit auto track: the region list's
+            one-line summaries would otherwise widen the column past a phone. */}
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
           <div>
             <SectionHeading
               title="Wherever you live in Cape Town, we come to you"
