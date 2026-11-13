@@ -64,7 +64,7 @@ export default function AboutPage() {
         photo="hero-about"
         trail={TRAIL}
         title="Storage built for how Cape Town lives"
-        lead="Flats on the Seaboard, digs near campus, family homes on the Flats and new estates up the West Coast. Every home runs out of space eventually, so we collect what you are not using and bring it back when you need it."
+        lead="Flats on the Seaboard, student accommodation near campus, family homes on the Flats and new estates up the West Coast. Every home runs out of space eventually, so we collect what you are not using and bring it back when you need it."
       />
 
       {/* Why we exist */}

@@ -40,7 +40,7 @@ export const ARTICLES: Article[] = [
     slug: "student-storage-summer-break",
     title: "Student storage in Cape Town over the summer break",
     excerpt:
-      "Res closes, the digs lease ends in November and the new one starts in February. Here is how to bridge the gap without dragging a room's worth of stuff home.",
+      "Res closes, your rental lease ends in November and the new one starts in February. Here is how to bridge the gap without dragging a room's worth of stuff home.",
     category: "Students",
     readMinutes: 5,
     published: "2026-10-22",
@@ -52,7 +52,7 @@ export const ARTICLES: Article[] = [
       {
         heading: "Work out your two dates first",
         paragraphs: [
-          "The date you have to be out, and the date you can move into next year's place. Res move-out dates are fixed and published early. Private digs usually follow the lease, and many student leases end on 30 November. Write both dates down before you book anything.",
+          "The date you have to be out, and the date you can move into next year's place. Res move-out dates are fixed and published early. Private accommodation usually follows the lease, and many student leases end on 30 November. Write both dates down before you book anything.",
           "If you are flying home straight after your last exam, book collection for the day before you leave, not the morning of your flight.",
         ],
       },
@@ -70,7 +70,7 @@ export const ARTICLES: Article[] = [
       {
         heading: "Sharing with housemates",
         paragraphs: [
-          "Housemates in a digs can share a collection slot and keep separate accounts, so each person's boxes are billed and returned to them alone. That matters in February, when people move to different houses.",
+          "Housemates in the same house can share a collection slot and keep separate accounts, so each person's boxes are billed and returned to them alone. That matters in February, when people move to different houses.",
         ],
       },
       {

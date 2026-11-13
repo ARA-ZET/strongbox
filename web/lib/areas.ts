@@ -94,11 +94,11 @@ export const REGIONS: readonly Region[] = [
       "Bergvliet", "Meadowridge", "Constantia", "Tokai", "Retreat", "Kirstenhof",
     ],
     intro: [
-      "The Southern Suburbs run from student digs in Obs and Rondebosch to family homes in Bergvliet and Constantia, and the storage problem changes along the way. Near campus it is a student moving out every December. Further south it is a family house being renovated, or a parent downsizing.",
+      "The Southern Suburbs run from student accommodation in Obs and Rondebosch to family homes in Bergvliet and Constantia, and the storage problem changes along the way. Near campus it is a student moving out every December. Further south it is a family house being renovated, or a parent downsizing.",
       "Winter is wet on this side of the mountain, and Newlands is among the wettest places in the city. Garages and outside storerooms get damp. Our facility is climate-controlled, so boxes do not spend July soaking up moisture.",
     ],
     onTheDay: [
-      "Shared digs are fine. Each student can have their own account and their own boxes, all collected on the same visit.",
+      "Shared accommodation is fine. Each student can have their own account and their own boxes, all collected on the same visit.",
       "Security estates and complexes: give us the gate or guardhouse details so the driver is not stuck at the boom.",
       "If the house is being renovated, tell us what is coming back first. We return it room by room as the work finishes.",
     ],
