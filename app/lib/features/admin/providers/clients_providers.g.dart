@@ -22,6 +22,24 @@ final clientsProvider = AutoDisposeStreamProvider<List<Client>>.internal(
 );
 
 typedef ClientsRef = AutoDisposeStreamProviderRef<List<Client>>;
+String _$closedClientsHash() => r'08ca4cf37e4d436926d4c2a216896d2c35231762';
+
+/// Closed (archived) accounts, newest first — the directory's "Closed"
+/// filter. Kept for the retention period (functions/src/closure.js).
+///
+/// Copied from [closedClients].
+@ProviderFor(closedClients)
+final closedClientsProvider = AutoDisposeStreamProvider<List<Client>>.internal(
+  closedClients,
+  name: r'closedClientsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$closedClientsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ClosedClientsRef = AutoDisposeStreamProviderRef<List<Client>>;
 String _$clientNamesHash() => r'fda99d05489920bf93efb94c462e06c86f598d6f';
 
 /// clientId → display name lookup used by job/unit tables.
@@ -70,7 +88,7 @@ final driverNamesProvider = AutoDisposeProvider<Map<String, String>>.internal(
 );
 
 typedef DriverNamesRef = AutoDisposeProviderRef<Map<String, String>>;
-String _$filteredClientsHash() => r'fcc05d37f3b3d068dbdb94df1fe8a5cb4eb3f7da';
+String _$filteredClientsHash() => r'3531f601e9c71d75a6387ef99c7fb336c3693f71';
 
 /// Directory rows after search + status filter.
 ///
@@ -550,7 +568,8 @@ typedef _$ClientSearchQuery = AutoDisposeNotifier<String>;
 String _$clientStatusFilterHash() =>
     r'f238f0fd4e3069e57cc1a54a146ba7a7f0d2939b';
 
-/// Directory status filter: all | active | pastDue | cancelled.
+/// Directory status filter: all | active | pastDue | cancelled | closing
+/// (asked to close) | closed (archived accounts).
 ///
 /// Copied from [ClientStatusFilter].
 @ProviderFor(ClientStatusFilter)

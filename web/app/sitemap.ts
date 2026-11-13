@@ -9,7 +9,13 @@ import { SITE_URL as BASE } from "@/lib/seo";
  * are generated from `lib/resources.ts` and need no edit here.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  /*
+   * The date the marketing pages last changed in substance. A sitemap that
+   * stamps every URL with the build time tells a crawler everything changed
+   * on every deploy, and it learns to ignore the field. Bump this when the
+   * pages themselves are edited.
+   */
+  const pagesUpdated = new Date("2026-11-12");
   const routes: [string, number, MetadataRoute.Sitemap[number]["changeFrequency"]][] = [
     ["", 1, "weekly"],
     ["/how-it-works", 0.9, "monthly"],
@@ -29,14 +35,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...routes.map(([path, priority, changeFrequency]) => ({
       url: `${BASE}${path}`,
-      lastModified: now,
+      lastModified: pagesUpdated,
       changeFrequency,
       priority,
     })),
     // One page per region — the pages a suburb search lands on.
     ...REGIONS.map((region) => ({
       url: `${BASE}/areas/${region.slug}`,
-      lastModified: now,
+      lastModified: pagesUpdated,
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),

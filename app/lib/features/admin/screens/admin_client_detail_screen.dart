@@ -18,6 +18,7 @@ import '../../../core/models/job.dart';
 import '../../billing/providers/billing_providers.dart';
 import '../../billing/widgets/invoice_table.dart';
 import '../providers/clients_providers.dart';
+import '../widgets/account_closure_card.dart';
 import '../widgets/client_form_dialog.dart';
 import '../../../core/widgets/table_scroll.dart';
 import '../../../core/utils/public_ref.dart';
@@ -72,6 +73,10 @@ class _ClientDetailBody extends ConsumerWidget {
             const SizedBox(height: 16),
             _HeaderCard(client: client, desktop: desktop),
             const SizedBox(height: 24),
+            if (client.closure != null) ...[
+              AccountClosureCard(client: client),
+              const SizedBox(height: 24),
+            ],
             if (desktop)
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,8 +208,14 @@ class _HeaderCard extends StatelessWidget {
       ],
     );
 
-    final actions = Row(
-      mainAxisSize: MainAxisSize.min,
+    // A closed account is a record: nothing more to edit or book. Wrap,
+    // not Row: three actions don't fit one line on a phone.
+    final actions = client.isClosed
+        ? const StatusChip(status: 'archived', label: 'Closed')
+        : Wrap(
+      spacing: 12,
+      runSpacing: 8,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         OutlinedButton.icon(
           style: OutlinedButton.styleFrom(
@@ -215,7 +226,6 @@ class _HeaderCard extends StatelessWidget {
           icon: const Icon(Icons.edit_outlined, size: 18),
           label: const Text('Edit Profile'),
         ),
-        const SizedBox(width: 12),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(0, 44),
@@ -225,6 +235,22 @@ class _HeaderCard extends StatelessWidget {
           icon: const Icon(Icons.add_box_outlined, size: 18),
           label: const Text('New Job'),
         ),
+        if (!client.isClosing)
+          PopupMenuButton<String>(
+            tooltip: 'More',
+            icon: const Icon(Icons.more_vert),
+            onSelected: (_) => StartClosureDialog.show(context, client),
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: 'close',
+                child: ListTile(
+                  leading: Icon(Icons.lock_outline),
+                  title: Text('Close account…'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+            ],
+          ),
       ],
     );
 

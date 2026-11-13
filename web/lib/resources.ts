@@ -1,4 +1,4 @@
-import type { IllustrationName } from "@/components/graphics/Illustration";
+import type { PhotoId } from "@/lib/photos";
 
 /**
  * The guides library, as plain data.
@@ -23,9 +23,12 @@ export type Article = {
   excerpt: string;
   category: string;
   readMinutes: number;
+  /** ISO date the guide first went up. */
+  published: string;
   /** ISO date. Rendered as "Updated <month year>". */
   updated: string;
-  illustration: IllustrationName;
+  /** Header and index-card photograph, from lib/photos.ts. */
+  photo: PhotoId;
   intro: string;
   sections: ArticleSection[];
   /** Related internal links shown at the foot of the article. */
@@ -37,18 +40,19 @@ export const ARTICLES: Article[] = [
     slug: "student-storage-summer-break",
     title: "Student storage in Cape Town over the summer break",
     excerpt:
-      "Res closes, the digs lease ends in November and the new one starts in February. Here is how to bridge the gap without dragging a room's worth of stuff home.",
+      "Res closes, your rental lease ends in November and the new one starts in February. Here is how to bridge the gap without dragging a room's worth of stuff home.",
     category: "Students",
     readMinutes: 5,
+    published: "2026-10-22",
     updated: "2026-10-22",
-    illustration: "moving",
+    photo: "hero-home",
     intro:
       "Every year, students across Rondebosch, Observatory, Mowbray, Bellville and the city centre have the same problem. The academic year ends, residence or the lease ends with it, and the next place only opens in February. That leaves two or three months of furniture, books and a bar fridge with nowhere to go. Here is how to sort it out without your parents driving down to fetch everything.",
     sections: [
       {
         heading: "Work out your two dates first",
         paragraphs: [
-          "The date you have to be out, and the date you can move into next year's place. Res move-out dates are fixed and published early. Private digs usually follow the lease, and many student leases end on 30 November. Write both dates down before you book anything.",
+          "The date you have to be out, and the date you can move into next year's place. Res move-out dates are fixed and published early. Private accommodation usually follows the lease, and many student leases end on 30 November. Write both dates down before you book anything.",
           "If you are flying home straight after your last exam, book collection for the day before you leave, not the morning of your flight.",
         ],
       },
@@ -66,7 +70,7 @@ export const ARTICLES: Article[] = [
       {
         heading: "Sharing with housemates",
         paragraphs: [
-          "Housemates in a digs can share a collection slot and keep separate accounts, so each person's boxes are billed and returned to them alone. That matters in February, when people move to different houses.",
+          "Housemates in the same house can share a collection slot and keep separate accounts, so each person's boxes are billed and returned to them alone. That matters in February, when people move to different houses.",
         ],
       },
       {
@@ -89,8 +93,9 @@ export const ARTICLES: Article[] = [
       "Moving down from Gauteng usually means renting before you buy. What to bring, what to store, and how to stop paying for a house-sized truck twice.",
     category: "Moving",
     readMinutes: 6,
+    published: "2026-10-22",
     updated: "2026-10-22",
-    illustration: "map-location",
+    photo: "region-city",
     intro:
       "Many families moving from Gauteng to the Western Cape rent first, and for good reason. The suburbs feel different on the ground than they do on a property portal, and a few months of living here tells you whether you belong in Durbanville, Table View or Somerset West. The catch is that a rental is usually smaller than the house you sold, so something has to happen to the furniture that does not fit.",
     sections: [
@@ -137,8 +142,9 @@ export const ARTICLES: Article[] = [
       "Six weeks of ordered steps, from giving notice to handing back the keys — with the bits people forget, like the municipal account and the geyser.",
     category: "Moving",
     readMinutes: 7,
+    published: "2026-07-14",
     updated: "2026-07-14",
-    illustration: "checklist",
+    photo: "hero-how",
     intro:
       "Most moving stress is scheduling stress. The lifting is one bad day; the fortnight of half-finished admin either side is what actually ruins the month. This is the order we have watched work, built around the dates that are fixed for you — your notice period and your handover — rather than the ones you can move.",
     sections: [
@@ -204,8 +210,9 @@ export const ARTICLES: Article[] = [
       "A room-by-room method for flats where there is no garage to hide things in — and an honest rule for what deserves to be stored rather than sold.",
     category: "Organising",
     readMinutes: 6,
+    published: "2026-06-02",
     updated: "2026-06-02",
-    illustration: "questions",
+    photo: "box-open",
     intro:
       "Advice written for suburban houses assumes a garage, a loft and a spare room. A one-bedroom in Sea Point or Observatory has none of those, which means every object is competing for space you actively live in. The method below is built for that constraint: decide by frequency of use, not by sentiment, and get the seasonal things out of the room entirely.",
     sections: [
@@ -259,8 +266,9 @@ export const ARTICLES: Article[] = [
       "The rent is roughly half the bill. Here is the rest of it — access fees, insurance, the deposit, and the drive — and when a unit is still the right answer.",
     category: "Costs",
     readMinutes: 8,
+    published: "2026-08-11",
     updated: "2026-08-11",
-    illustration: "pricing",
+    photo: "hero-compare",
     intro:
       "Self-storage is advertised on a monthly rent, and the rent is the part that is easiest to compare and least likely to be the whole number. This is what the twelve-month figure usually looks like once the rest of it is on the page — and, since we sell the alternative, the cases where a unit still beats us.",
     sections: [
@@ -320,8 +328,9 @@ export const ARTICLES: Article[] = [
       "Weight distribution, what actually causes damage in storage, and the five things that should never go into a sealed box in the first place.",
     category: "Practical",
     readMinutes: 5,
+    published: "2026-05-20",
     updated: "2026-05-20",
-    illustration: "package-arrived",
+    photo: "box-closed",
     intro:
       "Almost nothing is damaged in storage by the storage. It is damaged in the handling either side, or by being sealed in with something it should not have been sealed in with. Both are avoidable in the ten minutes it takes to pack a box properly.",
     sections: [

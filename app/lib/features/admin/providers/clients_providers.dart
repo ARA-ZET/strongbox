@@ -22,6 +22,14 @@ Stream<List<Client>> clients(Ref ref) {
   return ref.watch(clientRepositoryProvider).watchAll(tenantId: tenantId);
 }
 
+/// Closed (archived) accounts, newest first — the directory's "Closed"
+/// filter. Kept for the retention period (functions/src/closure.js).
+@riverpod
+Stream<List<Client>> closedClients(Ref ref) {
+  final tenantId = ref.watch(currentTenantIdProvider);
+  return ref.watch(clientRepositoryProvider).watchClosed(tenantId: tenantId);
+}
+
 /// clientId → display name lookup used by job/unit tables.
 @riverpod
 Map<String, String> clientNames(Ref ref) {
@@ -53,7 +61,8 @@ class ClientSearchQuery extends _$ClientSearchQuery {
   void set(String value) => state = value;
 }
 
-/// Directory status filter: all | active | pastDue | cancelled.
+/// Directory status filter: all | active | pastDue | cancelled | closing
+/// (asked to close) | closed (archived accounts).
 @riverpod
 class ClientStatusFilter extends _$ClientStatusFilter {
   @override
@@ -66,11 +75,18 @@ class ClientStatusFilter extends _$ClientStatusFilter {
 List<Client> filteredClients(Ref ref) {
   final query = ref.watch(clientSearchQueryProvider).trim().toLowerCase();
   final status = ref.watch(clientStatusFilterProvider);
-  final list = ref.watch(clientsProvider).valueOrNull ?? const [];
+  final list = status == 'closed'
+      ? ref.watch(closedClientsProvider).valueOrNull ?? const []
+      : ref.watch(clientsProvider).valueOrNull ?? const [];
 
   return list.where((client) {
-    if (status != 'all' && client.subscriptionStatus.name != status) {
-      return false;
+    switch (status) {
+      case 'all' || 'closed':
+        break;
+      case 'closing':
+        if (!client.isClosing) return false;
+      default:
+        if (client.subscriptionStatus.name != status) return false;
     }
     if (query.isEmpty) return true;
     return client.displayName.toLowerCase().contains(query) ||

@@ -7,15 +7,15 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadow.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/contact_us_card.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../../core/widgets/secondary_button.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/client_providers.dart';
+import '../widgets/account_closure_section.dart';
 import '../../../core/utils/public_ref.dart';
 
-/// Account settings: personal info, security, danger zone.
+/// Account settings: personal info, security, closing the account.
 /// Design: client_designs/account_settings/screen.png.
 class ClientAccountScreen extends ConsumerStatefulWidget {
   const ClientAccountScreen({super.key});
@@ -81,28 +81,6 @@ class _ClientAccountScreenState extends ConsumerState<ClientAccountScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Password reset email sent to $email')),
-      );
-    }
-  }
-
-  Future<void> _requestDeletion() async {
-    final confirmed = await showConfirmDialog(
-      context,
-      title: 'Request account deletion?',
-      message:
-          'Deleting your account is permanent. All stored data, delivery '
-          'history and billing records will be archived and then removed '
-          'after 30 days. Our team will contact you to confirm.',
-      isDestructive: true,
-      confirmLabel: 'Request Deletion',
-    );
-    if (!confirmed) return;
-    await ref.read(accountActionsProvider.notifier).requestAccountDeletion();
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content:
-                Text('Deletion request logged — our team will be in touch.')),
       );
     }
   }
@@ -330,50 +308,8 @@ class _ClientAccountScreenState extends ConsumerState<ClientAccountScreen> {
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          // Danger zone ------------------------------------------------------
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            decoration: BoxDecoration(
-              color: AppColors.statusErrorBg,
-              borderRadius: AppRadius.md,
-              border: Border.all(color: AppColors.statusError),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.warning_amber_rounded,
-                        color: AppColors.statusError),
-                    const SizedBox(width: AppSpacing.sm),
-                    Text('Danger Zone',
-                        style: tt.titleMedium
-                            ?.copyWith(color: AppColors.statusError)),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  'Deleting your account is a permanent action. All stored '
-                  'data, delivery history, and billing records will be '
-                  'archived and then permanently removed after 30 days.',
-                  style: tt.bodyMedium,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.statusError,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(0, 44),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md),
-                  ),
-                  onPressed: _requestDeletion,
-                  child: const Text('Request Account Deletion'),
-                ),
-              ],
-            ),
-          ),
+          // Closing the account --------------------------------------------
+          const AccountClosureSection(),
         ],
       );
 

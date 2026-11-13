@@ -29,6 +29,9 @@ _$ClientImpl _$$ClientImplFromJson(Map<String, dynamic> json) => _$ClientImpl(
           const [],
       storageUnitCount: (json['storageUnitCount'] as num?)?.toInt() ?? 0,
       notes: json['notes'] as String?,
+      closure: json['closure'] == null
+          ? null
+          : AccountClosure.fromJson(json['closure'] as Map<String, dynamic>),
       isActive: json['isActive'] as bool? ?? true,
       isDeleted: json['isDeleted'] as bool? ?? false,
       deletedAt: const NullableTimestampConverter().fromJson(json['deletedAt']),
@@ -52,6 +55,7 @@ Map<String, dynamic> _$$ClientImplToJson(_$ClientImpl instance) =>
       'memberIds': instance.memberIds,
       'storageUnitCount': instance.storageUnitCount,
       'notes': instance.notes,
+      'closure': instance.closure?.toJson(),
       'isActive': instance.isActive,
       'isDeleted': instance.isDeleted,
       'deletedAt':
@@ -72,4 +76,54 @@ const _$SubscriptionStatusEnumMap = {
   SubscriptionStatus.cancelled: 'cancelled',
   SubscriptionStatus.incomplete: 'incomplete',
   SubscriptionStatus.unpaid: 'unpaid',
+};
+
+_$AccountClosureImpl _$$AccountClosureImplFromJson(Map<String, dynamic> json) =>
+    _$AccountClosureImpl(
+      status: $enumDecodeNullable(_$ClosureStatusEnumMap, json['status']) ??
+          ClosureStatus.requested,
+      requestedAt:
+          const NullableTimestampConverter().fromJson(json['requestedAt']),
+      scheduledFor:
+          const NullableTimestampConverter().fromJson(json['scheduledFor']),
+      requestedBy: json['requestedBy'] as String? ?? '',
+      requestedByRole:
+          $enumDecodeNullable(_$UserRoleEnumMap, json['requestedByRole']) ??
+              UserRole.client,
+      reason: json['reason'] as String?,
+      closedAt: const NullableTimestampConverter().fromJson(json['closedAt']),
+      closedBy: json['closedBy'] as String?,
+      retainUntil:
+          const NullableTimestampConverter().fromJson(json['retainUntil']),
+      purgedAt: const NullableTimestampConverter().fromJson(json['purgedAt']),
+    );
+
+Map<String, dynamic> _$$AccountClosureImplToJson(
+        _$AccountClosureImpl instance) =>
+    <String, dynamic>{
+      'status': _$ClosureStatusEnumMap[instance.status]!,
+      'requestedAt':
+          const NullableTimestampConverter().toJson(instance.requestedAt),
+      'scheduledFor':
+          const NullableTimestampConverter().toJson(instance.scheduledFor),
+      'requestedBy': instance.requestedBy,
+      'requestedByRole': _$UserRoleEnumMap[instance.requestedByRole]!,
+      'reason': instance.reason,
+      'closedAt': const NullableTimestampConverter().toJson(instance.closedAt),
+      'closedBy': instance.closedBy,
+      'retainUntil':
+          const NullableTimestampConverter().toJson(instance.retainUntil),
+      'purgedAt': const NullableTimestampConverter().toJson(instance.purgedAt),
+    };
+
+const _$ClosureStatusEnumMap = {
+  ClosureStatus.requested: 'requested',
+  ClosureStatus.closed: 'closed',
+  ClosureStatus.purged: 'purged',
+};
+
+const _$UserRoleEnumMap = {
+  UserRole.admin: 'admin',
+  UserRole.driver: 'driver',
+  UserRole.client: 'client',
 };

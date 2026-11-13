@@ -81,7 +81,7 @@ export const USE_CASES = [
   {
     icon: "school",
     title: "Students over the long break",
-    body: "Res closes, the digs lease ends, and you are going home for December. We collect at the end of the year and deliver to the new place in February.",
+    body: "Res closes, your rental lease ends, and you are going home for December. We collect at the end of the year and deliver to the new place in February.",
   },
   {
     icon: "flight_land",

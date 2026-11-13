@@ -6,11 +6,13 @@ import { REGIONS } from "@/lib/areas";
 import { HQ_SUBURB, SERVICE_AREAS, WHATSAPP_HREF } from "@/lib/constants";
 import { getPrices } from "@/lib/prices";
 import { pageMeta, breadcrumbJsonLd } from "@/lib/seo";
+import PhotoHero from "@/components/PhotoHero";
+import CoverageMap from "@/components/visuals/CoverageMap";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { boxFrom } = await getPrices();
   return pageMeta({
-    title: "Areas We Serve — Storage Collection Across Cape Town",
+    title: "Storage Collection Areas Across Cape Town",
     description: `Door-to-door storage collection across Cape Town, from Bloubergstrand to Gordon's Bay and Sea Point to Khayelitsha. Check your suburb. From R${boxFrom}/box a month.`,
     path: "/areas",
   });
@@ -30,30 +32,27 @@ export default async function AreasPage() {
       <JsonLd data={breadcrumbJsonLd([{ name: "Areas We Serve", path: "/areas" }])} />
 
       {/* Hero — the checker is the page's primary action, so it sits in the first screen. */}
-      <section className="py-14 md:py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <span className="font-label-caps text-accent-deep tracking-widest uppercase text-xs mb-3 block">
-              Areas We Serve
-            </span>
-            <h1 className="text-headline-h1 font-bold text-navy-deep mb-4">
-              Storage collection across Cape Town
-            </h1>
-            <p className="text-on-surface-variant text-body-main max-w-xl">
-              We collect from {Math.floor(SERVICE_AREAS.length / 10) * 10}+ suburbs, from Atlantis to Gordon&apos;s
-              Bay and from Sea Point to Khayelitsha. Everything is stored in one facility and
-              comes back to your door when you ask for it.
-            </p>
-          </div>
-          <div className="bg-surface-white rounded-xl shadow-tactile border border-outline-variant p-6 md:p-8">
+      <PhotoHero
+        photo="hero-areas"
+        trail={[{ name: "Areas we serve", path: "/areas" }]}
+        title="Storage collection across Cape Town"
+        lead={
+          <p>
+            We collect from {Math.floor(SERVICE_AREAS.length / 10) * 10}+ suburbs, from Atlantis
+            to Gordon&apos;s Bay and from Sea Point to Khayelitsha. Everything is stored in one
+            facility and comes back to your door when you ask for it.
+          </p>
+        }
+        aside={
+          <div className="rounded-2xl bg-surface-white p-6 text-on-surface shadow-tactile-md md:p-8">
             <SuburbChecker />
           </div>
-        </div>
-      </section>
+        }
+      />
 
       {/* Facts that hold everywhere — stated once here, not repeated per region. */}
       <section className="py-14 bg-surface-white">
-        <ul className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <ul className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter">
           {facts.map(({ icon, title, body }) => (
             <li key={title} className="flex items-start gap-4">
               <div className="w-11 h-11 rounded-lg bg-sky-tint flex items-center justify-center shrink-0">
@@ -71,8 +70,8 @@ export default async function AreasPage() {
       </section>
 
       {/* Regions */}
-      <section className="py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+      <section className="py-14 md:py-20 bg-mist">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <h2 className="text-headline-h2 font-bold text-navy-deep mb-3">
             Find your part of the city
           </h2>
@@ -80,14 +79,21 @@ export default async function AreasPage() {
             Each area has its own kinds of homes and its own reasons for needing space.
             Choose yours to see how collection works there.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-            {REGIONS.map((region) => (
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:gap-14">
+          <div className="lg:sticky lg:top-36 lg:self-start">
+            <CoverageMap />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+            {REGIONS.map((region, i) => (
               <Link
                 key={region.slug}
                 href={`/areas/${region.slug}`}
-                className="group bg-surface-white rounded-xl border border-outline-variant shadow-tactile p-7 flex flex-col card-hover"
+                className="group bg-surface-white rounded-2xl border border-outline-variant p-6 flex flex-col hover:border-accent-deep transition-colors"
               >
-                <h3 className="text-headline-h3 font-bold text-navy-deep mb-2 group-hover:text-accent-deep transition-colors">
+                <h3 className="flex items-center gap-3 text-headline-h3 font-bold text-navy-deep mb-2 group-hover:text-accent-deep transition-colors">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-navy-deep text-xs font-bold group-hover:border-accent-deep">
+                    {i + 1}
+                  </span>
                   {region.name}
                 </h3>
                 <p className="text-sm text-on-surface-variant mb-4">{region.summary}</p>
@@ -103,12 +109,13 @@ export default async function AreasPage() {
               </Link>
             ))}
           </div>
+          </div>
         </div>
       </section>
 
       {/* Close */}
       <section className="py-16 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <h2 className="text-headline-h3 font-bold text-navy-deep mb-1">
               Suburb not listed?

@@ -16,6 +16,11 @@
  *                                drop-off) awaiting confirmation
  *   requestDelivery              client callable: stored units → delivery
  *                                awaiting confirmation
+ *   requestAccountClosure /      client or admin callables: close an
+ *   cancelAccountClosure /       account in 30 days, cancel it, or (admin)
+ *   closeAccountNow              close a pending one now
+ *   dailyClosureSweep            closes accounts whose date has come;
+ *                                purges records past retention
  *
  * Billing is invoices-only: clients pay by EFT and an admin marks invoices
  * paid in the app. Anything that emails writes a doc to `mail`, which
@@ -25,6 +30,7 @@ const { initializeApp } = require("firebase-admin/app");
 const { getFirestore, FieldValue } = require("firebase-admin/firestore");
 const { getMessaging } = require("firebase-admin/messaging");
 const { getAuth } = require("firebase-admin/auth");
+const { getStorage } = require("firebase-admin/storage");
 const { setGlobalOptions } = require("firebase-functions/v2");
 const {
   onDocumentCreated,
@@ -49,6 +55,7 @@ const { createStore, NOT_FOUND } = require("./src/store");
 const { createInvites } = require("./src/invites");
 const { createBooking } = require("./src/booking");
 const { createDelivery } = require("./src/delivery");
+const { createClosure } = require("./src/closure");
 // const mailer = require("./src/mailer");
 
 initializeApp();
@@ -60,6 +67,10 @@ const store = createStore(db);
 const invites = createInvites(db, getAuth());
 const booking = createBooking(db);
 const delivery = createDelivery(db);
+// The bucket is resolved when a purge runs, not at load.
+const closure = createClosure(db, getAuth(),
+    { deleteFiles: (options) => getStorage().bucket().deleteFiles(options) },
+    store);
 const { notificationData, createOnce, deliver, recomputeBillingStatus } = store;
 
 
@@ -310,6 +321,25 @@ exports.resendInvite = onCall((request) => invites.resendInvite(request));
 exports.bookPickup = onCall((request) => booking.bookPickup(request));
 exports.requestDelivery = onCall((request) =>
   delivery.requestDelivery(request));
+
+// ------------------------------------------------------ account closure
+// See src/closure.js: what is cleared at closing, what is kept and for how
+// long, and what blocks a closure.
+
+exports.requestAccountClosure = onCall((request) =>
+  closure.requestAccountClosure(request));
+exports.cancelAccountClosure = onCall((request) =>
+  closure.cancelAccountClosure(request));
+exports.closeAccountNow = onCall({ timeoutSeconds: 300 }, (request) =>
+  closure.closeAccountNow(request));
+
+exports.dailyClosureSweep = onSchedule({
+  schedule: "30 7 * * *",
+  timeZone: TIME_ZONE,
+  timeoutSeconds: 540,
+}, async () => {
+  await closure.runClosureSweep(new Date());
+});
 
 // ---------------------------------------------------------------- email
 // Off until SMTP is set up. Declaring the SMTP_URL secret blocks every

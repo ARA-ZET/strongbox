@@ -11,6 +11,7 @@ import '../../../core/enums/app_enums.dart';
 import '../../../core/models/client.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../providers/clients_providers.dart';
+import '../widgets/account_closure_card.dart';
 import '../widgets/client_form_dialog.dart';
 import '../../../core/widgets/table_scroll.dart';
 import '../../../core/utils/public_ref.dart';
@@ -110,6 +111,9 @@ class _AdminClientsScreenState extends ConsumerState<AdminClientsScreen> {
                 DropdownMenuItem(value: 'pastDue', child: Text('Past Due')),
                 DropdownMenuItem(
                     value: 'cancelled', child: Text('Cancelled')),
+                DropdownMenuItem(value: 'closing', child: Text('Closing')),
+                DropdownMenuItem(
+                    value: 'closed', child: Text('Closed accounts')),
               ],
               onChanged: (value) {
                 if (value != null) {
@@ -352,7 +356,13 @@ class _ClientRowState extends ConsumerState<_ClientRow> {
                 flex: 2,
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: StatusChip(status: client.subscriptionStatus.name),
+                  child: client.isClosed
+                      ? const StatusChip(status: 'archived', label: 'Closed')
+                      : client.isClosing
+                          ? const StatusChip(
+                              status: 'pastDue', label: 'Closing')
+                          : StatusChip(
+                              status: client.subscriptionStatus.name),
                 ),
               ),
               SizedBox(
@@ -367,6 +377,8 @@ class _ClientRowState extends ConsumerState<_ClientRow> {
                     PopupMenuItem(value: 'edit', child: Text('Edit')),
                     PopupMenuItem(
                         value: 'deactivate', child: Text('Deactivate')),
+                    PopupMenuItem(
+                        value: 'close', child: Text('Close account…')),
                   ],
                 ),
               ),
@@ -387,6 +399,8 @@ class _ClientRowState extends ConsumerState<_ClientRow> {
         await reportFailure(context, 'Could not deactivate client', () => ref
             .read(clientMutationsProvider.notifier)
             .updateClient(client.id, status: SubscriptionStatus.cancelled));
+      case 'close':
+        await StartClosureDialog.show(context, client);
     }
   }
 }

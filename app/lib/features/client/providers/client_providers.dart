@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/constants/storage_paths.dart';
+import '../../../core/utils/account_closure.dart';
 import '../../../core/utils/async_value_ext.dart';
 import '../../../core/constants/pricing.dart';
 import '../../../core/enums/app_enums.dart';
@@ -93,6 +94,14 @@ List<ClientTodo> myTodos(Ref ref) => clientTodos(
       units: ref.watch(myUnitsProvider).valueOrNull ?? const [],
       invoices: ref.watch(myInvoicesProvider).valueOrNull ?? const [],
       now: DateTime.now(),
+    );
+
+/// What still stops the client's account closing (empty = nothing).
+@riverpod
+List<ClosureBlocker> myClosureBlockers(Ref ref) => closureBlockers(
+      units: ref.watch(myUnitsProvider).valueOrNull ?? const [],
+      jobs: ref.watch(myJobsProvider).valueOrNull ?? const [],
+      invoices: ref.watch(myInvoicesProvider).valueOrNull ?? const [],
     );
 
 /// Storage search text.
@@ -372,21 +381,27 @@ class AccountActions extends _$AccountActions {
     state.throwIfError();
   }
 
-  /// Logs a deletion request for staff review (no immediate delete).
-  Future<void> requestAccountDeletion() async {
+  /// Asks to close the client's account: it closes 30 days from now
+  /// (functions/src/closure.js), once their items are back and invoices
+  /// are settled. Returns the closing date.
+  Future<DateTime?> requestAccountClosure() async {
     final client = ref.read(currentClientProvider).valueOrNull;
-    final tenantId = ref.read(currentTenantIdProvider);
+    if (client == null) return null;
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(() =>
+        ref.read(accountClosureRepositoryProvider).request(client.id));
+    state = result;
+    state.throwIfError();
+    return result.valueOrNull;
+  }
+
+  /// Keeps the account open: cancels a pending closure.
+  Future<void> cancelAccountClosure() async {
+    final client = ref.read(currentClientProvider).valueOrNull;
+    if (client == null) return;
     state = const AsyncLoading();
     state = await AsyncValue.guard(() =>
-        ref.read(notificationRepositoryProvider).create(
-              tenantId: tenantId,
-              type: NotificationType.systemAlert,
-              title: 'Account deletion requested',
-              body:
-                  'Client ${client?.displayName ?? ''} requested account deletion.',
-              entityType: 'client',
-              entityId: client?.id,
-            ));
+        ref.read(accountClosureRepositoryProvider).cancel(client.id));
     state.throwIfError();
   }
 }

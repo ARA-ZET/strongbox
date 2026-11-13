@@ -8,7 +8,12 @@ service cloud.firestore {
     }
     function isAdmin() { return signedIn() && me().role == 'admin'; }
     function isDriver() { return signedIn() && me().role == 'driver'; }
-    function isClient() { return signedIn() && me().role == 'client'; }
+    // A closed account's login is deleted, but its last token works for up
+    // to an hour — its archived profile reads as nobody.
+    function isClient() {
+      return signedIn() && me().role == 'client' &&
+        me().get('isDeleted', false) != true;
+    }
     function myClientId() { return me().clientId; }
     function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
     // A unit of the signed-in client's that is still with them, awaiting
@@ -52,11 +57,13 @@ service cloud.firestore {
         (isClient() && request.resource.data.primaryUserId == request.auth.uid) ||
         (signedIn() && request.resource.data.primaryUserId == request.auth.uid);
       // Clients may edit their own profile, but billing fields
-      // (subscription state, Stripe ids) are set by ops or Stripe.
+      // (subscription state, Stripe ids) are set by ops or Stripe, and
+      // closing an account goes through the account-closure functions.
       allow update: if isAdmin() ||
         (ownsClientDoc(resource.data) &&
           !request.resource.data.diff(resource.data).affectedKeys().hasAny(
-            ['subscriptionStatus', 'subscriptionId', 'stripeCustomerId']));
+            ['subscriptionStatus', 'subscriptionId', 'stripeCustomerId',
+             'closure', 'isDeleted', 'deletedAt', 'isActive']));
     }
 
     // ---- Storage units & items ----------------------------------------

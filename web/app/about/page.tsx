@@ -1,153 +1,132 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import SectionDivider from "@/components/graphics/SectionDivider";
-import SitePhoto from "@/components/SitePhoto";
 import FacilityProof from "@/components/FacilityProof";
-import { TRUST_STATS } from "@/lib/constants";
-
+import ClosingCta from "@/components/ClosingCta";
 import JsonLd from "@/components/JsonLd";
+import PhotoHero from "@/components/PhotoHero";
+import Section from "@/components/ui/Section";
+import SectionHeading from "@/components/ui/SectionHeading";
+import IconPoint from "@/components/ui/IconPoint";
+import CoverageMap from "@/components/visuals/CoverageMap";
+import { REGIONS } from "@/lib/areas";
+import {
+  HQ_SUBURB,
+  OPENING_HOURS_LINES,
+  SERVICE_AREAS,
+} from "@/lib/constants";
 import { pageMeta, breadcrumbJsonLd } from "@/lib/seo";
+
+const TRAIL = [{ name: "About", path: "/about" }];
+
 export const metadata: Metadata = pageMeta({
-  title: "About StrongBox — Valet Storage Built in Cape Town",
+  title: "About StrongBox, Cape Town Door-to-Door Storage",
   description:
-    "StrongBox started in Cape Town to make storage simple for every household in the city. We do the lifting and the driving, and you can see every box in your account.",
+    "StrongBox is a Cape Town storage service that comes to you: one monitored facility in Kensington, collections across the metro, every box tracked.",
   path: "/about",
 });
 
-const values = [
+const VALUES = [
   {
     icon: "shield",
-    title: "Security First",
-    body: "Every item is barcoded, tracked, and stored in our climate-controlled, 24/7 monitored facility. Your peace of mind is our foundation.",
+    title: "Know where everything is",
+    body: "Every box is labelled, scanned and given a shelf position. If we cannot tell you where something is, we have failed at the one thing we are for.",
   },
   {
     icon: "hail",
-    title: "Total Convenience",
-    body: "We manage the logistics from your doorstep to our vault. No heavy lifting, no traffic, no warehouse trips required.",
+    title: "You should not have to drive",
+    body: "Collection and return happen at your door. No van hire, no warehouse visit, no afternoon lost to it.",
   },
   {
     icon: "visibility",
-    title: "Full Transparency",
-    body: "Manage your storage via your digital dashboard. See photos of every box and request returns with a single click.",
+    title: "Say what it costs, and what it does not cover",
+    body: "Prices are published and the same in every suburb. Insurance is not included, and we say so before you book.",
   },
 ];
 
 export default function AboutPage() {
+  /*
+   * Facts, not figures. This band used to show customer counts and a star
+   * rating that predated the service opening. What is here instead is true
+   * today and stays true: where we are, how far we go, when we answer.
+   */
+  const facts = [
+    { value: "1", label: `Facility, in ${HQ_SUBURB}` },
+    { value: String(REGIONS.length), label: "Regions of the metro covered" },
+    { value: `${Math.floor(SERVICE_AREAS.length / 10) * 10}+`, label: "Suburbs we collect from" },
+    { value: "0", label: "Months of minimum term" },
+  ];
+
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "About", path: "/about" }])} />
+      <JsonLd data={breadcrumbJsonLd(TRAIL)} />
+
       {/* Hero */}
-      <section className="py-28 bg-navy-deep text-center">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <h1 className="text-display-bold font-bold text-surface-white mb-6">
-            Storage built for how Cape Town lives
-          </h1>
-          <p className="text-on-navy-variant text-body-main max-w-2xl mx-auto">
-            Flats on the Seaboard, digs near campus, family homes on the Flats and new
-            estates up the West Coast. Every home runs out of space eventually, so we
-            collect what you are not using and bring it back when you need it.
-          </p>
-        </div>
-      </section>
+      <PhotoHero
+        photo="hero-about"
+        trail={TRAIL}
+        title="Storage built for how Cape Town lives"
+        lead="Flats on the Seaboard, student accommodation near campus, family homes on the Flats and new estates up the West Coast. Every home runs out of space eventually, so we collect what you are not using and bring it back when you need it."
+      />
 
-      <SectionDivider from="navyDeep" to="mist" variant="wave" />
-
-      {/* Our Story */}
-      <section className="py-24 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <span className="font-label-caps text-accent-deep uppercase tracking-widest text-xs mb-4 block">
-                Born in the Mother City
-              </span>
-              <h2 className="text-headline-h1 font-bold text-navy-deep mb-6">Our Story</h2>
-              <p className="text-on-surface-variant text-body-main mb-5">
-                StrongBox began with a simple observation: urban living in Cape Town is spectacular, but space is a finite luxury. We realised that traditional self-storage was an industrial, inconvenient chore that didn&apos;t fit the modern Capetonian lifestyle.
+      {/* Why we exist */}
+      <Section>
+        <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
+          <div data-reveal>
+            <h2 className="text-headline-h1 font-bold text-navy-deep">Why we started</h2>
+            <div className="mt-5 space-y-5 text-body-lead text-on-surface-variant">
+              <p>
+                Self-storage asks a lot of you. You rent a unit bigger than you need, hire
+                a bakkie, carry everything in yourself, and then drive back every time
+                you want one thing out of it.
               </p>
-              <p className="text-on-surface-variant text-body-main mb-5">
-                We envisioned a service that acts as an &ldquo;Extended Closet&rdquo; — a natural, premium extension of your home where your belongings are cared for with the same meticulous attention you&apos;d give them yourself. Since our founding, we&apos;ve focused on combining high-end concierge service with military-grade security.
+              <p>
+                We thought the storage should do the travelling instead. You pay for the
+                boxes and items you actually store, we fetch them from your door, and
+                your account shows a photograph and a location for every one of them.
               </p>
-              <blockquote className="border-l-4 border-accent-deep pl-5 py-2">
-                <p className="text-accent-deep font-body-strong italic text-lg">
-                  &ldquo;We do the driving. You keep your space.&rdquo;
-                </p>
-              </blockquote>
             </div>
-            <SitePhoto id="team-portrait" className="shadow-tactile" />
-          </div>
-        </div>
-      </section>
+            <blockquote className="mt-8 border-l-4 border-accent pl-5">
+              <p className="text-headline-h3 font-semibold text-navy-deep">
+                We do the driving. You keep your space.
+              </p>
+            </blockquote>
 
-      {/* Stats */}
-      <section className="py-16 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {TRUST_STATS.map(({ value, label }) => (
-              <div key={label} className="bg-mist rounded-xl p-8 text-center shadow-tactile">
-                <p className="text-display-bold font-bold text-navy-deep mb-2">{value}</p>
-                <p className="text-label-caps text-accent-deep uppercase tracking-widest font-bold text-xs">
-                  {label}
-                </p>
-              </div>
-            ))}
+            <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-8 border-t border-outline-variant pt-8">
+              {facts.map(({ value, label }) => (
+                <div key={label} className="flex flex-col-reverse">
+                  <dt className="mt-1 text-sm text-on-surface-variant">{label}</dt>
+                  <dd className="text-display-bold font-bold text-navy-deep">{value}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-8 text-sm text-on-surface-variant">
+              Office hours: {OPENING_HOURS_LINES.join(", ")}.
+            </p>
           </div>
+          <CoverageMap />
         </div>
-      </section>
+      </Section>
 
       <FacilityProof tone="mist" />
 
-      {/* Values */}
-      <section className="py-24 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <div className="text-center mb-14">
-            <span className="font-label-caps text-accent-deep uppercase tracking-widest text-xs mb-3 block">
-              What We Stand For
-            </span>
-            <h2 className="text-headline-h1 font-bold text-navy-deep">Our Core Values</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            {values.map(({ icon, title, body }) => (
-              <div key={title} className="bg-mist rounded-xl p-8 shadow-tactile card-hover text-center">
-                <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-5">
-                  <span className="material-symbols-outlined text-accent-deep text-3xl">{icon}</span>
-                </div>
-                <h3 className="text-headline-h3 font-bold text-navy-deep mb-3">{title}</h3>
-                <p className="text-on-surface-variant text-body-main">{body}</p>
-              </div>
-            ))}
-          </div>
+      {/* What we hold ourselves to */}
+      <Section>
+        <SectionHeading title="What we hold ourselves to" />
+        <div className="grid gap-10 md:grid-cols-3">
+          {VALUES.map(({ icon, title, body }, i) => (
+            <div key={title} data-reveal style={{ ["--i" as string]: i }}>
+              <IconPoint icon={icon} title={title}>
+                {body}
+              </IconPoint>
+            </div>
+          ))}
         </div>
-      </section>
+      </Section>
 
-      <SectionDivider from="white" to="navyDeep" variant="wave" />
-
-      {/* CTA */}
-      <section className="py-20 bg-navy-deep text-center">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <h2 className="text-headline-h1 font-bold text-surface-white mb-4">
-            Let us take it from here
-          </h2>
-          <p className="text-on-navy-variant mb-10 max-w-xl mx-auto">
-            Tell us what needs storing and we&apos;ll price it in about a minute — no
-            account required to see the number.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/pricing#calculator"
-              className="bg-accent text-on-accent px-10 py-4 rounded-xl font-body-strong hover:opacity-90 transition-all inline-flex items-center justify-center gap-2"
-            >
-              Get a Free Quote
-              <span className="material-symbols-outlined">arrow_forward</span>
-            </Link>
-            <Link
-              href="/contact"
-              className="border-2 border-surface-white/30 text-surface-white px-10 py-4 rounded-xl font-body-strong hover:bg-surface-white/10 transition-all"
-            >
-              Talk to Our Team
-            </Link>
-          </div>
-        </div>
-      </section>
+      <ClosingCta
+        title="Let us take it from here"
+        body="Tell us what needs storing and we will price it in about a minute. No account needed to see the number."
+        secondary={{ href: "/contact", label: "Talk to us" }}
+      />
     </>
   );
 }

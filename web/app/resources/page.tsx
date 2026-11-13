@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Illustration from "@/components/graphics/Illustration";
+import PhotoHero from "@/components/PhotoHero";
+import SitePhoto from "@/components/SitePhoto";
 import { ARTICLES, formatUpdated } from "@/lib/resources";
 
 import JsonLd from "@/components/JsonLd";
 import { pageMeta, breadcrumbJsonLd } from "@/lib/seo";
 export const metadata: Metadata = pageMeta({
-  title: "Storage & Moving Guides",
+  title: "Storage & Moving Guides for Cape Town",
   description:
-    "Practical guides for moving, decluttering and storing in Cape Town — moving-out checklists, small-space decluttering, what self-storage really costs, and how to pack a box that lasts.",
+    "Practical Cape Town guides to moving, decluttering and storing: moving-out checklists, what self-storage really costs, and how to pack a box that lasts.",
   path: "/resources",
 });
 
@@ -17,27 +18,16 @@ export default function ResourcesPage() {
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Guides", path: "/resources" }])} />
       {/* Hero */}
-      <section className="py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="font-label-caps text-accent-deep uppercase tracking-widest text-xs mb-4 block">
-              Guides
-            </span>
-            <h1 className="text-display-bold font-bold text-navy-deep mb-4">
-              Moving, decluttering and storing — written for Cape Town
-            </h1>
-            <p className="text-on-surface-variant text-body-main max-w-xl">
-              What we have learned collecting and returning other people&apos;s
-              belongings, written down. No email wall, no lead magnet.
-            </p>
-          </div>
-          <Illustration name="questions" priority className="max-w-[340px] mx-auto" />
-        </div>
-      </section>
+      <PhotoHero
+        photo="hero-guides"
+        trail={[{ name: "Guides", path: "/resources" }]}
+        title="Moving, decluttering and storing, written for Cape Town"
+        lead="What we have learned collecting and returning other people's belongings, written down. No email wall, no lead magnet."
+      />
 
       {/* Index */}
       <section className="py-16 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
             {ARTICLES.map((article) => (
               <Link
@@ -45,8 +35,13 @@ export default function ResourcesPage() {
                 href={`/resources/${article.slug}`}
                 className="group bg-surface-white border border-outline-variant rounded-xl overflow-hidden shadow-tactile card-hover flex flex-col"
               >
-                <div className="bg-mist p-8 flex items-center justify-center min-h-[12rem]">
-                  <Illustration name={article.illustration} className="max-w-[220px]" />
+                <div className="relative aspect-[16/9] overflow-hidden bg-navy-deep">
+                  <SitePhoto
+                    id={article.photo}
+                    sizes="(min-width: 1280px) 588px, (min-width: 768px) 50vw, 100vw"
+                    className="absolute inset-0"
+                    imgClassName="transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
                 </div>
                 <div className="p-8 flex flex-col flex-1">
                   <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -77,8 +72,8 @@ export default function ResourcesPage() {
       </section>
 
       {/* Tools cross-link */}
-      <section className="py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+      <section className="py-14 md:py-20 bg-mist">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <div className="bg-surface-white rounded-xl border border-outline-variant p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8 shadow-tactile">
             <div>
               <h2 className="text-headline-h2 font-bold text-navy-deep mb-3">

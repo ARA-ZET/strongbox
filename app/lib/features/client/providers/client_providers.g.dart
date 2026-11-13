@@ -271,6 +271,24 @@ final myTodosProvider = AutoDisposeProvider<List<ClientTodo>>.internal(
 );
 
 typedef MyTodosRef = AutoDisposeProviderRef<List<ClientTodo>>;
+String _$myClosureBlockersHash() => r'251313285ea4ffc7ee4d6f8ba9a88abc90e87964';
+
+/// What still stops the client's account closing (empty = nothing).
+///
+/// Copied from [myClosureBlockers].
+@ProviderFor(myClosureBlockers)
+final myClosureBlockersProvider =
+    AutoDisposeProvider<List<ClosureBlocker>>.internal(
+  myClosureBlockers,
+  name: r'myClosureBlockersProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$myClosureBlockersHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef MyClosureBlockersRef = AutoDisposeProviderRef<List<ClosureBlocker>>;
 String _$filteredMyUnitsHash() => r'bf78172633dbf560c2970081cf94b61c8959ae76';
 
 /// Units after search + status filter. [status] is a [StorageStatus] name
@@ -1206,7 +1224,7 @@ final deliveryRequestProvider =
 );
 
 typedef _$DeliveryRequest = AutoDisposeNotifier<DeliveryRequestData>;
-String _$accountActionsHash() => r'791d27cb5799c20ce73642a0733a6834e66a2899';
+String _$accountActionsHash() => r'513c58e9023d026d28b7f7068003a8873781cd8b';
 
 /// Profile, address, prefs and account-deletion writes for the client.
 ///

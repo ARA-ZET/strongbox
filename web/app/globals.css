@@ -14,6 +14,30 @@
   html:has([data-launch-bar]) {
     scroll-padding-top: 128px;
   }
+
+  /*
+   * One focus ring for the whole site. Keyboard users get a visible ring on
+   * every interactive element; mouse users never see it.
+   */
+  :focus-visible {
+    outline: 2px solid theme("colors.accent");
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  /* On navy the accent ring is too dark to read; sky clears it. */
+  .on-dark :focus-visible,
+  footer :focus-visible {
+    outline-color: theme("colors.sky");
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
 }
 
 @layer utilities {
@@ -46,4 +70,164 @@
 
 .material-symbols-filled {
   font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+/* -------------------------------------------------------------------------
+ * Drawing palette
+ *
+ * Every drawing in `components/visuals/` paints with these six roles rather
+ * than with colours, so one drawing works on a light band and on navy:
+ * `.viz` sets the light scheme, `.viz-dark` the navy one. The values are the
+ * Tailwind theme colours — nothing here introduces a new colour.
+ * ---------------------------------------------------------------------- */
+.viz {
+  /* Outlines and solid dark shapes. */
+  --ink: theme("colors.navy-deep");
+  /* The main surface of an object. */
+  --paper: theme("colors.surface-white");
+  /* Its shaded face. */
+  --tint: theme("colors.sky-tint");
+  /* Deeper shade, floors, far objects. */
+  --soft: theme("colors.surface-container");
+  /* Hairlines and quiet detail. */
+  --line: theme("colors.outline-variant");
+  /* The one thing the eye should land on. */
+  --pop: theme("colors.accent");
+  --pop-soft: theme("colors.sky");
+}
+.viz-dark {
+  --ink: theme("colors.on-navy");
+  --paper: theme("colors.navy");
+  --tint: theme("colors.navy-soft");
+  --soft: theme("colors.navy");
+  --line: theme("colors.navy-soft");
+  --pop: theme("colors.sky");
+  --pop-soft: theme("colors.accent");
+}
+
+/* -------------------------------------------------------------------------
+ * Motion
+ *
+ * Two rules keep this safe:
+ *
+ *  1. Nothing is hidden unless JavaScript is running. The hidden start state
+ *     is scoped to `.js`, a class an inline script in the root layout puts on
+ *     <html>. Without it — no JS, a crawler, a failed bundle — every element
+ *     renders in its finished state.
+ *  2. Every animated element is complete in its resting state. Animation only
+ *     ever adds movement to a picture that already makes sense still, so
+ *     `prefers-reduced-motion` can switch all of it off and lose nothing.
+ *
+ * `components/motion/RevealObserver.tsx` sets `data-revealed` on any element
+ * carrying `data-reveal` the first time it scrolls into view.
+ * ---------------------------------------------------------------------- */
+
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* `--i` staggers siblings: style={{ "--i": index }}. */
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+.js [data-reveal="fade"] {
+  transform: none;
+}
+.js [data-reveal][data-revealed] {
+  opacity: 1;
+  transform: none;
+}
+
+/*
+ * Drawings loop only while they are on screen: paused by default, running
+ * once their reveal container has been seen.
+ */
+.anim {
+  animation-play-state: paused;
+}
+[data-revealed] .anim,
+[data-revealed].anim,
+html:not(.js) .anim {
+  animation-play-state: running;
+}
+
+/* Dashed route that appears to flow in the direction of travel. */
+@keyframes route-flow {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+.anim-route {
+  animation: route-flow 1.6s linear infinite;
+}
+
+/* Scanner beam sweeping a QR label. */
+@keyframes scan-sweep {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(var(--scan-travel, 80px));
+  }
+}
+.anim-scan {
+  animation: scan-sweep 2.8s ease-in-out infinite;
+}
+
+/* Soft halo around a live point: a map pin, a status dot. */
+@keyframes halo {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+.anim-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: halo 2.4s ease-out infinite;
+}
+
+/*
+ * Hero photographs settle in: a slight zoom-out over the first moments the
+ * page is on screen. Transform only, so it costs nothing in layout and does
+ * not delay the image counting as painted.
+ */
+@keyframes hero-settle {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: none;
+  }
+}
+.hero-photo img {
+  animation: hero-settle 2.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .anim {
+    animation: none !important;
+  }
+  .hero-photo img {
+    animation: none;
+  }
+  .card-hover,
+  .card-hover:hover {
+    transition: none;
+    transform: none;
+  }
 }

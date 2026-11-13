@@ -323,6 +323,7 @@ function routeFor(role, n) {
       }
       if (n.entityType === "invoice") return "/client/subscription";
       if (n.entityType === "unit" && id) return `/client/storage/${id}`;
+      if (n.entityType === "account") return "/client/account";
       return "/client/notifications";
   }
 }

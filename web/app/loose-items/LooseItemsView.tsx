@@ -3,10 +3,9 @@
 import { useState } from "react";
 import type { Prices } from "@/lib/prices";
 import { quoteQuery } from "@/lib/quote";
-import Illustration from "@/components/graphics/Illustration";
-import SitePhoto from "@/components/SitePhoto";
 import Link from "next/link";
-import SectionDivider from "@/components/graphics/SectionDivider";
+import ClosingCta from "@/components/ClosingCta";
+import PhotoHero from "@/components/PhotoHero";
 
 /** The interactive body of /loose-items; `page.tsx` fetches the live prices. */
 export default function LooseItemsView({
@@ -24,26 +23,16 @@ export default function LooseItemsView({
   return (
     <>
       {/* Hero */}
-      <section className="py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="font-label-caps text-accent-deep uppercase tracking-widest text-xs mb-4 block">
-              Loose Items Storage
-            </span>
-            <h1 className="text-display-bold font-bold text-navy-deep mb-4">
-              We Store More Than Just Boxes
-            </h1>
-            <p className="text-on-surface-variant text-body-main max-w-xl">
-              Add furniture and oversized items that won&apos;t fit in a standard valet box. We handle everything from beds to office chairs. Priced by the exact space they occupy.
-            </p>
-          </div>
-          <SitePhoto id="loose-items-load" className="shadow-tactile" />
-        </div>
-      </section>
+      <PhotoHero
+        photo="hero-loose"
+        trail={[{ name: "Loose items", path: "/loose-items" }]}
+        title="Furniture and loose item storage"
+        lead="For the things that will not fit in a box: beds, bicycles, desks, surfboards. Each one is priced by the space it takes up, labelled, and tracked exactly as a box is."
+      />
 
       {/* Category filter + grid */}
       <section className="py-16 bg-surface-white">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           {/* Category chips */}
           <div className="flex gap-2 flex-wrap mb-10">
             {LOOSE_ITEM_CATEGORIES.map((cat) => (
@@ -103,18 +92,15 @@ export default function LooseItemsView({
       </section>
 
       {/* How pricing works */}
-      <section className="py-20 bg-mist">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+      <section className="py-14 md:py-20 bg-mist">
+        <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="font-label-caps text-accent-deep uppercase tracking-widest text-xs mb-4 block">
-                Fair Pricing
-              </span>
-              <h2 className="text-headline-h2 font-bold text-navy-deep mb-5">
-                How Loose Item Pricing Works
+              <h2 className="text-headline-h1 font-bold text-navy-deep mb-5">
+                How loose item pricing works
               </h2>
               <p className="text-on-surface-variant text-body-main mb-6">
-                We calculate the exact cubic metres your item occupies in our facility. No rounded-up guesses, no flat furniture fees — just accurate, honest pricing.
+                We work out the cubic metres your item takes up in our facility and charge for that. No rounded-up guesses and no flat furniture fee.
               </p>
               <div className="space-y-4">
                 {[
@@ -130,8 +116,7 @@ export default function LooseItemsView({
               </div>
             </div>
             <div className="bg-surface-white rounded-xl p-8 shadow-tactile">
-              <Illustration name="pricing" className="max-w-[220px] mx-auto mb-6" />
-              <h3 className="text-headline-h3 font-bold text-navy-deep mb-6">Example Calculation</h3>
+              <h3 className="text-headline-h3 font-bold text-navy-deep mb-6">An example</h3>
               <div className="space-y-4 text-sm">
                 <div className="flex justify-between py-3 border-b border-outline-variant">
                   <span className="text-on-surface-variant">Item</span>
@@ -157,33 +142,12 @@ export default function LooseItemsView({
         </div>
       </section>
 
-      <SectionDivider from="mist" to="navyDeep" variant="angle" />
-
-      {/* CTA */}
-      <section className="py-16 bg-navy-deep text-center">
-        <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop">
-          <h2 className="text-headline-h1 font-bold text-surface-white mb-4">
-            Not sure what something will cost?
-          </h2>
-          <p className="text-on-navy-variant mb-8 max-w-xl mx-auto">
-            Use our full quote builder to add boxes, loose items, and choose your vehicle — all in one place.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/pricing#calculator"
-              className="bg-accent text-on-accent px-10 py-4 rounded-xl font-body-strong hover:opacity-90 transition-all"
-            >
-              Open Full Calculator
-            </Link>
-            <Link
-              href="/contact"
-              className="border-2 border-surface-white/30 text-surface-white px-10 py-4 rounded-xl font-body-strong hover:bg-surface-white/10 transition-all"
-            >
-              Ask Our Team
-            </Link>
-          </div>
-        </div>
-      </section>
+      <ClosingCta
+        tone="white"
+        title="Not sure what something will cost?"
+        body="Add boxes, loose items and a vehicle in the quote builder and see the whole figure in one place."
+        secondary={{ href: "/contact", label: "Ask us" }}
+      />
     </>
   );
 }

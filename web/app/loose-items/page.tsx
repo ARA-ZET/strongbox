@@ -7,7 +7,7 @@ import LooseItemsView from "./LooseItemsView";
 export async function generateMetadata(): Promise<Metadata> {
   const { looseItemFrom } = await getPrices();
   return pageMeta({
-    title: "Loose Item Storage — Furniture, Bikes & Oversized Items",
+    title: "Furniture & Loose Item Storage in Cape Town",
     description: `StrongBox stores more than boxes. Beds, desks, bicycles, surfboards and appliances, priced by the exact cubic metres they occupy. From R${looseItemFrom}/month in Cape Town.`,
     path: "/loose-items",
   });

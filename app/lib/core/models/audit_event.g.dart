@@ -79,4 +79,8 @@ const _$AuditActionEnumMap = {
   AuditAction.vehicleAdded: 'vehicleAdded',
   AuditAction.vehicleUpdated: 'vehicleUpdated',
   AuditAction.vehicleRetired: 'vehicleRetired',
+  AuditAction.accountClosureRequested: 'accountClosureRequested',
+  AuditAction.accountClosureCancelled: 'accountClosureCancelled',
+  AuditAction.accountClosed: 'accountClosed',
+  AuditAction.accountRecordsPurged: 'accountRecordsPurged',
 };

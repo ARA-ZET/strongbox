@@ -80,7 +80,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-navy-deep border-t-4 border-accent w-full pt-16 pb-8">
-      <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-gutter mb-12">
+      <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-gutter mb-12">
         {/* Brand */}
         <div className="space-y-6">
           <div className="flex items-center gap-2 text-headline-h3 font-bold text-surface-white">
@@ -131,9 +131,9 @@ export default function Footer() {
         <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-8 md:col-span-2 lg:col-span-2">
           {COLUMNS.map(({ heading, items }) => (
             <div key={heading}>
-              <h4 className="text-surface-white font-body-strong mb-5 uppercase tracking-wider text-xs">
+              <h2 className="text-surface-white font-body-strong mb-5 uppercase tracking-wider text-xs">
                 {heading}
-              </h4>
+              </h2>
               <ul className="space-y-3">
                 {items.map(({ href, label }) => (
                   <li key={href}>
@@ -152,9 +152,9 @@ export default function Footer() {
 
         {/* Newsletter */}
         <div>
-          <h4 className="text-surface-white font-body-strong mb-5 uppercase tracking-wider text-xs">
+          <h2 className="text-surface-white font-body-strong mb-5 uppercase tracking-wider text-xs">
             Newsletter
-          </h4>
+          </h2>
           <p className="text-on-navy-variant text-sm mb-4">
             Get home organisation tips and seasonal offers.
           </p>
@@ -189,11 +189,11 @@ export default function Footer() {
       */}
       <nav
         aria-label="Areas we serve"
-        className="max-w-container-max mx-auto px-6 md:px-margin-desktop pb-8"
+        className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop pb-8"
       >
-        <h4 className="text-surface-white font-body-strong mb-4 uppercase tracking-wider text-xs">
+        <h2 className="text-surface-white font-body-strong mb-4 uppercase tracking-wider text-xs">
           Areas We Serve
-        </h4>
+        </h2>
         <ul className="flex flex-wrap gap-x-5 gap-y-2">
           {REGIONS.map((r) => (
             <li key={r.slug}>
@@ -208,7 +208,7 @@ export default function Footer() {
         </ul>
       </nav>
 
-      <div className="max-w-container-max mx-auto px-6 md:px-margin-desktop pt-8 border-t border-surface-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="max-w-container-max mx-auto px-5 sm:px-6 md:px-margin-desktop pt-8 border-t border-surface-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="text-xs text-on-navy-variant/70 uppercase tracking-widest text-center md:text-left">
           © {new Date().getFullYear()} StrongBox Valet Storage. All rights reserved.
         </p>

@@ -331,6 +331,23 @@ final bookingRepositoryProvider = Provider<BookingRepository>.internal(
 );
 
 typedef BookingRepositoryRef = ProviderRef<BookingRepository>;
+String _$accountClosureRepositoryHash() =>
+    r'991efe930ee091ea199234d01d62a844375d605f';
+
+/// See also [accountClosureRepository].
+@ProviderFor(accountClosureRepository)
+final accountClosureRepositoryProvider =
+    Provider<AccountClosureRepository>.internal(
+  accountClosureRepository,
+  name: r'accountClosureRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$accountClosureRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AccountClosureRepositoryRef = ProviderRef<AccountClosureRepository>;
 String _$quoteDraftStoreHash() => r'cc978437b9e3fc0c8d62e99313206a5641d540fa';
 
 /// See also [quoteDraftStore].
