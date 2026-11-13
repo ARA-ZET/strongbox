@@ -15,11 +15,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
    * on every deploy, and it learns to ignore the field. Bump this when the
    * pages themselves are edited.
    */
-  const pagesUpdated = new Date("2026-11-12");
+  const pagesUpdated = new Date("2026-11-13");
   const routes: [string, number, MetadataRoute.Sitemap[number]["changeFrequency"]][] = [
     ["", 1, "weekly"],
     ["/how-it-works", 0.9, "monthly"],
     ["/pricing", 0.9, "monthly"],
+    ["/mini-moves", 0.9, "monthly"],
     ["/compare", 0.9, "monthly"],
     ["/areas", 0.8, "monthly"],
     ["/loose-items", 0.8, "monthly"],

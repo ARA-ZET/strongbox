@@ -12,10 +12,11 @@ import {
 } from "@/lib/constants";
 
 /**
- * "The app goes live on 1 December — N days to go", plus a way to reach a
- * person now. Visitors were already getting in touch before the app opened;
- * this tells them when it does and that talking to us first is welcome, so an
- * early prospect is not lost.
+ * "Our storage service will start from 1 December — N days to go", plus a
+ * way to reach a person now. Visitors were already getting in touch before we
+ * opened; this tells them when we do and that talking to us first is welcome,
+ * so an early prospect is not lost. It names the storage service, not "the
+ * app": customers read "app live" as a download date and were confused.
  *
  * The count is recomputed in the browser after mount: pages are cached, and a
  * number baked in at build time would drift. Once launch day arrives the
@@ -55,9 +56,14 @@ export default function LaunchNotice({
           >
             rocket_launch
           </span>
-          App live {APP_LAUNCH_LABEL}
-          <span suppressHydrationWarning className="text-sky">
-            · {countdown}
+          {/* One wrapping text run, so the countdown flows after the date
+              instead of being squeezed into its own column. */}
+          <span>
+            Storage service starts from{" "}
+            <span className="whitespace-nowrap">{APP_LAUNCH_LABEL}</span>{" "}
+            <span suppressHydrationWarning className="text-sky whitespace-nowrap">
+              · {countdown}
+            </span>
           </span>
         </span>
         <span className="block mt-1">
@@ -126,8 +132,10 @@ export default function LaunchNotice({
               dark ? "text-surface-white" : "text-navy-deep"
             }`}
           >
-            Our app goes live on{" "}
-            <span className={dark ? "text-sky" : "text-accent-deep"}>
+            Our storage service will start from{" "}
+            <span
+              className={`whitespace-nowrap ${dark ? "text-sky" : "text-accent-deep"}`}
+            >
               {APP_LAUNCH_LABEL}
             </span>
           </p>
@@ -254,10 +262,15 @@ export function LaunchBar() {
             </span>
           </span>
           <p className="flex-1 min-w-0 flex items-center gap-x-2 sm:gap-x-3 text-sm text-surface-white">
-            <span className="truncate">
-              <span className="hidden sm:inline">Our app goes live on </span>
-              <span className="sm:hidden">Live </span>
-              <strong className="text-sky">
+            {/* Below lg the full sentence doesn't fit beside the buttons, so
+                it becomes two short lines (the bar is tall enough) and the
+                date is never cut off. */}
+            <span className="min-w-0 leading-tight lg:leading-normal lg:truncate">
+              <span className="hidden lg:inline">
+                Our storage service will start from{" "}
+              </span>
+              <span className="lg:hidden">Storage starts from</span>
+              <strong className="text-sky block lg:inline">
                 <span className="hidden sm:inline">{APP_LAUNCH_LABEL}</span>
                 <span className="sm:hidden">{APP_LAUNCH_LABEL_SHORT}</span>
               </strong>

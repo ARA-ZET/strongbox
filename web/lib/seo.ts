@@ -48,6 +48,12 @@ type PageMetaInput = {
   type?: "website" | "article";
   /** ISO date, article pages only. */
   modifiedTime?: string;
+  /**
+   * A page's own social card, when its segment has an `opengraph-image.tsx`.
+   * That file already overrides `og:image`; this keeps `twitter:image` on the
+   * same card instead of the shared one.
+   */
+  image?: { url: string; alt: string };
 };
 
 /**
@@ -65,8 +71,10 @@ export function pageMeta({
   ogTitle,
   type = "website",
   modifiedTime,
+  image,
 }: PageMetaInput): Metadata {
   const canonical = url(path);
+  const card = image ? { ...OG_IMAGE, ...image } : OG_IMAGE;
   return {
     title,
     description,
@@ -80,14 +88,14 @@ export function pageMeta({
       description,
       // Stated per page. `openGraph` is replaced, not merged, by a page that
       // sets it, so the shared card has to be named here or it is dropped.
-      images: [OG_IMAGE],
+      images: [card],
       ...(modifiedTime ? { modifiedTime } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: ogTitle ?? title,
       description,
-      images: [OG_IMAGE.url],
+      images: [card.url],
     },
   };
 }
@@ -105,10 +113,27 @@ const BUSINESS_ID = `${SITE_URL}/#business`;
 const ORG_ID = `${SITE_URL}/#organisation`;
 
 /**
+ * The city, then its regions, each pointing at the page that lists its
+ * suburbs. Listing all ~120 suburbs here put the whole list in the head of
+ * every page; the region pages carry them instead. Shared by the business
+ * and by each metro-wide service, which cover the same ground.
+ */
+function metroAreaServed() {
+  return [
+    { "@type": "City", name: "Cape Town" },
+    ...REGIONS.map((r) => ({
+      "@type": "Place",
+      name: `${r.name}, Cape Town`,
+      url: url(`/areas/${r.slug}`),
+    })),
+  ];
+}
+
+/**
  * The trading entity. `SelfStorage` is the closest schema.org type Google
- * recognises for a storage operator; `MovingCompany` is added as a second
- * type because the collection-and-return half of the service is what people
- * actually search for.
+ * recognises for a storage operator; `MovingCompany` is the second type,
+ * covering both the collection-and-return half of storage and the mini moves
+ * at `/mini-moves`.
  */
 export function localBusinessJsonLd(boxFrom: number) {
   return {
@@ -121,7 +146,7 @@ export function localBusinessJsonLd(boxFrom: number) {
     image: url("/opengraph-image"),
     logo: url("/icon.svg"),
     description:
-      "Valet storage in Cape Town. We collect your belongings from your door, store them in our monitored Kensington facility, and return them on request.",
+      "Valet storage and mini moves in Cape Town. We collect your belongings from your door, store them in our monitored Kensington facility and return them on request, and move furniture between homes across the metro.",
     telephone: CONTACT_PHONE_HREF.replace("tel:", ""),
     email: CONTACT_EMAIL,
     priceRange: `From R${boxFrom} per month`,
@@ -141,17 +166,7 @@ export function localBusinessJsonLd(boxFrom: number) {
       latitude: HQ_GEO.lat,
       longitude: HQ_GEO.lng,
     },
-    // The city, then its regions, each pointing at the page that lists its
-    // suburbs. Listing all ~120 suburbs here put the whole list in the head
-    // of every page; the region pages carry them instead.
-    areaServed: [
-      { "@type": "City", name: "Cape Town" },
-      ...REGIONS.map((r) => ({
-        "@type": "Place",
-        name: `${r.name}, Cape Town`,
-        url: url(`/areas/${r.slug}`),
-      })),
-    ],
+    areaServed: metroAreaServed(),
     openingHoursSpecification: OPENING_HOURS.map(({ days, opens, closes }) => ({
       "@type": "OpeningHoursSpecification",
       dayOfWeek: days,
@@ -190,15 +205,16 @@ export function websiteJsonLd() {
 }
 
 /**
- * Only emit this on pages that visibly render `FAQ_ITEMS`. Google treats FAQ
- * markup on a page with no matching answers on screen as a mismatch, and the
- * root layout was shipping it on every route including the legal pages.
+ * Only emit this on pages that visibly render the same `items` — by default
+ * `FAQ_ITEMS`, which is what `FAQAccordion` shows. Google treats FAQ markup on
+ * a page with no matching answers on screen as a mismatch, and the root
+ * layout was shipping it on every route including the legal pages.
  */
-export function faqJsonLd() {
+export function faqJsonLd(items: readonly { q: string; a: string }[] = FAQ_ITEMS) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FAQ_ITEMS.map(({ q, a }) => ({
+    mainEntity: items.map(({ q, a }) => ({
       "@type": "Question",
       name: q,
       acceptedAnswer: { "@type": "Answer", text: a },
@@ -302,6 +318,39 @@ export function serviceJsonLd(boxes: readonly BoxType[]) {
           unitCode: "MON",
           billingIncrement: 1,
         },
+      })),
+    },
+  };
+}
+
+/**
+ * Mini moves as a service — emitted by `/mini-moves`. The three move types
+ * are offers without a price: moves are quoted per job, and an invented
+ * "from" figure in the markup would be a price the page does not show.
+ */
+export function movesServiceJsonLd(
+  moveTypes: readonly { name: string; body: string }[],
+  path: string
+) {
+  const canonical = url(path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${canonical}#service`,
+    name: "Mini moves in Cape Town",
+    alternateName: ["Small furniture removals", "Mini removals"],
+    serviceType: "Furniture removals",
+    description:
+      "Small, local furniture moves across Cape Town: home to home, into a storage unit of your choice, or split between your new home and StrongBox storage.",
+    url: canonical,
+    provider: { "@id": BUSINESS_ID },
+    areaServed: metroAreaServed(),
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Mini move options",
+      itemListElement: moveTypes.map(({ name, body }) => ({
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name, description: body },
       })),
     },
   };

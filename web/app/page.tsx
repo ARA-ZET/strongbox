@@ -18,6 +18,7 @@ import CoverageMap, { RegionList } from "@/components/visuals/CoverageMap";
 import { OrderScreen, StorageScreen } from "@/components/visuals/Phone";
 import { FEATURED_ROWS, withLivePrices } from "@/lib/comparison";
 import { STORAGE_MODES, USE_CASES } from "@/lib/service-details";
+import { MOVES_PATH, MOVE_TYPES, MOVE_WHATSAPP_HREF } from "@/lib/moves";
 import { pageMeta, faqJsonLd, serviceJsonLd } from "@/lib/seo";
 import { getPrices } from "@/lib/prices";
 
@@ -266,6 +267,59 @@ export default async function HomePage() {
               </li>
             ))}
           </ul>
+        </div>
+      </Section>
+
+      {/* ── Mini moves ── */}
+      {/*
+        The second service, placed where it follows on: the reasons above
+        include leases ending, downsizing and moving to Cape Town, and some of
+        those visitors need a move more than a box. The homepage stays about
+        storage — its title and hero are what rank for "storage Cape Town" —
+        so moves get one panel here and a page of their own.
+      */}
+      <Section className="pt-0 md:pt-0">
+        <div
+          data-reveal
+          className="grid overflow-hidden rounded-2xl border border-outline-variant bg-mist lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
+        >
+          <div className="relative min-h-[240px] lg:min-h-full">
+            <SitePhoto
+              id="collect"
+              sizes="(min-width: 1280px) 500px, (min-width: 1024px) 40vw, 100vw"
+              className="absolute inset-0"
+            />
+          </div>
+          <div className="p-6 sm:p-8 lg:p-12">
+            <p className="text-[13px] font-semibold text-accent-deep">Mini moves</p>
+            <h2 className="mt-2 text-headline-h1 font-bold text-navy-deep">
+              Moving, not storing? We move it too
+            </h2>
+            <p className="mt-4 text-body-main text-on-surface-variant">
+              A few pieces of furniture, a room or a small flat, carried from your door
+              anywhere in Cape Town. Each move is quoted before you book.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {MOVE_TYPES.map(({ id, icon, name, tagline }) => (
+                <li key={id} className="flex items-start gap-3">
+                  <span aria-hidden="true" className="material-symbols-outlined mt-0.5 shrink-0 text-xl text-accent-deep">
+                    {icon}
+                  </span>
+                  <span className="text-[15px] text-on-surface-variant">
+                    <span className="font-semibold text-navy-deep">{name}.</span> {tagline}.
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button href={MOVES_PATH} arrow>
+                See mini moves
+              </Button>
+              <Button href={MOVE_WHATSAPP_HREF} variant="secondary" external>
+                WhatsApp for a quote
+              </Button>
+            </div>
+          </div>
         </div>
       </Section>
 

@@ -137,6 +137,7 @@ All 25 specification documents live at `docs/` in this project folder.
 | `23_BILLING.md` | Monthly invoices, EFT, mark paid / void |
 | `24_ANALYTICS.md` | Reports, charts, KPI cards |
 | `25_AI_DEVELOPMENT_RULES.md` | **READ THIS FIRST** — 37 mandatory rules |
+| `26_MINI_MOVES.md` | Mini moves: website (live, enquiry-led), open decisions, phased app plan |
 
 ---
 

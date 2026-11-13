@@ -29,6 +29,7 @@ const COLUMNS: { heading: string; items: { href: string; label: string }[] }[] =
       { href: "/how-it-works", label: "How It Works" },
       { href: "/pricing", label: "Pricing" },
       { href: "/loose-items", label: "Loose Items" },
+      { href: "/mini-moves", label: "Mini Moves" },
       { href: "/areas", label: "Areas We Serve" },
       { href: "/about", label: "About Us" },
     ],
@@ -90,8 +91,8 @@ export default function Footer() {
             StrongBox
           </div>
           <p className="text-on-navy-variant text-body-main max-w-xs">
-            Valet storage for the whole of Cape Town. We collect from your door, store
-            your things safely, and bring them back when you ask.
+            Valet storage and mini moves for the whole of Cape Town. We collect from your
+            door, store your things safely, and bring them back when you ask.
           </p>
           <div className="space-y-2">
             <a

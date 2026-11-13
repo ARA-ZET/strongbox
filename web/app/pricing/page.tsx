@@ -125,6 +125,23 @@ export default async function PricingPage() {
             <p className="mt-3 text-sm text-on-surface-variant">
               The fee depends on the vehicle your load needs, not on your suburb.
             </p>
+            {/*
+              A collection fee is the closest thing on this page to a moving
+              price, so this is where someone after a move is most likely to
+              be reading. Moves are quoted per job and have no rate card.
+            */}
+            <p className="mt-4 flex items-start gap-2 rounded-xl border border-outline-variant bg-mist p-4 text-sm text-on-surface-variant">
+              <span aria-hidden="true" className="material-symbols-outlined shrink-0 text-lg text-accent-deep">
+                local_shipping
+              </span>
+              <span>
+                <span className="font-semibold text-navy-deep">Moving rather than storing?</span>{" "}
+                Mini moves, home to home or part into storage, are quoted per move.{" "}
+                <Link href="/mini-moves" className="font-semibold text-accent-deep hover:underline">
+                  See mini moves
+                </Link>
+              </span>
+            </p>
 
             <div className="mt-12 overflow-hidden rounded-2xl border border-outline-variant bg-mist">
               <div className="relative aspect-[16/9]">

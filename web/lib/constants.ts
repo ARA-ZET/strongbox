@@ -16,7 +16,8 @@ export const CONTACT_EMAIL_HREF = "mailto:info@strongbox.co.za";
 export const WHATSAPP_HREF = "https://wa.me/27719090839";
 
 /**
- * When the client app opens for bookings. Until then the launch notice (hero,
+ * When the storage service (and the client app) opens for bookings. On screen
+ * it is worded as the date the storage service starts. Until then the launch notice (hero,
  * contact form, footer) counts down to it and sends visitors to a person, so
  * an early enquiry is answered rather than lost. Midnight SAST, so the count
  * ticks over on the Cape Town calendar, not the visitor's or the server's.
@@ -132,6 +133,10 @@ export const FAQ_ITEMS = [
   {
     q: "Do you collect from my suburb?",
     a: "Almost certainly. We cover the whole City of Cape Town — the Atlantic Seaboard and City Bowl, the Southern and Northern Suburbs, the Cape Flats, Mitchells Plain and Khayelitsha, Blouberg and the West Coast, the South Peninsula and the Helderberg. The collection fee depends on the size of vehicle you need, not on where you live. Check your suburb on our areas page, or WhatsApp us if it is not listed.",
+  },
+  {
+    q: "Do you also do moves?",
+    a: "Yes, mini moves within Cape Town: a few pieces of furniture, a room or a small flat. We move it from one address to another, into a storage unit you already use, or split it, with what fits going to your new home and the rest into storage with us. Every move is quoted before you book; see our mini moves page or WhatsApp us the details.",
   },
   {
     q: "Where is the storage facility located?",

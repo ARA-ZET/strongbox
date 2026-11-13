@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CONTACT_PHONE_DISPLAY,
   CONTACT_PHONE_HREF,
@@ -20,8 +20,22 @@ import PhotoHero from "@/components/PhotoHero";
 import SocialIcon from "@/components/graphics/SocialIcon";
 import LaunchNotice from "@/components/LaunchNotice";
 
+/** The subject a `/contact?subject=move` link opens with (see `lib/moves.ts`). */
+const MOVE_SUBJECT = "Mini Move Quote";
+
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
+  const [subject, setSubject] = useState("General Inquiry");
+
+  /*
+   * Read after mount rather than with useSearchParams, which would opt the
+   * whole page out of static rendering. The query only preselects an option.
+   */
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("subject") === "move") {
+      setSubject(MOVE_SUBJECT);
+    }
+  }, []);
 
   /*
    * No form backend exists yet. Flashing "Message Sent!" while dropping the
@@ -143,10 +157,11 @@ export default function ContactPage() {
                       <label htmlFor="contact-subject" className="font-label-caps text-on-surface-variant uppercase text-xs mb-2 block">
                         Subject
                       </label>
-                      <select id="contact-subject" name="subject" defaultValue="General Inquiry" className="w-full bg-mist border border-navy-deep/10 rounded-lg px-4 py-3 text-navy-deep focus:outline-none focus:border-accent-deep focus:ring-2 focus:ring-accent-deep/20 transition-all">
+                      <select id="contact-subject" name="subject" value={subject} onChange={(e) => setSubject(e.target.value)} className="w-full bg-mist border border-navy-deep/10 rounded-lg px-4 py-3 text-navy-deep focus:outline-none focus:border-accent-deep focus:ring-2 focus:ring-accent-deep/20 transition-all">
                         <option>General Inquiry</option>
                         <option>How StrongBox Works</option>
                         <option>Get a Quote</option>
+                        <option>{MOVE_SUBJECT}</option>
                         <option>Business Enquiry</option>
                         <option>Support</option>
                       </select>
@@ -161,7 +176,11 @@ export default function ContactPage() {
                       name="message"
                       rows={5}
                       required
-                      placeholder="Tell us your suburb and roughly what you'd like to store."
+                      placeholder={
+                        subject === MOVE_SUBJECT
+                          ? "Both suburbs, your preferred date, what's moving, and any stairs or lifts."
+                          : "Tell us your suburb and roughly what you'd like to store."
+                      }
                       className="w-full bg-mist border border-navy-deep/10 rounded-lg px-4 py-3 text-navy-deep placeholder:text-on-surface-variant/50 focus:outline-none focus:border-accent-deep focus:ring-2 focus:ring-accent-deep/20 transition-all resize-none"
                     />
                   </div>

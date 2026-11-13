@@ -152,6 +152,14 @@ export default async function RegionPage({ params }: Params) {
               The full collection and return process
               <span aria-hidden="true" className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
+            {/* Moves serve the same suburbs; a suburb search is often a move search. */}
+            <p className="mt-4 text-on-surface-variant text-body-main">
+              Moving house rather than storing?{" "}
+              <Link href="/mini-moves" className="text-accent-deep font-body-strong hover:underline">
+                Mini moves {region.where}
+              </Link>
+              , home to home or part into storage.
+            </p>
             <CoverageMap active={region.slug} className="mt-10 !mx-0 !max-w-[320px]" />
           </div>
           <ul className="space-y-4">

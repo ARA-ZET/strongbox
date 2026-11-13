@@ -10,19 +10,30 @@ import Section from "@/components/ui/Section";
  * whole block did nothing without JavaScript. Native disclosure keeps every
  * answer in the document, works with the keyboard for free, and needs no
  * client code.
+ *
+ * Pass `items` for a page with its own questions (e.g. `/mini-moves`), and
+ * give `faqJsonLd` the same list so the markup matches what is on screen.
  */
-export default function FAQAccordion({ tone = "white" }: { tone?: "white" | "mist" }) {
+export default function FAQAccordion({
+  tone = "white",
+  items = FAQ_ITEMS,
+  title = "Questions people ask first",
+  lead = "Insurance, turnaround, packing materials and the small print.",
+}: {
+  tone?: "white" | "mist";
+  items?: readonly { q: string; a: string }[];
+  title?: string;
+  lead?: string;
+}) {
   return (
     <Section tone={tone} id="faq">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
         <div data-reveal className="lg:sticky lg:top-36 lg:self-start">
-          <h2 className="text-headline-h1 font-bold text-navy-deep">Questions people ask first</h2>
-          <p className="mt-4 text-body-lead text-on-surface-variant">
-            Insurance, turnaround, packing materials and the small print.
-          </p>
+          <h2 className="text-headline-h1 font-bold text-navy-deep">{title}</h2>
+          <p className="mt-4 text-body-lead text-on-surface-variant">{lead}</p>
         </div>
         <div data-reveal className="divide-y divide-outline-variant border-y border-outline-variant">
-          {FAQ_ITEMS.map((item) => (
+          {items.map((item) => (
             <details key={item.q} className="group">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left [&::-webkit-details-marker]:hidden">
                 <h3 className="text-[17px] font-semibold text-navy-deep group-hover:text-accent-deep">

@@ -9,13 +9,15 @@ import { APP_URL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF, CONTACT_EMAIL_HREF 
  * Desktop bar. Six is the ceiling this layout holds — the earlier set already
  * had to defer the nav to `lg`. Home is reachable from the logo, and Loose
  * Items now sits under Pricing and the tools hub, so both come out of the bar
- * and stay in the mobile drawer and the footer.
+ * and stay in the mobile drawer and the footer. Mini moves is the second
+ * service, so it took Free tools' place; the tools are a click away from
+ * Pricing, the drawer and the footer.
  */
 const links = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/mini-moves", label: "Mini moves" },
   { href: "/compare", label: "Compare" },
-  { href: "/tools", label: "Free tools" },
   { href: "/resources", label: "Guides" },
   { href: "/about", label: "About" },
 ];
@@ -24,6 +26,7 @@ const links = [
 const mobileLinks = [
   { href: "/", label: "Home" },
   ...links,
+  { href: "/tools", label: "Free tools" },
   { href: "/loose-items", label: "Loose items" },
   { href: "/areas", label: "Areas we serve" },
   { href: "/contact", label: "Contact" },
