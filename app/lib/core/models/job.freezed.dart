@@ -109,6 +109,10 @@ mixin _$Job {
   @NullableTimestampConverter()
   DateTime? get cancelledAt => throw _privateConstructorUsedError;
   String? get cancelReason => throw _privateConstructorUsedError;
+
+  /// `client` when the client cancelled it themselves (the cancelOrder
+  /// function); null when ops cancelled or declined it.
+  String? get cancelledBy => throw _privateConstructorUsedError;
   bool get isDeleted => throw _privateConstructorUsedError;
   @NullableTimestampConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -168,6 +172,7 @@ abstract class $JobCopyWith<$Res> {
       @NullableTimestampConverter() DateTime? completedAt,
       @NullableTimestampConverter() DateTime? cancelledAt,
       String? cancelReason,
+      String? cancelledBy,
       bool isDeleted,
       @NullableTimestampConverter() DateTime? createdAt,
       @NullableTimestampConverter() DateTime? updatedAt});
@@ -229,6 +234,7 @@ class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
     Object? completedAt = freezed,
     Object? cancelledAt = freezed,
     Object? cancelReason = freezed,
+    Object? cancelledBy = freezed,
     Object? isDeleted = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -402,6 +408,10 @@ class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
           ? _value.cancelReason
           : cancelReason // ignore: cast_nullable_to_non_nullable
               as String?,
+      cancelledBy: freezed == cancelledBy
+          ? _value.cancelledBy
+          : cancelledBy // ignore: cast_nullable_to_non_nullable
+              as String?,
       isDeleted: null == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
@@ -475,6 +485,7 @@ abstract class _$$JobImplCopyWith<$Res> implements $JobCopyWith<$Res> {
       @NullableTimestampConverter() DateTime? completedAt,
       @NullableTimestampConverter() DateTime? cancelledAt,
       String? cancelReason,
+      String? cancelledBy,
       bool isDeleted,
       @NullableTimestampConverter() DateTime? createdAt,
       @NullableTimestampConverter() DateTime? updatedAt});
@@ -534,6 +545,7 @@ class __$$JobImplCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res, _$JobImpl>
     Object? completedAt = freezed,
     Object? cancelledAt = freezed,
     Object? cancelReason = freezed,
+    Object? cancelledBy = freezed,
     Object? isDeleted = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -707,6 +719,10 @@ class __$$JobImplCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res, _$JobImpl>
           ? _value.cancelReason
           : cancelReason // ignore: cast_nullable_to_non_nullable
               as String?,
+      cancelledBy: freezed == cancelledBy
+          ? _value.cancelledBy
+          : cancelledBy // ignore: cast_nullable_to_non_nullable
+              as String?,
       isDeleted: null == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
@@ -769,6 +785,7 @@ class _$JobImpl extends _Job {
       @NullableTimestampConverter() this.completedAt,
       @NullableTimestampConverter() this.cancelledAt,
       this.cancelReason,
+      this.cancelledBy,
       this.isDeleted = false,
       @NullableTimestampConverter() this.createdAt,
       @NullableTimestampConverter() this.updatedAt})
@@ -987,6 +1004,11 @@ class _$JobImpl extends _Job {
   final DateTime? cancelledAt;
   @override
   final String? cancelReason;
+
+  /// `client` when the client cancelled it themselves (the cancelOrder
+  /// function); null when ops cancelled or declined it.
+  @override
+  final String? cancelledBy;
   @override
   @JsonKey()
   final bool isDeleted;
@@ -999,7 +1021,7 @@ class _$JobImpl extends _Job {
 
   @override
   String toString() {
-    return 'Job(id: $id, tenantId: $tenantId, type: $type, clientId: $clientId, driverId: $driverId, driverName: $driverName, status: $status, scheduledDate: $scheduledDate, timeWindow: $timeWindow, address: $address, storageUnitIds: $storageUnitIds, scannedUnitIds: $scannedUnitIds, itemIds: $itemIds, notes: $notes, driverNotes: $driverNotes, photoIds: $photoIds, clientSignatureUrl: $clientSignatureUrl, clientConfirmMethod: $clientConfirmMethod, estimatedFee: $estimatedFee, pickupVehicleId: $pickupVehicleId, source: $source, fleetVehicleId: $fleetVehicleId, helperHours: $helperHours, accessNotes: $accessNotes, supplies: $supplies, emptyBoxes: $emptyBoxes, suppliesFirst: $suppliesFirst, linkedJobId: $linkedJobId, onceOffZar: $onceOffZar, invoicedIn: $invoicedIn, confirmedAt: $confirmedAt, confirmedBy: $confirmedBy, departedAt: $departedAt, arrivedAt: $arrivedAt, collectedAt: $collectedAt, receivedUnitIds: $receivedUnitIds, handedOverUnitIds: $handedOverUnitIds, recipientName: $recipientName, isRushJob: $isRushJob, completedAt: $completedAt, cancelledAt: $cancelledAt, cancelReason: $cancelReason, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Job(id: $id, tenantId: $tenantId, type: $type, clientId: $clientId, driverId: $driverId, driverName: $driverName, status: $status, scheduledDate: $scheduledDate, timeWindow: $timeWindow, address: $address, storageUnitIds: $storageUnitIds, scannedUnitIds: $scannedUnitIds, itemIds: $itemIds, notes: $notes, driverNotes: $driverNotes, photoIds: $photoIds, clientSignatureUrl: $clientSignatureUrl, clientConfirmMethod: $clientConfirmMethod, estimatedFee: $estimatedFee, pickupVehicleId: $pickupVehicleId, source: $source, fleetVehicleId: $fleetVehicleId, helperHours: $helperHours, accessNotes: $accessNotes, supplies: $supplies, emptyBoxes: $emptyBoxes, suppliesFirst: $suppliesFirst, linkedJobId: $linkedJobId, onceOffZar: $onceOffZar, invoicedIn: $invoicedIn, confirmedAt: $confirmedAt, confirmedBy: $confirmedBy, departedAt: $departedAt, arrivedAt: $arrivedAt, collectedAt: $collectedAt, receivedUnitIds: $receivedUnitIds, handedOverUnitIds: $handedOverUnitIds, recipientName: $recipientName, isRushJob: $isRushJob, completedAt: $completedAt, cancelledAt: $cancelledAt, cancelReason: $cancelReason, cancelledBy: $cancelledBy, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -1082,6 +1104,8 @@ class _$JobImpl extends _Job {
                 other.cancelledAt == cancelledAt) &&
             (identical(other.cancelReason, cancelReason) ||
                 other.cancelReason == cancelReason) &&
+            (identical(other.cancelledBy, cancelledBy) ||
+                other.cancelledBy == cancelledBy) &&
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.createdAt, createdAt) ||
@@ -1136,6 +1160,7 @@ class _$JobImpl extends _Job {
         completedAt,
         cancelledAt,
         cancelReason,
+        cancelledBy,
         isDeleted,
         createdAt,
         updatedAt
@@ -1199,6 +1224,7 @@ abstract class _Job extends Job {
       @NullableTimestampConverter() final DateTime? completedAt,
       @NullableTimestampConverter() final DateTime? cancelledAt,
       final String? cancelReason,
+      final String? cancelledBy,
       final bool isDeleted,
       @NullableTimestampConverter() final DateTime? createdAt,
       @NullableTimestampConverter() final DateTime? updatedAt}) = _$JobImpl;
@@ -1337,6 +1363,11 @@ abstract class _Job extends Job {
   DateTime? get cancelledAt;
   @override
   String? get cancelReason;
+  @override
+
+  /// `client` when the client cancelled it themselves (the cancelOrder
+  /// function); null when ops cancelled or declined it.
+  String? get cancelledBy;
   @override
   bool get isDeleted;
   @override

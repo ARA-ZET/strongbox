@@ -95,6 +95,10 @@ class Job with _$Job {
     @NullableTimestampConverter() DateTime? completedAt,
     @NullableTimestampConverter() DateTime? cancelledAt,
     String? cancelReason,
+
+    /// `client` when the client cancelled it themselves (the cancelOrder
+    /// function); null when ops cancelled or declined it.
+    String? cancelledBy,
     @Default(false) bool isDeleted,
     @NullableTimestampConverter() DateTime? createdAt,
     @NullableTimestampConverter() DateTime? updatedAt,

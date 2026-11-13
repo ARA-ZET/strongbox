@@ -336,6 +336,134 @@ void main() {
     expect(await auditActions(), ['jobDeclined']);
   });
 
+  test("declining a supplies-first booking from its drop-off also releases "
+      "the pickup's items", () async {
+    await seedJob('pickup-1', {'type': 'pickup', 'source': 'quote',
+      'suppliesFirst': true, 'linkedJobId': 'drop-1'});
+    await seedJob('drop-1', {'type': 'supplyDrop', 'source': 'quote',
+      'suppliesFirst': true, 'linkedJobId': 'pickup-1',
+      'storageUnitIds': <String>[]});
+    await seedUnits(StorageStatus.pendingPickup, jobId: 'pickup-1');
+    final admin = containerFor('admin-1');
+    final jobs = admin.read(jobRepositoryProvider);
+
+    // The drop-off is in the Jobs list too, with its own Decline button.
+    await admin
+        .read(jobMutationsProvider.notifier)
+        .decline((await jobs.getJob('drop-1'))!, 'Out of area.');
+
+    expect((await jobs.getJob('drop-1'))!.status, JobStatus.cancelled);
+    final pickup = (await jobs.getJob('pickup-1'))!;
+    expect(pickup.status, JobStatus.cancelled);
+    expect(pickup.cancelReason, 'Out of area.');
+    expect(await unitStatuses(), {'u1': 'cancelled', 'u2': 'cancelled'});
+    expect((await unitData('u1'))['jobId'], isNull);
+  });
+
+  test('cancelling a confirmed supplies-first pickup cancels its drop-off '
+      'too', () async {
+    await seedJob('pickup-1', {'type': 'pickup', 'source': 'quote',
+      'suppliesFirst': true, 'linkedJobId': 'drop-1'});
+    await seedJob('drop-1', {'type': 'supplyDrop', 'source': 'quote',
+      'suppliesFirst': true, 'linkedJobId': 'pickup-1',
+      'storageUnitIds': <String>[]});
+    await seedUnits(StorageStatus.pendingPickup, jobId: 'pickup-1');
+    final admin = containerFor('admin-1');
+    final mutations = admin.read(jobMutationsProvider.notifier);
+    final jobs = admin.read(jobRepositoryProvider);
+
+    await mutations.confirm((await jobs.getJob('pickup-1'))!,
+        driverId: 'driver-1');
+    expect((await jobs.getJob('drop-1'))!.status, JobStatus.assigned);
+
+    await mutations.cancelJob((await jobs.getJob('pickup-1'))!,
+        reason: 'Client moved the date.');
+
+    expect((await jobs.getJob('pickup-1'))!.status, JobStatus.cancelled);
+    final drop = (await jobs.getJob('drop-1'))!;
+    expect(drop.status, JobStatus.cancelled); // driver no longer goes out
+    expect(drop.cancelReason, 'Client moved the date.');
+    expect(await unitStatuses(), {'u1': 'cancelled', 'u2': 'cancelled'});
+  });
+
+  test('a supply drop-off already under way is not cancelled with its '
+      'pickup', () async {
+    await seedJob('pickup-1', {'type': 'pickup', 'source': 'quote',
+      'status': 'assigned', 'driverId': 'driver-1',
+      'suppliesFirst': true, 'linkedJobId': 'drop-1'});
+    await seedJob('drop-1', {'type': 'supplyDrop', 'source': 'quote',
+      'status': 'inProgress', 'driverId': 'driver-1',
+      'suppliesFirst': true, 'linkedJobId': 'pickup-1',
+      'storageUnitIds': <String>[]});
+    final admin = containerFor('admin-1');
+    final jobs = admin.read(jobRepositoryProvider);
+
+    await admin
+        .read(jobMutationsProvider.notifier)
+        .cancelJob((await jobs.getJob('pickup-1'))!);
+
+    expect((await jobs.getJob('pickup-1'))!.status, JobStatus.cancelled);
+    expect((await jobs.getJob('drop-1'))!.status, JobStatus.inProgress);
+  });
+
+  test('a client cancels their own order through the cancelOrder function',
+      () async {
+    final booking = _FakeBooking();
+    final client = containerFor('client-user',
+        extra: [bookingRepositoryProvider.overrideWithValue(booking)]);
+    await seedJob('job-1', {'type': 'pickup', 'source': 'quote'});
+    final job = (await client.read(jobRepositoryProvider).getJob('job-1'))!;
+
+    await client
+        .read(orderCancellationProvider.notifier)
+        .cancel(job, reason: 'Moving next month');
+
+    // Clients can't write jobs (firestore.rules): the function does it.
+    expect(booking.cancelled, {'job-1': 'Moving next month'});
+  });
+
+  test("a driver can't start a job the client cancelled moments ago",
+      () async {
+    await seedJob('job-1',
+        {'type': 'pickup', 'status': 'assigned', 'driverId': 'driver-1'});
+    final driver = containerFor('driver-1');
+    final jobs = driver.read(jobRepositoryProvider);
+    final stale = (await jobs.getJob('job-1'))!; // still on the driver's screen
+
+    // What cancelOrder writes server-side.
+    await db.collection('jobs').doc('job-1').update(
+        {'status': 'cancelled', 'cancelledBy': 'client'});
+
+    await expectLater(
+      driver.read(driverJobActionsProvider.notifier).startJob(stale),
+      throwsA(isA<AppException>()
+          .having((e) => e.message, 'message', contains('cancelled'))),
+    );
+    final job = (await jobs.getJob('job-1'))!;
+    expect(job.status, JobStatus.cancelled);
+    expect(job.departedAt, isNull);
+  });
+
+  test('the dashboard lists confirmed jobs that still need a driver, '
+      'supply drop-offs included', () async {
+    await seedJob('pickup-1', {'type': 'pickup', 'status': 'scheduled',
+      'scheduledDate': DateTime(2026, 11, 20)});
+    await seedJob('drop-1', {'type': 'supplyDrop', 'status': 'scheduled',
+      'scheduledDate': DateTime(2026, 11, 18), 'linkedJobId': 'pickup-1',
+      'storageUnitIds': <String>[]});
+    await seedJob('assigned-1', {'type': 'delivery', 'status': 'assigned',
+      'driverId': 'driver-1', 'scheduledDate': DateTime(2026, 11, 19)});
+    await seedJob('pending-1', {'type': 'pickup'});
+    final admin = containerFor('admin-1');
+    final sub = admin.listen(allJobsProvider, (_, _) {});
+    addTearDown(sub.close);
+    await admin.read(allJobsProvider.future);
+
+    expect(admin.read(jobsToDispatchProvider).map((j) => j.id),
+        ['drop-1', 'pickup-1']); // soonest first
+    expect(admin.read(jobsToConfirmProvider).map((j) => j.id), ['pending-1']);
+  });
+
   test('a client photographs and describes a box while packing it',
       () async {
     await seedUnits(StorageStatus.pendingPickup);
@@ -399,6 +527,12 @@ class _FakeBooking implements BookingRepository {
     requested = {'unitIds': unitIds, 'address': address.line1, 'notes': notes};
     return 'delivery-1';
   }
+
+  final cancelled = <String, String?>{};
+
+  @override
+  Future<void> cancelOrder(String jobId, {String? reason}) async =>
+      cancelled[jobId] = reason;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);

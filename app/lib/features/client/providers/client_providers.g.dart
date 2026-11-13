@@ -289,7 +289,7 @@ final myClosureBlockersProvider =
 );
 
 typedef MyClosureBlockersRef = AutoDisposeProviderRef<List<ClosureBlocker>>;
-String _$filteredMyUnitsHash() => r'bf78172633dbf560c2970081cf94b61c8959ae76';
+String _$filteredMyUnitsHash() => r'1ca35fbb27198afa90540923e523038ea8610dab';
 
 /// Units after search + status filter. [status] is a [StorageStatus] name
 /// or 'all' — it comes from the URL (/client/storage?status=inStorage) so
@@ -1208,6 +1208,25 @@ final packingActionsProvider =
 );
 
 typedef _$PackingActions = AsyncNotifier<void>;
+String _$orderCancellationHash() => r'3c6b73bf383294a329c8c33dea7cebdfc63d7c35';
+
+/// The client cancelling their own pickup or delivery before the driver
+/// starts it (the `cancelOrder` function checks again server-side).
+///
+/// Copied from [OrderCancellation].
+@ProviderFor(OrderCancellation)
+final orderCancellationProvider =
+    AsyncNotifierProvider<OrderCancellation, void>.internal(
+  OrderCancellation.new,
+  name: r'orderCancellationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$orderCancellationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$OrderCancellation = AsyncNotifier<void>;
 String _$deliveryRequestHash() => r'ce9894d221c39a44ee405153343179b5308e22ea';
 
 /// See also [DeliveryRequest].

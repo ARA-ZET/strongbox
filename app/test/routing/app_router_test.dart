@@ -13,6 +13,7 @@ import 'package:strong_box/core/theme/app_theme.dart';
 import 'package:strong_box/features/auth/providers/auth_provider.dart';
 import 'package:strong_box/features/client/providers/client_providers.dart';
 import 'package:strong_box/features/quote/providers/quote_providers.dart';
+import 'package:strong_box/repositories/booking_repository.dart';
 import 'package:strong_box/repositories/quote_draft_store.dart';
 import 'package:strong_box/repositories/repository_providers.dart';
 import 'package:strong_box/routing/app_router.dart';
@@ -34,6 +35,18 @@ class _MemoryStore implements QuoteDraftStore {
 
   @override
   Future<void> save(SavedQuote quote) async => saved = quote;
+}
+
+/// Booking functions stand-in: records cancellations.
+class _RecordingBooking implements BookingRepository {
+  final cancelled = <String, String?>{};
+
+  @override
+  Future<void> cancelOrder(String jobId, {String? reason}) async =>
+      cancelled[jobId] = reason;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 const _client = AppUser(
@@ -287,6 +300,76 @@ void main() {
     await tester.tap(find.text('Kitchen box'));
     await tester.pumpAndSettle();
     expect(path(), '/client/storage/unit-1');
+  });
+
+  testWidgets("a client cancels a pickup the driver hasn't started", (
+    tester,
+  ) async {
+    final booking = _RecordingBooking();
+    await start(
+      tester,
+      '/login',
+      overrides: [
+        ...portal,
+        bookingRepositoryProvider.overrideWithValue(booking),
+      ],
+    );
+    await signInAsClient(tester);
+    container.read(appRouterProvider).go('/client/orders/job-1');
+    await tester.pumpAndSettle();
+    expect(find.text('Change of plans?'), findsOneWidget);
+
+    await tester.ensureVisible(find.text('Cancel pickup'));
+    await tester.tap(find.text('Cancel pickup'));
+    await tester.pumpAndSettle();
+    expect(find.text('Cancel this pickup?'), findsOneWidget);
+    await tester.enterText(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.byType(TextField),
+      ),
+      'Moving next month',
+    );
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.text('Cancel pickup'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(booking.cancelled, {'job-1': 'Moving next month'});
+    expect(find.textContaining('cancelled.'), findsOneWidget); // snackbar
+  });
+
+  testWidgets("once the driver has set off, there's no cancel button", (
+    tester,
+  ) async {
+    await start(
+      tester,
+      '/login',
+      overrides: [
+        portal.first,
+        myJobsProvider.overrideWith(
+          (ref) => Stream.value([
+            Job(
+              id: 'job-1',
+              tenantId: 'strongbox-default',
+              clientId: 'client-1',
+              status: JobStatus.inProgress,
+              storageUnitIds: const ['unit-1'],
+              scheduledDate: DateTime(2026, 11, 12),
+              departedAt: DateTime(2026, 11, 12, 8),
+            ),
+          ]),
+        ),
+      ],
+    );
+    await signInAsClient(tester);
+    container.read(appRouterProvider).go('/client/orders/job-1');
+    await tester.pumpAndSettle();
+    expect(find.text('On the way'), findsOneWidget);
+    expect(find.text('Change of plans?'), findsNothing);
+    expect(find.text('Cancel pickup'), findsNothing);
   });
 
   testWidgets('dashboard stats open a filtered view', (tester) async {

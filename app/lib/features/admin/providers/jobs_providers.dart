@@ -52,6 +52,18 @@ List<Job> jobsToConfirm(Ref ref) {
         .compareTo(b.createdAt ?? DateTime(0)));
 }
 
+/// Confirmed jobs no driver is dispatched to yet, soonest first — incl. a
+/// Path A supply drop-off, which no other dashboard count shows.
+@riverpod
+List<Job> jobsToDispatch(Ref ref) {
+  final jobs = ref.watch(allJobsProvider).valueOrNull ?? const [];
+  return jobs
+      .where((j) => j.status == JobStatus.scheduled && j.driverId == null)
+      .toList()
+    ..sort((a, b) => (a.scheduledDate ?? DateTime(9999))
+        .compareTo(b.scheduledDate ?? DateTime(9999)));
+}
+
 /// Pickups collected and on their way to (or at) the facility.
 @riverpod
 List<Job> jobsToReceive(Ref ref) {

@@ -197,6 +197,11 @@ extension StorageStatusX on StorageStatus {
         _ => false,
       };
 
+  /// Shown in the client's My Storage — not items from a cancelled
+  /// booking (they never reached us) or archived ones.
+  bool get isListedForClient =>
+      this != StorageStatus.archived && this != StorageStatus.cancelled;
+
   Color get chipBgColour => switch (this) {
         StorageStatus.inStorage ||
         StorageStatus.delivered =>

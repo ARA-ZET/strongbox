@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/enums/app_enums.dart';
+import '../../../core/errors/app_exception.dart';
 import '../../../core/models/job.dart';
 import '../../../core/models/storage_unit.dart';
 import '../../../core/providers/business_settings_provider.dart';
@@ -16,6 +17,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/currency.dart';
 import '../../../core/utils/public_ref.dart';
 import '../../../core/widgets/contact_us_card.dart';
+import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/label_print_dialog.dart';
 import '../../../core/widgets/status_chip.dart';
@@ -73,6 +75,9 @@ class ClientOrderDetailScreen extends ConsumerWidget {
           );
         }
 
+        final linked = job.linkedJobId == null
+            ? null
+            : ref.watch(myOrderProvider(job.linkedJobId!));
         final left = Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -95,6 +100,10 @@ class ClientOrderDetailScreen extends ConsumerWidget {
             if (job.linkedJobId != null) ...[
               const SizedBox(height: AppSpacing.lg),
               _LinkedOrder(jobId: job.linkedJobId!),
+            ],
+            if (canCancelOrder(job, linked: linked)) ...[
+              const SizedBox(height: AppSpacing.lg),
+              _CancelOrderCard(job: job),
             ],
           ],
         );
@@ -673,6 +682,141 @@ class _Line extends StatelessWidget {
           Text(value, style: style),
         ],
       ),
+    );
+  }
+}
+
+// ----------------------------------------------------------------- cancel
+
+/// "Change of plans?" — the client cancels their pickup or delivery until
+/// the driver starts it. Shown only while [canCancelOrder] allows it.
+class _CancelOrderCard extends ConsumerStatefulWidget {
+  const _CancelOrderCard({required this.job});
+
+  final Job job;
+
+  @override
+  ConsumerState<_CancelOrderCard> createState() => _CancelOrderCardState();
+}
+
+class _CancelOrderCardState extends ConsumerState<_CancelOrderCard> {
+  bool _busy = false;
+
+  String get _kind => widget.job.type.label.toLowerCase();
+
+  Future<void> _cancel() async {
+    final job = widget.job;
+    final reason = await showDialog<String>(
+      context: context,
+      builder: (_) => _CancelOrderDialog(job: job),
+    );
+    if (reason == null || !mounted) return; // kept the order
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _busy = true);
+    try {
+      await ref
+          .read(orderCancellationProvider.notifier)
+          .cancel(job, reason: reason);
+      messenger.showSnackBar(
+        SnackBar(content: Text('${job.type.label} ${jobRef(job)} cancelled.')),
+      );
+    } catch (error) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            error is AppException
+                ? error.message
+                : 'Could not cancel the order: $error',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final tt = Theme.of(context).textTheme;
+    return _Card(
+      title: 'Change of plans?',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            widget.job.type == JobType.delivery
+                ? 'You can cancel this delivery until your driver starts '
+                      'loading it.'
+                : 'You can cancel this pickup until your driver sets off.',
+            style: tt.bodyMedium?.copyWith(color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: AppSpacing.sm + 4),
+          DestructiveButton(
+            label: _busy ? 'Cancelling…' : 'Cancel $_kind',
+            icon: Icons.event_busy_outlined,
+            fullWidth: true,
+            onPressed: _busy ? null : _cancel,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Confirms the cancellation and takes an optional reason. Pops the reason
+/// ('' when none) to cancel, or null to keep the order.
+class _CancelOrderDialog extends StatefulWidget {
+  const _CancelOrderDialog({required this.job});
+
+  final Job job;
+
+  @override
+  State<_CancelOrderDialog> createState() => _CancelOrderDialogState();
+}
+
+class _CancelOrderDialogState extends State<_CancelOrderDialog> {
+  final _reason = TextEditingController();
+
+  @override
+  void dispose() {
+    _reason.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final kind = widget.job.type.label.toLowerCase();
+    return AlertDialog(
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: AppRadius.md),
+      title: Text('Cancel this $kind?'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('${jobRef(widget.job)} · ${cancelOrderEffect(widget.job)}'),
+          const SizedBox(height: AppSpacing.md),
+          TextField(
+            controller: _reason,
+            maxLines: 2,
+            maxLength: 300,
+            decoration: const InputDecoration(
+              labelText: 'Reason (optional)',
+              hintText: 'Let us know why, if you like.',
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text('Keep $kind'),
+        ),
+        DestructiveButton(
+          label: 'Cancel $kind',
+          onPressed: () => Navigator.of(context).pop(_reason.text.trim()),
+        ),
+      ],
     );
   }
 }

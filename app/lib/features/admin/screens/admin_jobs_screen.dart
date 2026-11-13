@@ -31,10 +31,14 @@ const _pageSize = 10;
 /// Jobs List with type/status/date/driver filters.
 /// Design: admin_jobs_list/screen.png.
 class AdminJobsScreen extends ConsumerStatefulWidget {
-  const AdminJobsScreen({super.key, this.initialQuery = ''});
+  const AdminJobsScreen({super.key, this.initialQuery = '', this.openJobId});
 
   /// Pre-fills search (deep-linked from the top-bar global search via ?q=).
   final String initialQuery;
+
+  /// Opens this job's sheet (?job=) — from an alert or the dashboard, so a
+  /// booking to confirm is one tap away.
+  final String? openJobId;
 
   @override
   ConsumerState<AdminJobsScreen> createState() => _AdminJobsScreenState();
@@ -48,15 +52,41 @@ class _AdminJobsScreenState extends ConsumerState<AdminJobsScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.initialQuery.isNotEmpty) {
-      // Provider writes must wait for the first frame.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    // Provider writes must wait for the first frame.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.initialQuery.isNotEmpty) {
         final filter = ref.read(jobsFilterStateProvider);
         ref
             .read(jobsFilterStateProvider.notifier)
             .update(filter.copyWith(query: widget.initialQuery));
-      });
+      }
+      _openLinkedJob();
+    });
+  }
+
+  @override
+  void didUpdateWidget(AdminJobsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.openJobId != oldWidget.openJobId) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _openLinkedJob());
     }
+  }
+
+  /// Opens the ?job= sheet once jobs have loaded, then drops the param so
+  /// the same link opens it again next time.
+  Future<void> _openLinkedJob() async {
+    final id = widget.openJobId;
+    if (id == null || id.isEmpty) return;
+    final jobs = await ref.read(allJobsProvider.future);
+    if (!mounted) return;
+    final job = jobs.where((j) => j.id == id).firstOrNull;
+    if (job == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('That job no longer exists.')));
+    } else {
+      await showJobSheet(context, job);
+    }
+    if (mounted && widget.openJobId == id) context.go('/admin/jobs');
   }
 
   @override
@@ -157,6 +187,7 @@ class _AdminJobsScreenState extends ConsumerState<AdminJobsScreen> {
     final visible = list.skip(start).take(_pageSize).toList();
     final clientNames = ref.watch(clientNamesProvider);
     final driverNames = ref.watch(driverNamesProvider);
+    final settings = ref.watch(businessSettingsProvider);
 
     Widget headerCell(String label, {required int flex}) => Expanded(
           flex: flex,
@@ -204,6 +235,11 @@ class _AdminJobsScreenState extends ConsumerState<AdminJobsScreen> {
                       driverName: job.driverId == null
                           ? null
                           : driverNames[job.driverId],
+                      when: [
+                        if (job.scheduledDate != null)
+                          DateFormat('MMM d, y').format(job.scheduledDate!),
+                        settings.windowLabel(job.timeWindow),
+                      ].join(' · '),
                     ),
                 ],
               ),
@@ -368,11 +404,15 @@ class _JobRow extends StatefulWidget {
     required this.job,
     required this.clientName,
     required this.driverName,
+    required this.when,
   });
 
   final Job job;
   final String clientName;
   final String? driverName;
+
+  /// Day and booked time window — jobs carry a window, not a clock time.
+  final String when;
 
   @override
   State<_JobRow> createState() => _JobRowState();
@@ -437,10 +477,7 @@ class _JobRowState extends State<_JobRow> {
             ),
             Expanded(
               flex: 3,
-              child: Text(
-                job.scheduledDate == null ? '' : DateFormat('MMM d, y · hh:mm a').format(job.scheduledDate!),
-                style: textTheme.bodyMedium,
-              ),
+              child: Text(widget.when, style: textTheme.bodyMedium),
             ),
             Expanded(
               flex: 3,
@@ -478,7 +515,7 @@ class _JobRowState extends State<_JobRow> {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   side: const BorderSide(color: AppColors.border),
                 ),
-                onPressed: () => _showJobSheet(context),
+                onPressed: () => showJobSheet(context, job),
                 child: const Text('View'),
               ),
             ),
@@ -487,8 +524,11 @@ class _JobRowState extends State<_JobRow> {
       ),
     );
   }
+}
 
-  void _showJobSheet(BuildContext context) {
+/// The job sheet: details, live progress and the action its status calls
+/// for (confirm / decline, dispatch, receive).
+Future<void> showJobSheet(BuildContext context, Job job) =>
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -496,10 +536,8 @@ class _JobRowState extends State<_JobRow> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (_) => _JobSheet(jobId: widget.job.id, initial: widget.job),
+      builder: (_) => _JobSheet(jobId: job.id, initial: job),
     );
-  }
-}
 
 /// A job at a glance — where, what, progress — with the action its status
 /// calls for: confirm or decline a booking, dispatch, or receive units.
@@ -578,6 +616,12 @@ class _JobSheet extends ConsumerWidget {
           if (job.accessNotes?.isNotEmpty == true)
             line('Access', job.accessNotes!),
           if (job.notes?.isNotEmpty == true) line('Notes', job.notes!),
+          if (job.status == JobStatus.cancelled)
+            line('Cancelled', [
+              job.cancelledBy == 'client' ? 'By the client' : 'By ops',
+              if (job.cancelledAt != null) day.format(job.cancelledAt!),
+              if (job.cancelReason?.isNotEmpty == true) job.cancelReason!,
+            ].join(' · ')),
           line('Driver', driverName ?? 'Unassigned'),
           if (vehicle != null) line('Vehicle', vehicle.displayName),
           if (job.type != JobType.supplyDrop) line('Units', '$total'),
@@ -950,9 +994,14 @@ class _DispatchActionsState extends ConsumerState<_DispatchActions> {
       message: switch (widget.job.type) {
         JobType.delivery => 'Its boxes go back to "In Storage".',
         JobType.supplyDrop => 'No supplies will be delivered.',
-        JobType.pickup => widget.job.source == 'quote'
-            ? 'The client\'s booked items are cancelled too.'
-            : 'Its boxes stay pending pickup.',
+        JobType.pickup => [
+            widget.job.source == 'quote'
+                ? 'The client\'s booked items are cancelled too.'
+                : 'Its boxes stay pending pickup.',
+            if (widget.job.linkedJobId != null)
+              'Its supply drop-off is cancelled too, unless it\'s already '
+                  'under way.',
+          ].join(' '),
       },
       confirmLabel: 'Cancel Job',
       cancelLabel: 'Keep',

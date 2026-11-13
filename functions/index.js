@@ -16,6 +16,8 @@
  *                                drop-off) awaiting confirmation
  *   requestDelivery              client callable: stored units → delivery
  *                                awaiting confirmation
+ *   cancelOrder                  client callable: cancel a pickup or
+ *                                delivery before the driver starts
  *   requestAccountClosure /      client or admin callables: close an
  *   cancelAccountClosure /       account in 30 days, cancel it, or (admin)
  *   closeAccountNow              close a pending one now
@@ -55,6 +57,7 @@ const { createStore, NOT_FOUND } = require("./src/store");
 const { createInvites } = require("./src/invites");
 const { createBooking } = require("./src/booking");
 const { createDelivery } = require("./src/delivery");
+const { createOrders } = require("./src/orders");
 const { createClosure } = require("./src/closure");
 // const mailer = require("./src/mailer");
 
@@ -67,6 +70,7 @@ const store = createStore(db);
 const invites = createInvites(db, getAuth());
 const booking = createBooking(db);
 const delivery = createDelivery(db);
+const orders = createOrders(db);
 // The bucket is resolved when a purge runs, not at load.
 const closure = createClosure(db, getAuth(),
     { deleteFiles: (options) => getStorage().bucket().deleteFiles(options) },
@@ -321,6 +325,7 @@ exports.resendInvite = onCall((request) => invites.resendInvite(request));
 exports.bookPickup = onCall((request) => booking.bookPickup(request));
 exports.requestDelivery = onCall((request) =>
   delivery.requestDelivery(request));
+exports.cancelOrder = onCall((request) => orders.cancelOrder(request));
 
 // ------------------------------------------------------ account closure
 // See src/closure.js: what is cleared at closing, what is kept and for how

@@ -57,6 +57,24 @@ final jobsToConfirmProvider = AutoDisposeProvider<List<Job>>.internal(
 );
 
 typedef JobsToConfirmRef = AutoDisposeProviderRef<List<Job>>;
+String _$jobsToDispatchHash() => r'75083f020aa8f9f54c1d7f0e6621fa2ebae1ad7a';
+
+/// Confirmed jobs no driver is dispatched to yet, soonest first — incl. a
+/// Path A supply drop-off, which no other dashboard count shows.
+///
+/// Copied from [jobsToDispatch].
+@ProviderFor(jobsToDispatch)
+final jobsToDispatchProvider = AutoDisposeProvider<List<Job>>.internal(
+  jobsToDispatch,
+  name: r'jobsToDispatchProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$jobsToDispatchHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef JobsToDispatchRef = AutoDisposeProviderRef<List<Job>>;
 String _$jobsToReceiveHash() => r'4d4100c52ab2c3c03770bafcef1e13c093836b1f';
 
 /// Pickups collected and on their way to (or at) the facility.

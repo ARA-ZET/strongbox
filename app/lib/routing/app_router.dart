@@ -234,6 +234,7 @@ GoRouter appRouter(Ref ref) {
             path: '/admin/jobs',
             builder: (context, state) => AdminJobsScreen(
               initialQuery: state.uri.queryParameters['q'] ?? '',
+              openJobId: state.uri.queryParameters['job'],
             ),
           ),
           GoRoute(

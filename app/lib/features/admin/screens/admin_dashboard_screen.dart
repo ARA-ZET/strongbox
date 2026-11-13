@@ -8,6 +8,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/enums/app_enums.dart';
 import '../../../core/models/audit_event.dart';
 import '../../../core/models/job.dart';
+import '../../../core/providers/business_settings_provider.dart';
 import '../../../core/utils/relative_time.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../../core/widgets/status_chip.dart';
@@ -109,16 +110,20 @@ class _UnlinkedQrBanner extends ConsumerWidget {
 
 // ------------------------------------------------------------ action queue
 
-/// What ops must act on now: client bookings and delivery requests waiting
-/// for confirmation, and pickups heading to the facility to be received.
+/// What ops must act on now, stage by stage: client bookings and delivery
+/// requests to confirm, confirmed jobs with no driver yet, and pickups
+/// heading to the facility to be received. Each row opens its job.
 class _ActionQueue extends ConsumerWidget {
   const _ActionQueue();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final toConfirm = ref.watch(jobsToConfirmProvider);
+    final toDispatch = ref.watch(jobsToDispatchProvider);
     final toReceive = ref.watch(jobsToReceiveProvider);
-    if (toConfirm.isEmpty && toReceive.isEmpty) return const SizedBox.shrink();
+    if (toConfirm.isEmpty && toDispatch.isEmpty && toReceive.isEmpty) {
+      return const SizedBox.shrink();
+    }
     final clientNames = ref.watch(clientNamesProvider);
     final tt = Theme.of(context).textTheme;
     final day = DateFormat('EEE d MMM');
@@ -156,8 +161,11 @@ class _ActionQueue extends ConsumerWidget {
                 ],
               ),
               for (final job in jobs.take(5))
-                Padding(
-                  padding: const EdgeInsets.only(top: 6),
+                InkWell(
+                  onTap: () => context.go('/admin/jobs?job=${job.id}'),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Row(
                     children: [
                       Expanded(
@@ -177,6 +185,7 @@ class _ActionQueue extends ConsumerWidget {
                       ),
                     ],
                   ),
+                  ),
                 ),
             ],
           ),
@@ -187,6 +196,9 @@ class _ActionQueue extends ConsumerWidget {
         if (toConfirm.isNotEmpty)
           card('Bookings to confirm', Icons.fact_check_outlined, toConfirm,
               JobStatus.pendingConfirmation, 'Review'),
+        if (toDispatch.isNotEmpty)
+          card('Confirmed — needs a driver', Icons.person_add_alt_outlined,
+              toDispatch, JobStatus.scheduled, 'Assign'),
         if (toReceive.isNotEmpty)
           card('Collected — arriving at the facility', Icons.warehouse_outlined,
               toReceive, JobStatus.collected, 'View'),
@@ -277,6 +289,7 @@ class _TodaysJobsCardState extends ConsumerState<_TodaysJobsCard> {
     final jobs = ref.watch(todaysJobsProvider);
     final clientNames = ref.watch(clientNamesProvider);
     final driverNames = ref.watch(driverNamesProvider);
+    final settings = ref.watch(businessSettingsProvider);
     final textTheme = Theme.of(context).textTheme;
 
     return Container(
@@ -318,7 +331,7 @@ class _TodaysJobsCardState extends ConsumerState<_TodaysJobsCard> {
               ],
             ),
           ),
-          _buildTable(jobs, clientNames, driverNames),
+          _buildTable(jobs, clientNames, driverNames, settings),
         ],
       ),
     );
@@ -328,6 +341,7 @@ class _TodaysJobsCardState extends ConsumerState<_TodaysJobsCard> {
     List<Job> jobs,
     Map<String, String> clientNames,
     Map<String, String> driverNames,
+    BusinessSettings settings,
   ) {
     final textTheme = Theme.of(context).textTheme;
 
@@ -367,9 +381,11 @@ class _TodaysJobsCardState extends ConsumerState<_TodaysJobsCard> {
                 for (final job in visible)
                   _JobRow(
                     job: job,
-                    clientName: clientNames[job.clientId] ?? job.clientId,
+                    // Never show a Firebase id on screen.
+                    clientName: clientNames[job.clientId] ?? 'Client',
                     driverName:
                         job.driverId == null ? null : driverNames[job.driverId],
+                    window: settings.windowLabel(job.timeWindow),
                   ),
               ],
             ),
@@ -407,11 +423,15 @@ class _JobRow extends StatefulWidget {
     required this.job,
     required this.clientName,
     required this.driverName,
+    required this.window,
   });
 
   final Job job;
   final String clientName;
   final String? driverName;
+
+  /// Booked time window — jobs carry a window, not a clock time.
+  final String window;
 
   @override
   State<_JobRow> createState() => _JobRowState();
@@ -430,8 +450,7 @@ class _JobRowState extends State<_JobRow> {
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: InkWell(
-        // Job detail lands in Stage 4; keep rows tappable to the jobs list.
-        onTap: () => context.go('/admin/jobs'),
+        onTap: () => context.go('/admin/jobs?job=${job.id}'),
         child: Container(
           color: _hovered ? AppColors.surfaceContainer : Colors.transparent,
           padding:
@@ -465,7 +484,7 @@ class _JobRowState extends State<_JobRow> {
                       borderRadius: BorderRadius.circular(999),
                     ),
                     child: Text(
-                      pickup ? 'PICKUP' : 'DELIVERY',
+                      job.type.label.toUpperCase(),
                       style: textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w700,
                         color:
@@ -498,12 +517,7 @@ class _JobRowState extends State<_JobRow> {
               ),
               Expanded(
                 flex: 2,
-                child: Text(
-                  job.scheduledDate == null
-                      ? '—'
-                      : DateFormat('hh:mm a').format(job.scheduledDate!),
-                  style: textTheme.bodyMedium,
-                ),
+                child: Text(widget.window, style: textTheme.bodyMedium),
               ),
               Expanded(
                 flex: 2,

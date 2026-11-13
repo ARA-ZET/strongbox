@@ -131,12 +131,43 @@ test("cancellation tells the client and the driver who had it", () => {
       { ...base, status: "cancelled" }, JOB_ID)), ["client:jobCancelled"]);
 });
 
+test("a client's own cancellation is confirmed to them and tells ops and " +
+  "the driver", () => {
+  const assigned = { ...base, status: "assigned", driverId: "drv-1",
+    suppliesFirst: true, linkedJobId: "drop-1" };
+  const byClient = { ...assigned, status: "cancelled", cancelledBy: "client",
+    cancelReason: "Moving next month" };
+  const msgs = jobUpdatedMessages(assigned, byClient, JOB_ID);
+  assert.deepEqual(types(msgs),
+      ["client:jobCancelled", "admins:jobCancelled", "driver:jobCancelled"]);
+  assert.match(msgs[0].title, /Your pickup is cancelled/);
+  assert.match(msgs[0].body, /as you asked.*supply drop-off is cancelled/);
+  assert.match(msgs[1].title, /^Client cancelled pickup PU-/);
+  assert.match(msgs[1].body, /3 items · .*Moving next month/);
+  assert.equal(msgs[1].entityId, JOB_ID);
+
+  // Still awaiting confirmation: not "we couldn't confirm", no driver yet.
+  const pending = { ...base, type: "delivery", status: "pendingConfirmation" };
+  const early = jobUpdatedMessages(pending,
+      { ...pending, status: "cancelled", cancelledBy: "client" }, JOB_ID);
+  assert.deepEqual(types(early), ["client:jobCancelled", "admins:jobCancelled"]);
+  assert.match(early[0].title, /Your delivery is cancelled/);
+
+  // Its paired supply drop-off: only its driver hears about it.
+  const drop = { ...assigned, type: "supplyDrop", storageUnitIds: [],
+    linkedJobId: JOB_ID };
+  assert.deepEqual(types(jobUpdatedMessages(drop,
+      { ...drop, status: "cancelled", cancelledBy: "client" }, "drop-1")),
+  ["driver:jobCancelled"]);
+});
+
 test("routes open a screen each role can see", () => {
   const job = { entityType: "job", entityId: "j1" };
   assert.equal(routeFor("driver", job), "/driver/jobs/j1");
   assert.equal(routeFor("client", job), "/client/orders/j1");
   assert.equal(routeFor("client", { entityType: "job" }), "/client/orders");
-  assert.equal(routeFor("admin", job), "/admin/jobs");
+  assert.equal(routeFor("admin", job), "/admin/jobs?job=j1");
+  assert.equal(routeFor("admin", { entityType: "job" }), "/admin/jobs");
   assert.equal(routeFor("client", { entityType: "invoice", entityId: "i" }),
       "/client/subscription");
   assert.equal(routeFor("admin", { entityType: "client", entityId: "c1" }),

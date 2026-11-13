@@ -121,7 +121,7 @@ List<StorageUnit> filteredMyUnits(Ref ref, String status) {
   final units = ref.watch(myUnitsProvider).valueOrNull ?? const [];
 
   return units.where((unit) {
-    if (unit.status == StorageStatus.archived) return false;
+    if (!unit.status.isListedForClient) return false;
     if (status != 'all' && unit.status.name != status) return false;
     if (query.isEmpty) return true;
     return unit.label.toLowerCase().contains(query) ||
@@ -230,6 +230,24 @@ class PackingActions extends _$PackingActions {
   Future<void> saveNotes(StorageUnit unit, String notes) => _run(() => ref
       .read(storageUnitRepositoryProvider)
       .setPackingNotes(unit, notes, actorId: ref.read(currentActorIdProvider)));
+}
+
+// ------------------------------------------------------- order changes
+
+/// The client cancelling their own pickup or delivery before the driver
+/// starts it (the `cancelOrder` function checks again server-side).
+@Riverpod(keepAlive: true)
+class OrderCancellation extends _$OrderCancellation {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> cancel(Job job, {String? reason}) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => ref
+        .read(bookingRepositoryProvider)
+        .cancelOrder(job.id, reason: reason));
+    state.throwIfError();
+  }
 }
 
 // ------------------------------------------------------- delivery request
